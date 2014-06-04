@@ -74,29 +74,26 @@ namespace MonoDevelop.PackageManagement
 				PackageId = parts [0].Trim ();
 			}
 
-			if (parts.Length < 2)
+			if (parts.Length < 3)
 				return;
 
 			if (!IsVersionOption (parts [1]))
 				return;
 
-			Version = parts [1];
+			Version = parts [2].Trim ();
 		}
 
 		string GetUsage ()
 		{
-			return "Usage: PackageId [version:number]";
+			return "Usage: PackageId [-version number]";
 		}
 
 		bool IsVersionOption (string option)
 		{
-			return option.StartsWith ("version:", StringComparison.OrdinalIgnoreCase);
-		}
-
-		string GetVersion (string option)
-		{
-			int index = option.IndexOf (':');
-			return option.Substring (index + 1);
+			return
+				IsMatch (option, "-v") ||
+				IsMatch (option, "-ver") ||
+				IsMatch (option, "-version");
 		}
 
 		static bool IsMatch (string a, string b)
