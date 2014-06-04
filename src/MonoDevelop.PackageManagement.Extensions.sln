@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.Extensions", "MonoDevelop.PackageManagement.Extensions\MonoDevelop.PackageManagement.Extensions.csproj", "{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = MonoDevelop.PackageManagement.Extensions.csproj
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,7 @@
+<AddinProject appVersion="5.0">
+  <Project platforms="Mac Linux Win32">
+    <AddinFile>bin/MonoDevelop.PackageManagement.Extensions.dll</AddinFile>
+    <BuildFile>src/MonoDevelop.PackageManagement.Extensions.sln</BuildFile>
+    <BuildConfiguration>Debug</BuildConfiguration>
+  </Project>
+</AddinProject>

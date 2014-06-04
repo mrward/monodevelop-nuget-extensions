@@ -1,0 +1,25 @@
+<Addin
+	name        = "NuGet Package Management Extensions"
+	id          = "PackageManagement.Extensions"
+	namespace   = "MonoDevelop"
+	author      = "Matt Ward"
+	copyright   = "MIT"
+	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
+	description = "Provides extensions to the NuGet addin"
+	category    = "IDE extensions"
+	version     = "0.1">
+	
+	<Runtime>
+		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
+	</Runtime>
+
+	<Dependencies>
+		<Addin id="Core" version="5.0"/>
+		<Addin id="Ide" version="5.0"/>
+		<Addin id="PackageManagement" version="5.0"/>
+	</Dependencies>
+	
+	<Extension path="/MonoDevelop/Ide/SearchCategories">
+		<Class class="MonoDevelop.PackageManagement.InstallPackageSearchCategory" />
+	</Extension>
+</Addin>
