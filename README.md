@@ -20,11 +20,15 @@ To install the latest version of a NuGet package
  * Type in the package id into the unified search.
  * Select **Install Package**
 
+![Installing NuGet package from unified search](doc/images/InstallNUnitPackageFromUnifiedSearch.png)
+
 The NuGet package will then be installed in the background.
  
 To install a specific version of the package use can specify the -version option:
 
        nunit -version 2.6.1
+       
+![Installing NuGet package from unified search](doc/images/InstallNUnitPackageVersionFromUnifiedSearch.png)
  
 The status bar will be update as the install progresses. Errors will be displayed in the **Package Console**.
 
