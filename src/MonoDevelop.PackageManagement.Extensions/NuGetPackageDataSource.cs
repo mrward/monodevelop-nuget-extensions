@@ -1,5 +1,5 @@
 ﻿//
-// InstallPackageDataSource.cs
+// NuGetPackageDataSource.cs
 //
 // Author:
 //       Matt Ward <matt.ward@xamarin.com>
@@ -26,24 +26,24 @@
 //
 
 using System;
+using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.PackageManagement;
 using MonoDevelop.Components.MainToolbar;
+using MonoDevelop.Core;
 using MonoDevelop.Ide.CodeCompletion;
 using Xwt.Drawing;
-using MonoDevelop.Core;
-using ICSharpCode.NRefactory.TypeSystem;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class InstallPackageDataSource : ISearchDataSource
+	public class NuGetPackageDataSource : ISearchDataSource
 	{
 		readonly SearchPopupSearchPattern searchPattern;
-		readonly InstallPackageCommand command;
+		readonly PackageSearchCommand command;
 
-		public InstallPackageDataSource (SearchPopupSearchPattern searchPattern)
+		public NuGetPackageDataSource (SearchPopupSearchPattern searchPattern)
 		{
 			this.searchPattern = searchPattern;
-			command = new InstallPackageCommand (searchPattern.Pattern);
+			command = new PackageSearchCommand (searchPattern.Pattern);
 		}
 
 		Image ISearchDataSource.GetIcon (int item)
@@ -112,4 +112,6 @@ namespace MonoDevelop.PackageManagement
 		}
 	}
 }
+
+
 

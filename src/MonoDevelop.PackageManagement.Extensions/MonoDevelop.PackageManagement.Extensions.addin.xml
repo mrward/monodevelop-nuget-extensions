@@ -21,5 +21,6 @@
 	
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
 		<Class class="MonoDevelop.PackageManagement.InstallPackageSearchCategory" />
+		<Class class="MonoDevelop.PackageManagement.NuGetPackageSearchCategory" />
 	</Extension>
 </Addin>

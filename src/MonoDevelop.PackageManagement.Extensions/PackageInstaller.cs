@@ -32,10 +32,9 @@ namespace MonoDevelop.PackageManagement
 {
 	public class PackageInstaller
 	{
-		public void Run (string search)
+		public void Run (InstallPackageCommand command)
 		{
 			try {
-				var command = new InstallPackageCommand (search);
 				IPackageManagementProject project = PackageManagementServices.Solution.GetActiveProject ();
 				var action = new InstallPackageAction (project, PackageManagementServices.PackageManagementEvents);
 				action.PackageId = command.PackageId;

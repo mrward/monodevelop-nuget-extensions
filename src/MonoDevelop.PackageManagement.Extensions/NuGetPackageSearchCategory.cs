@@ -1,5 +1,5 @@
 ﻿//
-// InstallPackageSearchCategory.cs
+// NuGetPackageSearchCategory.cs
 //
 // Author:
 //       Matt Ward <matt.ward@xamarin.com>
@@ -26,6 +26,7 @@
 //
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.Components.MainToolbar;
@@ -33,26 +34,31 @@ using MonoDevelop.Core;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class InstallPackageSearchCategory : SearchCategory
+	public class NuGetPackageSearchCategory : SearchCategory
 	{
-		public InstallPackageSearchCategory ()
-			: base (GettextCatalog.GetString("Command"))
+		string[] validTags = new string[] { "package", "nuget" };
+
+		public NuGetPackageSearchCategory ()
+			: base (GettextCatalog.GetString("Package"))
 		{
 		}
 
 		public override Task<ISearchDataSource> GetResults (SearchPopupSearchPattern searchPattern, int resultsCount, CancellationToken token)
 		{
 			return Task.Factory.StartNew (() => {
-				if ((searchPattern.Tag == null) || IsValidTag (searchPattern.Tag)) {
-					return (ISearchDataSource)new InstallPackageDataSource (searchPattern);
-				}
-				return null;
+				if (!IsValidTag (searchPattern.Tag))
+					return null;
+
+				return (ISearchDataSource)new NuGetPackageDataSource (searchPattern);
 			});
 		}
 
 		public override bool IsValidTag (string tag)
 		{
-			return tag == "command";
+			if (tag == null)
+				return false;
+
+			return validTags.Contains (tag);
 		}
 	}
 }

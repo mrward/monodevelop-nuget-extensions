@@ -59,6 +59,9 @@
     <Compile Include="InstallPackageSearchCategory.cs" />
     <Compile Include="PackageInstaller.cs" />
     <Compile Include="InstallPackageCommand.cs" />
+    <Compile Include="NuGetPackageSearchCategory.cs" />
+    <Compile Include="NuGetPackageDataSource.cs" />
+    <Compile Include="PackageSearchCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

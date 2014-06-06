@@ -1,5 +1,5 @@
 ﻿//
-// InstallPackageSearchCategory.cs
+// PackageSearchCommand.cs
 //
 // Author:
 //       Matt Ward <matt.ward@xamarin.com>
@@ -26,33 +26,28 @@
 //
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MonoDevelop.Components.MainToolbar;
-using MonoDevelop.Core;
+using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class InstallPackageSearchCategory : SearchCategory
+	public class PackageSearchCommand : InstallPackageCommand
 	{
-		public InstallPackageSearchCategory ()
-			: base (GettextCatalog.GetString("Command"))
+		public PackageSearchCommand (string text)
+			: base (text)
 		{
 		}
 
-		public override Task<ISearchDataSource> GetResults (SearchPopupSearchPattern searchPattern, int resultsCount, CancellationToken token)
+		protected override void Parse (string text)
 		{
-			return Task.Factory.StartNew (() => {
-				if ((searchPattern.Tag == null) || IsValidTag (searchPattern.Tag)) {
-					return (ISearchDataSource)new InstallPackageDataSource (searchPattern);
-				}
-				return null;
-			});
-		}
+			base.Parse (text);
 
-		public override bool IsValidTag (string tag)
-		{
-			return tag == "command";
+			if (HasVersion ())
+				return;
+
+			string[] parts = text.Split (new [] {' '}, StringSplitOptions.RemoveEmptyEntries);
+			if (parts.Length == 2) {
+				Version = parts [1].Trim ();
+			}
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace MonoDevelop.PackageManagement
 
 		public string PackageId { get; private set; }
 		public string Text { get; private set; }
-		public string Version { get; private set; }
+		public string Version { get; protected set; }
 		public bool IsValid { get; private set; }
 
 		public bool IsPackageVersionSearch {
@@ -76,7 +76,7 @@ namespace MonoDevelop.PackageManagement
 			return text;
 		}
 
-		void Parse (string text)
+		protected virtual void Parse (string text)
 		{
 			PackageId = String.Empty;
 			Version = String.Empty;
