@@ -18,17 +18,17 @@ To install the latest version of a NuGet package
 
  * Make sure the project is selected in the **Solution** window.
  * Type the package id into the unified search.
- * Select **Install Package**
+ * Select **Add Package**
 
-![Installing NuGet package from unified search](doc/images/InstallNUnitPackageFromUnifiedSearch.png)
+![Installing NuGet package from unified search](doc/images/InstallPackageFromUnifiedSearch.png)
 
 The NuGet package will then be installed in the background.
  
 To install a specific version of the package you can use the **-version** option:
 
-       nunit -version 2.6.1
+       automapper -version 2.2.1
        
-![Installing NuGet package from unified search](doc/images/InstallNUnitPackageVersionFromUnifiedSearch.png)
+![Installing NuGet package from unified search](doc/images/InstallPackageVersionFromUnifiedSearch.png)
  
 The status bar will be updated as the install progresses. Errors will be displayed in the **Package Console**.
 
