@@ -62,9 +62,15 @@
     <Compile Include="NuGetPackageSearchCategory.cs" />
     <Compile Include="NuGetPackageDataSource.cs" />
     <Compile Include="PackageSearchCommand.cs" />
+    <Compile Include="MonoPclCommandLine.cs" />
+    <Compile Include="MonoPclExe.cs" />
+    <Compile Include="MonoPclRunner.cs" />
+    <Compile Include="PortableClassLibrarySearchCategory.cs" />
+    <Compile Include="PortableClassLibraryDataSource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <EmbeddedResource Include="MonoDevelop.PackageManagement.Extensions.addin.xml" />
   </ItemGroup>
+  <Import Project="PostBuildEvent.proj" />
 </Project>

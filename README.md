@@ -33,19 +33,3 @@ To install a specific version of the package you can use the **-version** option
 The status bar will be updated as the install progresses. Errors will be displayed in the **Package Console**.
 
 The unified search is available at the top right of the main Xamarin Studio window.
-
-## Package search category
-
-As a variation on how to add a package described in the previous section, there is also a package search category which also allows you to add a package. Here the search category tag **nuget** or **package** must be typed in followed by the colon character. After the tag you can specify a package id and optionally the version number.
-
-To add a package to a project
-
- * Make sure the project is selected in the **Solution** window.
- * Type the **package:** or **nuget:** followed by the package id into the unified search.
- * Select **Add Package**
-
-![Installing NuGet package from unified search](doc/images/PackageSearchCategoryAddPackage.png)
-
-A specific package version can be installed by typing the version number after the package id in the unified search.
-
-![Installing NuGet package from unified search](doc/images/PackageSearchCategoryAddPackageWithVersion.png)

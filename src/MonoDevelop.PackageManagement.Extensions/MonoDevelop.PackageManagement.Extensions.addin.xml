@@ -11,6 +11,7 @@
 	
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
+		<Import file="MonoPcl.exe" />
 	</Runtime>
 
 	<Dependencies>
@@ -22,5 +23,6 @@
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
 		<Class class="MonoDevelop.PackageManagement.InstallPackageSearchCategory" />
 		<Class class="MonoDevelop.PackageManagement.NuGetPackageSearchCategory" />
+		<Class class="MonoDevelop.PackageManagement.PortableClassLibrarySearchCategory" />
 	</Extension>
 </Addin>
