@@ -12,6 +12,9 @@ Please use at your own risk.
 
 # Features
 
+ * Installing a NuGet package from the unified search
+ * Listing Portable Class Libraries available on the local machine
+
 ## Install a NuGet package from the unified search
 
 To install the latest version of a NuGet package
@@ -33,3 +36,29 @@ To install a specific version of the package you can use the **-version** option
 The status bar will be updated as the install progresses. Errors will be displayed in the **Package Console**.
 
 The unified search is available at the top right of the main Xamarin Studio window.
+
+## Package search category
+
+As a variation on how to add a package described in the previous section, there is also a package search category which also allows you to add a package. Here the search category tag **nuget** or **package** must be typed in followed by the colon character. After the tag you can specify a package id and optionally the version number.
+
+To add a package to a project
+
+ * Make sure the project is selected in the **Solution** window.
+ * Type the **package:** or **nuget:** followed by the package id into the unified search.
+ * Select **Add Package**
+
+![Installing NuGet package from unified search](doc/images/PackageSearchCategoryAddPackage.png)
+
+A specific package version can be installed by typing the version number after the package id in the unified search.
+
+![Installing NuGet package from unified search](doc/images/PackageSearchCategoryAddPackageWithVersion.png)
+
+## Listing Portable Class Libraries Installed
+
+To see a list of the .NET Portable Class libraries on the local machine, from the unified search select **List Portable Class Libraries**.
+
+![Listing Portable Class Libraries](doc/images/ListPortableClassLibrariesFromUnifiedSearch.png)
+
+This runs the [Mono Portable Class Library command line utility](https://github.com/mrward/mono-portable-class-library-util) which will look for portable class libraries installed on the local machine. The results are displayed  in the Package Console.
+
+![Listing Portable Class Libraries](doc/images/PortableClassLibraryListInPackageConsole.png)
