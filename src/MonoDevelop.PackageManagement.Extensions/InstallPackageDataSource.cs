@@ -37,10 +37,12 @@ namespace MonoDevelop.PackageManagement
 	public class InstallPackageDataSource : ISearchDataSource
 	{
 		readonly SearchPopupSearchPattern searchPattern;
+		readonly InstallPackageCommand command;
 
 		public InstallPackageDataSource (SearchPopupSearchPattern searchPattern)
 		{
 			this.searchPattern = searchPattern;
+			command = new InstallPackageCommand (searchPattern.Pattern);
 		}
 
 		Image ISearchDataSource.GetIcon (int item)
@@ -50,7 +52,17 @@ namespace MonoDevelop.PackageManagement
 
 		string ISearchDataSource.GetMarkup (int item, bool isSelected)
 		{
-			return GettextCatalog.GetString ("Install Package");
+			return GettextCatalog.GetString (
+				"Add Package <b>{0}</b>{1}",
+				command.PackageId, GetPackageVersionMarkup ());
+		}
+
+		string GetPackageVersionMarkup ()
+		{
+			if (command.HasVersion ()) {
+				return " <b>" + command.Version + "</b>";
+			}
+			return String.Empty;
 		}
 
 		string ISearchDataSource.GetDescriptionMarkup (int item, bool isSelected)
@@ -91,7 +103,7 @@ namespace MonoDevelop.PackageManagement
 
 		int ISearchDataSource.ItemCount {
 			get {
-				if (IsProjectSelected ()) {
+				if (IsProjectSelected () && command.IsValid) {
 					return 1;
 				}
 				return 0;

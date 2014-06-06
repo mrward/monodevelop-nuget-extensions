@@ -40,9 +40,24 @@ namespace MonoDevelop.PackageManagement
 		public string PackageId { get; private set; }
 		public string Text { get; private set; }
 		public string Version { get; private set; }
+		public bool IsValid { get; private set; }
 
 		public bool IsPackageVersionSearch {
 			get { return !String.IsNullOrEmpty (PackageId); }
+		}
+
+		public bool HasVersion ()
+		{
+			if (String.IsNullOrEmpty (Version))
+				return false;
+
+			return IsValidVersionNumber ();
+		}
+
+		bool IsValidVersionNumber ()
+		{
+			SemanticVersion version = null;
+			return SemanticVersion.TryParse (Version, out version);
 		}
 
 		public SemanticVersion GetVersion ()
@@ -63,11 +78,13 @@ namespace MonoDevelop.PackageManagement
 
 		void Parse (string text)
 		{
-			if (text == null)
-				throw new ApplicationException (GetUsage ()); 
-
 			PackageId = String.Empty;
 			Version = String.Empty;
+
+			if (text == null)
+				return;
+
+			IsValid = true;
 
 			string[] parts = text.Split (new [] {' '}, StringSplitOptions.RemoveEmptyEntries);
 			if (parts.Length > 0) {
