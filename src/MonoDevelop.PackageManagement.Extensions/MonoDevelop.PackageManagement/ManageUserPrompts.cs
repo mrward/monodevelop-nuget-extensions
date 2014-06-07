@@ -27,9 +27,10 @@
 //
 
 using System;
+using ICSharpCode.PackageManagement;
 using NuGet;
 
-namespace ICSharpCode.PackageManagement
+namespace MonoDevelop.PackageManagement
 {
 	public class ManagePackagesUserPrompts
 	{
@@ -42,7 +43,7 @@ namespace ICSharpCode.PackageManagement
 		public ManagePackagesUserPrompts (IPackageManagementEvents packageManagementEvents)
 			: this (
 				packageManagementEvents,
-				new LicenseAcceptanceService (),
+				new LicenseAcceptanceService2 (),
 				new SelectProjectsService (),
 				new FileConflictResolver ())
 		{

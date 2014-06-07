@@ -87,6 +87,11 @@
     <Compile Include="MonoDevelop.PackageManagement\UpdatedPackagesViewModel2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\RecentPackagesViewModel2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ManageUserPrompts.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\LicenseAcceptanceDialog2.cs" />
+    <Compile Include="gtk-gui\MonoDevelop.PackageManagement.LicenseAcceptanceDialog2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\PackageLicenseWidget2.cs" />
+    <Compile Include="gtk-gui\MonoDevelop.PackageManagement.PackageLicenseWidget2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\LicenseAcceptanceService2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
