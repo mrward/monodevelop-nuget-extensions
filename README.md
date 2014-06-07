@@ -23,7 +23,7 @@ The addin is available from the [MonoDevelop addin repository](http://addins.mon
  * Expand **IDE extensions**.
  * Select **NuGet Package Management Extensions**.
  * Click the **Refresh** button if the addin is not visible.
- * Click the **Install...** to install the addin.
+ * Click **Install...** to install the addin.
 
 ![NuGet package management extension addin in the addin manager dialog](doc/images/AddinManagerNuGetExtensionsAddin.png)
 
