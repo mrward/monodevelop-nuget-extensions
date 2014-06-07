@@ -313,8 +313,11 @@ namespace MonoDevelop.PackageManagement
 		
 		void ManagePackagesButtonClicked (object sender, EventArgs e)
 		{
-			PackageViewModel packageViewModel = GetSelectedPackageViewModel ();
-			packageViewModel.ManagePackage ();
+			var packageEvents = new ThreadSafePackageManagementEvents (PackageManagementServices.PackageManagementEvents);
+			using (var userPrompts = new ManagePackagesUserPrompts (packageEvents)) {
+				PackageViewModel packageViewModel = GetSelectedPackageViewModel ();
+				packageViewModel.ManagePackage ();
+			}
 		}
 		
 		void UpdateAllPackagesButtonClicked (object sender, EventArgs e)

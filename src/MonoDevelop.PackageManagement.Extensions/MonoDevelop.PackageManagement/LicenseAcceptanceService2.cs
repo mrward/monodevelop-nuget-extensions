@@ -36,11 +36,18 @@ namespace MonoDevelop.PackageManagement
 {
 	public class LicenseAcceptanceService2 : ILicenseAcceptanceService
 	{
+		bool? accepted;
+
 		public bool AcceptLicenses (IEnumerable<IPackage> packages)
 		{
+			if (accepted.HasValue) {
+				return accepted.Value;
+			}
+
 			LicenseAcceptanceDialog2 dialog = CreateLicenseAcceptanceDialog (packages);
 			int result = MessageService.ShowCustomDialog (dialog);
-			return result == (int)Gtk.ResponseType.Ok;
+			accepted = (result == (int)Gtk.ResponseType.Ok);
+			return accepted.Value;
 		}
 
 		LicenseAcceptanceDialog2 CreateLicenseAcceptanceDialog (IEnumerable<IPackage> packages)

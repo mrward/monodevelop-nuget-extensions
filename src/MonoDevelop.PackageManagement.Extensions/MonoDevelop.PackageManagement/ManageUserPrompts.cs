@@ -32,7 +32,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ManagePackagesUserPrompts
+	public class ManagePackagesUserPrompts : IDisposable
 	{
 		ILicenseAcceptanceService licenseAcceptanceService;
 		ISelectProjectsService selectProjectsService;

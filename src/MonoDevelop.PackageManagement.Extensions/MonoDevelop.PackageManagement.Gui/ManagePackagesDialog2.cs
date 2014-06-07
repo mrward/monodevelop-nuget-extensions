@@ -37,7 +37,6 @@ namespace MonoDevelop.PackageManagement
 		ManagePackagesViewModel2 viewModel;
 		IPackageManagementEvents packageManagementEvents;
 		string messagesExpanderDefaultLabel;
-		ManagePackagesUserPrompts userPrompts;
 
 		public ManagePackagesDialog2 (ManagePackagesViewModel2 viewModel, IPackageManagementEvents packageManagementEvents)
 		{
@@ -48,8 +47,6 @@ namespace MonoDevelop.PackageManagement
 			this.packageManagementEvents = packageManagementEvents;
 			AddPackageManagementEventHandlers ();
 			LoadViewModels ();
-
-			userPrompts = new ManagePackagesUserPrompts (packageManagementEvents);
 		}
 
 		void AddPackageManagementEventHandlers ()
@@ -102,7 +99,6 @@ namespace MonoDevelop.PackageManagement
 
 		public override void Destroy ()
 		{
-			userPrompts.Dispose ();
 			viewModel.Dispose ();
 			RemovePackageManagementEventHandlers ();
 			base.Destroy ();
