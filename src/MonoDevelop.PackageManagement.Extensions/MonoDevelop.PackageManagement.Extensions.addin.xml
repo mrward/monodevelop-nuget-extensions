@@ -7,7 +7,7 @@
 	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
 	description = "Provides extensions to the NuGet addin"
 	category    = "IDE extensions"
-	version     = "0.2">
+	version     = "0.3">
 	
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
@@ -19,10 +19,34 @@
 		<Addin id="Ide" version="5.0"/>
 		<Addin id="PackageManagement" version="5.0"/>
 	</Dependencies>
-	
+
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
 		<Class class="MonoDevelop.PackageManagement.InstallPackageSearchCategory" />
 		<Class class="MonoDevelop.PackageManagement.NuGetPackageSearchCategory" />
 		<Class class="MonoDevelop.PackageManagement.PortableClassLibrarySearchCategory" />
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/Commands">
+		<Command
+			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
+			_description="Manage packages"
+			_label="_Manage Packages..."
+			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler2" />
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/MainMenu/Project">
+		<CommandItem
+			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
+			insertafter="MonoDevelop.Ide.Commands.ProjectCommands.AddReference"
+			insertbefore="ExportSeparator" />
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
+		<Condition id="ItemType" value="Solution">
+			<CommandItem
+				id="MonoDevelop.PackageManagement.Commands.ManagePackages"
+				insertafter="MonoDevelop.Ide.Commands.ProjectCommands.AddReference"
+				insertbefore="AddSectionEnd" />
+		</Condition>
 	</Extension>
 </Addin>
