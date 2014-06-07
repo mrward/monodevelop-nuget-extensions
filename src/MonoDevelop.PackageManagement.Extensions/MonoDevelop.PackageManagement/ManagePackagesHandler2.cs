@@ -28,6 +28,7 @@
 
 using System;
 using ICSharpCode.PackageManagement;
+using MonoDevelop.Components.Commands;
 using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement.Commands;
 
@@ -61,6 +62,11 @@ namespace MonoDevelop.PackageManagement
 				viewModels,
 				new ManagePackagesViewTitle (PackageManagementServices.Solution),
 				packageEvents);
+		}
+
+		protected override void Update (CommandInfo info)
+		{
+			info.Enabled = !IsDotNetProjectSelected ();
 		}
 	}
 }
