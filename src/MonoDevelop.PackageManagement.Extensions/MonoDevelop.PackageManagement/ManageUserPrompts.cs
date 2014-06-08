@@ -27,7 +27,11 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ICSharpCode.PackageManagement;
+using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using NuGet;
 
 namespace MonoDevelop.PackageManagement
@@ -39,6 +43,7 @@ namespace MonoDevelop.PackageManagement
 		IPackageManagementEvents packageManagementEvents;
 		IFileConflictResolver fileConflictResolver;
 		FileConflictResolution lastFileConflictResolution;
+		List<FileEventArgs> fileChangedEvents = new List<FileEventArgs> ();
 
 		public ManagePackagesUserPrompts (IPackageManagementEvents packageManagementEvents)
 			: this (
@@ -75,6 +80,7 @@ namespace MonoDevelop.PackageManagement
 			packageManagementEvents.SelectProjects += SelectProjects;
 			packageManagementEvents.ResolveFileConflict += ResolveFileConflict;
 			packageManagementEvents.PackageOperationsStarting += PackageOperationsStarting;
+			packageManagementEvents.FileChanged += FileChanged;
 		}
 
 		void AcceptLicenses (object sender, AcceptLicensesEventArgs e)
@@ -112,6 +118,7 @@ namespace MonoDevelop.PackageManagement
 		public void Dispose ()
 		{
 			UnsubscribeFromEvents ();
+			NotifyFilesChanged ();
 		}
 
 		public void UnsubscribeFromEvents ()
@@ -120,6 +127,29 @@ namespace MonoDevelop.PackageManagement
 			packageManagementEvents.AcceptLicenses -= AcceptLicenses;
 			packageManagementEvents.ResolveFileConflict -= ResolveFileConflict;
 			packageManagementEvents.PackageOperationsStarting -= PackageOperationsStarting;
+			packageManagementEvents.FileChanged -= FileChanged;
+		}
+
+		void FileChanged (object sender, FileEventArgs e)
+		{
+			fileChangedEvents.Add (e);
+		}
+
+		void NotifyFilesChanged ()
+		{
+			DispatchService.GuiDispatch (() => {
+				FilePath[] files = fileChangedEvents
+					.SelectMany (fileChangedEvent => fileChangedEvent.ToArray ())
+					.Select (fileInfo => fileInfo.FileName)
+					.ToArray ();
+
+				NotifyFilesChanged (files);
+			});
+		}
+
+		void NotifyFilesChanged (FilePath[] files)
+		{
+			FileService.NotifyFilesChanged (files);
 		}
 	}
 }
