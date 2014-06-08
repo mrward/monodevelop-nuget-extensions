@@ -8,6 +8,7 @@ These features are experimental, subject to change, removal, and should be consi
 
  * Installing a NuGet package from the unified search
  * Listing Portable Class Libraries available on the local machine
+ * Installing, updating, uninstalling NuGet packages for multiple projects in one step.
 
 # Requirements
 
@@ -78,3 +79,37 @@ To see a list of the .NET Portable Class libraries available on the local machin
 This runs the [Mono Portable Class Library command line utility](https://github.com/mrward/mono-portable-class-library-util) which will look for portable class libraries installed on the local machine. The results are displayed  in the **Package Console**.
 
 ![Listing Portable Class Libraries](doc/images/PortableClassLibraryListInPackageConsole.png)
+
+## Managing Packages for the Solution
+
+The NuGet addin that is available for Xamarin Studio 4 included the ability to manage packages for the solution. You could install, update or uninstall packages for multiple projects in one step. This feature is has been made available for Xamarin Studio 5 by the extension addin.
+
+To open the Manage Packages dialog:
+
+ * Make sure the solution is selected in the **Solution** window.
+ * Right click the solution and select **Manage Packages**.
+ * Or select **Manage Packages** from the **Project** menu.
+
+![Manage Packages dialog](doc/images/ManagePackagesDialog.png)
+
+### Install a package into multiple projects
+
+ * Select the package in the **Available** tab.
+ * Click the **Manage** button.
+
+Then a Select Projects dialog will be displayed.
+
+![Select Projects dialog](doc/images/SelectProjectsDialog.png)
+
+Tick the projects you want to install the package and click **OK**.
+
+### Uninstalling a package from multiple projects
+
+To uninstall a package from multiple projects:
+
+ * Open the **Manage Packages** dialog.
+ * Select the **Installed** tab.
+ * Select the package you want to uninstall.
+ * Click the **Manage** button.
+ * Untick the projects you want the package to be uninstalled from.
+ * Click **OK**.
