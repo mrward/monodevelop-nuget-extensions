@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// OpenProjects.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -26,37 +26,53 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+
 using System;
 using System.Collections.Generic;
-using ICSharpCode.Scripting;
+using System.Management.Automation;
+
+using DTEProject = ICSharpCode.PackageManagement.EnvDTE.Project;
+using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Projects;
-using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement.Cmdlets
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class OpenProjects
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		IPackageManagementSolution solution;
 		
-		void SetDefaultRunspace ();
+		public OpenProjects(IPackageManagementSolution solution)
+		{
+			this.solution = solution;
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		public IEnumerable<EnvDTE.Project> GetAllProjects()
+		{
+			foreach (Project project in solution.GetDotNetProjects()) {
+				yield return CreateProject(project);
+			}
+		}
 		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
+		DTEProject CreateProject(Project project)
+		{
+			return new DTEProject(project as DotNetProject);
+		}
 		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		public IEnumerable<EnvDTE.Project> GetFilteredProjects(string[] projectNames)
+		{
+			foreach (string projectName in projectNames) {
+				WildcardPattern wildcard = CreateWildcard(projectName);
+				foreach (EnvDTE.Project project in GetAllProjects()) {
+					if (wildcard.IsMatch(project.Name)) {
+						yield return project;
+					}
+				}
+			}
+		}
+		
+		WildcardPattern CreateWildcard(string pattern)
+		{
+			return new WildcardPattern(pattern, WildcardOptions.IgnoreCase);
+		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// GetVSComponentModelCmdlet.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -25,38 +25,28 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
-using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
-using NuGet;
-
-namespace ICSharpCode.PackageManagement.Scripting
-{
-	public interface IPackageManagementConsoleHost : IDisposable
-	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
-		
-		void SetDefaultRunspace ();
-		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
-		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
-	}
-}
+//
+//using System;
+//using System.Management.Automation;
+//using ICSharpCode.PackageManagement.Scripting;
+//using Microsoft.VisualStudio.ComponentModelHost;
+//using Microsoft.VisualStudio.Shell;
+//
+//namespace ICSharpCode.PackageManagement.Cmdlets
+//{
+//	[Cmdlet(VerbsCommon.Get, "VSComponentModel")]
+//	//TODO: PowerShell OutputTypeAttribute
+//	//[OutputType(typeof(IComponentModel))]
+//	public class GetVSComponentModelCmdlet : PSCmdlet
+//	{
+//		public GetVSComponentModelCmdlet()
+//		{
+//		}
+//		
+//		protected override void ProcessRecord()
+//		{
+//			object service = Package.GetGlobalService(typeof(SComponentModel));
+//			WriteObject(service);
+//		}
+//	}
+//}

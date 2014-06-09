@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// ConsoleHostFileConflictResolver.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,36 +27,43 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class ConsoleHostFileConflictResolver : IConsoleHostFileConflictResolver
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		IPackageManagementEvents packageEvents;
+		FileConflictResolution conflictResolution;
 		
-		void SetDefaultRunspace ();
+		public ConsoleHostFileConflictResolver (
+			IPackageManagementEvents packageEvents,
+			FileConflictAction fileConflictAction)
+		{
+			this.packageEvents = packageEvents;
+			
+			conflictResolution = GetFileConflictResolution (fileConflictAction);
+			packageEvents.ResolveFileConflict += ResolveFileConflict;
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		void ResolveFileConflict (object sender, ResolveFileConflictEventArgs e)
+		{
+			e.Resolution = conflictResolution;
+		}
 		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
+		FileConflictResolution GetFileConflictResolution (FileConflictAction fileConflictAction)
+		{
+			switch (fileConflictAction) {
+				case FileConflictAction.Overwrite:
+					return FileConflictResolution.Overwrite;
+				default:
+					return FileConflictResolution.Ignore;
+			}
+		}
 		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		public void Dispose ()
+		{
+			packageEvents.ResolveFileConflict -= ResolveFileConflict;
+		}
 	}
 }

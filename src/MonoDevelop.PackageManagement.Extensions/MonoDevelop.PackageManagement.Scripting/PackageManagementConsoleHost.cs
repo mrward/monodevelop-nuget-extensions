@@ -41,38 +41,38 @@ namespace ICSharpCode.PackageManagement.Scripting
 	{
 //		IThread thread;
 		IRegisteredPackageRepositories registeredRepositories;
-//		IPowerShellHostFactory powerShellHostFactory;
-//		IPowerShellHost powerShellHost;
-//		IPackageManagementAddInPath addinPath;
+		IPowerShellHostFactory powerShellHostFactory;
+		IPowerShellHost powerShellHost;
+		IPackageManagementAddInPath addinPath;
 		IPackageManagementEvents packageEvents;
 		string prompt = "PM> ";
 		
 		public PackageManagementConsoleHost (
 			IPackageManagementSolution solution,
 			IRegisteredPackageRepositories registeredRepositories,
-			IPackageManagementEvents packageEvents)
-//			IPowerShellHostFactory powerShellHostFactory,
-//			IPackageManagementAddInPath addinPath)
+			IPackageManagementEvents packageEvents,
+			IPowerShellHostFactory powerShellHostFactory,
+			IPackageManagementAddInPath addinPath)
 		{
 			this.Solution = solution;
 			this.registeredRepositories = registeredRepositories;
-//			this.powerShellHostFactory = powerShellHostFactory;
-//			this.addinPath = addinPath;
+			this.powerShellHostFactory = powerShellHostFactory;
+			this.addinPath = addinPath;
 			this.packageEvents = packageEvents;
 		}
 		
-//		public PackageManagementConsoleHost (
-//			IPackageManagementSolution solution,
-//			IRegisteredPackageRepositories registeredRepositories,
-//			IPackageManagementEvents packageEvents)
-//			: this (
-//				solution,
-//				registeredRepositories,
-//				packageEvents,
-//				new PowerShellHostFactory(),
-//				new PackageManagementAddInPath())
-//		{
-//		}
+		public PackageManagementConsoleHost (
+			IPackageManagementSolution solution,
+			IRegisteredPackageRepositories registeredRepositories,
+			IPackageManagementEvents packageEvents)
+			: this (
+				solution,
+				registeredRepositories,
+				packageEvents,
+				new PowerShellHostFactory (),
+				new PackageManagementAddInPath ())
+		{
+		}
 		
 		public bool IsRunning { get; private set; }
 		public Project DefaultProject { get; set; }
@@ -144,13 +144,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		void CreatePowerShellHost()
 		{
-//			var clearConsoleHostCommand = new ClearPackageManagementConsoleHostCommand(this);
-//			powerShellHost = 
-//				powerShellHostFactory.CreatePowerShellHost(
-//					this.ScriptingConsole,
-//					GetNuGetVersion(),
-//					clearConsoleHostCommand,
-//					new EnvDTE.DTE());
+			var clearConsoleHostCommand = new ClearPackageManagementConsoleHostCommand (this);
+			powerShellHost = 
+				powerShellHostFactory.CreatePowerShellHost (
+					this.ScriptingConsole,
+					GetNuGetVersion (),
+					clearConsoleHostCommand,
+					new EnvDTE.DTE ());
 		}
 		
 		protected virtual Version GetNuGetVersion()
@@ -160,8 +160,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		void AddModulesToImport()
 		{
-//			string module = addinPath.CmdletsAssemblyFileName;
-//			powerShellHost.ModulesToImport.Add(module);
+			string module = addinPath.CmdletsAssemblyFileName;
+			powerShellHost.ModulesToImport.Add(module);
 		}
 		
 //		void UpdateFormatting()
@@ -194,22 +194,21 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		void WriteNuGetVersionInfo()
 		{
-//			string versionInfo = String.Format("NuGet {0}", powerShellHost.Version);
-			string versionInfo = String.Format("NuGet {0}", NuGetVersion.Version);
+			string versionInfo = String.Format("NuGet {0}", powerShellHost.Version);
 			WriteLine(versionInfo);
 		}
 		
 		void UpdateWorkingDirectory()
 		{
-//			string command = "Invoke-UpdateWorkingDirectory";
-//			powerShellHost.ExecuteCommand(command);
+			string command = "Invoke-UpdateWorkingDirectory";
+			powerShellHost.ExecuteCommand(command);
 		}
 		
 		void InitializePackageScriptsForOpenSolution()
 		{
 			if (Solution.IsOpen) {
-//				string command = "Invoke-InitializePackages";
-//				powerShellHost.ExecuteCommand(command);
+				string command = "Invoke-InitializePackages";
+				powerShellHost.ExecuteCommand(command);
 			}
 		}
 		
@@ -244,8 +243,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 	
 		void ProcessLine(string line)
 		{
-//			string preprocessedLine = PashCommandLinePreprocessor.Process(line);
-//			powerShellHost.ExecuteCommand(line);
+			string preprocessedLine = PashCommandLinePreprocessor.Process (line);
+			powerShellHost.ExecuteCommand (line);
 		}
 		
 		public IPackageManagementProject GetProject(string packageSource, string projectName)
@@ -300,9 +299,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 //			powerShellHost.SetDefaultRunspace();
 		}
 		
-//		public IConsoleHostFileConflictResolver CreateFileConflictResolver(FileConflictAction fileConflictAction)
-//		{
-//			return new ConsoleHostFileConflictResolver(packageEvents, fileConflictAction);
-//		}
+		public IConsoleHostFileConflictResolver CreateFileConflictResolver(FileConflictAction fileConflictAction)
+		{
+			return new ConsoleHostFileConflictResolver(packageEvents, fileConflictAction);
+		}
 	}
 }

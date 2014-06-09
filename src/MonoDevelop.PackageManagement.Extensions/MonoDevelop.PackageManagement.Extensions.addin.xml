@@ -12,6 +12,11 @@
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
 		<Import file="MonoPcl.exe" />
+		<Import assembly="System.Management.Automation.dll" />
+		<Import assembly="Irony.dll" />
+		<Import assembly="Microsoft.PowerShell.Commands.Management.dll" />
+		<Import assembly="Microsoft.PowerShell.Commands.Utility.dll" />
+		<Import assembly="MonoDevelop.PackageManagement.Cmdlets.dll" />
 	</Runtime>
 
 	<Dependencies>

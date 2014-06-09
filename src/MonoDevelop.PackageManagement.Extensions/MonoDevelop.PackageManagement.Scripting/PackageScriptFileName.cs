@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// PackageScriptFileName.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,36 +27,56 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
+using System.IO;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public abstract class PackageScriptFileName : IPackageScriptFileName
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		IFileSystem fileSystem;
+		string relativeScriptFilePath;
 		
-		void SetDefaultRunspace ();
+		public PackageScriptFileName(string packageInstallDirectory)
+			: this(new PhysicalFileSystem(packageInstallDirectory))
+		{
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		public PackageScriptFileName(IFileSystem fileSystem)
+		{
+			this.fileSystem = fileSystem;
+			GetRelativeScriptFilePath();
+		}
 		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
+		void GetRelativeScriptFilePath()
+		{
+			relativeScriptFilePath = Path.Combine("tools", Name);
+		}
 		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		public abstract string Name { get; }
+		
+		public string PackageInstallDirectory {
+			get { return fileSystem.Root; }
+		}
+		
+		public override string ToString()
+		{
+			return fileSystem.GetFullPath(relativeScriptFilePath);
+		}
+		
+		public bool ScriptDirectoryExists()
+		{
+			return fileSystem.DirectoryExists("tools");
+		}
+		
+		public bool FileExists()
+		{
+			return fileSystem.FileExists(relativeScriptFilePath);
+		}
+		
+		public string GetScriptDirectory()
+		{
+			return fileSystem.GetFullPath("tools");
+		}
 	}
 }

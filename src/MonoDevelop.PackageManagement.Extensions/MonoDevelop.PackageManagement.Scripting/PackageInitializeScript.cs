@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// PackageInitializeScript.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,36 +27,34 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class PackageInitializeScript : PackageScript
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		public PackageInitializeScript(IPackage package, IPackageScriptFileName fileName)
+			: base(package, fileName)
+		{
+		}
 		
-		void SetDefaultRunspace ();
+		protected override void BeforeRun()
+		{
+			AddScriptDirectoryToEnvironmentPath();
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		void AddScriptDirectoryToEnvironmentPath()
+		{
+			if (ScriptFileName.ScriptDirectoryExists()) {
+				string directory = ScriptFileName.GetScriptDirectory();
+				AddScriptDirectoryToEnvironmentPath(directory);
+			}
+		}
 		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		void AddScriptDirectoryToEnvironmentPath(string directory)
+		{
+			//var environmentPath = new PowerShellSessionEnvironmentPath(Session);
+			//environmentPath.Append(directory);
+		}
 	}
 }

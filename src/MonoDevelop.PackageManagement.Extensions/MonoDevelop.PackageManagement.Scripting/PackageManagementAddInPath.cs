@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// PackageManagementAddInPath.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -28,35 +28,42 @@
 
 using System;
 using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
-using NuGet;
+using System.IO;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class PackageManagementAddInPath : IPackageManagementAddInPath
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		string cmdletsAssemblyFileName;
 		
-		void SetDefaultRunspace ();
+		public string CmdletsAssemblyFileName {
+			get {
+				if (cmdletsAssemblyFileName == null) {
+					GetCmdletsAssemblyFileName();
+				}
+				return cmdletsAssemblyFileName;
+			}
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		void GetCmdletsAssemblyFileName()
+		{
+			cmdletsAssemblyFileName = Path.Combine(AddInDirectory, "MonoDevelop.PackageManagement.Cmdlets.dll");
+		}
 		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
+		string AddInDirectory {
+			get {
+				string addinFilename = GetType().Assembly.Location;
+				return Path.GetDirectoryName(addinFilename);
+			}
+		}
 		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		public IEnumerable<string> GetPowerShellFormattingFileNames()
+		{
+			return Directory.GetFiles(PowerShellScriptsDirectory, "*.ps1xml");
+		}
+		
+		string PowerShellScriptsDirectory {
+			get { return Path.Combine(AddInDirectory, "Scripts"); }
+		}
 	}
 }

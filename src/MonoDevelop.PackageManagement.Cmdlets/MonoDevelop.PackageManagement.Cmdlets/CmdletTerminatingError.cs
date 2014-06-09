@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// CmdletTerminatingError.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,36 +27,32 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
-using NuGet;
+using System.Management.Automation;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement.Cmdlets
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class CmdletTerminatingError : ICmdletTerminatingError
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		ITerminatingCmdlet cmdlet;
 		
-		void SetDefaultRunspace ();
+		public CmdletTerminatingError(ITerminatingCmdlet cmdlet)
+		{
+			this.cmdlet = cmdlet;
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		public void ThrowNoProjectOpenError()
+		{
+			ErrorRecord error = CreateInvalidOperationErrorRecord("NoProjectOpen");
+			cmdlet.ThrowTerminatingError(error);
+		}
 		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		ErrorRecord CreateInvalidOperationErrorRecord(string errorId)
+		{
+			return new ErrorRecord(
+				new InvalidOperationException("A project must be open to run this command."),
+				"NoProjectOpen",
+				ErrorCategory.InvalidOperation,
+				null);
+		}
 	}
 }

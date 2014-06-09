@@ -1,10 +1,10 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// PashCommandLinPreprocessor.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2014 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,36 +27,42 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
-using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	/// <summary>
+	/// Preprocess the command line so that Pash can process it.
+	/// </summary>
+	public static class PashCommandLinePreprocessor
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		public static string Process(string line)
+		{
+			return QuoteVersionParameter(line);
+		}
 		
-		void SetDefaultRunspace ();
-		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
-		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		static string QuoteVersionParameter(string line)
+		{
+			int versionOptionIndex = line.IndexOf("-version ", StringComparison.OrdinalIgnoreCase);
+			if (versionOptionIndex < 0) {
+				return line;
+			}
+			
+			int versionStartIndex = versionOptionIndex + 9;
+			int versionEndIndex = line.IndexOf(' ', versionStartIndex);
+			if (versionEndIndex < 0) {
+				versionEndIndex = line.Length;
+			}
+			
+			int versionLength = versionEndIndex - versionStartIndex;
+			if (versionLength <= 0) {
+				return line;
+			}
+			
+			string version = line.Substring(versionStartIndex, versionLength);
+			
+			return line.Substring(0, versionStartIndex) + 
+				"\"" + version + "\"" +
+				line.Substring(versionEndIndex);
+		}
 	}
 }

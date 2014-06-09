@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// UpdatePackageActionsFactory.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,36 +27,30 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
 using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class UpdatePackageActionsFactory : IUpdatePackageActionsFactory
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
+		public IUpdatePackageActions CreateUpdateAllPackagesInProject (IPackageManagementProject project)
+		{
+			return new UpdateAllPackagesInProject (project);
+		}
 
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
-		
-		void SetDefaultRunspace ();
-		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
-		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		public IUpdatePackageActions CreateUpdateAllPackagesInSolution (
+			IPackageManagementSolution solution,
+			IPackageRepository sourceRepository)
+		{
+			return new UpdateAllPackagesInSolution (solution, sourceRepository);
+		}
+
+		public IUpdatePackageActions CreateUpdatePackageInAllProjects (
+			PackageReference packageReference,
+			IPackageManagementSolution solution,
+			IPackageRepository sourceRepository)
+		{
+			return new UpdatePackageInAllProjects (packageReference, solution, sourceRepository);
+		}
 	}
 }

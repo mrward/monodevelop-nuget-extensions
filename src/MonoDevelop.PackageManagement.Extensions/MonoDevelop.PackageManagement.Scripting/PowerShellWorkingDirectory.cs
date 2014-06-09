@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// PowerShellWorkingDirectory.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,36 +27,31 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
 using MonoDevelop.Projects;
-using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class PowerShellWorkingDirectory
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		IPackageManagementProjectService projectService;
 		
-		void SetDefaultRunspace ();
+		public PowerShellWorkingDirectory(IPackageManagementProjectService projectService)
+		{
+			this.projectService = projectService;
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		public string GetWorkingDirectory()
+		{
+			Solution solution = projectService.OpenSolution;
+			if (solution != null) {
+				return QuotedDirectory(solution.BaseDirectory);
+			}
+			return "$env:USERPROFILE";
+		}
 		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		string QuotedDirectory(string directory)
+		{
+			return String.Format("'{0}'", directory);
+		}
 	}
 }

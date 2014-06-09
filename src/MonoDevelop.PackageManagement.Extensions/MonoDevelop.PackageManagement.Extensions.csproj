@@ -93,8 +93,6 @@
     <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsoleToolbarWidget.cs" />
     <Compile Include="gtk-gui\MonoDevelop.PackageManagement.PackageConsoleToolbarWidget.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementConsoleViewModel.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\IScriptingConsole.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptingStyle.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageManagementConsoleHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsolePad.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsoleView.cs" />
@@ -102,6 +100,40 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementConsoleHostProvider.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementConsoleHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\NuGetVersion.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ClearPackageManagementConsoleHostCommand.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostFileConflictResolver.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\FileConflictAction.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IConsoleHostFileConflictResolver.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageInitializationScripts.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageInitializationScriptsFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageManagementAddInPath.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptRunner.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptSession.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializationScripts.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializationScriptsConsole.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializationScriptsFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializeScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializeScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInstallScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInstallScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementAddInPath.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageScriptFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageUninstallScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageUninstallScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PashCommandLinePreprocessor.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PowerShellWorkingDirectory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\RunPackageInitializationScriptsOnSolutionOpen.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\RunPackageScriptsAction.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\DTE.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Project.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IUpdatePackageActionsFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatePackageActionsFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatePackageInAllProjects.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -114,5 +146,12 @@
   <ItemGroup>
     <Folder Include="MonoDevelop.PackageManagement\" />
     <Folder Include="MonoDevelop.PackageManagement.Scripting\" />
+    <Folder Include="MonoDevelop.PackageManagement.EnvDTE\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj">
+      <Project>{A406803B-C584-43A3-BCEE-A0BB3132CB5F}</Project>
+      <Name>MonoDevelop.PackageManagement.PowerShell</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

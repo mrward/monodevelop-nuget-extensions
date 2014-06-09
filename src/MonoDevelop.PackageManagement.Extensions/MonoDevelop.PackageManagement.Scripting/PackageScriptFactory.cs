@@ -1,5 +1,5 @@
 ﻿// 
-// IPackageManagementConsoleHost.cs
+// PackageScriptFactory.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,36 +27,28 @@
 //
 
 using System;
-using System.Collections.Generic;
-using ICSharpCode.Scripting;
-using MonoDevelop.Projects;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	public class PackageScriptFactory : IPackageScriptFactory
 	{
-		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
-		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution Solution { get; }
-		bool IsRunning { get; }
-
-		void Clear ();
-		void WritePrompt ();
-		void Run ();
-		void ShutdownConsole ();
-		void ExecuteCommand (string command);
-		void ProcessUserInput (string line);
+		public IPackageScript CreatePackageInitializeScript(IPackage package, string packageInstallDirectory)
+		{
+			var scriptFileName = new PackageInitializeScriptFileName(packageInstallDirectory);
+			return new PackageInitializeScript(package, scriptFileName);
+		}
 		
-		void SetDefaultRunspace ();
+		public IPackageScript CreatePackageUninstallScript(IPackage package, string packageInstallDirectory)
+		{
+			var scriptFileName = new PackageUninstallScriptFileName(packageInstallDirectory);
+			return new PackageUninstallScript(package, scriptFileName);
+		}
 		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
-		
-		IPackageManagementProject GetProject (string packageSource, string projectName);
-		IPackageManagementProject GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		public IPackageScript CreatePackageInstallScript(IPackage package, string packageInstallDirectory)
+		{
+			var scriptFileName = new PackageInstallScriptFileName(packageInstallDirectory);
+			return new PackageInstallScript(package, scriptFileName);
+		}
 	}
 }
