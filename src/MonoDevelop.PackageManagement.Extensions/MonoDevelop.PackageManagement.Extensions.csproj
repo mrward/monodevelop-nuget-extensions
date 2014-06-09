@@ -90,6 +90,18 @@
     <Compile Include="MonoDevelop.PackageManagement.Gui\PackageLicenseWidget2.cs" />
     <Compile Include="gtk-gui\MonoDevelop.PackageManagement.PackageLicenseWidget2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\LicenseAcceptanceService2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsoleToolbarWidget.cs" />
+    <Compile Include="gtk-gui\MonoDevelop.PackageManagement.PackageConsoleToolbarWidget.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementConsoleViewModel.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IScriptingConsole.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptingStyle.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageManagementConsoleHost.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsolePad.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsoleView.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageManagementExtendedServices.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementConsoleHostProvider.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementConsoleHost.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\NuGetVersion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -101,5 +113,6 @@
   <Import Project="PostBuildEvent.proj" />
   <ItemGroup>
     <Folder Include="MonoDevelop.PackageManagement\" />
+    <Folder Include="MonoDevelop.PackageManagement.Scripting\" />
   </ItemGroup>
 </Project>
