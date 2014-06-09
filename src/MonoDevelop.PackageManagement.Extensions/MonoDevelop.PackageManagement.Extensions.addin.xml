@@ -17,6 +17,7 @@
 		<Import assembly="Microsoft.PowerShell.Commands.Management.dll" />
 		<Import assembly="Microsoft.PowerShell.Commands.Utility.dll" />
 		<Import assembly="MonoDevelop.PackageManagement.Cmdlets.dll" />
+		<Import assembly="MonoDevelop.PackageManagement.PowerShell.dll" />
 	</Runtime>
 
 	<Dependencies>
