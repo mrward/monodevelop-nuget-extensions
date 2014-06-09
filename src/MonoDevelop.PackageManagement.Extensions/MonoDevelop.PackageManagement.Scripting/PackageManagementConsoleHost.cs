@@ -244,7 +244,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void ProcessLine(string line)
 		{
 			string preprocessedLine = PashCommandLinePreprocessor.Process (line);
-			powerShellHost.ExecuteCommand (line);
+			powerShellHost.ExecuteCommand (preprocessedLine);
 		}
 		
 		public IPackageManagementProject GetProject(string packageSource, string projectName)
