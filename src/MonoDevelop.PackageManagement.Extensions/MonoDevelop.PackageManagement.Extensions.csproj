@@ -79,8 +79,6 @@
     <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesDialog2.cs" />
     <Compile Include="gtk-gui\MonoDevelop.PackageManagement.ManagePackagesDialog2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ManagePackagesHandler2.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\DummyDialog.cs" />
-    <Compile Include="gtk-gui\MonoDevelop.PackageManagement.DummyDialog.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Gui\PackagesWidget2.cs" />
     <Compile Include="gtk-gui\MonoDevelop.PackageManagement.PackagesWidget2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\InstalledPackagesViewModel2.cs" />
