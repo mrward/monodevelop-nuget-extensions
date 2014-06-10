@@ -79,7 +79,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 			IPackageManagementProject project = GetProject ();
 			UninstallPackageAction action = CreateUninstallPackageAction (project);
-			action.Execute ();
+			ExecuteWithScriptRunner (project, () => {
+				action.Execute ();
+			});
 		}
 
 		IPackageManagementProject GetProject ()

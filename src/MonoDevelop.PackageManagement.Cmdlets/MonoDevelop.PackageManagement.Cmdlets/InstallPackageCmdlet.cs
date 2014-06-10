@@ -92,7 +92,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			IPackageManagementProject project = GetProject ();
 			using (project.SourceRepository.StartInstallOperation (Id)) {
 				InstallPackageAction action = CreateInstallPackageTask (project);
-				action.Execute ();
+				ExecuteWithScriptRunner (project, () => {
+					action.Execute ();
+				});
 			}
 		}
 
@@ -108,7 +110,6 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			action.PackageVersion = Version;
 			action.IgnoreDependencies = IgnoreDependencies.IsPresent;
 			action.AllowPrereleaseVersions = IncludePrerelease.IsPresent;
-//			action.PackageScriptRunner = this;
 			return action;
 		}
 	}

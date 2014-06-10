@@ -130,5 +130,17 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 			return ConsoleHost.CreateEventsMonitor ();
 		}
+
+		protected void ExecuteWithScriptRunner (IPackageManagementProject project, Action action)
+		{
+			using (RunPackageScriptsAction runScriptsAction = CreateRunPackageScriptsAction (project)) {
+				action ();
+			}
+		}
+
+		RunPackageScriptsAction CreateRunPackageScriptsAction (IPackageManagementProject project)
+		{
+			return new RunPackageScriptsAction (this, project);
+		}
 	}
 }

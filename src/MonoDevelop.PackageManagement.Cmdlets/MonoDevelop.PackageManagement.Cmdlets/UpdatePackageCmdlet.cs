@@ -157,7 +157,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			IPackageManagementProject project = GetProject ();
 			UpdatePackageAction action = CreateUpdatePackageAction (project);
 			using (IDisposable operation = StartUpdateOperation (action)) {
-				action.Execute ();
+				ExecuteWithScriptRunner (project, () => {
+					action.Execute ();
+				});
 			}
 		}
 
@@ -198,7 +200,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			
 			foreach (UpdatePackageAction action in updateActions.CreateActions()) {
 				using (IDisposable operation = StartUpdateOperation (action)) {
-					action.Execute ();
+					ExecuteWithScriptRunner (action.Project, () => {
+						action.Execute ();
+					});
 				}
 			}
 		}
