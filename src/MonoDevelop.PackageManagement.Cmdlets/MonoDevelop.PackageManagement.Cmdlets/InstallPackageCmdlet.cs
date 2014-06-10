@@ -76,7 +76,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 			ThrowErrorIfProjectNotOpen ();
 			using (IConsoleHostFileConflictResolver resolver = CreateFileConflictResolver ()) {
-				InstallPackage ();
+				using (IDisposable monitor = CreateEventsMonitor ()) {
+					InstallPackage ();
+				}
 			}
 		}
 

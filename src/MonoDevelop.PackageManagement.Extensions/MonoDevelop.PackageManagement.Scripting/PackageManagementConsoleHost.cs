@@ -32,6 +32,7 @@ using System.Threading;
 
 using ICSharpCode.Scripting;
 using MonoDevelop.Ide;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet;
 
@@ -302,6 +303,11 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public IConsoleHostFileConflictResolver CreateFileConflictResolver(FileConflictAction fileConflictAction)
 		{
 			return new ConsoleHostFileConflictResolver(packageEvents, fileConflictAction);
+		}
+
+		public IDisposable CreateEventsMonitor ()
+		{
+			return new ConsoleHostPackageEventsMonitor (packageEvents);
 		}
 	}
 }

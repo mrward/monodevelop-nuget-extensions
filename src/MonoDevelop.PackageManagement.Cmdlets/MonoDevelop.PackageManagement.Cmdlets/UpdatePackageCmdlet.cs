@@ -83,7 +83,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 			ThrowErrorIfProjectNotOpen ();
 			using (IConsoleHostFileConflictResolver resolver = CreateFileConflictResolver ()) {
-				RunUpdate ();
+				using (IDisposable monitor = CreateEventsMonitor ()) {
+					RunUpdate ();
+				}
 			}
 		}
 

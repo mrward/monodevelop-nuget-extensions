@@ -70,7 +70,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		protected override void ProcessRecord ()
 		{
 			ThrowErrorIfProjectNotOpen ();
-			UninstallPackage ();
+			using (IDisposable monitor = CreateEventsMonitor ()) {
+				UninstallPackage ();
+			}
 		}
 
 		void UninstallPackage ()

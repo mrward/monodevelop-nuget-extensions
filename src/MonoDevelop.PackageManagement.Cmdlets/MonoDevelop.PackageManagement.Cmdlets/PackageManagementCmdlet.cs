@@ -125,5 +125,10 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 				script.Run(this);
 			}
 		}
+
+		protected IDisposable CreateEventsMonitor ()
+		{
+			return ConsoleHost.CreateEventsMonitor ();
+		}
 	}
 }

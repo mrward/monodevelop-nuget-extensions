@@ -134,6 +134,7 @@
     <Compile Include="MonoDevelop.PackageManagement\IUpdatePackageActionsFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement\UpdatePackageActionsFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement\UpdatePackageInAllProjects.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostPackageEventsMonitor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
