@@ -64,6 +64,6 @@
 			defaultStatus="AutoHide"
 			icon="md-console"
 			class="MonoDevelop.PackageManagement.PackageConsolePad"
-			_label="Package Console - PowerShell" />
+			_label="Package Console Extension" />
 	</Extension>
 </Addin>
