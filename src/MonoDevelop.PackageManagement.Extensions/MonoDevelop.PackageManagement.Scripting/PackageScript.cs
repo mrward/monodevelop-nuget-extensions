@@ -76,16 +76,16 @@ namespace ICSharpCode.PackageManagement.Scripting
 			Session.AddVariable("__rootPath", ScriptFileName.PackageInstallDirectory);
 			Session.AddVariable("__toolsPath", ScriptFileName.GetScriptDirectory());
 			Session.AddVariable("__package", Package);
-			//Session.AddVariable("__project", GetProject());
+			Session.AddVariable("__project", GetProject ());
 		}
 		
-//		Project GetProject()
-//		{
-//			if (Project != null) {
-//				return Project.ConvertToDTEProject();
-//			}
-//			return null;
-//		}
+		Project GetProject ()
+		{
+			if (Project != null) {
+				return new EnvDTE.Project (Project.DotNetProject);
+			}
+			return null;
+		}
 		
 		void RunScript()
 		{
