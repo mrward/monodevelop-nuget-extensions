@@ -31,6 +31,7 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
 using ICSharpCode.PackageManagement.Scripting;
+using MonoDevelop.Core;
 using MonoDevelop.Projects;
 using NuGet;
 
@@ -116,7 +117,16 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		public virtual void InvokeScript(string script)
 		{
 			var resultTypes = PipelineResultTypes.Error | PipelineResultTypes.Output;
-			InvokeCommand.InvokeScript(script, false, resultTypes, null, null);
+			try {
+				InvokeCommand.InvokeScript(script, false, resultTypes, null, null);
+			} catch (Exception ex) {
+				LoggingService.LogInternalError ("PowerShell script error.", ex);
+				var errorRecord = new ErrorRecord (ex,
+					"PackageManagementInternalError",
+					ErrorCategory.InvalidOperation,
+					null);
+				WriteError (errorRecord);
+			}
 		}
 		
 		public void Run(IPackageScript script)
