@@ -30,29 +30,44 @@ using System.Linq;
 using ICSharpCode.PackageManagement;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
+using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
 	public class ConsoleHostPackageEventsMonitor : IDisposable
 	{
 		IPackageManagementEvents packageManagementEvents;
+		ILogger logger;
 		List<FileEventArgs> fileChangedEvents = new List<FileEventArgs> ();
 
-		public ConsoleHostPackageEventsMonitor ()
-			: this (PackageManagementServices.PackageManagementEvents)
+		public ConsoleHostPackageEventsMonitor (ILogger logger)
+			: this (
+				logger,
+				PackageManagementServices.PackageManagementEvents)
 		{
 		}
 
-		public ConsoleHostPackageEventsMonitor (IPackageManagementEvents packageManagementEvents)
+		public ConsoleHostPackageEventsMonitor (
+			ILogger logger,
+			IPackageManagementEvents packageManagementEvents)
 		{
 			this.packageManagementEvents = packageManagementEvents;
+			this.logger = logger;
+
 			packageManagementEvents.FileChanged += FileChanged;
+			packageManagementEvents.PackageOperationMessageLogged += PackageOperationMessageLogged;
 		}
 
 		public void Dispose ()
 		{
+			packageManagementEvents.PackageOperationMessageLogged -= PackageOperationMessageLogged;
 			packageManagementEvents.FileChanged -= FileChanged;
 			NotifyFilesChanged ();
+		}
+
+		void PackageOperationMessageLogged (object sender, PackageOperationMessageLoggedEventArgs e)
+		{
+			logger.Log (e.Message.Level, e.Message.ToString ());
 		}
 
 		void FileChanged (object sender, FileEventArgs e)

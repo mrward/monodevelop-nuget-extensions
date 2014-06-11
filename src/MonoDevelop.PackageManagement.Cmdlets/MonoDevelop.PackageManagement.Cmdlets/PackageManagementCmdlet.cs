@@ -37,7 +37,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
-	public abstract class PackageManagementCmdlet : PSCmdlet, ITerminatingCmdlet, IPackageScriptSession, IPackageScriptRunner
+	public abstract class PackageManagementCmdlet : PSCmdlet, ITerminatingCmdlet, IPackageScriptSession, IPackageScriptRunner, ILogger
 	{
 		IPackageManagementConsoleHost consoleHost;
 		ICmdletTerminatingError terminatingError;
@@ -138,7 +138,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		protected IDisposable CreateEventsMonitor ()
 		{
-			return ConsoleHost.CreateEventsMonitor ();
+			return ConsoleHost.CreateEventsMonitor (this);
 		}
 
 		protected void ExecuteWithScriptRunner (IPackageManagementProject project, Action action)
@@ -151,6 +151,40 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		RunPackageScriptsAction CreateRunPackageScriptsAction (IPackageManagementProject project)
 		{
 			return new RunPackageScriptsAction (this, project);
+		}
+
+		public void Log (MessageLevel level, string message, params object[] args)
+		{
+			string fullMessage = String.Format (message, args);
+
+			switch (level) {
+				case MessageLevel.Error:
+					WriteError (CreateErrorRecord (message));
+					break;
+				case MessageLevel.Warning:
+					WriteWarning (fullMessage);
+					break;
+				case MessageLevel.Debug:
+					WriteVerbose (fullMessage);
+					break;
+				default:
+					Host.UI.WriteLine (message);
+					break;
+			}
+		}
+
+		ErrorRecord CreateErrorRecord (string message)
+		{
+			return new ErrorRecord (
+				new Exception (message),
+				"PackageManagementErrorId",
+				ErrorCategory.NotSpecified,
+				null);
+		}
+
+		public FileConflictResolution ResolveFileConflict (string message)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

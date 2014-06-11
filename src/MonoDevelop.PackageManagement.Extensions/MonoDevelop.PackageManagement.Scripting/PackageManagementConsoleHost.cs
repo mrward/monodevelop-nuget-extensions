@@ -314,9 +314,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 			return new ConsoleHostFileConflictResolver(packageEvents, fileConflictAction);
 		}
 
-		public IDisposable CreateEventsMonitor ()
+		public IDisposable CreateEventsMonitor (ILogger logger)
 		{
-			return new ConsoleHostPackageEventsMonitor (packageEvents);
+			return new ConsoleHostPackageEventsMonitor (logger, packageEvents);
 		}
 	}
 }
