@@ -27,6 +27,7 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
@@ -36,6 +37,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		IPackageManagementProject project;
 		IPackageScriptFactory scriptFactory;
 		IPackageScriptRunner scriptRunner;
+		ExtendedPackageManagementProject extendedProject;
 		//IGlobalMSBuildProjectCollection projectCollection;
 		
 		public RunPackageScriptsAction(
@@ -52,6 +54,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			//IGlobalMSBuildProjectCollection projectCollection)
 		{
 			this.project = project;
+			extendedProject = project as ExtendedPackageManagementProject;
 			this.scriptRunner = scriptRunner;
 			this.scriptFactory = scriptFactory;
 			//this.projectCollection = projectCollection;
@@ -64,14 +67,19 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			project.PackageInstalled += PackageInstalled;
 			project.PackageReferenceAdded += PackageReferenceAdded;
-//			project.PackageReferenceRemoving += PackageReferenceRemoving;
+
+			if (extendedProject != null) {
+				extendedProject.ProjectManager.PackageReferenceRemoving += PackageReferenceRemoving;
+			}
 		}
 		
 		void UnregisterEvents()
 		{
 			project.PackageInstalled -= PackageInstalled;
 			project.PackageReferenceAdded -= PackageReferenceAdded;
-//			project.PackageReferenceRemoving -= PackageReferenceRemoving;
+			if (extendedProject != null) {
+				extendedProject.ProjectManager.PackageReferenceRemoving -= PackageReferenceRemoving;
+			}
 		}
 		
 		void PackageInstalled(object sender, PackageOperationEventArgs e)

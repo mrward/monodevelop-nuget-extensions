@@ -252,8 +252,17 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			PackageSource source = GetActivePackageSource(packageSource);
 			projectName = GetActiveProjectName(projectName);
-			
-			return Solution.GetProject(source, projectName);
+
+			IPackageRepository repository = GetPackageRepository (source);
+			DotNetProject project = GetDotNetProject (projectName);
+
+			return new ExtendedPackageManagementProject (repository, project, PackageManagementServices.PackageManagementEvents);
+		}
+
+		DotNetProject GetDotNetProject(string name)
+		{
+			var openProjects = new OpenDotNetProjects (PackageManagementServices.ProjectService);
+			return openProjects.FindProject (name);
 		}
 		
 		public PackageSource GetActivePackageSource(string source)
