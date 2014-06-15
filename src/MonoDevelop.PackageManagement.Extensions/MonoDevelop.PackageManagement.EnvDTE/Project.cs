@@ -59,7 +59,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			this.fileService = fileService;
 			
 			CreateProperties ();
-//			Object = new ProjectObject(this);
+			Object = new ProjectObject(this);
 //			ProjectItems = new ProjectItems(this, this, fileService);
 		}
 
@@ -93,8 +93,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public virtual string FullName {
 			get { return FileName; }
 		}
-		
-		//		public virtual object Object { get; private set; }
+
+		public virtual object Object { get; private set; }
 		//		public virtual global::EnvDTE.Properties Properties { get; private set; }
 		//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
 
