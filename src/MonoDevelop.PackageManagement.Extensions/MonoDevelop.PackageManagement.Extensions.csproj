@@ -140,6 +140,8 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostPackageEventsMonitor.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ExtendedPackageManagementProject.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ExtendedPackageManagerFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectKind.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

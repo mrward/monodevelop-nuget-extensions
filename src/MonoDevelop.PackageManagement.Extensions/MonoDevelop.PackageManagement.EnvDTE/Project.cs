@@ -107,24 +107,24 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			}
 		//		}
 		//
-		//		public virtual string Type {
-		//			get { return GetProjectType(); }
-		//		}
-		//
-		//		string GetProjectType()
-		//		{
-		//			return new ProjectType(this).Type;
-		//		}
-		//
-		//		public virtual string Kind {
-		//			get { return GetProjectKind(); }
-		//		}
-		//
-		//		string GetProjectKind()
-		//		{
-		//			return new ProjectKind(this).Kind;
-		//		}
-		//
+		public virtual string Type {
+			get { return GetProjectType(); }
+		}
+
+		string GetProjectType()
+		{
+			return ProjectType.GetProjectType(DotNetProject);
+		}
+
+		public virtual string Kind {
+			get { return GetProjectKind(); }
+		}
+
+		string GetProjectKind()
+		{
+			return new ProjectKind(this).Kind;
+		}
+
 		internal DotNetProject DotNetProject { get; private set; }
 		
 		//		public virtual void Save()
