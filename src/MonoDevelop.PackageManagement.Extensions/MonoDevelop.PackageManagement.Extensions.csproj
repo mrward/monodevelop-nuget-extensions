@@ -157,4 +157,10 @@
       <Name>MonoDevelop.PackageManagement.PowerShell</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\external\pash\Source\PashConsole\config.ps1">
+      <Link>config.ps1</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
