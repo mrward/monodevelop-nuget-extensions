@@ -39,7 +39,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 	{
 		IPackageManagementProjectService projectService;
 		IPackageManagementFileService fileService;
-//		DTE dte;
+		DTE dte;
 
 		public Project (DotNetProject project)
 			: this (
@@ -97,16 +97,17 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//		public virtual object Object { get; private set; }
 		//		public virtual global::EnvDTE.Properties Properties { get; private set; }
 		//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
-		//
+
 		//		public virtual global::EnvDTE.DTE DTE {
-		//			get {
-		//				if (dte == null) {
-		//					dte = new DTE(projectService, fileService);
-		//				}
-		//				return dte;
-		//			}
-		//		}
-		//
+		public virtual DTE DTE {
+			get {
+				if (dte == null) {
+					dte = new DTE(projectService, fileService);
+				}
+				return dte;
+			}
+		}
+
 		public virtual string Type {
 			get { return GetProjectType(); }
 		}
