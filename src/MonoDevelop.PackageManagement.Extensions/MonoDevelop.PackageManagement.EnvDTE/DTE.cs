@@ -53,8 +53,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			this.projectService = projectService;
 			this.fileService = fileService;
-			
-//			ItemOperations = new ItemOperations(fileService);
+
+			ItemOperations = new ItemOperations ();
 		}
 
 		public string Version {
@@ -90,7 +90,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			return false;
 		//		}
 		//
-		//		public global::EnvDTE.ItemOperations ItemOperations { get; private set; }
+//		public global::EnvDTE.ItemOperations ItemOperations { get; private set; }
+		public ItemOperations ItemOperations { get; private set; }
 		//
 		//		public global::EnvDTE.Properties Properties(string category, string page)
 		//		{
