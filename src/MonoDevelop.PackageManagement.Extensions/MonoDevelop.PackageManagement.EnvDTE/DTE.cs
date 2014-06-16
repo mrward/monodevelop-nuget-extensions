@@ -40,7 +40,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 	{
 		IPackageManagementProjectService projectService;
 		IPackageManagementFileService fileService;
-		//		Solution solution;
+		Solution solution;
 		
 		public DTE ()
 			: this (new PackageManagementProjectService (), new PackageManagementFileService ())
@@ -60,36 +60,37 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public string Version {
 			get { return "10.0"; }
 		}
+
+//		public global::EnvDTE.Solution Solution {
+		public Solution Solution {
+			get {
+				if (IsSolutionOpen) {
+					CreateSolution();
+					return solution;
+				}
+				return null;
+			}
+		}
+
+		bool IsSolutionOpen {
+			get { return projectService.OpenSolution != null; }
+		}
+
+		void CreateSolution ()
+		{
+			if (!IsOpenSolutionAlreadyCreated ()) {
+				solution = new Solution (projectService);
+			}
+		}
+
+		bool IsOpenSolutionAlreadyCreated ()
+		{
+			if (solution != null) {
+				return solution.IsOpen;
+			}
+			return false;
+		}
 		
-		//		public global::EnvDTE.Solution Solution {
-		//			get {
-		//				if (IsSolutionOpen) {
-		//					CreateSolution();
-		//					return solution;
-		//				}
-		//				return null;
-		//			}
-		//		}
-		//
-		//		bool IsSolutionOpen {
-		//			get { return projectService.OpenSolution != null; }
-		//		}
-		//
-		//		void CreateSolution()
-		//		{
-		//			if (!IsOpenSolutionAlreadyCreated()) {
-		//				solution = new Solution(projectService);
-		//			}
-		//		}
-		//
-		//		bool IsOpenSolutionAlreadyCreated()
-		//		{
-		//			if (solution != null) {
-		//				return solution.IsOpen;
-		//			}
-		//			return false;
-		//		}
-		//
 //		public global::EnvDTE.ItemOperations ItemOperations { get; private set; }
 		public ItemOperations ItemOperations { get; private set; }
 		//

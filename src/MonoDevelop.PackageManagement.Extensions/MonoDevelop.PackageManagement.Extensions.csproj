@@ -145,6 +145,7 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectObject.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ItemOperations.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Window.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Solution.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
