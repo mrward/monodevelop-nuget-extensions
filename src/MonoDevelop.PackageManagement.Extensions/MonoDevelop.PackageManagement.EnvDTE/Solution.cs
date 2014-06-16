@@ -41,7 +41,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			this.projectService = projectService;
 			this.solution = projectService.OpenSolution;
-//			this.Projects = new Projects (projectService);
+			this.Projects = new Projects (projectService);
 //			this.Globals = new SolutionGlobals (this);
 //			this.SolutionBuild = new SolutionBuild (this, projectService.ProjectBuilder);
 			CreateProperties ();
@@ -66,7 +66,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		}
 
 //		public global::EnvDTE.Projects Projects { get; private set; }
-//
+		public Projects Projects { get; private set; }
+
 //		public global::EnvDTE.Globals Globals { get; private set; }
 //
 //		internal ICollection<SD.SolutionSection> Sections {
