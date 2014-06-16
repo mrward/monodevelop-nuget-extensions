@@ -59,7 +59,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			this.fileService = fileService;
 			
 			CreateProperties ();
-			Object = new ProjectObject(this);
+			Object = new ProjectObject (this);
 //			ProjectItems = new ProjectItems(this, this, fileService);
 		}
 
@@ -69,8 +69,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		void CreateProperties ()
 		{
-//			var propertyFactory = new ProjectPropertyFactory(this);
-//			Properties = new Properties(propertyFactory);
+			var propertyFactory = new ProjectPropertyFactory (this);
+			Properties = new Properties (propertyFactory);
 		}
 
 		public virtual string Name {
@@ -78,10 +78,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		}
 
 		public virtual string UniqueName {
-			get { return GetUniqueName(); }
+			get { return GetUniqueName (); }
 		}
 
-		string GetUniqueName()
+		string GetUniqueName ()
 		{
 			return FileService.AbsoluteToRelativePath (DotNetProject.ParentSolution.BaseDirectory, FileName);
 		}
@@ -95,7 +95,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		}
 
 		public virtual object Object { get; private set; }
-		//		public virtual global::EnvDTE.Properties Properties { get; private set; }
+		public virtual global::EnvDTE.Properties Properties { get; private set; }
 		//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
 
 		//		public virtual global::EnvDTE.DTE DTE {
@@ -228,19 +228,21 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			string relativePath = GetRelativePath(path);
 		//			return CreateFileProjectItemUsingPathRelativeToProject(relativePath);
 		//		}
-		//
-		//		internal IList<string> GetAllPropertyNames()
-		//		{
-		//			var names = new List<string>();
-		//			lock (DotNetProject.SyncRoot) {
-		//				foreach (ProjectPropertyElement propertyElement in DotNetProject.MSBuildProjectFile.Properties) {
-		//					names.Add(propertyElement.Name);
-		//				}
-		//				names.Add("OutputFileName");
-		//			}
-		//			return names;
-		//		}
-		//
+
+		internal IList<string> GetAllPropertyNames()
+		{
+			var names = new List<string>();
+//			foreach (ProjectPropertyElement propertyElement in DotNetProject.MSBuildProjectFile.Properties) {
+//				names.Add(propertyElement.Name);
+//			}
+			names.Add ("TargetFrameworkMoniker");
+			names.Add ("OutputFileName");
+			names.Add ("FullPath");
+			names.Add ("LocalPath");
+			names.Add ("DefaultNamespace");
+			return names;
+		}
+
 		//		public virtual global::EnvDTE.CodeModel CodeModel {
 		//			get { return new CodeModel(projectService.GetProjectContent(DotNetProject) ); }
 		//		}

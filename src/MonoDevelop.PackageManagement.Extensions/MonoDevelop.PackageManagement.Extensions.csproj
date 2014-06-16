@@ -152,6 +152,8 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\SolutionProperty.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\SolutionPropertyFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\IPropertyFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectProperty.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectPropertyFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
