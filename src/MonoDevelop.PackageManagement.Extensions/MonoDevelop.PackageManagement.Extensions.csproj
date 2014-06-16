@@ -147,6 +147,11 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Window.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Solution.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Projects.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Properties.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Property.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\SolutionProperty.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\SolutionPropertyFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\IPropertyFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

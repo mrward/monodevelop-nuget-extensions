@@ -49,8 +49,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		void CreateProperties ()
 		{
-//			var propertyFactory = new SolutionPropertyFactory (this);
-//			Properties = new Properties (propertyFactory);
+			var propertyFactory = new SolutionPropertyFactory (this);
+			Properties = new Properties (propertyFactory);
 		}
 
 		public string FullName {
@@ -91,17 +91,17 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 //		}
 //
 //		public global::EnvDTE.SolutionBuild SolutionBuild { get; private set; }
-//
-//		public global::EnvDTE.Properties Properties { get; private set; }
-//
-//		internal Project GetStartupProject ()
-//		{
-//			var project = solution.StartupProject as MSBuildBasedProject;
-//			if (project != null) {
-//				return new Project (project);
-//			}
-//			return null;
-//		}
+
+		public global::EnvDTE.Properties Properties { get; private set; }
+
+		internal Project GetStartupProject ()
+		{
+			var project = solution.StartupItem as MD.DotNetProject;
+			if (project != null) {
+				return new Project (project);
+			}
+			return null;
+		}
 
 		internal IEnumerable<string> GetAllPropertyNames ()
 		{
