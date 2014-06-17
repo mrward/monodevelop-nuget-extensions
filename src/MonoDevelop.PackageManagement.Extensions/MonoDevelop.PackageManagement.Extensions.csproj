@@ -154,6 +154,11 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\IPropertyFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectProperty.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectPropertyFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItem.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItems.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\FileExistsException.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItemsInsideProject.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\EnumerableProjectItems.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

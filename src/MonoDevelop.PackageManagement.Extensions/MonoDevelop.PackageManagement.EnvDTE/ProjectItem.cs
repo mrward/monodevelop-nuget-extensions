@@ -1,0 +1,280 @@
+﻿// 
+// ProjectItem.cs
+// 
+// Author:
+//   Matt Ward <ward.matt@gmail.com>
+// 
+// Copyright (C) 2012-2014 Matthew Ward
+// 
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+using System;
+using System.IO;
+
+using MD = MonoDevelop.Projects;
+
+namespace ICSharpCode.PackageManagement.EnvDTE
+{
+	public class ProjectItem //: global::EnvDTE.ProjectItemBase, global::EnvDTE.ProjectItem
+	{
+		MD.ProjectFile projectItem;
+		Project containingProject;
+
+		public const string CopyToOutputDirectoryPropertyName = "CopyToOutputDirectory";
+		public const string CustomToolPropertyName = "CustomTool";
+		public const string FullPathPropertyName = "FullPath";
+		public const string LocalPathPropertyName = "LocalPath";
+
+		public ProjectItem (Project project, MD.ProjectFile projectItem)
+		{
+			this.projectItem = projectItem;
+			this.containingProject = project;
+//			this.ProjectItems = CreateProjectItems (projectItem);
+			CreateProperties ();
+			Kind = GetKindFromFileProjectItemType ();
+		}
+
+//		global::EnvDTE.ProjectItems CreateProjectItems (MD.ProjectFile projectItem)
+//		{
+//			if (projectItem.FilePath.IsDirectory) {
+//				return new DirectoryProjectItems (this);
+//			}
+//			return new FileProjectItems (this);
+//		}
+
+//		internal static ProjectItem FindByEntity (IProject project, IEntity entity)
+//		{
+//			if (entity.Region.FileName != null) {
+//				return FindByFileName (project, entity.Region.FileName);
+//			}
+//			return null;
+//		}
+
+		internal static ProjectItem FindByFileName (MD.DotNetProject project, string fileName)
+		{
+//			MD.ProjectFile item = project.FindFile (new FileName (fileName));
+//			if (item != null) {
+//				return new ProjectItem (new Project (project), item);
+//			}
+			return null;
+		}
+
+		string GetKindFromFileProjectItemType ()
+		{
+			if (IsDirectory) {
+				return global::EnvDTE.Constants.vsProjectItemKindPhysicalFolder;
+			}
+			return global::EnvDTE.Constants.vsProjectItemKindPhysicalFile;
+		}
+
+		bool IsDirectory {
+			get { return projectItem.FilePath.IsDirectory; }
+		}
+
+		public ProjectItem ()
+		{
+		}
+
+		void CreateProperties ()
+		{
+//			var propertyFactory = new ProjectItemPropertyFactory (this);
+//			Properties = new Properties (propertyFactory);
+		}
+
+		public virtual string Name {
+			get { return Path.GetFileName (projectItem.FilePath.FileName); }
+		}
+
+		public virtual string Kind { get; set; }
+
+		public global::EnvDTE.Project SubProject {
+			get { return null; }
+		}
+
+		public virtual global::EnvDTE.Properties Properties { get; private set; }
+
+//		public virtual global::EnvDTE.Project ContainingProject {
+		public virtual Project ContainingProject {
+			get { return this.containingProject; }
+		}
+
+		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
+
+		internal virtual object GetProperty (string name)
+		{
+			if (name == CopyToOutputDirectoryPropertyName) {
+				return GetCopyToOutputDirectory ();
+			} else if (name == CustomToolPropertyName) {
+//				return projectItem.CustomTool;
+			} else if ((name == FullPathPropertyName) || (name == LocalPathPropertyName)) {
+				return projectItem.FilePath.ToString ();
+			}
+			return String.Empty;
+		}
+
+		UInt32 GetCopyToOutputDirectory ()
+		{
+			return (UInt32)projectItem.CopyToOutputDirectory;
+		}
+
+		internal virtual void SetProperty (string name, object value)
+		{
+			if (name == CopyToOutputDirectoryPropertyName) {
+				SetCopyToOutputDirectory (value);
+			} else if (name == CustomToolPropertyName) {
+//				projectItem.CustomTool = value as string;
+			}
+		}
+
+		void SetCopyToOutputDirectory (object value)
+		{
+//			CopyToOutputDirectory copyToOutputDirectory = ConvertToCopyToOutputDirectory (value);
+//			projectItem.CopyToOutputDirectory = copyToOutputDirectory;
+		}
+
+//		CopyToOutputDirectory ConvertToCopyToOutputDirectory (object value)
+//		{
+//			string valueAsString = value.ToString ();
+//			return (CopyToOutputDirectory)Enum.Parse (typeof(CopyToOutputDirectory), valueAsString);
+//		}
+
+		internal virtual bool IsMatchByName (string name)
+		{
+			return String.Equals (this.Name, name, StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		internal virtual bool IsChildItem (MD.ProjectFile msbuildProjectItem)
+		{
+			string directory = msbuildProjectItem.FilePath.ParentDirectory;
+			return IsMatchByName (directory);
+		}
+
+//		internal virtual ProjectItemRelationship GetRelationship (SD.ProjectItem msbuildProjectItem)
+//		{
+//			return new ProjectItemRelationship (this, msbuildProjectItem);
+//		}
+
+		public void Delete ()
+		{
+//			containingProject.DeleteFile (projectItem.FileName);
+//			containingProject.Save ();
+		}
+
+//		public global::EnvDTE.FileCodeModel2 FileCodeModel {
+//			get {
+//				if (!IsDirectory) {
+//					return new FileCodeModel2 (CreateModelContext (), containingProject);
+//				}
+//				return null;
+//			}
+//		}
+//
+//		CodeModelContext CreateModelContext ()
+//		{
+//			return new CodeModelContext {
+//				CurrentProject = containingProject.MSBuildProject,
+//				FilteredFileName = projectItem.FileName
+//			};
+//		}
+
+		internal string GetIncludePath (string fileName)
+		{
+			string relativeDirectory = GetProjectItemRelativePathToProject ();
+			return Path.Combine (relativeDirectory, fileName);
+		}
+
+		string GetProjectItemRelativePathToProject ()
+		{
+			return containingProject.GetRelativePath (projectItem.FilePath);
+		}
+
+		internal string GetIncludePath ()
+		{
+			return projectItem.FilePath;
+		}
+
+		public virtual void Remove ()
+		{
+//			containingProject.RemoveProjectItem (this);
+//			containingProject.Save ();
+		}
+
+		internal MD.ProjectFile MSBuildProjectItem {
+			get { return projectItem; }
+		}
+
+//		protected override string GetFileNames (short index)
+//		{
+//			return FileName;
+//		}
+
+		string FileName {
+			get { return projectItem.FilePath; }
+		}
+
+//		public virtual global::EnvDTE.Document Document {
+//			get { return GetOpenDocument (); }
+//		}
+//
+//		Document GetOpenDocument ()
+//		{
+//			IViewContent view = containingProject.GetOpenFile (FileName);
+//			if (view != null) {
+//				return new Document (FileName, view);
+//			}
+//			return null;
+//		}
+
+//		public virtual global::EnvDTE.Window Open (string viewKind)
+//		{
+//			containingProject.OpenFile (FileName);
+//			return null;
+//		}
+
+		public virtual short FileCount {
+			get { return 1; }
+		}
+
+//		public global::EnvDTE.ProjectItems Collection {
+//			get {
+//				string relativePath = GetProjectItemRelativeDirectoryToProject ();
+//				if (String.IsNullOrEmpty (relativePath)) {
+//					return containingProject.ProjectItems;
+//				}
+//				var directoryProjectItem = new DirectoryProjectItem (containingProject, relativePath);
+//				return directoryProjectItem.ProjectItems;
+//			}
+//		}
+
+		string GetProjectItemRelativeDirectoryToProject ()
+		{
+			return Path.GetDirectoryName (GetProjectItemRelativePathToProject ());
+		}
+
+//		public void Save (string fileName = null)
+//		{
+//			IViewContent view = containingProject.GetOpenFile (FileName);
+//			if (view != null) {
+//				containingProject.SaveFile (view);
+//			}
+//		}
+	}
+}

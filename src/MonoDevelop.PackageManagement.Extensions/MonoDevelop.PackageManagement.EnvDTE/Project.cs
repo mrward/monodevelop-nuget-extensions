@@ -32,6 +32,7 @@ using System.IO;
 using System.Linq;
 using MonoDevelop.Core;
 using MonoDevelop.Projects;
+using MD = MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -60,11 +61,15 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			
 			CreateProperties ();
 			Object = new ProjectObject (this);
-//			ProjectItems = new ProjectItems(this, this, fileService);
+			ProjectItems = new ProjectItems (this, this, fileService);
 		}
 
 		public Project ()
 		{
+		}
+
+		internal IPackageManagementFileService FileService {
+			get { return fileService; }
 		}
 
 		void CreateProperties ()
@@ -83,9 +88,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		string GetUniqueName ()
 		{
-			return FileService.AbsoluteToRelativePath (DotNetProject.ParentSolution.BaseDirectory, FileName);
+			return MonoDevelop.Core.FileService.AbsoluteToRelativePath (DotNetProject.ParentSolution.BaseDirectory, FileName);
 		}
-		
+
 		public virtual string FileName {
 			get { return DotNetProject.FileName; }
 		}
@@ -95,44 +100,47 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		}
 
 		public virtual object Object { get; private set; }
+
 		public virtual global::EnvDTE.Properties Properties { get; private set; }
-		//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
+
+//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
+		public virtual ProjectItems ProjectItems { get; private set; }
 
 		//		public virtual global::EnvDTE.DTE DTE {
 		public virtual DTE DTE {
 			get {
 				if (dte == null) {
-					dte = new DTE(projectService, fileService);
+					dte = new DTE (projectService, fileService);
 				}
 				return dte;
 			}
 		}
 
 		public virtual string Type {
-			get { return GetProjectType(); }
+			get { return GetProjectType (); }
 		}
 
-		string GetProjectType()
+		string GetProjectType ()
 		{
-			return ProjectType.GetProjectType(DotNetProject);
+			return ProjectType.GetProjectType (DotNetProject);
 		}
 
 		public virtual string Kind {
-			get { return GetProjectKind(); }
+			get { return GetProjectKind (); }
 		}
 
-		string GetProjectKind()
+		string GetProjectKind ()
 		{
-			return new ProjectKind(this).Kind;
+			return new ProjectKind (this).Kind;
 		}
 
 		internal DotNetProject DotNetProject { get; private set; }
-		
-		//		public virtual void Save()
-		//		{
-		//			projectService.Save(DotNetProject);
-		//		}
-		//
+
+		public virtual void Save ()
+		{
+			DotNetProject.Save ();
+		}
+
 		//		internal virtual void AddReference(string path)
 		//		{
 		//			if (!HasReference(path)) {
@@ -150,12 +158,12 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			}
 		//			return false;
 		//		}
-		//
-		//		void AddProjectItemToMSBuildProject(SD.ProjectItem projectItem)
-		//		{
-		//			projectService.AddProjectItem(DotNetProject, projectItem);
-		//		}
-		//
+
+//		void AddProjectItemToMSBuildProject (MD.ProjectItem projectItem)
+//		{
+//			projectService.AddProjectItem (DotNetProject, projectItem);
+//		}
+
 		//		internal IEnumerable<SD.ProjectItem> GetReferences()
 		//		{
 		//			return DotNetProject.GetItemsOfType(ItemType.Reference);
@@ -170,43 +178,43 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//		{
 		//			projectService.RemoveProjectItem(DotNetProject, referenceItem);
 		//		}
-		//
-		//		internal ProjectItem AddFileProjectItemUsingFullPath(string path)
-		//		{
-		//			string dependentUpon = GetDependentUpon(path);
-		//			return AddFileProjectItemWithDependentUsingFullPath(path, dependentUpon);
-		//		}
-		//
-		//		string GetDependentUpon(string path)
-		//		{
-		//			var dependentFile = new DependentFile(DotNetProject);
-		//			FileProjectItem projectItem = dependentFile.GetParentFileProjectItem(path);
-		//			if (projectItem != null) {
-		//				return Path.GetFileName(projectItem.Include);
-		//			}
-		//			return null;
-		//		}
-		//
-		//		internal ProjectItem AddFileProjectItemWithDependentUsingFullPath(string path, string dependentUpon)
-		//		{
-		//			FileProjectItem fileProjectItem = CreateFileProjectItemUsingFullPath(path);
-		//			fileProjectItem.FileName = path;
-		//			fileProjectItem.DependentUpon = dependentUpon;
-		//			AddProjectItemToMSBuildProject(fileProjectItem);
-		//			return new ProjectItem(this, fileProjectItem);
-		//		}
-		//
-		//		FileProjectItem CreateFileProjectItemUsingPathRelativeToProject(string include)
-		//		{
-		//			ItemType itemType = GetDefaultItemType(include);
-		//			return CreateFileProjectItemUsingPathRelativeToProject(itemType, include);
-		//		}
-		//
-		//		ItemType GetDefaultItemType(string include)
-		//		{
-		//			return DotNetProject.GetDefaultItemType(Path.GetFileName(include));
-		//		}
-		//
+
+//		internal ProjectItem AddFileProjectItemUsingFullPath (string path)
+//		{
+//			string dependentUpon = GetDependentUpon (path);
+//			return AddFileProjectItemWithDependentUsingFullPath (path, dependentUpon);
+//		}
+//
+//		string GetDependentUpon (string path)
+//		{
+//			var dependentFile = new DependentFile (DotNetProject);
+//			FileProjectItem projectItem = dependentFile.GetParentFileProjectItem (path);
+//			if (projectItem != null) {
+//				return Path.GetFileName(projectItem.Include);
+//			}
+//			return null;
+//		}
+
+//		internal ProjectItem AddFileProjectItemWithDependentUsingFullPath(string path, string dependentUpon)
+//		{
+//			FileProjectItem fileProjectItem = CreateFileProjectItemUsingFullPath(path);
+//			fileProjectItem.FileName = path;
+//			fileProjectItem.DependentUpon = dependentUpon;
+//			AddProjectItemToMSBuildProject(fileProjectItem);
+//			return new ProjectItem(this, fileProjectItem);
+//		}
+//
+//		FileProjectItem CreateFileProjectItemUsingPathRelativeToProject(string include)
+//		{
+//			ItemType itemType = GetDefaultItemType (include);
+//			return CreateFileProjectItemUsingPathRelativeToProject(itemType, include);
+//		}
+//
+//		ItemType GetDefaultItemType(string include)
+//		{
+//			return DotNetProject.GetDefaultItemType(Path.GetFileName(include));
+//		}
+
 		//		FileProjectItem CreateFileProjectItemUsingPathRelativeToProject(ItemType itemType, string include)
 		//		{
 		//			var fileItem = new FileProjectItem(DotNetProject, itemType) {
@@ -229,9 +237,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			return CreateFileProjectItemUsingPathRelativeToProject(relativePath);
 		//		}
 
-		internal IList<string> GetAllPropertyNames()
+		internal IList<string> GetAllPropertyNames ()
 		{
-			var names = new List<string>();
+			var names = new List<string> ();
 //			foreach (ProjectPropertyElement propertyElement in DotNetProject.MSBuildProjectFile.Properties) {
 //				names.Add(propertyElement.Name);
 //			}
@@ -261,57 +269,45 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			fileService.RemoveFile(fileName);
 		//		}
 		//
-		//		internal ProjectItem AddDirectoryProjectItemUsingFullPath(string directory)
-		//		{
-		//			AddDirectoryProjectItemsRecursively(directory);
-		//			return DirectoryProjectItem.CreateDirectoryProjectItemFromFullPath(this, directory);
-		//		}
-		//
-		//		void AddDirectoryProjectItemsRecursively(string directory)
-		//		{
-		//			string[] files = fileService.GetFiles(directory);
-		//			string[] childDirectories = fileService.GetDirectories(directory);
-		//			if (files.Any()) {
-		//				foreach (string file in files) {
-		//					AddFileProjectItemUsingFullPath(file);
-		//				}
-		//			} else if (!childDirectories.Any()) {
-		//				AddDirectoryProjectItemToMSBuildProject(directory);
-		//			}
-		//
-		//			foreach (string childDirectory in childDirectories) {
-		//				AddDirectoryProjectItemsRecursively(childDirectory);
-		//			}
-		//		}
-		//
-		//		void AddDirectoryProjectItemToMSBuildProject(string directory)
-		//		{
-		//			FileProjectItem projectItem = CreateMSBuildProjectItemForDirectory(directory);
-		//			AddProjectItemToMSBuildProject(projectItem);
-		//		}
-		//
-		//		FileProjectItem CreateMSBuildProjectItemForDirectory(string directory)
-		//		{
-		//			return new FileProjectItem(DotNetProject, ItemType.Folder) {
-		//				FileName = directory
-		//			};
-		//		}
-		//
-		//		internal string GetRelativePath(string path)
-		//		{
-		//			return FileUtility.GetRelativePath(DotNetProject.Directory, path);
-		//		}
-		//
-		//		internal IProjectBrowserUpdater CreateProjectBrowserUpdater()
-		//		{
-		//			return projectService.CreateProjectBrowserUpdater();
-		//		}
-		//
-		//		internal ICompilationUnit GetCompilationUnit(string fileName)
-		//		{
-		//			return fileService.GetCompilationUnit(fileName);
-		//		}
-		//
+//		internal ProjectItem AddDirectoryProjectItemUsingFullPath (string directory)
+//		{
+//			AddDirectoryProjectItemsRecursively (directory);
+//			return DirectoryProjectItem.CreateDirectoryProjectItemFromFullPath (this, directory);
+//		}
+
+//		void AddDirectoryProjectItemsRecursively (string directory)
+//		{
+//			string[] files = Directory.GetFiles (directory);
+//			string[] childDirectories = Directory.GetDirectories (directory);
+//			if (files.Any ()) {
+//				foreach (string file in files) {
+//					AddFileProjectItemUsingFullPath (file);
+//				}
+//			} else if (!childDirectories.Any ()) {
+//				AddDirectoryProjectItemToMSBuildProject (directory);
+//			}
+//
+//			foreach (string childDirectory in childDirectories) {
+//				AddDirectoryProjectItemsRecursively (childDirectory);
+//			}
+//		}
+
+//		void AddDirectoryProjectItemToMSBuildProject (string directory)
+//		{
+//			ProjectFile projectItem = CreateMSBuildProjectItemForDirectory (directory);
+//			AddProjectItemToMSBuildProject (projectItem);
+//		}
+
+		ProjectFile CreateMSBuildProjectItemForDirectory (string directory)
+		{
+			return new ProjectFile (directory);
+		}
+
+		internal string GetRelativePath (string path)
+		{
+			return MonoDevelop.Core.FileService.AbsoluteToRelativePath (DotNetProject.BaseDirectory, path);
+		}
+
 		//		internal void RemoveProjectItem(ProjectItem projectItem)
 		//		{
 		//			projectService.RemoveProjectItem(DotNetProject, projectItem.MSBuildProjectItem);
@@ -336,9 +332,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			fileService.OpenFile(fileName);
 		//		}
 		//
-		//		internal bool IsFileFileInsideProjectFolder(string filePath)
-		//		{
-		//			return FileUtility.IsBaseDirectory(DotNetProject.Directory, filePath);
-		//		}
+		internal bool IsFileFileInsideProjectFolder (string filePath)
+		{
+			string relativePath = MonoDevelop.Core.FileService.AbsoluteToRelativePath (DotNetProject.BaseDirectory, filePath);
+			return !relativePath.StartsWith ("..");
+		}
 	}
 }
