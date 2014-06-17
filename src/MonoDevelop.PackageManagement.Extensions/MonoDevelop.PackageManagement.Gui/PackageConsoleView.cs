@@ -47,6 +47,11 @@ namespace MonoDevelop.PackageManagement
 			FontDescription font = FontDescription.FromString (DesktopService.DefaultMonospaceFont);
 			SetFont (font);
 		}
+
+		void WriteOutputLine (string message)
+		{
+			WriteOutput (message + Environment.NewLine);
+		}
 		
 		void WriteOutputLine (string format, params object[] args)
 		{
