@@ -96,8 +96,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		void CreateProperties ()
 		{
-//			var propertyFactory = new ProjectItemPropertyFactory (this);
-//			Properties = new Properties (propertyFactory);
+			var propertyFactory = new ProjectItemPropertyFactory (this);
+			Properties = new Properties (propertyFactory);
 		}
 
 		public virtual string Name {
@@ -148,15 +148,15 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		void SetCopyToOutputDirectory (object value)
 		{
-//			CopyToOutputDirectory copyToOutputDirectory = ConvertToCopyToOutputDirectory (value);
-//			projectItem.CopyToOutputDirectory = copyToOutputDirectory;
+			MD.FileCopyMode copyToOutputDirectory = ConvertToCopyToOutputDirectory (value);
+			projectItem.CopyToOutputDirectory = copyToOutputDirectory;
 		}
 
-//		CopyToOutputDirectory ConvertToCopyToOutputDirectory (object value)
-//		{
-//			string valueAsString = value.ToString ();
-//			return (CopyToOutputDirectory)Enum.Parse (typeof(CopyToOutputDirectory), valueAsString);
-//		}
+		MD.FileCopyMode ConvertToCopyToOutputDirectory (object value)
+		{
+			string valueAsString = value.ToString ();
+			return (MD.FileCopyMode)Enum.Parse (typeof(MD.FileCopyMode), valueAsString);
+		}
 
 		internal virtual bool IsMatchByName (string name)
 		{

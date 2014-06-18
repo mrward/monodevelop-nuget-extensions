@@ -166,6 +166,8 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\FileProjectItems.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\FileProjectItemExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement\DependentFile.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItemPropertyFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItemProperty.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
