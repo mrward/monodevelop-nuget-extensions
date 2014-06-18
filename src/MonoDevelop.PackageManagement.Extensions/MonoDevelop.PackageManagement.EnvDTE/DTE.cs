@@ -93,26 +93,26 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		
 //		public global::EnvDTE.ItemOperations ItemOperations { get; private set; }
 		public ItemOperations ItemOperations { get; private set; }
-		//
-		//		public global::EnvDTE.Properties Properties(string category, string page)
-		//		{
-		//			var properties = new DTEProperties();
-		//			return properties.GetProperties(category, page);
-		//		}
-		//
-		//		public object ActiveSolutionProjects {
-		//			get {
-		//				if (IsSolutionOpen) {
-		//					return Solution.Projects.OfType<Project>().ToArray();
-		//				}
-		//				return new Project[0];
-		//			}
-		//		}
-		//
-		//		public global::EnvDTE.SourceControl SourceControl {
-		//			get { return null; }
-		//		}
-		//
+
+		public global::EnvDTE.Properties Properties(string category, string page)
+		{
+			var properties = new DTEProperties ();
+			return properties.GetProperties (category, page);
+		}
+
+		public object ActiveSolutionProjects {
+			get {
+				if (IsSolutionOpen) {
+					return Solution.Projects.OfType<Project> ().ToArray ();
+				}
+				return new Project [0];
+			}
+		}
+
+		public global::EnvDTE.SourceControl SourceControl {
+			get { return null; }
+		}
+
 		//		/// <summary>
 		//		/// HACK - EnvDTE.DTE actually implements Microsoft.VisualStudio.OLE.Interop.IServiceProvider
 		//		/// which is COM specific and has a QueryInterface method.

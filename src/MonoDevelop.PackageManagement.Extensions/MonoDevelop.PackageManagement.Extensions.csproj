@@ -168,6 +168,12 @@
     <Compile Include="MonoDevelop.PackageManagement\DependentFile.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItemPropertyFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItemProperty.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\DTEProperties.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\TextEditorFontsAndColorsPropertyFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\TextEditorFontsAndColorsItemsProperty.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\TextEditorFontSizeProperty.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\FontsAndColorsItems.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ColorableItems.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
