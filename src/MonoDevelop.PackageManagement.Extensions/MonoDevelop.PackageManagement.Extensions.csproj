@@ -159,6 +159,13 @@
     <Compile Include="MonoDevelop.PackageManagement\FileExistsException.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItemsInsideProject.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\EnumerableProjectItems.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\DirectoryProjectItems.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ChildProjectItems.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectItemRelationship.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\DirectoryProjectItem.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\FileProjectItems.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\FileProjectItemExtensions.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\DependentFile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

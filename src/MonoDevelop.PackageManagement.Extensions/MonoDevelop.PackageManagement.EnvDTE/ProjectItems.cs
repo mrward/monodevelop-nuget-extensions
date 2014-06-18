@@ -176,10 +176,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		/// <summary>
 		/// Adds a file to the project with this ProjectItems as its parent.
 		/// </summary>
-//		protected virtual ProjectItem AddFileProjectItemToProject (string fileName)
-//		{
-//			return Project.AddFileProjectItemUsingFullPath (fileName);
-//		}
+		protected virtual ProjectItem AddFileProjectItemToProject (string fileName)
+		{
+			return Project.AddFileProjectItemUsingFullPath (fileName);
+		}
 
 		public virtual int Count {
 			get { return GetProjectItems ().Count (); }

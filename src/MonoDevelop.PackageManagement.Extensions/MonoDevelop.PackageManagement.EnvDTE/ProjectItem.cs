@@ -47,18 +47,19 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			this.projectItem = projectItem;
 			this.containingProject = project;
-//			this.ProjectItems = CreateProjectItems (projectItem);
+			this.ProjectItems = CreateProjectItems (projectItem);
 			CreateProperties ();
 			Kind = GetKindFromFileProjectItemType ();
 		}
 
 //		global::EnvDTE.ProjectItems CreateProjectItems (MD.ProjectFile projectItem)
-//		{
-//			if (projectItem.FilePath.IsDirectory) {
-//				return new DirectoryProjectItems (this);
-//			}
-//			return new FileProjectItems (this);
-//		}
+		ProjectItems CreateProjectItems (MD.ProjectFile projectItem)
+		{
+			if (projectItem.FilePath.IsDirectory) {
+				return new DirectoryProjectItems (this);
+			}
+			return new FileProjectItems (this);
+		}
 
 //		internal static ProjectItem FindByEntity (IProject project, IEntity entity)
 //		{
@@ -116,7 +117,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return this.containingProject; }
 		}
 
-		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
+//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
+		public virtual ProjectItems ProjectItems { get; private set; }
 
 		internal virtual object GetProperty (string name)
 		{
@@ -161,16 +163,21 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return String.Equals (this.Name, name, StringComparison.InvariantCultureIgnoreCase);
 		}
 
-		internal virtual bool IsChildItem (MD.ProjectFile msbuildProjectItem)
+		internal virtual bool IsChildItem (MD.ProjectItem msbuildProjectItem)
 		{
-			string directory = msbuildProjectItem.FilePath.ParentDirectory;
-			return IsMatchByName (directory);
+			var fileItem = msbuildProjectItem as MD.ProjectFile;
+			if (fileItem != null) {
+				string directory = fileItem.FilePath.ParentDirectory;
+				string relativePath = ContainingProject.GetRelativePath (directory);
+				return IsMatchByName (relativePath);
+			}
+			return false;
 		}
 
-//		internal virtual ProjectItemRelationship GetRelationship (SD.ProjectItem msbuildProjectItem)
-//		{
-//			return new ProjectItemRelationship (this, msbuildProjectItem);
-//		}
+		internal virtual ProjectItemRelationship GetRelationship (MD.ProjectItem msbuildProjectItem)
+		{
+			return new ProjectItemRelationship (this, msbuildProjectItem);
+		}
 
 		public void Delete ()
 		{
@@ -253,16 +260,17 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return 1; }
 		}
 
-//		public global::EnvDTE.ProjectItems Collection {
-//			get {
-//				string relativePath = GetProjectItemRelativeDirectoryToProject ();
-//				if (String.IsNullOrEmpty (relativePath)) {
-//					return containingProject.ProjectItems;
-//				}
-//				var directoryProjectItem = new DirectoryProjectItem (containingProject, relativePath);
-//				return directoryProjectItem.ProjectItems;
-//			}
-//		}
+		//		public global::EnvDTE.ProjectItems Collection {
+		public ProjectItems Collection {
+			get {
+				string relativePath = GetProjectItemRelativeDirectoryToProject ();
+				if (String.IsNullOrEmpty (relativePath)) {
+					return containingProject.ProjectItems;
+				}
+				var directoryProjectItem = new DirectoryProjectItem (containingProject, relativePath);
+				return directoryProjectItem.ProjectItems;
+			}
+		}
 
 		string GetProjectItemRelativeDirectoryToProject ()
 		{

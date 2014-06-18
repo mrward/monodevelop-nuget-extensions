@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MonoDevelop.Core;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using MD = MonoDevelop.Projects;
 
@@ -159,10 +160,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			return false;
 		//		}
 
-//		void AddProjectItemToMSBuildProject (MD.ProjectItem projectItem)
-//		{
-//			projectService.AddProjectItem (DotNetProject, projectItem);
-//		}
+		void AddProjectItemToMSBuildProject (MD.ProjectFile projectItem)
+		{
+			DotNetProject.AddFile (projectItem);
+		}
 
 		//		internal IEnumerable<SD.ProjectItem> GetReferences()
 		//		{
@@ -179,63 +180,50 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			projectService.RemoveProjectItem(DotNetProject, referenceItem);
 		//		}
 
-//		internal ProjectItem AddFileProjectItemUsingFullPath (string path)
-//		{
-//			string dependentUpon = GetDependentUpon (path);
-//			return AddFileProjectItemWithDependentUsingFullPath (path, dependentUpon);
-//		}
-//
-//		string GetDependentUpon (string path)
-//		{
-//			var dependentFile = new DependentFile (DotNetProject);
-//			FileProjectItem projectItem = dependentFile.GetParentFileProjectItem (path);
-//			if (projectItem != null) {
-//				return Path.GetFileName(projectItem.Include);
-//			}
-//			return null;
-//		}
+		internal ProjectItem AddFileProjectItemUsingFullPath (string path)
+		{
+			string dependentUpon = GetDependentUpon (path);
+			return AddFileProjectItemWithDependentUsingFullPath (path, dependentUpon);
+		}
 
-//		internal ProjectItem AddFileProjectItemWithDependentUsingFullPath(string path, string dependentUpon)
-//		{
-//			FileProjectItem fileProjectItem = CreateFileProjectItemUsingFullPath(path);
-//			fileProjectItem.FileName = path;
-//			fileProjectItem.DependentUpon = dependentUpon;
-//			AddProjectItemToMSBuildProject(fileProjectItem);
-//			return new ProjectItem(this, fileProjectItem);
-//		}
-//
-//		FileProjectItem CreateFileProjectItemUsingPathRelativeToProject(string include)
-//		{
-//			ItemType itemType = GetDefaultItemType (include);
-//			return CreateFileProjectItemUsingPathRelativeToProject(itemType, include);
-//		}
-//
-//		ItemType GetDefaultItemType(string include)
-//		{
-//			return DotNetProject.GetDefaultItemType(Path.GetFileName(include));
-//		}
+		string GetDependentUpon (string path)
+		{
+			var dependentFile = new DependentFile (DotNetProject);
+			MD.ProjectFile projectItem = dependentFile.GetParentFileProjectItem (path);
+			if (projectItem != null) {
+				string relativePath = GetRelativePath (projectItem.FilePath);
+				return Path.GetFileName (relativePath);
+			}
+			return null;
+		}
 
-		//		FileProjectItem CreateFileProjectItemUsingPathRelativeToProject(ItemType itemType, string include)
-		//		{
-		//			var fileItem = new FileProjectItem(DotNetProject, itemType) {
-		//				Include = include
-		//			};
-		//			if (IsLink(include)) {
-		//				fileItem.SetEvaluatedMetadata("Link", Path.GetFileName(include));
-		//			}
-		//			return fileItem;
-		//		}
-		//
-		//		bool IsLink(string include)
-		//		{
-		//			return include.StartsWith("..");
-		//		}
-		//
-		//		FileProjectItem CreateFileProjectItemUsingFullPath(string path)
-		//		{
-		//			string relativePath = GetRelativePath(path);
-		//			return CreateFileProjectItemUsingPathRelativeToProject(relativePath);
-		//		}
+		internal ProjectItem AddFileProjectItemWithDependentUsingFullPath(string path, string dependentUpon)
+		{
+			MD.ProjectFile fileProjectItem = CreateFileProjectItemUsingFullPath (path);
+			fileProjectItem.DependsOn = dependentUpon;
+			AddProjectItemToMSBuildProject (fileProjectItem);
+			return new ProjectItem (this, fileProjectItem);
+		}
+
+		MD.ProjectFile CreateFileProjectItemUsingPathRelativeToProject (string include, string fullPath)
+		{
+			var fileItem = new MD.ProjectFile (fullPath);
+			if (IsLink (include)) {
+				fileItem.Link = fullPath;
+			}
+			return fileItem;
+		}
+
+		bool IsLink(string include)
+		{
+			return include.StartsWith ("..");
+		}
+
+		MD.ProjectFile CreateFileProjectItemUsingFullPath (string path)
+		{
+			string relativePath = GetRelativePath (path);
+			return CreateFileProjectItemUsingPathRelativeToProject (relativePath, path);
+		}
 
 		internal IList<string> GetAllPropertyNames ()
 		{
