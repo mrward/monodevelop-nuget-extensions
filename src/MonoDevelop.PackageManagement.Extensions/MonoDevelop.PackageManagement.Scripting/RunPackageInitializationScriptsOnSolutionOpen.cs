@@ -39,7 +39,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		PackageInitializationScriptsConsole scriptsConsole;
 
 		public RunPackageInitializationScriptsOnSolutionOpen (
-			IPackageManagementProjectService projectService)
+			IExtendedPackageManagementProjectService projectService)
 			: this (
 				projectService,
 				new PackageInitializationScriptsConsole (PackageManagementExtendedServices.ConsoleHost),
@@ -48,7 +48,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 
 		public RunPackageInitializationScriptsOnSolutionOpen (
-			IPackageManagementProjectService projectService,
+			IExtendedPackageManagementProjectService projectService,
 			PackageInitializationScriptsConsole scriptsConsole,
 			IPackageInitializationScriptsFactory scriptsFactory)
 		{

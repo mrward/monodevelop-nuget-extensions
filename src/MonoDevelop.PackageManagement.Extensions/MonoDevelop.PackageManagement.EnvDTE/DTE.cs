@@ -33,22 +33,23 @@ using System.Linq;
 
 //using Microsoft.VisualStudio.Shell;
 using MD = MonoDevelop.Projects;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
 	public class DTE : MarshalByRefObject//, global::EnvDTE.DTE, IServiceProvider
 	{
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		IPackageManagementFileService fileService;
 		Solution solution;
 		
 		public DTE ()
-			: this (new PackageManagementProjectService (), new PackageManagementFileService ())
+			: this (new ExtendedPackageManagementProjectService (), new PackageManagementFileService ())
 		{
 		}
 
 		public DTE (
-			IPackageManagementProjectService projectService,
+			IExtendedPackageManagementProjectService projectService,
 			IPackageManagementFileService fileService)
 		{
 			this.projectService = projectService;
@@ -65,7 +66,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public Solution Solution {
 			get {
 				if (IsSolutionOpen) {
-					CreateSolution();
+					CreateSolution ();
 					return solution;
 				}
 				return null;

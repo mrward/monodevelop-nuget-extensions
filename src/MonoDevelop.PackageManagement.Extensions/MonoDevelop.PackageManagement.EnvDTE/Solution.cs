@@ -29,15 +29,18 @@
 using System;
 using System.Collections.Generic;
 using MD = MonoDevelop.Projects;
+using MonoDevelop.Core.ProgressMonitoring;
+using MonoDevelop.Ide;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
 	public class Solution : MarshalByRefObject//, global::EnvDTE.Solution
 	{
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		MD.Solution solution;
 
-		public Solution (IPackageManagementProjectService projectService)
+		public Solution (IExtendedPackageManagementProjectService projectService)
 		{
 			this.projectService = projectService;
 			this.solution = projectService.OpenSolution;
@@ -76,7 +79,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		internal void Save ()
 		{
-			projectService.Save (solution);
+			DispatchService.GuiSyncDispatch (() => {
+				solution.Save (new NullProgressMonitor ());
+			});
 		}
 
 //		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)

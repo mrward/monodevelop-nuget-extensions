@@ -31,14 +31,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MD = MonoDevelop.Projects;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
 	public class Projects : MarshalByRefObject, IEnumerable<Project>//, global::EnvDTE.Projects
 	{
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 
-		public Projects (IPackageManagementProjectService projectService)
+		public Projects (IExtendedPackageManagementProjectService projectService)
 		{
 			this.projectService = projectService;
 		}

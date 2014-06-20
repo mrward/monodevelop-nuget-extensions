@@ -1,5 +1,5 @@
 ﻿//
-// PackageManagementExtendedServices.cs
+// IExtendedPackageManagementProjectService.cs
 //
 // Author:
 //       Matt Ward <matt.ward@xamarin.com>
@@ -26,33 +26,22 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement;
-using ICSharpCode.PackageManagement.Scripting;
+using System.Collections.Generic;
 using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
 {
-	public static class PackageManagementExtendedServices
+	public interface IExtendedPackageManagementProjectService
 	{
-		static readonly PackageManagementConsoleHostProvider consoleHostProvider;
-		static readonly ExtendedPackageManagementProjectService projectService;
+		event EventHandler SolutionLoaded;
+		event EventHandler SolutionUnloaded;
 
-		static PackageManagementExtendedServices ()
-		{
-			consoleHostProvider = new PackageManagementConsoleHostProvider (
-				PackageManagementServices.Solution,
-				PackageManagementServices.RegisteredPackageRepositories);
+		DotNetProject CurrentProject { get; }
+		Solution OpenSolution { get; }
 
-			projectService = new ExtendedPackageManagementProjectService ();
-		}
+		IEnumerable<DotNetProject> GetOpenProjects ();
 
-		public static IPackageManagementConsoleHost ConsoleHost {
-			get { return consoleHostProvider.ConsoleHost; }
-		}
-
-		public static IExtendedPackageManagementProjectService ProjectService {
-			get { return projectService; }
-		}
+		string GetDefaultCustomToolForFileName(ProjectFile projectItem);
 	}
 }
 

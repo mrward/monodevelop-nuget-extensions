@@ -61,7 +61,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			viewModel = new PackageManagementConsoleViewModel (
 				PackageManagementServices.RegisteredPackageRepositories.PackageSources,
-				PackageManagementServices.ProjectService,
+				PackageManagementExtendedServices.ProjectService,
 				PackageManagementExtendedServices.ConsoleHost
 			);
 			viewModel.RegisterConsole (view);

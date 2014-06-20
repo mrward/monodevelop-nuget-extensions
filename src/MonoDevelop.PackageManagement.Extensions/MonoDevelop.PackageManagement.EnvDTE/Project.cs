@@ -40,21 +40,21 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 {
 	public class Project : MarshalByRefObject//, global::EnvDTE.Project
 	{
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		IPackageManagementFileService fileService;
 		DTE dte;
 
 		public Project (DotNetProject project)
 			: this (
 				project,
-				new PackageManagementProjectService (),
+				new ExtendedPackageManagementProjectService (),
 				new PackageManagementFileService ())
 		{
 		}
 
 		public Project (
 			DotNetProject project,
-			IPackageManagementProjectService projectService,
+			IExtendedPackageManagementProjectService projectService,
 			IPackageManagementFileService fileService)
 		{
 			this.DotNetProject = project;

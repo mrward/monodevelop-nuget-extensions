@@ -177,6 +177,8 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\References.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Reference3.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Reference.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IExtendedPackageManagementProjectService.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ExtendedProjectService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

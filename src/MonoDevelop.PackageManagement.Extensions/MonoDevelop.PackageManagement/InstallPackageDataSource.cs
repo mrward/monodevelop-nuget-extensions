@@ -93,7 +93,7 @@ namespace MonoDevelop.PackageManagement
 
 		bool IsProjectSelected ()
 		{
-			return PackageManagementServices.ProjectService.CurrentProject != null;
+			return PackageManagementExtendedServices.ProjectService.CurrentProject != null;
 		}
 
 		void ISearchDataSource.Activate (int item)

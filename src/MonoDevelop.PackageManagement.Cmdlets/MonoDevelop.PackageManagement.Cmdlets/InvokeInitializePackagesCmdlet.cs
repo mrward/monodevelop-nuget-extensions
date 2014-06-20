@@ -38,12 +38,12 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 	[Cmdlet (VerbsLifecycle.Invoke, "InitializePackages", DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
 	public class InvokeInitializePackagesCmdlet : PackageManagementCmdlet
 	{
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		IPackageInitializationScriptsFactory scriptsFactory;
 
 		public InvokeInitializePackagesCmdlet ()
 			: this (
-				PackageManagementServices.ProjectService,
+				PackageManagementExtendedServices.ProjectService,
 				new PackageInitializationScriptsFactory (),
 				PackageManagementExtendedServices.ConsoleHost,
 				null)
@@ -51,7 +51,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		}
 
 		public InvokeInitializePackagesCmdlet (
-			IPackageManagementProjectService projectService,
+			IExtendedPackageManagementProjectService projectService,
 			IPackageInitializationScriptsFactory scriptsFactory,
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)

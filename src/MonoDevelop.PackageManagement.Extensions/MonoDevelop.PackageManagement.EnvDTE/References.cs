@@ -32,23 +32,24 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoDevelop.Ide;
 using MD = MonoDevelop.Projects;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
 	public class References : MarshalByRefObject, IEnumerable//, global::EnvDTE.References
 	{
 		MD.DotNetProject msbuildProject;
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		Project project;
 
 		public References (MD.DotNetProject project)
-			: this (project, new PackageManagementProjectService ())
+			: this (project, new ExtendedPackageManagementProjectService ())
 		{
 		}
 
 		public References (
 			MD.DotNetProject project,
-			IPackageManagementProjectService projectService)
+			IExtendedPackageManagementProjectService projectService)
 		{
 			this.msbuildProject = project;
 			this.projectService = projectService;

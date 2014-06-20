@@ -37,18 +37,18 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 	[Cmdlet (VerbsLifecycle.Invoke, "UpdateWorkingDirectory", DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
 	public class InvokeUpdateWorkingDirectoryCmdlet : PackageManagementCmdlet
 	{
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 
 		public InvokeUpdateWorkingDirectoryCmdlet ()
 			: this (
-				PackageManagementServices.ProjectService,
+				PackageManagementExtendedServices.ProjectService,
 				PackageManagementExtendedServices.ConsoleHost,
 				null)
 		{
 		}
 
 		public InvokeUpdateWorkingDirectoryCmdlet (
-			IPackageManagementProjectService projectService,
+			IExtendedPackageManagementProjectService projectService,
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)
 			: base (consoleHost, terminatingError)

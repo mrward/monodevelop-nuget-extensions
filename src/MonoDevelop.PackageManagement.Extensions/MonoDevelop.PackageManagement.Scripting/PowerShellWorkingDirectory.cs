@@ -28,14 +28,15 @@
 
 using System;
 using MonoDevelop.Projects;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	public class PowerShellWorkingDirectory
 	{
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		
-		public PowerShellWorkingDirectory(IPackageManagementProjectService projectService)
+		public PowerShellWorkingDirectory(IExtendedPackageManagementProjectService projectService)
 		{
 			this.projectService = projectService;
 		}

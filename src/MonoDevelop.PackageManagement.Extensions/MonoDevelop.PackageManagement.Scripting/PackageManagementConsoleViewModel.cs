@@ -36,13 +36,14 @@ using ICSharpCode.Scripting;
 using MonoDevelop.Ide;
 using MonoDevelop.Projects;
 using NuGet;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	public class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
 	{
 		RegisteredPackageSources registeredPackageSources;
-		IPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		IPackageManagementConsoleHost consoleHost;
 
 		DelegateCommand clearConsoleCommand;
@@ -54,7 +55,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public PackageManagementConsoleViewModel (
 			RegisteredPackageSources registeredPackageSources,
-			IPackageManagementProjectService projectService,
+			IExtendedPackageManagementProjectService projectService,
 			IPackageManagementConsoleHost consoleHost)
 		{
 			this.registeredPackageSources = registeredPackageSources;
