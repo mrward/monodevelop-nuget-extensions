@@ -33,7 +33,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class RecentPackagesViewModel2 : PackagesViewModel
+	public class RecentPackagesViewModel2 : PackagesViewModel2
 	{
 		IPackageManagementEvents packageManagementEvents;
 		IPackageRepository recentPackageRepository;
@@ -41,7 +41,7 @@ namespace MonoDevelop.PackageManagement
 		public RecentPackagesViewModel2 (
 			IPackageManagementEvents packageManagementEvents,
 			IRegisteredPackageRepositories registeredPackageRepositories,
-			IPackageViewModelFactory packageViewModelFactory,
+			IPackageViewModelFactory2 packageViewModelFactory,
 			ITaskFactory taskFactory)
 			: base (registeredPackageRepositories, packageViewModelFactory, taskFactory)
 		{

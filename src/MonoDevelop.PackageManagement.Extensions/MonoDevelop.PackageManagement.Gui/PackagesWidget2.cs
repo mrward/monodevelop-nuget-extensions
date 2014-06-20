@@ -42,7 +42,7 @@ namespace MonoDevelop.PackageManagement
 	[System.ComponentModel.ToolboxItem(true)]
 	public partial class PackagesWidget2 : Gtk.Bin
 	{
-		PackagesViewModel viewModel;
+		PackagesViewModel2 viewModel;
 		List<PackageSource> packageSources;
 		ListStore packageStore;
 		CellRendererText treeViewColumnTextRenderer;
@@ -56,7 +56,7 @@ namespace MonoDevelop.PackageManagement
 		
 		void InitializeTreeView ()
 		{
-			packageStore = new ListStore (typeof (Pixbuf), typeof (string), typeof(PackageViewModel));
+			packageStore = new ListStore (typeof (Pixbuf), typeof (string), typeof(PackageViewModel2));
 			packagesTreeView.Model = packageStore;
 			packagesTreeView.AppendColumn (CreateTreeViewColumn ());
 			packagesTreeView.Selection.Changed += PackagesTreeViewSelectionChanged;
@@ -110,7 +110,7 @@ namespace MonoDevelop.PackageManagement
 			viewModel.IncludePrerelease = !viewModel.IncludePrerelease;
 		}
 
-		public void LoadViewModel (PackagesViewModel viewModel)
+		public void LoadViewModel (PackagesViewModel2 viewModel)
 		{
 			this.viewModel = viewModel;
 			
@@ -185,7 +185,7 @@ namespace MonoDevelop.PackageManagement
 		
 		void ShowSelectedPackage ()
 		{
-			PackageViewModel packageViewModel = GetSelectedPackageViewModel ();
+			PackageViewModel2 packageViewModel = GetSelectedPackageViewModel ();
 			if (packageViewModel != null) {
 				ShowPackageInformation (packageViewModel);
 			} else {
@@ -193,16 +193,16 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 		
-		PackageViewModel GetSelectedPackageViewModel ()
+		PackageViewModel2 GetSelectedPackageViewModel ()
 		{
 			TreeIter item;
 			if (packagesTreeView.Selection.GetSelected (out item)) {
-				return packageStore.GetValue (item, PackageViewModelColumn) as PackageViewModel;
+				return packageStore.GetValue (item, PackageViewModelColumn) as PackageViewModel2;
 			}
 			return null;
 		}
 		
-		void ShowPackageInformation (PackageViewModel packageViewModel)
+		void ShowPackageInformation (PackageViewModel2 packageViewModel)
 		{
 			this.packageVersionTextBox.Text = packageViewModel.Version.ToString ();
 			this.packageCreatedByTextBox.Text = packageViewModel.GetAuthors ();
@@ -246,7 +246,7 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 		
-		void EnablePackageActionButtons (PackageViewModel packageViewModel)
+		void EnablePackageActionButtons (PackageViewModel2 packageViewModel)
 		{
 			this.addPackageButton.Visible = !packageViewModel.IsManaged;
 			this.removePackageButton.Visible = !packageViewModel.IsManaged;
@@ -268,7 +268,7 @@ namespace MonoDevelop.PackageManagement
 				AddSearchingMessageToTreeView ();
 			}
 			
-			foreach (PackageViewModel packageViewModel in viewModel.PackageViewModels) {
+			foreach (PackageViewModel2 packageViewModel in viewModel.PackageViewModels) {
 				AppendPackageToTreeView (packageViewModel);
 			}
 
@@ -289,7 +289,7 @@ namespace MonoDevelop.PackageManagement
 			Search ();
 		}
 		
-		void AppendPackageToTreeView (PackageViewModel packageViewModel)
+		void AppendPackageToTreeView (PackageViewModel2 packageViewModel)
 		{
 			packageStore.AppendValues (
 				GetImage ("md-nuget-package", IconSize.Dnd),
@@ -299,14 +299,14 @@ namespace MonoDevelop.PackageManagement
 		
 		void OnAddPackageButtonClicked (object sender, EventArgs e)
 		{
-			PackageViewModel packageViewModel = GetSelectedPackageViewModel ();
+			PackageViewModel2 packageViewModel = GetSelectedPackageViewModel ();
 			packageViewModel.AddPackage ();
 			EnablePackageActionButtons (packageViewModel);
 		}
 		
 		void RemovePackageButtonClicked (object sender, EventArgs e)
 		{
-			PackageViewModel packageViewModel = GetSelectedPackageViewModel ();
+			PackageViewModel2 packageViewModel = GetSelectedPackageViewModel ();
 			packageViewModel.RemovePackage ();
 			EnablePackageActionButtons (packageViewModel);
 		}
@@ -315,7 +315,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			var packageEvents = new ThreadSafePackageManagementEvents (PackageManagementServices.PackageManagementEvents);
 			using (var userPrompts = new ManagePackagesUserPrompts (packageEvents)) {
-				PackageViewModel packageViewModel = GetSelectedPackageViewModel ();
+				PackageViewModel2 packageViewModel = GetSelectedPackageViewModel ();
 				packageViewModel.ManagePackage ();
 			}
 		}

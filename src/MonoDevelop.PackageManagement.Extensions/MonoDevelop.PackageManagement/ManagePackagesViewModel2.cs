@@ -58,7 +58,7 @@ namespace ICSharpCode.PackageManagement
 			packagesViewModels.ReadPackages ();
 		}
 
-		public AvailablePackagesViewModel AvailablePackagesViewModel {
+		public AvailablePackagesViewModel2 AvailablePackagesViewModel {
 			get { return packagesViewModels.AvailablePackagesViewModel; }
 		}
 

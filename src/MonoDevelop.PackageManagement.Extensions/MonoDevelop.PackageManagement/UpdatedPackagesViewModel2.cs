@@ -35,10 +35,10 @@ using ICSharpCode.PackageManagement;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class UpdatedPackagesViewModel2 : PackagesViewModel
+	public class UpdatedPackagesViewModel2 : PackagesViewModel2
 	{
 		PackageManagementSelectedProjects selectedProjects;
-		UpdatedPackages updatedPackages;
+		UpdatedPackages2 updatedPackages;
 		string errorMessage = String.Empty;
 		ILogger logger;
 		IPackageManagementEvents packageManagementEvents;
@@ -46,7 +46,7 @@ namespace MonoDevelop.PackageManagement
 		public UpdatedPackagesViewModel2 (
 			IPackageManagementSolution solution,
 			IRegisteredPackageRepositories registeredPackageRepositories,
-			UpdatedPackageViewModelFactory packageViewModelFactory,
+			UpdatedPackageViewModelFactory2 packageViewModelFactory,
 			ITaskFactory taskFactory)
 			: base (
 				registeredPackageRepositories,
@@ -79,7 +79,7 @@ namespace MonoDevelop.PackageManagement
 			try {
 				IPackageRepository repository = RegisteredPackageRepositories.ActiveRepository;
 				IQueryable<IPackage> installedPackages = GetInstalledPackages (repository);
-				updatedPackages = new UpdatedPackages (installedPackages, repository);
+				updatedPackages = new UpdatedPackages2 (installedPackages, repository);
 			} catch (Exception ex) {
 				errorMessage = ex.Message;
 			}

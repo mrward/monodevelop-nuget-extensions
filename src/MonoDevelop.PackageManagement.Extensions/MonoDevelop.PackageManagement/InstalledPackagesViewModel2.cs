@@ -34,7 +34,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class InstalledPackagesViewModel2 : PackagesViewModel
+	public class InstalledPackagesViewModel2 : PackagesViewModel2
 	{
 		IPackageManagementSolution solution;
 		IPackageManagementEvents packageManagementEvents;
@@ -45,7 +45,7 @@ namespace MonoDevelop.PackageManagement
 			IPackageManagementSolution solution,
 			IPackageManagementEvents packageManagementEvents,
 			IRegisteredPackageRepositories registeredPackageRepositories,
-			InstalledPackageViewModelFactory packageViewModelFactory,
+			InstalledPackageViewModelFactory2 packageViewModelFactory,
 			ITaskFactory taskFactory)
 			: base (registeredPackageRepositories, packageViewModelFactory, taskFactory)
 		{

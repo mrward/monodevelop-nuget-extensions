@@ -16,7 +16,7 @@ namespace MonoDevelop.PackageManagement
 		
 		private global::Gtk.Label pagedResultsLeftLabel;
 		
-		private global::MonoDevelop.PackageManagement.PagedResultsWidget pagedResultsWidget;
+		private global::MonoDevelop.PackageManagement.PagedResultsWidget2 pagedResultsWidget;
 		
 		private global::Gtk.Label pagedResultsRightLabel;
 		
@@ -146,7 +146,7 @@ namespace MonoDevelop.PackageManagement
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.pagedResultsHBox [this.pagedResultsLeftLabel]));
 			w3.Position = 0;
 			// Container child pagedResultsHBox.Gtk.Box+BoxChild
-			this.pagedResultsWidget = new global::MonoDevelop.PackageManagement.PagedResultsWidget ();
+			this.pagedResultsWidget = new global::MonoDevelop.PackageManagement.PagedResultsWidget2 ();
 			this.pagedResultsWidget.Events = ((global::Gdk.EventMask)(256));
 			this.pagedResultsWidget.Name = "pagedResultsWidget";
 			this.pagedResultsHBox.Add (this.pagedResultsWidget);

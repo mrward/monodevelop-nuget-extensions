@@ -179,6 +179,21 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Reference.cs" />
     <Compile Include="MonoDevelop.PackageManagement\IExtendedPackageManagementProjectService.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ExtendedProjectService.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\AvailablePackagesViewModel2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\PagedResultsWidget.cs" />
+    <Compile Include="gtk-gui\MonoDevelop.PackageManagement.PagedResultsWidget2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackagesForSelectedPageQuery2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackagesForSelectedPageResult2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageViewModel2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageViewModelParent2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageViewModelFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatedPackages2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatedPackageViewModel2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatedPackageViewModelFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageViewModelFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackagesViewModel2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\InstalledPackageViewModel2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\InstalledPackageViewModelFactory2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

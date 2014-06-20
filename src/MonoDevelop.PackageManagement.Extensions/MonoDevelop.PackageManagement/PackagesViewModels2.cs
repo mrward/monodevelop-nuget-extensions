@@ -40,18 +40,18 @@ namespace MonoDevelop.PackageManagement
 			IPackageActionRunner actionRunner,
 			ITaskFactory taskFactory)
 		{
-			var packageViewModelFactory = new PackageViewModelFactory (solution, packageManagementEvents, actionRunner);
-			var updatedPackageViewModelFactory = new UpdatedPackageViewModelFactory (packageViewModelFactory);
-			var installedPackageViewModelFactory = new InstalledPackageViewModelFactory (packageViewModelFactory);
+			var packageViewModelFactory = new PackageViewModelFactory2 (solution, packageManagementEvents, actionRunner);
+			var updatedPackageViewModelFactory = new UpdatedPackageViewModelFactory2 (packageViewModelFactory);
+			var installedPackageViewModelFactory = new InstalledPackageViewModelFactory2 (packageViewModelFactory);
 
 			IRecentPackageRepository recentPackageRepository = PackageManagementServices.RecentPackageRepository;
-			AvailablePackagesViewModel = new AvailablePackagesViewModel (registeredPackageRepositories, recentPackageRepository, packageViewModelFactory, taskFactory);
+			AvailablePackagesViewModel = new AvailablePackagesViewModel2 (registeredPackageRepositories, recentPackageRepository, packageViewModelFactory, taskFactory);
 			InstalledPackagesViewModel = new InstalledPackagesViewModel2 (solution, packageManagementEvents, registeredPackageRepositories, installedPackageViewModelFactory, taskFactory);
 			UpdatedPackagesViewModel = new UpdatedPackagesViewModel2 (solution, registeredPackageRepositories, updatedPackageViewModelFactory, taskFactory);
 			RecentPackagesViewModel = new RecentPackagesViewModel2 (packageManagementEvents, registeredPackageRepositories, packageViewModelFactory, taskFactory);
 		}
 
-		public AvailablePackagesViewModel AvailablePackagesViewModel { get; private set; }
+		public AvailablePackagesViewModel2 AvailablePackagesViewModel { get; private set; }
 		public InstalledPackagesViewModel2 InstalledPackagesViewModel { get; private set; }
 		public RecentPackagesViewModel2 RecentPackagesViewModel { get; private set; }
 		public UpdatedPackagesViewModel2 UpdatedPackagesViewModel { get; private set; }
