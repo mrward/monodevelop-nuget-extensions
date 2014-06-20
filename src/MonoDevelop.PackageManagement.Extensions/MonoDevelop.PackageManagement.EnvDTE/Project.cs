@@ -34,6 +34,7 @@ using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using MD = MonoDevelop.Projects;
+using MonoDevelop.Ide;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -139,46 +140,62 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public virtual void Save ()
 		{
-			DotNetProject.Save ();
+			DispatchService.GuiSyncDispatch (() => {
+				DotNetProject.Save ();
+			});
 		}
 
-		//		internal virtual void AddReference(string path)
-		//		{
-		//			if (!HasReference(path)) {
-		//				var referenceItem = new ReferenceProjectItem(DotNetProject, path);
-		//				AddProjectItemToMSBuildProject(referenceItem);
-		//			}
-		//		}
-		//
-		//		bool HasReference(string include)
-		//		{
-		//			foreach (ReferenceProjectItem reference in GetReferences()) {
-		//				if (IsReferenceMatch(reference, include)) {
-		//					return true;
-		//				}
-		//			}
-		//			return false;
-		//		}
+		internal virtual void AddReference (string path)
+		{
+			DispatchService.GuiSyncDispatch (() => {
+				if (!HasReference (path)) {
+					if (Path.IsPathRooted (path)) {
+						DotNetProject.AddReference (path);
+					} else {
+						var reference = new MD.ProjectReference (MD.ReferenceType.Package, path);
+						DotNetProject.References.Add (reference);
+					}
+				}
+			});
+		}
+
+		bool HasReference (string include)
+		{
+			foreach (MD.ProjectReference reference in GetReferences ()) {
+				if (IsReferenceMatch (reference, include)) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 		void AddProjectItemToMSBuildProject (MD.ProjectFile projectItem)
 		{
 			DotNetProject.AddFile (projectItem);
 		}
 
-		//		internal IEnumerable<SD.ProjectItem> GetReferences()
-		//		{
-		//			return DotNetProject.GetItemsOfType(ItemType.Reference);
-		//		}
-		//
-		//		bool IsReferenceMatch(ReferenceProjectItem reference, string include)
-		//		{
-		//			return String.Equals(reference.Include, include, StringComparison.InvariantCultureIgnoreCase);
-		//		}
-		//
-		//		internal void RemoveReference(ReferenceProjectItem referenceItem)
-		//		{
-		//			projectService.RemoveProjectItem(DotNetProject, referenceItem);
-		//		}
+		internal IEnumerable<MD.ProjectReference> GetReferences ()
+		{
+			return DotNetProject
+				.References
+				.Where (reference => IsAssemblyReference (reference));
+		}
+
+		bool IsAssemblyReference (ProjectReference reference)
+		{
+			return reference.ReferenceType == MD.ReferenceType.Assembly ||
+				reference.ReferenceType == MD.ReferenceType.Package;
+		}
+
+		bool IsReferenceMatch (MD.ProjectReference reference, string include)
+		{
+			return String.Equals (reference.Reference, include, StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		internal void RemoveReference (MD.ProjectReference referenceItem)
+		{
+			DotNetProject.References.Remove (referenceItem);
+		}
 
 		internal ProjectItem AddFileProjectItemUsingFullPath (string path)
 		{
@@ -214,7 +231,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return fileItem;
 		}
 
-		bool IsLink(string include)
+		bool IsLink (string include)
 		{
 			return include.StartsWith ("..");
 		}

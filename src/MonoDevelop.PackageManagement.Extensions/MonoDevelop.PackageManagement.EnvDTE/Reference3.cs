@@ -1,5 +1,5 @@
 ﻿// 
-// ProjectObject.cs
+// Reference3.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -26,26 +26,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+
 using System;
+using MD = MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ProjectObject : MarshalByRefObject//, global::EnvDTE.ProjectObject
+	public class Reference3 : Reference//, global::EnvDTE.Reference3
 	{
-		public ProjectObject(Project project)
+		public Reference3 (Project project, MD.ProjectReference referenceProjectItem)
+			: base (project, referenceProjectItem)
 		{
-			this.Project = project;
-			References = new References (project);
 		}
 		
-//		public global::EnvDTE.References References { get; private set; }
-		public References References { get; private set; }
-//		public global::EnvDTE.Project Project { get; private set; }
-		public Project Project { get; private set; }
-		
-//		public global::EnvDTE.DTE DTE {
-		public DTE DTE {
-			get { return Project.DTE; }
-		}
+		public bool AutoReferenced { get; private set; }
 	}
 }
