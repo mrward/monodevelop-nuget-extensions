@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// SolutionPackageRepositoryPath.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,46 @@
 //
 
 using System;
+using System.IO;
 using MonoDevelop.Projects;
+using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public class SolutionPackageRepositoryPath2
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
+		string packagesRelativeDirectory;
+		Solution solution;
+		DefaultPackagePathResolver pathResolver;
+
+		public SolutionPackageRepositoryPath2 (Project project)
+			: this (project, new PackageManagementOptions ())
 		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
+		}
+
+		public SolutionPackageRepositoryPath2 (Project project, PackageManagementOptions options)
+			: this (project.ParentSolution, options)
+		{
+		}
+
+		public SolutionPackageRepositoryPath2 (Solution solution, PackageManagementOptions options)
+		{
+			packagesRelativeDirectory = options.PackagesDirectory;
+			this.solution = solution;
+			GetSolutionPackageRepositoryPath ();
+		}
+
+		void GetSolutionPackageRepositoryPath ()
+		{
+			PackageRepositoryPath = Path.Combine (solution.BaseDirectory, packagesRelativeDirectory);
+		}
+
+		public string PackageRepositoryPath { get; private set; }
+
+		public string GetInstallPath (IPackage package)
+		{
+			pathResolver = new DefaultPackagePathResolver (PackageRepositoryPath);
+			return pathResolver.GetInstallPath (package);
 		}
 	}
 }

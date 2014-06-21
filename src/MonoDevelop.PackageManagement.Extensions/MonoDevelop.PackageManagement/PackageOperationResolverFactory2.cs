@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// PackageOperationsResolverFactory.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,38 @@
 //
 
 using System;
-using MonoDevelop.Projects;
+using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public class PackageOperationsResolverFactory2 : IPackageOperationResolverFactory2
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
+		public IPackageOperationResolver CreateInstallPackageOperationResolver (
+			IPackageRepository localRepository,
+			IPackageRepository sourceRepository,
+			ILogger logger,
+			InstallPackageAction2 installAction)
 		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
+			return new InstallWalker (
+				localRepository,
+				sourceRepository,
+				installAction.ProjectTargetFramework,
+				logger,
+				installAction.IgnoreDependencies,
+				installAction.AllowPrereleaseVersions,
+				DependencyVersion.Lowest);
+		}
+
+		public IPackageOperationResolver CreateUpdatePackageOperationResolver (IPackageRepository localRepository, IPackageRepository sourceRepository, ILogger logger, IUpdatePackageSettings settings)
+		{
+			return new InstallWalker (
+				localRepository,
+				sourceRepository,
+				null,
+				logger,
+				!settings.UpdateDependencies,
+				settings.AllowPrereleaseVersions,
+				DependencyVersion.Lowest);
 		}
 	}
 }

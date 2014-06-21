@@ -194,6 +194,34 @@
     <Compile Include="MonoDevelop.PackageManagement\PackagesViewModel2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\InstalledPackageViewModel2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\InstalledPackageViewModelFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\SolutionPackageRepository.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\SolutionPackageRepositoryPath2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ConfigSettingsFileSystem.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\OpenDotNetProjects2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageManagerFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageManagementProject2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageManagementProject2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageManagementSolution2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageManagementSolution2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\InstallPackageAction2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageManagementProjectFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageManagementProjectFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ProcessPackageOperationsAction2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ProcessPackageAction2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UninstallPackageAction.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatePackageAction2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatePackagesAction2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\MonoDevelopPackageManagerFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\MonoDevelopPackageManager.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IMonoDevelopPackageManager.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageOperationResolverFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageOperationResolverFactory2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdatePackageActions2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IUpdatePackageActions2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdateAllPackagesInProject2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\UpdateAllPackagesInSolution2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ProjectTargetFramework2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackagesRequiringLicenseAcceptance2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

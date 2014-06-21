@@ -78,7 +78,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		void UninstallPackage ()
 		{
 			ExtendedPackageManagementProject project = GetProject ();
-			UninstallPackageAction action = CreateUninstallPackageAction (project);
+			UninstallPackageAction2 action = CreateUninstallPackageAction (project);
 			ExecuteWithScriptRunner (project, () => {
 				action.Execute ();
 			});
@@ -90,9 +90,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			return (ExtendedPackageManagementProject)ConsoleHost.GetProject (source, ProjectName);
 		}
 
-		UninstallPackageAction CreateUninstallPackageAction (ExtendedPackageManagementProject project)
+		UninstallPackageAction2 CreateUninstallPackageAction (ExtendedPackageManagementProject project)
 		{
-			UninstallPackageAction action = project.CreateUninstallPackageAction ();
+			UninstallPackageAction2 action = project.CreateUninstallPackageAction ();
 			action.Package = project.ProjectManager.LocalRepository.FindPackage (Id, Version);
 			action.ForceRemove = Force.IsPresent;
 			action.RemoveDependencies = RemoveDependencies.IsPresent;

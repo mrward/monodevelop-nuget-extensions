@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// IUpdatePackageActions.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2013 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,14 @@
 //
 
 using System;
-using MonoDevelop.Projects;
+using System.Collections.Generic;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public interface IUpdatePackageActions2 : IUpdatePackageSettings
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
-		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
-		}
+		//IPackageScriptRunner PackageScriptRunner { get; set; }
+
+		IEnumerable<UpdatePackageAction2> CreateActions();
 	}
 }

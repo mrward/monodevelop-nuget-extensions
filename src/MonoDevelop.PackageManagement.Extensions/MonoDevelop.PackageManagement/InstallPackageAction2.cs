@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// InstallPackageAction.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,36 @@
 //
 
 using System;
-using MonoDevelop.Projects;
+using System.Collections.Generic;
+using System.IO;
+using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public class InstallPackageAction2 : ProcessPackageOperationsAction2
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
+		public InstallPackageAction2(
+			IPackageManagementProject2 project,
+			IPackageManagementEvents packageManagementEvents)
+			: base(project, packageManagementEvents)
 		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
+		}
+
+		public bool IgnoreDependencies { get; set; }
+
+		protected override IEnumerable<PackageOperation> GetPackageOperations()
+		{
+			return Project.GetInstallPackageOperations(Package, this);
+		}
+
+		protected override void ExecuteCore()
+		{
+			Project.InstallPackage(Package, this);
+			OnParentPackageInstalled();
+		}
+
+		protected override string StartingMessageFormat {
+			get { return "Adding {0}..."; }
 		}
 	}
 }

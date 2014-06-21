@@ -89,23 +89,23 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		void InstallPackage ()
 		{
-			IPackageManagementProject project = GetProject ();
+			IPackageManagementProject2 project = GetProject ();
 			using (project.SourceRepository.StartInstallOperation (Id)) {
-				InstallPackageAction action = CreateInstallPackageTask (project);
+				InstallPackageAction2 action = CreateInstallPackageTask (project);
 				ExecuteWithScriptRunner (project, () => {
 					action.Execute ();
 				});
 			}
 		}
 
-		IPackageManagementProject GetProject ()
+		IPackageManagementProject2 GetProject ()
 		{
 			return ConsoleHost.GetProject (Source, ProjectName);
 		}
 
-		InstallPackageAction CreateInstallPackageTask (IPackageManagementProject project)
+		InstallPackageAction2 CreateInstallPackageTask (IPackageManagementProject2 project)
 		{
-			InstallPackageAction action = project.CreateInstallPackageAction ();
+			InstallPackageAction2 action = project.CreateInstallPackageAction ();
 			action.PackageId = Id;
 			action.PackageVersion = Version;
 			action.IgnoreDependencies = IgnoreDependencies.IsPresent;

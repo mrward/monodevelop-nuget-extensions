@@ -34,7 +34,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 {
 	public class RunPackageScriptsAction : IDisposable
 	{
-		IPackageManagementProject project;
+		IPackageManagementProject2 project;
 		IPackageScriptFactory scriptFactory;
 		IPackageScriptRunner scriptRunner;
 		ExtendedPackageManagementProject extendedProject;
@@ -42,13 +42,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		public RunPackageScriptsAction(
 			IPackageScriptRunner scriptRunner,
-			IPackageManagementProject project)
+			IPackageManagementProject2 project)
 			: this(project, scriptRunner, new PackageScriptFactory()) //, new GlobalMSBuildProjectCollection())
 		{
 		}
 		
 		public RunPackageScriptsAction(
-			IPackageManagementProject project,
+			IPackageManagementProject2 project,
 			IPackageScriptRunner scriptRunner,
 			IPackageScriptFactory scriptFactory)
 			//IGlobalMSBuildProjectCollection projectCollection)

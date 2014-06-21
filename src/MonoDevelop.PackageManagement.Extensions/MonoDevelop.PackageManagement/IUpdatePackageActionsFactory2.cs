@@ -1,5 +1,5 @@
 ﻿//
-// PackageManagementExtendedServices.cs
+// IUpdatePackageActionsFactory2.cs
 //
 // Author:
 //       Matt Ward <matt.ward@xamarin.com>
@@ -24,41 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-
 using System;
-using ICSharpCode.PackageManagement;
-using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
 {
-	public static class PackageManagementExtendedServices
+	public class IUpdatePackageActionsFactory2
 	{
-		static readonly PackageManagementConsoleHostProvider consoleHostProvider;
-		static readonly ExtendedPackageManagementProjectService projectService;
-		static readonly PackageManagementSolution2 solution;
-
-		static PackageManagementExtendedServices ()
+		public IUpdatePackageActionsFactory2 ()
 		{
-			projectService = new ExtendedPackageManagementProjectService ();
-
-			solution = new PackageManagementSolution2 (PackageManagementServices.RegisteredPackageRepositories, PackageManagementServices.PackageManagementEvents);
-
-			consoleHostProvider = new PackageManagementConsoleHostProvider (
-				solution,
-				PackageManagementServices.RegisteredPackageRepositories);
-		}
-
-		public static IPackageManagementConsoleHost ConsoleHost {
-			get { return consoleHostProvider.ConsoleHost; }
-		}
-
-		public static IExtendedPackageManagementProjectService ProjectService {
-			get { return projectService; }
-		}
-
-		public static IPackageManagementSolution2 Solution {
-			get { return solution; }
 		}
 	}
 }

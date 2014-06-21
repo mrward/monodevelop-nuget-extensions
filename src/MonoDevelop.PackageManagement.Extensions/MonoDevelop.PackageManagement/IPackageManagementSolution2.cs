@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// IPackageManagementSolution.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,33 @@
 //
 
 using System;
-using MonoDevelop.Projects;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace ICSharpCode.PackageManagement.Scripting
+using MonoDevelop.Projects;
+using NuGet;
+
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public interface IPackageManagementSolution2
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
-		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
-		}
+		IPackageManagementProject2 GetActiveProject ();
+		IPackageManagementProject2 GetActiveProject (IPackageRepository sourceRepository);
+		IPackageManagementProject2 GetProject (PackageSource source, string projectName);
+		IPackageManagementProject2 GetProject (IPackageRepository sourceRepository, string projectName);
+		IPackageManagementProject2 GetProject (IPackageRepository sourceRepository, Project project);
+		IEnumerable<IPackageManagementProject2> GetProjects (IPackageRepository sourceRepository);
+
+		Project GetActiveDotNetProject ();
+		IEnumerable<Project> GetDotNetProjects();
+		bool HasMultipleProjects();
+
+		bool IsPackageInstalled (IPackage package);
+		IQueryable<IPackage> GetPackages ();
+		IEnumerable<IPackage> GetPackagesInReverseDependencyOrder ();
+		string GetInstallPath (IPackage package);
+
+		bool IsOpen { get; }
+		string FileName { get; }
 	}
 }

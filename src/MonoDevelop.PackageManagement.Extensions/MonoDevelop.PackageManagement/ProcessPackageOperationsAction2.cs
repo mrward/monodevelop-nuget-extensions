@@ -1,10 +1,10 @@
 ﻿// 
-// OpenProjects.cs
+// ProcessPackageOperationsAction.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,53 +26,53 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-
 using System;
 using System.Collections.Generic;
-using System.Management.Automation;
+using System.Linq;
+using NuGet;
 
-using DTEProject = ICSharpCode.PackageManagement.EnvDTE.Project;
-using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
-
-namespace ICSharpCode.PackageManagement.Cmdlets
+namespace ICSharpCode.PackageManagement
 {
-	public class OpenProjects
+	public abstract class ProcessPackageOperationsAction2 : ProcessPackageAction2
 	{
-		IPackageManagementSolution2 solution;
-		
-		public OpenProjects(IPackageManagementSolution2 solution)
+		public ProcessPackageOperationsAction2(
+			IPackageManagementProject2 project,
+			IPackageManagementEvents packageManagementEvents)
+			: base(project, packageManagementEvents)
 		{
-			this.solution = solution;
 		}
-		
-		public IEnumerable<EnvDTE.Project> GetAllProjects()
+
+		public IEnumerable<PackageOperation> Operations { get; set; }
+
+		public override bool HasPackageScriptsToRun()
 		{
-			foreach (Project project in solution.GetDotNetProjects()) {
-				yield return CreateProject(project);
+			BeforeExecute();
+			var files = new PackageFilesForOperations(Operations);
+			return files.HasAnyPackageScripts();
+		}
+
+		protected override void BeforeExecute()
+		{
+			base.BeforeExecute();
+			GetPackageOperationsIfMissing();
+		}
+
+		void GetPackageOperationsIfMissing()
+		{
+			if (Operations == null) {
+				Operations = GetPackageOperations();
 			}
 		}
-		
-		DTEProject CreateProject(Project project)
+
+		protected virtual IEnumerable<PackageOperation> GetPackageOperations()
 		{
-			return new DTEProject(project as DotNetProject);
+			return null;
 		}
-		
-		public IEnumerable<EnvDTE.Project> GetFilteredProjects(string[] projectNames)
+
+		public IEnumerable<PackageOperation> GetInstallOperations ()
 		{
-			foreach (string projectName in projectNames) {
-				WildcardPattern wildcard = CreateWildcard(projectName);
-				foreach (EnvDTE.Project project in GetAllProjects()) {
-					if (wildcard.IsMatch(project.Name)) {
-						yield return project;
-					}
-				}
-			}
-		}
-		
-		WildcardPattern CreateWildcard(string pattern)
-		{
-			return new WildcardPattern(pattern, WildcardOptions.IgnoreCase);
+			BeforeExecute ();
+			return Operations.Where (operation => operation.Action == PackageAction.Install);
 		}
 	}
 }

@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// PackageManagementProjectFactory.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,27 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
+using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public class PackageManagementProjectFactory2 : IPackageManagementProjectFactory2
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
+		ExtendedPackageManagerFactory factory = new ExtendedPackageManagerFactory ();
+		IPackageManagementEvents packageManagementEvents;
+
+		public PackageManagementProjectFactory2 (IPackageManagementEvents packageManagementEvents)
 		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
+			this.packageManagementEvents = packageManagementEvents;
+		}
+
+		public IPackageManagementProject2 CreateProject(
+			IPackageRepository sourceRepository,
+			DotNetProject project)
+		{
+			return new ExtendedPackageManagementProject (sourceRepository, project, packageManagementEvents, factory);
 		}
 	}
 }

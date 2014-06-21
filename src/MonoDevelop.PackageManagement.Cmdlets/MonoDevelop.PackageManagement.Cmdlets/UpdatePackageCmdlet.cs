@@ -123,25 +123,25 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		void UpdateAllPackagesInProject ()
 		{
-			IUpdatePackageActions actions = CreateUpdateAllPackagesInProject ();
+			IUpdatePackageActions2 actions = CreateUpdateAllPackagesInProject ();
 			RunActions (actions);
 		}
 
-		IUpdatePackageActions CreateUpdateAllPackagesInProject ()
+		IUpdatePackageActions2 CreateUpdateAllPackagesInProject ()
 		{
-			IPackageManagementProject project = GetProject ();
+			IPackageManagementProject2 project = GetProject ();
 			return updatePackageActionsFactory.CreateUpdateAllPackagesInProject (project);
 		}
 
 		void UpdateAllPackagesInSolution ()
 		{
-			IUpdatePackageActions actions = CreateUpdateAllPackagesInSolution ();
+			IUpdatePackageActions2 actions = CreateUpdateAllPackagesInSolution ();
 			RunActions (actions);
 		}
 
-		IUpdatePackageActions CreateUpdateAllPackagesInSolution ()
+		IUpdatePackageActions2 CreateUpdateAllPackagesInSolution ()
 		{
-			IPackageManagementSolution solution = ConsoleHost.Solution;
+			IPackageManagementSolution2 solution = ConsoleHost.Solution;
 			IPackageRepository repository = GetActivePackageRepository ();
 			return updatePackageActionsFactory.CreateUpdateAllPackagesInSolution (solution, repository);
 		}
@@ -154,8 +154,8 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		void UpdatePackageInSingleProject ()
 		{
-			IPackageManagementProject project = GetProject ();
-			UpdatePackageAction action = CreateUpdatePackageAction (project);
+			IPackageManagementProject2 project = GetProject ();
+			UpdatePackageAction2 action = CreateUpdatePackageAction (project);
 			using (IDisposable operation = StartUpdateOperation (action)) {
 				ExecuteWithScriptRunner (project, () => {
 					action.Execute ();
@@ -163,19 +163,19 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			}
 		}
 
-		IDisposable StartUpdateOperation (UpdatePackageAction action)
+		IDisposable StartUpdateOperation (UpdatePackageAction2 action)
 		{
 			return action.Project.SourceRepository.StartUpdateOperation (action.PackageId);
 		}
 
-		IPackageManagementProject GetProject ()
+		IPackageManagementProject2 GetProject ()
 		{
 			return ConsoleHost.GetProject (Source, ProjectName);
 		}
 
-		UpdatePackageAction CreateUpdatePackageAction (IPackageManagementProject project)
+		UpdatePackageAction2 CreateUpdatePackageAction (IPackageManagementProject2 project)
 		{
-			UpdatePackageAction action = project.CreateUpdatePackageAction ();
+			UpdatePackageAction2 action = project.CreateUpdatePackageAction ();
 			action.PackageId = Id;
 			action.PackageVersion = Version;
 			action.UpdateDependencies = UpdateDependencies;
@@ -192,13 +192,13 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			get { return IncludePrerelease.IsPresent; }
 		}
 
-		void RunActions (IUpdatePackageActions updateActions)
+		void RunActions (IUpdatePackageActions2 updateActions)
 		{
 			updateActions.UpdateDependencies = UpdateDependencies;
 			updateActions.AllowPrereleaseVersions = AllowPreleaseVersions;
 //			updateActions.PackageScriptRunner = this;
 			
-			foreach (UpdatePackageAction action in updateActions.CreateActions()) {
+			foreach (UpdatePackageAction2 action in updateActions.CreateActions()) {
 				using (IDisposable operation = StartUpdateOperation (action)) {
 					ExecuteWithScriptRunner (action.Project, () => {
 						action.Execute ();
@@ -209,10 +209,10 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		void UpdatePackageInAllProjects ()
 		{
-			IPackageManagementSolution solution = ConsoleHost.Solution;
+			IPackageManagementSolution2 solution = ConsoleHost.Solution;
 			IPackageRepository repository = GetActivePackageRepository ();
 			PackageReference packageReference = CreatePackageReference ();
-			IUpdatePackageActions updateActions =
+			IUpdatePackageActions2 updateActions =
 				updatePackageActionsFactory.CreateUpdatePackageInAllProjects (packageReference, solution, repository);
 			
 			RunActions (updateActions);

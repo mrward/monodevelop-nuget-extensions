@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// ISharpDevelopPackageManager.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012-2013 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,24 @@
 //
 
 using System;
-using MonoDevelop.Projects;
+using System.Collections.Generic;
+using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public interface IMonoDevelopPackageManager : IPackageManager
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
-		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
-		}
+		ISharpDevelopProjectManager ProjectManager { get; }
+
+		void InstallPackage (IPackage package, InstallPackageAction2 installAction);
+		void UninstallPackage (IPackage package, UninstallPackageAction2 uninstallAction);
+		void UpdatePackage (IPackage package, UpdatePackageAction2 updateAction);
+		void UpdatePackages (UpdatePackagesAction2 updateAction);
+		void UpdatePackageReference (IPackage package, IUpdatePackageSettings settings);
+
+		IEnumerable<PackageOperation> GetInstallPackageOperations (IPackage package, InstallPackageAction2 installAction);
+		IEnumerable<PackageOperation> GetUpdatePackageOperations (IEnumerable<IPackage> packages, IUpdatePackageSettings settings);
+
+		void RunPackageOperations (IEnumerable<PackageOperation> operations);
 	}
 }

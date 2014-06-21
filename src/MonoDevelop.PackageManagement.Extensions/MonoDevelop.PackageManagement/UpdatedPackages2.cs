@@ -40,7 +40,7 @@ namespace ICSharpCode.PackageManagement
 		IQueryable<IPackage> installedPackages;
 
 		public UpdatedPackages2 (
-			IPackageManagementProject project,
+			IPackageManagementProject2 project,
 			IPackageRepository aggregateRepository)
 			: this (
 				project.GetPackages (),

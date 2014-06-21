@@ -31,7 +31,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ExtendedPackageManagementProject : PackageManagementProject
+	public class ExtendedPackageManagementProject : PackageManagementProject2
 	{
 		ExtendedPackageManagerFactory packageManagerFactory;
 
@@ -51,7 +51,7 @@ namespace MonoDevelop.PackageManagement
 			IPackageRepository sourceRepository,
 			DotNetProject project,
 			IPackageManagementEvents packageManagementEvents,
-			IPackageManagerFactory packageManagerFactory)
+			IPackageManagerFactory2 packageManagerFactory)
 			: base (
 				sourceRepository,
 				project,

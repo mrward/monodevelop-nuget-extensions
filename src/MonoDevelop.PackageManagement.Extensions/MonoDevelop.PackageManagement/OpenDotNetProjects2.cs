@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// OpenDotNetProjects.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,40 @@
 //
 
 using System;
+using System.Collections.Generic;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public class OpenDotNetProjects2
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
+		IExtendedPackageManagementProjectService projectService;
+
+		public OpenDotNetProjects2 (IExtendedPackageManagementProjectService projectService)
 		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
+			this.projectService = projectService;
+		}
+
+		public DotNetProject FindProject (string name)
+		{
+			foreach (Project project in projectService.GetOpenProjects()) {
+				if (IsProjectNameMatch (project, name)) {
+					return project as DotNetProject;
+				}
+			}
+			return null;
+		}
+
+		bool IsProjectNameMatch (Project project, string name)
+		{
+			return IsMatchIgnoringCase (project.Name, name) ||
+			(project.FileName == name);
+		}
+
+		bool IsMatchIgnoringCase (string a, string b)
+		{
+			return String.Equals (a, b, StringComparison.OrdinalIgnoreCase);
 		}
 	}
 }

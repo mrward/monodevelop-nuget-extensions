@@ -1,10 +1,10 @@
 ﻿// 
-// PackageInitializationScriptsFactory.cs
+// UninstallPackageAction.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
 // 
-// Copyright (C) 2011-2014 Matthew Ward
+// Copyright (C) 2012 Matthew Ward
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,18 +27,44 @@
 //
 
 using System;
-using MonoDevelop.Projects;
+using System.IO;
+using NuGet;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace ICSharpCode.PackageManagement
 {
-	public class PackageInitializationScriptsFactory : IPackageInitializationScriptsFactory
+	public class UninstallPackageAction2 : ProcessPackageAction2
 	{
-		public IPackageInitializationScripts CreatePackageInitializationScripts(
-			Solution solution)
+		public UninstallPackageAction2 (
+			IPackageManagementProject2 project,
+			IPackageManagementEvents packageManagementEvents)
+			: base(project, packageManagementEvents)
 		{
-			var repository = new SolutionPackageRepository2 (solution);
-			var scriptFactory = new PackageScriptFactory ();
-			return new PackageInitializationScripts (repository, scriptFactory);
+			this.AllowPrereleaseVersions = true;
+		}
+
+		public bool ForceRemove { get; set; }
+		public bool RemoveDependencies { get; set; }
+
+		protected override void BeforeExecute ()
+		{
+			base.BeforeExecute ();
+		}
+
+		protected override void ExecuteCore ()
+		{
+			Project.UninstallPackage (Package, this);
+			OnParentPackageUninstalled ();
+		}
+
+		public override bool HasPackageScriptsToRun ()
+		{
+			BeforeExecute ();
+			var files = new PackageFiles (Package);
+			return files.HasUninstallPackageScript();
+		}
+
+		protected override string StartingMessageFormat {
+			get { return "Removing {0}..."; }
 		}
 	}
 }

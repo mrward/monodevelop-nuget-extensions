@@ -33,14 +33,14 @@ namespace ICSharpCode.PackageManagement.Scripting
 {
 	public class PackageManagementConsoleHostProvider
 	{
-		IPackageManagementSolution solution;
+		IPackageManagementSolution2 solution;
 		IRegisteredPackageRepositories registeredRepositories;
 //		IPowerShellDetection powerShellDetection;
 		IPackageManagementConsoleHost consoleHost;
 		IPackageManagementEvents packageEvents;
 		
 		public PackageManagementConsoleHostProvider (
-			IPackageManagementSolution solution,
+			IPackageManagementSolution2 solution,
 			IRegisteredPackageRepositories registeredRepositories)
 			: this(solution,
 				registeredRepositories,
@@ -50,7 +50,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 		
 		public PackageManagementConsoleHostProvider (
-			IPackageManagementSolution solution,
+			IPackageManagementSolution2 solution,
 			IRegisteredPackageRepositories registeredRepositories,
 //			IPowerShellDetection powerShellDetection,
 			IPackageManagementEvents packageEvents)

@@ -32,15 +32,15 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ExtendedPackageManagerFactory : IPackageManagerFactory
+	public class ExtendedPackageManagerFactory : IPackageManagerFactory2
 	{
-		SharpDevelopPackageManagerFactory factory = new SharpDevelopPackageManagerFactory ();
+		MonoDevelopPackageManagerFactory factory = new MonoDevelopPackageManagerFactory ();
 
-		public ISharpDevelopPackageManager CreatePackageManager (
+		public IMonoDevelopPackageManager CreatePackageManager (
 			IPackageRepository sourceRepository,
 			DotNetProject project)
 		{
-			ISharpDevelopPackageManager packageManager = factory.CreatePackageManager (sourceRepository, project);
+			IMonoDevelopPackageManager packageManager = factory.CreatePackageManager (sourceRepository, project);
 			ProjectManager = packageManager.ProjectManager;
 			return packageManager;
 		}

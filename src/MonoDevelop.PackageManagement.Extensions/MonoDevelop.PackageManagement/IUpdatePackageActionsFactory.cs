@@ -33,15 +33,15 @@ namespace ICSharpCode.PackageManagement
 {
 	public interface IUpdatePackageActionsFactory
 	{
-		IUpdatePackageActions CreateUpdateAllPackagesInProject(IPackageManagementProject project);
+		IUpdatePackageActions2 CreateUpdateAllPackagesInProject(IPackageManagementProject2 project);
 		
-		IUpdatePackageActions CreateUpdateAllPackagesInSolution(
-			IPackageManagementSolution solution,
+		IUpdatePackageActions2 CreateUpdateAllPackagesInSolution(
+			IPackageManagementSolution2 solution,
 			IPackageRepository sourceRepository);
 		
-		 IUpdatePackageActions CreateUpdatePackageInAllProjects(
+		IUpdatePackageActions2 CreateUpdatePackageInAllProjects(
 			PackageReference packageReference,
-			IPackageManagementSolution solution,
+			IPackageManagementSolution2 solution,
 			IPackageRepository sourceRepository);
 	}
 }

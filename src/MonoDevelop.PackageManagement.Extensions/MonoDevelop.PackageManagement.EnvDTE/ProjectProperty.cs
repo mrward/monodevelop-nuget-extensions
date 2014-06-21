@@ -89,7 +89,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		string GetTargetFrameworkMoniker ()
 		{
-			var targetFramework = new ProjectTargetFramework (MSBuildProject);
+			var targetFramework = new ProjectTargetFramework2 (MSBuildProject);
 			return targetFramework.TargetFrameworkName.ToString ();
 		}
 

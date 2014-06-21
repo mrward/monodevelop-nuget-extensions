@@ -50,7 +50,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		string prompt = "PM> ";
 		
 		public PackageManagementConsoleHost (
-			IPackageManagementSolution solution,
+			IPackageManagementSolution2 solution,
 			IRegisteredPackageRepositories registeredRepositories,
 			IPackageManagementEvents packageEvents,
 			IPowerShellHostFactory powerShellHostFactory,
@@ -64,7 +64,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 		
 		public PackageManagementConsoleHost (
-			IPackageManagementSolution solution,
+			IPackageManagementSolution2 solution,
 			IRegisteredPackageRepositories registeredRepositories,
 			IPackageManagementEvents packageEvents)
 			: this (
@@ -85,7 +85,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 		
 		public IScriptingConsole ScriptingConsole { get; set; }
-		public IPackageManagementSolution Solution { get; private set; }
+		public IPackageManagementSolution2 Solution { get; private set; }
 		
 		public void Dispose()
 		{
@@ -266,7 +266,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			powerShellHost.ExecuteCommand (preprocessedLine);
 		}
 		
-		public IPackageManagementProject GetProject(string packageSource, string projectName)
+		public IPackageManagementProject2 GetProject(string packageSource, string projectName)
 		{
 			PackageSource source = GetActivePackageSource(packageSource);
 			projectName = GetActiveProjectName(projectName);
@@ -279,7 +279,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		DotNetProject GetDotNetProject(string name)
 		{
-			var openProjects = new OpenDotNetProjects (PackageManagementServices.ProjectService);
+			var openProjects = new OpenDotNetProjects2 (PackageManagementExtendedServices.ProjectService);
 			return openProjects.FindProject (name);
 		}
 		
@@ -299,7 +299,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			return DefaultProject.Name;
 		}
 		
-		public IPackageManagementProject GetProject(IPackageRepository sourceRepository, string projectName)
+		public IPackageManagementProject2 GetProject(IPackageRepository sourceRepository, string projectName)
 		{
 			projectName = GetActiveProjectName(projectName);
 			return Solution.GetProject(sourceRepository, projectName);

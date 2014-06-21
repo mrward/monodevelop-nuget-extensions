@@ -44,7 +44,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		protected IPackageScriptSession Session { get; private set; }
 		
 		public IPackage Package { get; set; }
-		public IPackageManagementProject Project { get; set; }
+		public IPackageManagementProject2 Project { get; set; }
 		
 		public bool Exists()
 		{

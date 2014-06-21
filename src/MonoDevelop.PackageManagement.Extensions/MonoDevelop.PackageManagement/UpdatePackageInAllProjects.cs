@@ -9,40 +9,40 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UpdatePackageInAllProjects : UpdatePackageActions
+	public class UpdatePackageInAllProjects : UpdatePackageActions2
 	{
-		IPackageManagementSolution solution;
+		IPackageManagementSolution2 solution;
 		IPackageRepository sourceRepository;
-		List<IPackageManagementProject> projects;
+		List<IPackageManagementProject2> projects;
 		PackageReference packageReference;
-		
-		public UpdatePackageInAllProjects(
+
+		public UpdatePackageInAllProjects (
 			PackageReference packageReference,
-			IPackageManagementSolution solution,
+			IPackageManagementSolution2 solution,
 			IPackageRepository sourceRepository)
 		{
 			this.packageReference = packageReference;
 			this.solution = solution;
 			this.sourceRepository = sourceRepository;
 		}
-		
-		public override IEnumerable<UpdatePackageAction> CreateActions()
+
+		public override IEnumerable<UpdatePackageAction2> CreateActions ()
 		{
-			GetProjects();
-			foreach (IPackageManagementProject project in projects) {
-				yield return CreateUpdatePackageAction(project);
+			GetProjects ();
+			foreach (IPackageManagementProject2 project in projects) {
+				yield return CreateUpdatePackageAction (project);
 			}
 		}
-		
-		void GetProjects()
+
+		void GetProjects ()
 		{
-			projects = new List<IPackageManagementProject>();
-			projects.AddRange(solution.GetProjects(sourceRepository));
+			projects = new List<IPackageManagementProject2> ();
+			projects.AddRange (solution.GetProjects (sourceRepository));
 		}
-		
-		UpdatePackageAction CreateUpdatePackageAction(IPackageManagementProject project)
+
+		UpdatePackageAction2 CreateUpdatePackageAction (IPackageManagementProject2 project)
 		{
-			UpdatePackageAction action = CreateDefaultUpdatePackageAction(project);
+			UpdatePackageAction2 action = CreateDefaultUpdatePackageAction (project);
 			action.PackageId = packageReference.Id;
 			action.PackageVersion = packageReference.Version;
 			return action;

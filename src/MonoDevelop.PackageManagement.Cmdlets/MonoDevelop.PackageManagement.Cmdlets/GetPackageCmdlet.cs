@@ -206,7 +206,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		UpdatedPackages2 CreateUpdatedPackages (IPackageRepository repository)
 		{
-			IPackageManagementProject project = GetSelectedProject (repository);
+			IPackageManagementProject2 project = GetSelectedProject (repository);
 			if (project != null) {
 				return new UpdatedPackages2 (project, repository);
 			}
@@ -218,7 +218,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			return ConsoleHost.Solution.GetPackages ();
 		}
 
-		IPackageManagementProject GetSelectedProject (IPackageRepository repository)
+		IPackageManagementProject2 GetSelectedProject (IPackageRepository repository)
 		{
 			if (HasSelectedProjectName ()) {
 				return ConsoleHost.GetProject (repository, ProjectName);
@@ -239,14 +239,14 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		IQueryable<IPackage> GetPackagesFromSelectedProjectOrSolution ()
 		{
-			IPackageManagementProject project = GetSelectedProject ();
+			IPackageManagementProject2 project = GetSelectedProject ();
 			if (project != null) {
 				return project.GetPackages ();
 			}
 			return GetSolutionPackages ();
 		}
 
-		IPackageManagementProject GetSelectedProject ()
+		IPackageManagementProject2 GetSelectedProject ()
 		{
 			if (HasSelectedProjectName ()) {
 				return ConsoleHost.GetProject (Source, ProjectName);
