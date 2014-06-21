@@ -68,12 +68,12 @@ namespace ICSharpCode.PackageManagement
 
 		protected void OnParentPackageInstalled ()
 		{
-			packageManagementEvents.OnParentPackageInstalled (Package, null);
+			//packageManagementEvents.OnParentPackageInstalled (Package, null);
 		}
 
 		protected void OnParentPackageUninstalled ()
 		{
-			packageManagementEvents.OnParentPackageUninstalled (Package, null);
+			//packageManagementEvents.OnParentPackageUninstalled (Package, null);
 		}
 
 		public void Execute ()
