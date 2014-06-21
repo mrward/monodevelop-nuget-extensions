@@ -30,6 +30,7 @@ using System;
 using System.IO;
 
 using MD = MonoDevelop.Projects;
+using MonoDevelop.Ide;
 using MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
@@ -182,8 +183,11 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public void Delete ()
 		{
-//			containingProject.DeleteFile (projectItem.FileName);
-//			containingProject.Save ();
+			DispatchService.GuiSyncDispatch (() => {
+				containingProject.RemoveProjectItem (this);
+				containingProject.DeleteFile (projectItem.FilePath);
+				containingProject.Save ();
+			});
 		}
 
 //		public global::EnvDTE.FileCodeModel2 FileCodeModel {
@@ -221,8 +225,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public virtual void Remove ()
 		{
-//			containingProject.RemoveProjectItem (this);
-//			containingProject.Save ();
+			DispatchService.GuiSyncDispatch (() => {
+				containingProject.RemoveProjectItem (this);
+				containingProject.Save ();
+			});
 		}
 
 		internal MD.ProjectFile MSBuildProjectItem {
@@ -278,12 +284,14 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return Path.GetDirectoryName (GetProjectItemRelativePathToProject ());
 		}
 
-//		public void Save (string fileName = null)
-//		{
-//			IViewContent view = containingProject.GetOpenFile (FileName);
-//			if (view != null) {
-//				containingProject.SaveFile (view);
-//			}
-//		}
+		public void Save (string fileName = null)
+		{
+			DispatchService.GuiSyncDispatch (() => {
+				MonoDevelop.Ide.Gui.Document document = containingProject.GetOpenFile (FileName);
+				if (document != null) {
+					document.Save ();
+				}
+			});
+		}
 	}
 }

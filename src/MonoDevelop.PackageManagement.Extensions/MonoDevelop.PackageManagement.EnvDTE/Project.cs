@@ -269,12 +269,14 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//		{
 		//			return Path.GetExtension(FileName).ToLowerInvariant();
 		//		}
-		//
-		//		internal virtual void DeleteFile(string fileName)
-		//		{
-		//			fileService.RemoveFile(fileName);
-		//		}
-		//
+
+		internal virtual void DeleteFile (string fileName)
+		{
+			DispatchService.GuiSyncDispatch (() => {
+				FileService.RemoveFile (fileName);
+			});
+		}
+
 //		internal ProjectItem AddDirectoryProjectItemUsingFullPath (string directory)
 //		{
 //			AddDirectoryProjectItemsRecursively (directory);
@@ -314,11 +316,13 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return MonoDevelop.Core.FileService.AbsoluteToRelativePath (DotNetProject.BaseDirectory, path);
 		}
 
-		//		internal void RemoveProjectItem(ProjectItem projectItem)
-		//		{
-		//			projectService.RemoveProjectItem(DotNetProject, projectItem.MSBuildProjectItem);
-		//		}
-		//
+		internal void RemoveProjectItem (ProjectItem projectItem)
+		{
+			DispatchService.GuiSyncDispatch (() => {
+				DotNetProject.Files.Remove (projectItem.MSBuildProjectItem);
+			});
+		}
+
 		//		internal ProjectItem FindProjectItem(string fileName)
 		//		{
 		//			SD.FileProjectItem item = DotNetProject.FindFile(fileName);
