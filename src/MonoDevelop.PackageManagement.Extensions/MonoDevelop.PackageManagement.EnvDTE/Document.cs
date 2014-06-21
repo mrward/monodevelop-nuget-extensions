@@ -1,5 +1,5 @@
 ﻿// 
-// ItemOperations.cs
+// Document.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -27,35 +27,33 @@
 //
 
 using System;
-using MonoDevelop.Core;
 using MonoDevelop.Ide;
+using MD = MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ItemOperations : MarshalByRefObject, global::EnvDTE.ItemOperations
+	public class Document : MarshalByRefObject, global::EnvDTE.Document
 	{
-		public ItemOperations ()
+		MD.Document document;
+
+		public Document (string fileName, MD.Document document)
 		{
+			this.FullName = fileName;
+			this.document = document;
 		}
 
-		public void OpenFile (string fileName)
-		{
-			DispatchService.GuiSyncDispatch (() => {
-				OpenFile (new FilePath (fileName));
-			});
+		public virtual bool Saved {
+			get { return !document.IsDirty; }
+			set { 
+				DispatchService.GuiSyncDispatch (() => {
+					document.IsDirty = !value;
+				});
+			}
 		}
 
-		void OpenFile (FilePath filePath)
-		{
-			IdeApp.Workbench.OpenDocument (filePath, null, true);
-		}
+		public string FullName { get; private set; }
 
-		public void Navigate (string url)
-		{
-			new Process ().Start(url);
-		}
-		
-		public global::EnvDTE.Window NewFile (string fileName)
+		public Object Object (string modelKind)
 		{
 			throw new NotImplementedException();
 		}

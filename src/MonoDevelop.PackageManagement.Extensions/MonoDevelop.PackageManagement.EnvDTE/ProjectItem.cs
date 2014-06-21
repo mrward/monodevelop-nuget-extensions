@@ -30,6 +30,7 @@ using System;
 using System.IO;
 
 using MD = MonoDevelop.Projects;
+using MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -237,24 +238,24 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return projectItem.FilePath; }
 		}
 
-//		public virtual global::EnvDTE.Document Document {
-//			get { return GetOpenDocument (); }
-//		}
-//
-//		Document GetOpenDocument ()
-//		{
-//			IViewContent view = containingProject.GetOpenFile (FileName);
-//			if (view != null) {
-//				return new Document (FileName, view);
-//			}
-//			return null;
-//		}
+		public virtual global::EnvDTE.Document Document {
+			get { return GetOpenDocument (); }
+		}
 
-//		public virtual global::EnvDTE.Window Open (string viewKind)
-//		{
-//			containingProject.OpenFile (FileName);
-//			return null;
-//		}
+		Document GetOpenDocument ()
+		{
+			MonoDevelop.Ide.Gui.Document document = containingProject.GetOpenFile (FileName);
+			if (document != null) {
+				return new Document (FileName, document);
+			}
+			return null;
+		}
+
+		public virtual global::EnvDTE.Window Open (string viewKind)
+		{
+			containingProject.OpenFile (FileName);
+			return null;
+		}
 
 		public virtual short FileCount {
 			get { return 1; }

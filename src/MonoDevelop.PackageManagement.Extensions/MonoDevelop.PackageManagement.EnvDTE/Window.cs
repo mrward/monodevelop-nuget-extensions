@@ -30,14 +30,14 @@ using System;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Window : MarshalByRefObject//, global::EnvDTE.Window
+	public class Window : MarshalByRefObject, global::EnvDTE.Window
 	{
 		public Window ()
 		{
 		}
-		
-//		public global::EnvDTE.Document Document {
-//			get { throw new NotImplementedException(); }
-//		}
+
+		public global::EnvDTE.Document Document {
+			get { throw new NotImplementedException(); }
+		}
 	}
 }

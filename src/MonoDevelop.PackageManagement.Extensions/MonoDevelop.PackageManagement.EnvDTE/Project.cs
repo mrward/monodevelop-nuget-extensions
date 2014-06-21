@@ -35,6 +35,7 @@ using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.Ide;
+using MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -326,17 +327,25 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		//			}
 		//			return null;
 		//		}
-		//
-		//		internal IViewContent GetOpenFile(string fileName)
-		//		{
-		//			return fileService.GetOpenFile(fileName);
-		//		}
-		//
-		//		internal void OpenFile(string fileName)
-		//		{
-		//			fileService.OpenFile(fileName);
-		//		}
-		//
+
+		internal MonoDevelop.Ide.Gui.Document GetOpenFile (string fileName)
+		{
+			MonoDevelop.Ide.Gui.Document document = null;
+
+			DispatchService.GuiSyncDispatch (() => {
+				document = IdeApp.Workbench.GetDocument (fileName);
+			});
+
+			return document;
+		}
+
+		internal void OpenFile (string fileName)
+		{
+			DispatchService.GuiSyncDispatch (() => {
+				IdeApp.Workbench.OpenDocument (fileName, DotNetProject, true);
+			});
+		}
+
 		internal bool IsFileFileInsideProjectFolder (string filePath)
 		{
 			string relativePath = MonoDevelop.Core.FileService.AbsoluteToRelativePath (DotNetProject.BaseDirectory, filePath);
