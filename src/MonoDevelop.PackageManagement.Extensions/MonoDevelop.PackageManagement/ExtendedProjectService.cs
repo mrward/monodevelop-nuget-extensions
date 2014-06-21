@@ -39,6 +39,8 @@ namespace MonoDevelop.PackageManagement
 		{
 			IdeApp.Workspace.SolutionLoaded += (sender, e) => OnSolutionLoaded (e.Solution);
 			IdeApp.Workspace.SolutionUnloaded += (sender, e) => OnSolutionUnloaded ();
+
+			OpenSolution = IdeApp.ProjectOperations.CurrentSelectedSolution;
 		}
 
 		public event EventHandler SolutionLoaded;

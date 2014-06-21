@@ -47,7 +47,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public Project (DotNetProject project)
 			: this (
 				project,
-				new ExtendedPackageManagementProjectService (),
+				PackageManagementExtendedServices.ProjectService,
 				new PackageManagementFileService ())
 		{
 		}

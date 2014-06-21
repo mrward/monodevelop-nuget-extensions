@@ -43,7 +43,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		Project project;
 
 		public References (MD.DotNetProject project)
-			: this (project, new ExtendedPackageManagementProjectService ())
+			: this (project, PackageManagementExtendedServices.ProjectService)
 		{
 		}
 
