@@ -9,6 +9,7 @@ These features are experimental, subject to change, removal, and should be consi
  * Installing a NuGet package from the unified search
  * Listing Portable Class Libraries available on the local machine
  * Installing, updating, uninstalling NuGet packages for multiple projects in one step.
+ * PowerShell console window - powered by [Pash](https://github.com/Pash-Project/Pash).
 
 # Requirements
 
@@ -27,6 +28,8 @@ The addin is available from the [MonoDevelop addin repository](http://addins.mon
  * Click **Install...** to install the addin.
 
 ![NuGet package management extension addin in the addin manager dialog](doc/images/AddinManagerNuGetExtensionsAddin.png)
+
+Please make sure you close Xamarin Studio and then re-open it before opening the new Package Console window otherwise Xamarin Studio will crash.
 
 # Features
 
@@ -113,3 +116,25 @@ To uninstall a package from multiple projects:
  * Click the **Manage** button.
  * Untick the projects you want the package to be uninstalled from.
  * Click **OK**.
+
+## PowerShell Console Window
+
+Please make sure you have closed and re-opened Xamarin Studio after the addin has been installed before trying to open the PowerShell Console window otherwise Xamarin Studio will crash.
+
+To open the console window, from the **View** menu select **Pads**, then select **Package Console Extension**.
+
+![Package Console Extension window](doc/images/PackageConsoleExtensionWindow.png)
+
+From the top of the Package Console Extension window you can choose a package source or a project. You can also clear the text from the Package Console by clicking the Clear Console button.
+
+From the console itself you can run the standard NuGet commands:
+
+ * Install-Package
+ * Uninstall-Package
+ * Update-Package
+ * Get-Package
+ * Get-Project
+
+The console uses [Pash](https://github.com/Pash-Project/Pash) which is an open source reimplementation of Windows PowerShell, for Mono.
+
+When you install, uninstall or update a NuGet package the console will run the **init.ps1**, **install.ps1** and **uninstall.ps1** scripts that the NuGet package contains. However there are some areas of PowerShell that Pash has not fully implemented so most PowerShell scripts will fail. The failure will be logged in the console window but will not prevent the package from being installed or uninstalled.
