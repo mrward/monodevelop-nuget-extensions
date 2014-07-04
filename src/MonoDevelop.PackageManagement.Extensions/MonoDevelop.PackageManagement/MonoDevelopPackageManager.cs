@@ -40,7 +40,7 @@ namespace ICSharpCode.PackageManagement
 		public MonoDevelopPackageManager (
 			IPackageRepository sourceRepository,
 			IProjectSystem projectSystem,
-			ISolutionPackageRepository solutionPackageRepository,
+			ISolutionPackageRepository2 solutionPackageRepository,
 			IPackageOperationResolverFactory2 packageOperationResolverFactory)
 			: base (
 				sourceRepository,

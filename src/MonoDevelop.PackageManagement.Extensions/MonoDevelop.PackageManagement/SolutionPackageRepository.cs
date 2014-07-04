@@ -35,7 +35,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class SolutionPackageRepository2 : ISolutionPackageRepository
+	public class SolutionPackageRepository2 : ISolutionPackageRepository2
 	{
 		SolutionPackageRepositoryPath2 repositoryPath;
 		ISharpDevelopPackageRepositoryFactory repositoryFactory;

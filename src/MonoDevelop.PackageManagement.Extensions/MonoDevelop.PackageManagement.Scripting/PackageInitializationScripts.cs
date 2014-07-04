@@ -35,12 +35,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 {
 	public class PackageInitializationScripts : IPackageInitializationScripts
 	{
-		ISolutionPackageRepository solutionPackageRepository;
+		ISolutionPackageRepository2 solutionPackageRepository;
 		IPackageScriptFactory scriptFactory;
 		List<IPackageScript> scripts;
 		
 		public PackageInitializationScripts(
-			ISolutionPackageRepository solutionPackageRepository,
+			ISolutionPackageRepository2 solutionPackageRepository,
 			IPackageScriptFactory scriptFactory)
 		{
 			this.solutionPackageRepository = solutionPackageRepository;

@@ -223,6 +223,7 @@
     <Compile Include="MonoDevelop.PackageManagement\ProjectTargetFramework2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\PackagesRequiringLicenseAcceptance2.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Document.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ISolutionPackageRepository2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

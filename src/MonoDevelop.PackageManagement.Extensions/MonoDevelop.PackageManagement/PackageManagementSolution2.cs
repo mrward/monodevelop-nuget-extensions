@@ -160,18 +160,18 @@ namespace ICSharpCode.PackageManagement
 
 		public bool IsPackageInstalled (IPackage package)
 		{
-			ISolutionPackageRepository repository = CreateSolutionPackageRepository ();
+			ISolutionPackageRepository2 repository = CreateSolutionPackageRepository ();
 			return repository.IsInstalled (package);
 		}
 
-		ISolutionPackageRepository CreateSolutionPackageRepository ()
+		ISolutionPackageRepository2 CreateSolutionPackageRepository ()
 		{
 			return new SolutionPackageRepository2 (OpenSolution);
 		}
 
 		public IQueryable<IPackage> GetPackages ()
 		{
-			ISolutionPackageRepository repository = CreateSolutionPackageRepository ();
+			ISolutionPackageRepository2 repository = CreateSolutionPackageRepository ();
 			List<IPackageManagementProject2> projects = GetProjects (ActivePackageRepository).ToList ();
 			return repository
 				.GetPackages ()
@@ -188,13 +188,13 @@ namespace ICSharpCode.PackageManagement
 
 		public string GetInstallPath (IPackage package)
 		{
-			ISolutionPackageRepository repository = CreateSolutionPackageRepository ();
+			ISolutionPackageRepository2 repository = CreateSolutionPackageRepository ();
 			return repository.GetInstallPath (package);
 		}
 
 		public IEnumerable<IPackage> GetPackagesInReverseDependencyOrder ()
 		{
-			ISolutionPackageRepository repository = CreateSolutionPackageRepository ();
+			ISolutionPackageRepository2 repository = CreateSolutionPackageRepository ();
 			return repository.GetPackagesByReverseDependencyOrder ();
 		}
 
