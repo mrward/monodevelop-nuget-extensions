@@ -137,7 +137,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			CreatePowerShellHost();
 			AddModulesToImport();
-			RunPashConfig ();
 //			powerShellHost.SetRemoteSignedExecutionPolicy();
 //			UpdateFormatting();
 			RedefineClearHostFunction();
@@ -156,22 +155,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 					new EnvDTE.DTE ());
 		}
 
-		/// <summary>
-		/// PowerShell configures aliases itself, but Pash requires an extra PowerShell script to be run.
-		/// </summary>
-		void RunPashConfig ()
-		{
-			string command = GetRunPashConfigCommand ();
-			powerShellHost.ExecuteCommand (command);
-		}
-
-		string GetRunPashConfigCommand ()
-		{
-			string assemblyPath = typeof(PackageManagementConsoleHost).Assembly.Location;
-			string configFilePath = Path.Combine (Path.GetDirectoryName (assemblyPath), "config.ps1");
-			return String.Format (". \"{0}\"", configFilePath);
-		}
-		
 		protected virtual Version GetNuGetVersion()
 		{
 			return NuGetVersion.Version;

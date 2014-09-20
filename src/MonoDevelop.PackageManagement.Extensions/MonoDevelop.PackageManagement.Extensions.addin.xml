@@ -19,7 +19,6 @@
 		<Import assembly="MonoDevelop.PackageManagement.Cmdlets.dll" />
 		<Import assembly="MonoDevelop.PackageManagement.PowerShell.dll" />
 		<Import assembly="SharpDevelop.EnvDTE.dll" />
-		<Import file="config.ps1" />
 	</Runtime>
 
 	<Dependencies>
