@@ -55,7 +55,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		public override void WriteVerboseLine(string message)
 		{
-			scriptingConsole.WriteLine(message, ScriptingStyle.Out);
+			scriptingConsole.WriteLine(message, ScriptingStyle.Debug);
 		}
 		
 		public override void WriteProgress(long sourceId, ProgressRecord record)

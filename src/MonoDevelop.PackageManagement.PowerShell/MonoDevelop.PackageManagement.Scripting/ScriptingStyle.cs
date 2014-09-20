@@ -35,6 +35,7 @@ namespace ICSharpCode.Scripting
 		Prompt,
 		Out,
 		Error,
-		Warning
+		Warning,
+		Debug
 	}
 }

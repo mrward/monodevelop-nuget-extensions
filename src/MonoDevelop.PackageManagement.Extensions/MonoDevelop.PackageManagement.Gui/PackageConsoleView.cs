@@ -32,11 +32,12 @@ using ICSharpCode.PackageManagement.Scripting;
 using ICSharpCode.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Ide;
+using MonoDevelop.Ide.Execution;
 using Pango;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class PackageConsoleView : ConsoleView, IScriptingConsole
+	public class PackageConsoleView : ConsoleView2, IScriptingConsole
 	{
 		public PackageConsoleView ()
 		{
@@ -48,14 +49,28 @@ namespace MonoDevelop.PackageManagement
 			SetFont (font);
 		}
 
-		void WriteOutputLine (string message)
+		void WriteOutputLine (string message, ScriptingStyle style)
 		{
-			WriteOutput (message + Environment.NewLine);
+			WriteOutput (message + Environment.NewLine, GetLogLevel (style));
 		}
 		
 		void WriteOutputLine (string format, params object[] args)
 		{
 			WriteOutput (String.Format (format, args) + Environment.NewLine);
+		}
+
+		LogLevel GetLogLevel (ScriptingStyle style)
+		{
+			switch (style) {
+			case ScriptingStyle.Error:
+				return LogLevel.Error;
+			case ScriptingStyle.Warning:
+				return LogLevel.Warning;
+			case ScriptingStyle.Debug:
+				return LogLevel.Debug;
+			default:
+				return LogLevel.Default;
+			}
 		}
 		
 		public bool ScrollToEndWhenTextWritten { get; set; }
@@ -79,11 +94,11 @@ namespace MonoDevelop.PackageManagement
 		{
 			DispatchService.GuiSyncDispatch (() => {
 				if (style == ScriptingStyle.Prompt) {
-					WriteOutputLine (text);
+					WriteOutputLine (text, style);
 					ConfigurePromptString ();
 					Prompt (true);
 				} else {
-					WriteOutputLine (text);
+					WriteOutputLine (text, style);
 				}
 			});
 		}
