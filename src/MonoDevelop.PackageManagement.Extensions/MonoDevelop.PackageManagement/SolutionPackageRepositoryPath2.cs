@@ -28,6 +28,7 @@
 
 using System;
 using System.IO;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet;
 
@@ -40,7 +41,7 @@ namespace ICSharpCode.PackageManagement
 		DefaultPackagePathResolver pathResolver;
 
 		public SolutionPackageRepositoryPath2 (Project project)
-			: this (project, new PackageManagementOptions ())
+			: this (project, PackageManagementServices.Options)
 		{
 		}
 
@@ -51,14 +52,21 @@ namespace ICSharpCode.PackageManagement
 
 		public SolutionPackageRepositoryPath2 (Solution solution, PackageManagementOptions options)
 		{
-			packagesRelativeDirectory = options.PackagesDirectory;
 			this.solution = solution;
-			GetSolutionPackageRepositoryPath ();
+			PackageRepositoryPath = GetSolutionPackageRepositoryPath (options);
 		}
 
-		void GetSolutionPackageRepositoryPath ()
+		string GetSolutionPackageRepositoryPath (PackageManagementOptions options)
 		{
-			PackageRepositoryPath = Path.Combine (solution.BaseDirectory, packagesRelativeDirectory);
+			var settingsProvider = new SettingsProvider2 ();
+			ISettings settings = settingsProvider.LoadSettings();
+
+			string customPath = settings.GetRepositoryPath ();
+			if (!String.IsNullOrEmpty (customPath)) {
+				return Path.GetFullPath (customPath);
+			}
+
+			return Path.Combine (solution.BaseDirectory, options.PackagesDirectory);
 		}
 
 		public string PackageRepositoryPath { get; private set; }
