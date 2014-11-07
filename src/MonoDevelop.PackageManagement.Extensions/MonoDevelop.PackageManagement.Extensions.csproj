@@ -61,6 +61,52 @@
     <Reference Include="SharpDevelop.EnvDTE">
       <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mef">
+      <HintPath>..\..\lib\Autofac.Integration.Mef.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\..\lib\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Xml">
+      <HintPath>..\..\lib\ICSharpCode.NRefactory.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\lib\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\lib\Mono.Cecil.Mdb.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\..\lib\Mono.Cecil.Pdb.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\..\lib\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.CSharp">
+      <HintPath>..\..\lib\Mono.CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ScriptCs.Contracts">
+      <HintPath>..\..\lib\ScriptCs.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptCs.Core">
+      <HintPath>..\..\lib\ScriptCs.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptCs.Engine.Mono">
+      <HintPath>..\..\lib\ScriptCs.Engine.Mono.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptCs.Hosting">
+      <HintPath>..\..\lib\ScriptCs.Hosting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MonoDevelop.PackageManagement\SettingsProvider2.cs" />
@@ -226,6 +272,21 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Document.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ISolutionPackageRepository2.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Gui\ConsoleView2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\RunScriptCsAction.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsScriptFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsScriptRunner.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsInitializeScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsUninstallScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsInstallScriptFileName.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsInitializeScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsUninstallScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsInstallScript.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsSession.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsHost.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\NuGetScriptPack.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\NuGetScriptPackContext.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsConsole.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsLogger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

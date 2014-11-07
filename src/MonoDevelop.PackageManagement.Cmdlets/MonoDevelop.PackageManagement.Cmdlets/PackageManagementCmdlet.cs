@@ -143,8 +143,10 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		protected void ExecuteWithScriptRunner (IPackageManagementProject2 project, Action action)
 		{
-			using (RunPackageScriptsAction runScriptsAction = CreateRunPackageScriptsAction (project)) {
-				action ();
+			using (var runScriptCsAction = new RunScriptCsAction (project, this)) {
+				using (RunPackageScriptsAction runScriptsAction = CreateRunPackageScriptsAction (project)) {
+					action ();
+				}
 			}
 		}
 
