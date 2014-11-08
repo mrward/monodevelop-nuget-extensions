@@ -61,51 +61,17 @@
     <Reference Include="SharpDevelop.EnvDTE">
       <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac">
-      <HintPath>..\..\lib\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Integration.Mef">
-      <HintPath>..\..\lib\Autofac.Integration.Mef.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging">
-      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.NRefactory.CSharp">
-      <HintPath>..\..\lib\ICSharpCode.NRefactory.CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.NRefactory.Xml">
-      <HintPath>..\..\lib\ICSharpCode.NRefactory.Xml.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\lib\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\lib\Mono.Cecil.Mdb.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\lib\Mono.Cecil.Pdb.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\lib\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.CSharp">
       <HintPath>..\..\lib\Mono.CSharp.dll</HintPath>
+      <Aliases>MonoCSharp</Aliases>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\..\lib\ICSharpCode.NRefactory.CSharp.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="ScriptCs.Contracts">
-      <HintPath>..\..\lib\ScriptCs.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptCs.Core">
-      <HintPath>..\..\lib\ScriptCs.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptCs.Engine.Mono">
-      <HintPath>..\..\lib\ScriptCs.Engine.Mono.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptCs.Hosting">
-      <HintPath>..\..\lib\ScriptCs.Hosting.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -287,6 +253,52 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\NuGetScriptPackContext.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsConsole.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsLogger.cs" />
+    <Compile Include="ScriptCs\ScriptExecutor.cs" />
+    <Compile Include="ScriptCs\IFilePreProcessor.cs" />
+    <Compile Include="ScriptCs\IFileSystem.cs" />
+    <Compile Include="ScriptCs\IScriptEngine.cs" />
+    <Compile Include="ScriptCs\IScriptExecutor.cs" />
+    <Compile Include="ScriptCs\FilePreProcessorResult.cs" />
+    <Compile Include="ScriptCs\IFileParser.cs" />
+    <Compile Include="ScriptCs\FileParserContext.cs" />
+    <Compile Include="ScriptCs\AssemblyReferences.cs" />
+    <Compile Include="ScriptCs\ScriptPackSession.cs" />
+    <Compile Include="ScriptCs\ScriptResult.cs" />
+    <Compile Include="ScriptCs\IScriptPack.cs" />
+    <Compile Include="ScriptCs\IScriptPackContext.cs" />
+    <Compile Include="ScriptCs\IScriptPackSession.cs" />
+    <Compile Include="ScriptCs\Guard.cs" />
+    <Compile Include="ScriptCs\ExceptionDispatchInfo.cs" />
+    <Compile Include="ScriptCs\ILog.cs" />
+    <Compile Include="ScriptCs\AbstractLogger.cs" />
+    <Compile Include="ScriptCs\FilePreProcessor.cs" />
+    <Compile Include="ScriptCs\FileSystem.cs" />
+    <Compile Include="ScriptCs\LoadLineProcessor.cs" />
+    <Compile Include="ScriptCs\ReferenceLineProcessor.cs" />
+    <Compile Include="ScriptCs\UsingLineProcessor.cs" />
+    <Compile Include="ScriptCs\DirectiveLineProcessor.cs" />
+    <Compile Include="ScriptCs\ILineProcessor.cs" />
+    <Compile Include="ScriptCs\BehaviorAfterCode.cs" />
+    <Compile Include="ScriptCs\IDirectiveLineProcessor.cs" />
+    <Compile Include="ScriptCs\InvalidDirectiveUseException.cs" />
+    <Compile Include="ScriptCs\MonoHost.cs" />
+    <Compile Include="ScriptCs\MonoScriptEngine.cs" />
+    <Compile Include="ScriptCs\ScriptHostFactory.cs" />
+    <Compile Include="ScriptCs\IScriptHost.cs" />
+    <Compile Include="ScriptCs\IScriptHostFactory.cs" />
+    <Compile Include="ScriptCs\IScriptPackManager.cs" />
+    <Compile Include="ScriptCs\ScriptEnvironment.cs" />
+    <Compile Include="ScriptCs\ScriptHost.cs" />
+    <Compile Include="ScriptCs\ParseResult.cs" />
+    <Compile Include="ScriptCs\SyntaxParser.cs" />
+    <Compile Include="ScriptCs\FormatMessageHandler.cs" />
+    <Compile Include="ScriptCs\ClassTypeVisitor.cs" />
+    <Compile Include="ScriptCs\MethodVisitor.cs" />
+    <Compile Include="ScriptCs\MethodVisitorResult.cs" />
+    <Compile Include="ScriptCs\LogLevel.cs" />
+    <Compile Include="ScriptCs\SessionState.cs" />
+    <Compile Include="ScriptCs\ScriptExecutorExtensions.cs" />
+    <Compile Include="ScriptCs\ScriptPackManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -300,6 +312,7 @@
     <Folder Include="MonoDevelop.PackageManagement\" />
     <Folder Include="MonoDevelop.PackageManagement.Scripting\" />
     <Folder Include="MonoDevelop.PackageManagement.EnvDTE\" />
+    <Folder Include="ScriptCs\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj">

@@ -26,17 +26,17 @@
 //
 
 using System;
+using System.Collections.Generic;
 using NuGet;
 using ScriptCs;
 using ScriptCs.Contracts;
 using ScriptCs.Engine.Mono;
-using ScriptCs.Hosting;
 
 namespace MonoDevelop.PackageManagement
 {
 	public class ScriptCsHost
 	{
-		ScriptServicesBuilder builder;
+		ScriptExecutor executor;
 		ILogger logger;
 		NuGetScriptPack scriptPack;
 
@@ -64,31 +64,33 @@ namespace MonoDevelop.PackageManagement
 
 		void Init ()
 		{
-			if (builder != null) {
+			if (executor != null) {
 				return;
 			}
 
-			var console = new ScriptConsole ();
-
 			var log = new ScriptCsLogger (logger);
-			var consoleLogger = new ScriptConsoleLogger (LogLevel.Debug, console, log);
-			builder = new ScriptServicesBuilder (console, consoleLogger, null);
-			builder
-				.LogLevel (LogLevel.Debug)
-				.Repl (false)
-				.Cache (false);
+
+			var fileSystem = new FileSystem ();
+			executor = new ScriptExecutor (
+				fileSystem,
+				new FilePreProcessor (fileSystem, log, GetLineProcessors (fileSystem)),
+				new MonoScriptEngine (new ScriptHostFactory (), log),
+				log);
+			//executor.AddReferences (typeof(NuGetScriptPackContext));
+			executor.Initialize (new string[0], new [] { scriptPack });
+		}
+
+		IEnumerable<ILineProcessor> GetLineProcessors (ScriptCs.Contracts.IFileSystem fileSystem)
+		{
+			yield return new LoadLineProcessor (fileSystem);
+			yield return new ReferenceLineProcessor (fileSystem);
+			yield return new UsingLineProcessor ();
 		}
 
 		void RunScript (string fileName)
 		{
 			try {
-				builder.ScriptEngine<MonoScriptEngine> ();
-				ScriptServices services = builder.Build ();
-				services.Executor.AddReferences (typeof(NuGetScriptPackContext));
-
-				services.Executor.Initialize (new string[0], new [] { scriptPack });
-
-				ScriptResult result = services.Executor.Execute (fileName);
+				ScriptResult result = executor.Execute (fileName);
 				if (result.CompileExceptionInfo != null) {
 					LogError (result.CompileExceptionInfo.SourceException);
 				}
