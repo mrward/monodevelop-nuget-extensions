@@ -32,7 +32,7 @@ namespace MonoDevelop.PackageManagement
 {
 	public class ScriptCsHost : MonoHost
 	{
-		static NuGetScriptPackContext context;
+		static ScriptCsHostContext context;
 
 		static ScriptCsHost ()
 		{
@@ -41,10 +41,10 @@ namespace MonoDevelop.PackageManagement
 
 		public static ScriptCsHostInfo ScriptHost { get; private set; }
 
-		internal static void SetHost (NuGetScriptPack scriptPack, ILogger logger)
+		internal static void SetContext (ScriptCsHostContext hostContext)
 		{
-			ScriptCsHost.context = (NuGetScriptPackContext)scriptPack.GetContext ();
-			ScriptCsHost.Logger = logger;
+			ScriptCsHost.context = hostContext;
+			ScriptCsHost.Logger = context.Logger;
 		}
 
 		public static IPackage Package {

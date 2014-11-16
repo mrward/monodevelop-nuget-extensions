@@ -1,10 +1,10 @@
 ﻿//
-// MonoDevelopScriptPack.cs
+// ScriptCsHostContext.cs
 //
 // Author:
-//   Matt Ward <ward.matt@gmail.com>
-// 
-// Copyright (C) 2014 Matthew Ward
+//       Matt Ward <matt.ward@xamarin.com>
+//
+// Copyright (c) 2014 Xamarin Inc. (http://xamarin.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,47 +26,36 @@
 //
 
 using System.Collections.Generic;
-using ScriptCs.Contracts;
-using NuGet;
 using ICSharpCode.PackageManagement.EnvDTE;
+using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class NuGetScriptPack : IScriptPack
+	public class ScriptCsHostContext
 	{
-		NuGetScriptPackContext context;
-		Dictionary<string, object> variables = new Dictionary<string, object> ();
-
-		public NuGetScriptPack (ILogger logger)
+		public ScriptCsHostContext (ILogger logger, IDictionary<string, object> variables)
 		{
-			context = new NuGetScriptPackContext (logger);
+			Logger = logger;
+			ReadVariables (variables);
 		}
 
-		public void AddVariable (string name, object value)
+		public ILogger Logger { get; private set; }
+		public string InstallPath { get; private set; }
+		public string ToolsPath { get; private set; }
+		public IPackage Package { get; private set; }
+		public dynamic Project { get; private set; }
+		public dynamic DTE { get; private set; }
+
+		void ReadVariables (IDictionary<string, object> variables)
 		{
-			variables [name] = value;
+			InstallPath = GetVariable<string> (variables, "__rootPath");
+			ToolsPath = GetVariable<string> (variables, "__toolsPath");
+			Package = GetVariable<IPackage> (variables, "__package");
+			Project = GetVariable<object> (variables, "__project");
+			DTE = new DTE ();
 		}
 
-		public void RemoveVariable (string name)
-		{
-			variables.Remove (name);
-		}
-
-		public void Initialize (IScriptPackSession session)
-		{
-		}
-
-		public IScriptPackContext GetContext ()
-		{
-			context.InstallPath = GetVariable<string> ("__rootPath");
-			context.ToolsPath = GetVariable<string> ("__toolsPath");
-			context.Package = GetVariable<IPackage> ("__package");
-			context.Project = GetVariable<object> ("__project");
-			context.DTE = new DTE ();
-			return context;
-		}
-
-		T GetVariable<T> (string name)
+		T GetVariable<T> (IDictionary <string, object> variables, string name)
 			where T: class
 		{
 			object value = null;
@@ -75,10 +64,6 @@ namespace MonoDevelop.PackageManagement
 			}
 
 			return default(T);
-		}
-
-		public void Terminate ()
-		{
 		}
 	}
 }

@@ -38,12 +38,11 @@ namespace MonoDevelop.PackageManagement
 	{
 		ScriptExecutor executor;
 		ILogger logger;
-		NuGetScriptPack scriptPack;
+		Dictionary<string, object> variables = new Dictionary<string, object> ();
 
 		public ScriptCsSession (ILogger logger)
 		{
 			this.logger = logger;
-			scriptPack = new NuGetScriptPack (logger);
 		}
 
 		public void SetEnvironmentPath (string path)
@@ -57,12 +56,12 @@ namespace MonoDevelop.PackageManagement
 
 		public void AddVariable (string name, object value)
 		{
-			scriptPack.AddVariable (name, value);
+			variables [name] = value;
 		}
 
 		public void RemoveVariable (string name)
 		{
-			scriptPack.RemoveVariable (name);
+			variables.Remove (name);
 		}
 
 		public void InvokeScript (string script)
@@ -86,7 +85,7 @@ namespace MonoDevelop.PackageManagement
 				new FilePreProcessor (fileSystem, log, GetLineProcessors (fileSystem)),
 				new ScriptCsEngine (log),
 				log);
-			executor.Initialize (new string[0], new [] { scriptPack });
+			executor.Initialize (new string[0], new IScriptPack[0]);
 		}
 
 		static IEnumerable<ILineProcessor> GetLineProcessors (ScriptCs.Contracts.IFileSystem fileSystem)
@@ -115,7 +114,7 @@ namespace MonoDevelop.PackageManagement
 		void RunScript (string fileName)
 		{
 			try {
-				ScriptCsHost.SetHost (scriptPack, logger);
+				ScriptCsHost.SetContext (new ScriptCsHostContext (logger, variables));
 				ScriptResult result = executor.Execute (fileName);
 				if (result.CompileExceptionInfo != null) {
 					LogError (result.CompileExceptionInfo.SourceException);
