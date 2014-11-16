@@ -299,6 +299,8 @@
     <Compile Include="ScriptCs\SessionState.cs" />
     <Compile Include="ScriptCs\ScriptExecutorExtensions.cs" />
     <Compile Include="ScriptCs\ScriptPackManager.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsHostInfo.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

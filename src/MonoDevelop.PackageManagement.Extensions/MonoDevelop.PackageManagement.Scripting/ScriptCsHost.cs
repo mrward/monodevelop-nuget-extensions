@@ -25,86 +25,68 @@
 // THE SOFTWARE.
 //
 
-using System;
-using System.Collections.Generic;
-using NuGet;
-using ScriptCs;
-using ScriptCs.Contracts;
 using ScriptCs.Engine.Mono;
+using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ScriptCsHost
+	public class ScriptCsHost : MonoHost
 	{
-		ScriptExecutor executor;
-		ILogger logger;
-		NuGetScriptPack scriptPack;
+		static NuGetScriptPackContext context;
 
-		public ScriptCsHost (ILogger logger)
+		static ScriptCsHost ()
 		{
-			this.logger = logger;
-			scriptPack = new NuGetScriptPack (logger);
+			ScriptHost = new ScriptCsHostInfo ();
 		}
 
-		public void AddVariable (string name, object value)
+		public static ScriptCsHostInfo ScriptHost { get; private set; }
+
+		internal static void SetHost (NuGetScriptPack scriptPack, ILogger logger)
 		{
-			scriptPack.AddVariable (name, value);
+			ScriptCsHost.context = (NuGetScriptPackContext)scriptPack.GetContext ();
+			ScriptCsHost.Logger = logger;
 		}
 
-		public void RemoveVariable (string name)
-		{
-			scriptPack.RemoveVariable (name);
+		public static IPackage Package {
+			get { return context.Package; }
 		}
 
-		public void InvokeScript (string fileName)
-		{
-			Init ();
-			RunScript (fileName);
+		public static string InstallPath {
+			get { return context.InstallPath; }
 		}
 
-		void Init ()
-		{
-			if (executor != null) {
-				return;
-			}
-
-			var log = new ScriptCsLogger (logger);
-
-			var fileSystem = new FileSystem ();
-			executor = new ScriptExecutor (
-				fileSystem,
-				new FilePreProcessor (fileSystem, log, GetLineProcessors (fileSystem)),
-				new MonoScriptEngine (new ScriptHostFactory (), log),
-				log);
-			//executor.AddReferences (typeof(NuGetScriptPackContext));
-			executor.Initialize (new string[0], new [] { scriptPack });
+		public static string ToolsPath {
+			get { return context.ToolsPath; }
 		}
 
-		IEnumerable<ILineProcessor> GetLineProcessors (ScriptCs.Contracts.IFileSystem fileSystem)
-		{
-			yield return new LoadLineProcessor (fileSystem);
-			yield return new ReferenceLineProcessor (fileSystem);
-			yield return new UsingLineProcessor ();
+		public static dynamic Project {
+			get { return context.Project; }
 		}
 
-		void RunScript (string fileName)
-		{
-			try {
-				ScriptResult result = executor.Execute (fileName);
-				if (result.CompileExceptionInfo != null) {
-					LogError (result.CompileExceptionInfo.SourceException);
-				}
-				if (result.ExecuteExceptionInfo != null) {
-					LogError (result.ExecuteExceptionInfo.SourceException);
-				}
-			} catch (Exception ex) {
-				LogError (ex);
-			}
+		public static dynamic DTE {
+			get { return context.DTE; }
 		}
 
-		void LogError (Exception ex)
+		static ILogger Logger { get; set; }
+
+		public static void Log (string message)
 		{
-			logger.Log (MessageLevel.Error, ex.ToString ());
+			Logger.Log (MessageLevel.Info, message);
+		}
+
+		public static void LogDebug (string message)
+		{
+			Logger.Log (MessageLevel.Debug, message);
+		}
+
+		public static void LogError (string message)
+		{
+			Logger.Log (MessageLevel.Error, message);
+		}
+
+		public static void LogWarning (string message)
+		{
+			Logger.Log (MessageLevel.Warning, message);
 		}
 	}
 }

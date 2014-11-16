@@ -28,16 +28,22 @@
 using System;
 using ICSharpCode.PackageManagement.Scripting;
 using NuGet;
+using ScriptCs;
+using ScriptCs.Contracts;
+using System.Collections.Generic;
 
 namespace MonoDevelop.PackageManagement
 {
 	public class ScriptCsSession : IPackageScriptSession
 	{
-		ScriptCsHost host;
+		ScriptExecutor executor;
+		ILogger logger;
+		NuGetScriptPack scriptPack;
 
 		public ScriptCsSession (ILogger logger)
 		{
-			host = new ScriptCsHost (logger);
+			this.logger = logger;
+			scriptPack = new NuGetScriptPack (logger);
 		}
 
 		public void SetEnvironmentPath (string path)
@@ -51,18 +57,43 @@ namespace MonoDevelop.PackageManagement
 
 		public void AddVariable (string name, object value)
 		{
-			host.AddVariable (name, value);
+			scriptPack.AddVariable (name, value);
 		}
 
 		public void RemoveVariable (string name)
 		{
-			host.RemoveVariable (name);
+			scriptPack.RemoveVariable (name);
 		}
 
 		public void InvokeScript (string script)
 		{
+			Init ();
 			string fileName = GetFileName (script);
-			host.InvokeScript (fileName);
+			RunScript (fileName);
+		}
+
+		void Init ()
+		{
+			if (executor != null) {
+				return;
+			}
+
+			var log = new ScriptCsLogger (logger);
+
+			var fileSystem = new FileSystem ();
+			executor = new ScriptExecutor (
+				fileSystem,
+				new FilePreProcessor (fileSystem, log, GetLineProcessors (fileSystem)),
+				new ScriptCsEngine (log),
+				log);
+			executor.Initialize (new string[0], new [] { scriptPack });
+		}
+
+		static IEnumerable<ILineProcessor> GetLineProcessors (ScriptCs.Contracts.IFileSystem fileSystem)
+		{
+			yield return new LoadLineProcessor (fileSystem);
+			yield return new ReferenceLineProcessor (fileSystem);
+			yield return new UsingLineProcessor ();
 		}
 
 		/// <summary>
@@ -79,6 +110,27 @@ namespace MonoDevelop.PackageManagement
 			string trimmedScript = script.Substring (0, index);
 			trimmedScript = trimmedScript.Substring ("& '".Length);
 			return trimmedScript;
+		}
+
+		void RunScript (string fileName)
+		{
+			try {
+				ScriptCsHost.SetHost (scriptPack, logger);
+				ScriptResult result = executor.Execute (fileName);
+				if (result.CompileExceptionInfo != null) {
+					LogError (result.CompileExceptionInfo.SourceException);
+				}
+				if (result.ExecuteExceptionInfo != null) {
+					LogError (result.ExecuteExceptionInfo.SourceException);
+				}
+			} catch (Exception ex) {
+				LogError (ex);
+			}
+		}
+
+		void LogError (Exception ex)
+		{
+			logger.Log (MessageLevel.Error, ex.ToString ());
 		}
 	}
 }
