@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A4316443-D17A-4832-B7ED-634CB0F10EC2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ScriptCs</RootNamespace>
+    <AssemblyName>ScriptCs</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Mono.CSharp">
+      <HintPath>..\..\lib\Mono.CSharp.dll</HintPath>
+      <Aliases>MonoCSharp</Aliases>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\..\lib\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory">
+      <HintPath>..\..\lib\ICSharpCode.NRefactory.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\CommonAssemblyInfo.cs" />
+    <Compile Include="Properties\CommonVersionInfo.cs" />
+    <Compile Include="Common.Logging\AbstractLogger.cs" />
+    <Compile Include="Common.Logging\FormatMessageHandler.cs" />
+    <Compile Include="Common.Logging\ILog.cs" />
+    <Compile Include="Common.Logging\LogLevel.cs" />
+    <Compile Include="ScriptCs.Contracts\AssemblyReferences.cs" />
+    <Compile Include="ScriptCs.Contracts\BehaviorAfterCode.cs" />
+    <Compile Include="ScriptCs.Contracts\DirectiveLineProcessor.cs" />
+    <Compile Include="ScriptCs.Contracts\ExceptionDispatchInfo.cs" />
+    <Compile Include="ScriptCs.Contracts\FileParserContext.cs" />
+    <Compile Include="ScriptCs.Contracts\FilePreProcessorResult.cs" />
+    <Compile Include="ScriptCs.Contracts\IDirectiveLineProcessor.cs" />
+    <Compile Include="ScriptCs.Contracts\IFileParser.cs" />
+    <Compile Include="ScriptCs.Contracts\IFilePreProcessor.cs" />
+    <Compile Include="ScriptCs.Contracts\IFileSystem.cs" />
+    <Compile Include="ScriptCs.Contracts\ILineProcessor.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptEngine.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptExecutor.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptHost.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptHostFactory.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptPack.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptPackContext.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptPackManager.cs" />
+    <Compile Include="ScriptCs.Contracts\IScriptPackSession.cs" />
+    <Compile Include="ScriptCs.Contracts\ScriptPackSession.cs" />
+    <Compile Include="ScriptCs.Contracts\ScriptResult.cs" />
+    <Compile Include="ScriptCs.Contracts\Exceptions\InvalidDirectiveUseException.cs" />
+    <Compile Include="ScriptCs.Core\FilePreProcessor.cs" />
+    <Compile Include="ScriptCs.Core\FileSystem.cs" />
+    <Compile Include="ScriptCs.Core\Guard.cs" />
+    <Compile Include="ScriptCs.Core\LoadLineProcessor.cs" />
+    <Compile Include="ScriptCs.Core\ReferenceLineProcessor.cs" />
+    <Compile Include="ScriptCs.Core\ScriptEnvironment.cs" />
+    <Compile Include="ScriptCs.Core\ScriptExecutor.cs" />
+    <Compile Include="ScriptCs.Core\ScriptExecutorExtensions.cs" />
+    <Compile Include="ScriptCs.Core\ScriptHost.cs" />
+    <Compile Include="ScriptCs.Core\ScriptHostFactory.cs" />
+    <Compile Include="ScriptCs.Core\ScriptPackManager.cs" />
+    <Compile Include="ScriptCs.Core\SessionState.cs" />
+    <Compile Include="ScriptCs.Core\UsingLineProcessor.cs" />
+    <Compile Include="ScriptCs.Engine.Mono\MonoHost.cs" />
+    <Compile Include="ScriptCs.Engine.Mono\MonoScriptEngine.cs" />
+    <Compile Include="ScriptCs.Engine.Mono\Parser\ParseResult.cs" />
+    <Compile Include="ScriptCs.Engine.Mono\Parser\SyntaxParser.cs" />
+    <Compile Include="ScriptCs.Engine.Mono\Parser\Visitors\ClassTypeVisitor.cs" />
+    <Compile Include="ScriptCs.Engine.Mono\Parser\Visitors\MethodVisitor.cs" />
+    <Compile Include="ScriptCs.Engine.Mono\Parser\Visitors\MethodVisitorResult.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Common.Logging\" />
+    <Folder Include="ScriptCs.Contracts\" />
+    <Folder Include="ScriptCs.Core\" />
+    <Folder Include="ScriptCs.Engine.Mono\" />
+  </ItemGroup>
+</Project>
