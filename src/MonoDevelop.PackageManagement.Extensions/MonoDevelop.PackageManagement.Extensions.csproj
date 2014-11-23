@@ -249,7 +249,6 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsInstallScript.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsSession.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsHost.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsConsole.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsLogger.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsHostInfo.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptCsEngine.cs" />
