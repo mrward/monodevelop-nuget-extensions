@@ -36,6 +36,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public PackageUninstallScript(IPackage package, IPackageScriptFileName fileName)
 			: base(package, fileName)
 		{
+			UseTargetSpecificScript = true;
 		}
 	}
 }
