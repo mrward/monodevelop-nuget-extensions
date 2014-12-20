@@ -36,7 +36,6 @@ namespace ICSharpCode.PackageManagement
 {
 	public class SolutionPackageRepositoryPath2
 	{
-		string packagesRelativeDirectory;
 		Solution solution;
 		DefaultPackagePathResolver pathResolver;
 

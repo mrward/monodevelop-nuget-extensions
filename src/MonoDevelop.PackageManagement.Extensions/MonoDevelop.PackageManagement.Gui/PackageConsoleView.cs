@@ -33,6 +33,7 @@ using ICSharpCode.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Ide;
 using MonoDevelop.Ide.Execution;
+using MonoDevelop.Ide.Fonts;
 using Pango;
 
 namespace MonoDevelop.PackageManagement
@@ -45,8 +46,7 @@ namespace MonoDevelop.PackageManagement
 			PromptString = String.Empty;
 			Clear ();
 			
-			FontDescription font = FontDescription.FromString (DesktopService.DefaultMonospaceFont);
-			SetFont (font);
+			SetFont (FontService.MonospaceFont);
 		}
 
 		void WriteOutputLine (string message, ScriptingStyle style)
