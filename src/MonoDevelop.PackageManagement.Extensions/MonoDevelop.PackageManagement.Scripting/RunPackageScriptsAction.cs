@@ -38,28 +38,28 @@ namespace ICSharpCode.PackageManagement.Scripting
 		IPackageScriptFactory scriptFactory;
 		IPackageScriptRunner scriptRunner;
 		ExtendedPackageManagementProject extendedProject;
-		//IGlobalMSBuildProjectCollection projectCollection;
+		IGlobalMSBuildProjectCollection projectCollection;
 		
 		public RunPackageScriptsAction(
 			IPackageScriptRunner scriptRunner,
 			IPackageManagementProject2 project)
-			: this(project, scriptRunner, new PackageScriptFactory()) //, new GlobalMSBuildProjectCollection())
+			: this(project, scriptRunner, new PackageScriptFactory (), new GlobalMSBuildProjectCollection ())
 		{
 		}
 		
-		public RunPackageScriptsAction(
+		public RunPackageScriptsAction (
 			IPackageManagementProject2 project,
 			IPackageScriptRunner scriptRunner,
-			IPackageScriptFactory scriptFactory)
-			//IGlobalMSBuildProjectCollection projectCollection)
+			IPackageScriptFactory scriptFactory,
+			IGlobalMSBuildProjectCollection projectCollection)
 		{
 			this.project = project;
 			extendedProject = project as ExtendedPackageManagementProject;
 			this.scriptRunner = scriptRunner;
 			this.scriptFactory = scriptFactory;
-			//this.projectCollection = projectCollection;
+			this.projectCollection = projectCollection;
 			
-			//projectCollection.AddProject(project);
+			projectCollection.AddProject(project);
 			RegisterEvents();
 		}
 		
@@ -125,7 +125,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			IsDisposed = true;
 			UnregisterEvents();
-			//projectCollection.Dispose();
+			projectCollection.Dispose();
 		}
 		
 		public bool IsDisposed { get; private set; }
