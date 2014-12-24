@@ -85,7 +85,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 
 			foreach (MSBuildImport importToRemove in importsToRemove) {
-				originalMSBuildProject.Document.RemoveChild (importToRemove.Element);
+				importToRemove.Element.ParentNode.RemoveChild (importToRemove.Element);
 			}
 
 			result.AddProjectImportsRemoved (importsToRemove);
