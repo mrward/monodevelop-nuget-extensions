@@ -64,7 +64,8 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		string GetMSBuildProjectProperty (string name)
 		{
-			return MSBuildProject.GetEvaluatedProperty (name);
+			return String.Empty;
+			//return MSBuildProject.GetEvaluatedProperty (name);
 		}
 
 		bool IsTargetFrameworkMoniker ()
