@@ -1,4 +1,4 @@
-<AddinProject appVersion="5.9">
+<AddinProject appVersion="5.9.2">
   <Project platforms="Mac Linux Win32">
     <AddinFile>bin/MonoDevelop.PackageManagement.Extensions.dll</AddinFile>
     <BuildFile>src/MonoDevelop.PackageManagement.Extensions.sln</BuildFile>
