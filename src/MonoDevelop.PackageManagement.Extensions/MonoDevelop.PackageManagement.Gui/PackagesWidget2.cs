@@ -93,10 +93,10 @@ namespace MonoDevelop.PackageManagement
 
 		Gdk.Pixbuf GetImage (string name, IconSize size)
 		{
-			Gtk.Image image = ImageService.GetImage (name, size);
-			if (image != null) {
-				return image.Pixbuf;
-			}
+//			Gtk.Image image = ImageService.GetImage (name, size);
+//			if (image != null) {
+//				return image.Pixbuf;
+//			}
 			return null;
 		}
 		
