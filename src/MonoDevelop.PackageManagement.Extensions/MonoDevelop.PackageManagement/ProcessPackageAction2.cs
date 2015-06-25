@@ -207,16 +207,16 @@ namespace ICSharpCode.PackageManagement
 		void GetPackageIfMissing ()
 		{
 			if (Package == null) {
-				FindPackage ();
+				Package = FindPackage ();
 			}
 			if (Package == null) {
 				ThrowPackageNotFoundError (PackageId);
 			}
 		}
 
-		void FindPackage ()
+		protected virtual IPackage FindPackage ()
 		{
-			Package = Project
+			return Project
 				.SourceRepository
 				.FindPackage (PackageId, PackageVersion, AllowPrereleaseVersions, allowUnlisted: false);
 		}

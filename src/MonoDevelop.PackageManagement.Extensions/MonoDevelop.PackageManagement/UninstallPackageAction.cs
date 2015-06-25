@@ -29,6 +29,7 @@
 using System;
 using System.IO;
 using NuGet;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement
 {
@@ -65,6 +66,12 @@ namespace ICSharpCode.PackageManagement
 
 		protected override string StartingMessageFormat {
 			get { return "Removing {0}..."; }
+		}
+
+		protected override IPackage FindPackage ()
+		{
+			var extendedProject = (ExtendedPackageManagementProject)Project;
+			return extendedProject.FindLocalPackage (PackageId, PackageVersion);
 		}
 	}
 }

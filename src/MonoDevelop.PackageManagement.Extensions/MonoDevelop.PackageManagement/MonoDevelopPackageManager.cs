@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
@@ -116,10 +117,20 @@ namespace ICSharpCode.PackageManagement
 
 		public override void UninstallPackage (IPackage package, bool forceRemove, bool removeDependencies)
 		{
-			ProjectManager.RemovePackageReference (package.Id, forceRemove, removeDependencies);
-			if (!IsPackageReferencedByOtherProjects (package)) {
+			if (IsProjectPackage (package)) {
+				ProjectManager.RemovePackageReference (package.Id, forceRemove, removeDependencies);
+				if (!IsPackageReferencedByOtherProjects (package)) {
+					base.UninstallPackage (package, forceRemove, removeDependencies);
+				}
+			} else {
 				base.UninstallPackage (package, forceRemove, removeDependencies);
 			}
+		}
+
+		bool IsProjectPackage (IPackage package)
+		{
+			return package.HasProjectContent () ||
+				package.DependencySets.SelectMany (p => p.Dependencies).Any ();
 		}
 
 		public void UninstallPackageFromSolutionRepository (IPackage package)

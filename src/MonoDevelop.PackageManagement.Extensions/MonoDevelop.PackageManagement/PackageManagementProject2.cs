@@ -205,5 +205,32 @@ namespace ICSharpCode.PackageManagement
 		{
 			return projectManager.LocalRepository.FindPackage (packageId);
 		}
+
+		public IPackage FindLocalPackage (string packageId, SemanticVersion packageVersion)
+		{
+			IPackage package = projectManager
+				.LocalRepository
+				.FindPackage (packageId, packageVersion);
+
+			if (package != null) {
+				return package;
+			}
+
+			if (packageVersion != null) {
+				return packageManager.LocalRepository.FindPackage (packageId, packageVersion);
+			}
+
+			List<IPackage> packages = packageManager.LocalRepository.FindPackagesById (packageId).ToList ();
+			if (packages.Count > 1) {
+				throw CreateAmbiguousPackageException (packageId);
+			}
+			return packages.FirstOrDefault ();
+		}
+
+		InvalidOperationException CreateAmbiguousPackageException (string packageId)
+		{
+			string message = String.Format ("Multiple versions of '{0} found. Please specify the version.", packageId);
+			return new InvalidOperationException (message);
+		}
 	}
 }
