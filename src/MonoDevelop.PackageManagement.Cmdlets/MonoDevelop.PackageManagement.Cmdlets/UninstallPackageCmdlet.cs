@@ -93,7 +93,8 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		UninstallPackageAction2 CreateUninstallPackageAction (ExtendedPackageManagementProject project)
 		{
 			UninstallPackageAction2 action = project.CreateUninstallPackageAction ();
-			action.Package = project.ProjectManager.LocalRepository.FindPackage (Id, Version);
+			action.PackageId = Id;
+			action.PackageVersion = Version;
 			action.ForceRemove = Force.IsPresent;
 			action.RemoveDependencies = RemoveDependencies.IsPresent;
 //			action.PackageScriptRunner = this;
