@@ -50,6 +50,8 @@ namespace ICSharpCode.PackageManagement
 
 		DotNetProject DotNetProject { get; }
 
+		IPackageConstraintProvider ConstraintProvider { get; }
+
 		bool IsPackageInstalled(IPackage package);
 		bool IsPackageInstalled(string packageId);
 		bool HasOlderPackageInstalled(IPackage package);
