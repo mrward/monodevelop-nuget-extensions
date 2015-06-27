@@ -229,7 +229,7 @@ namespace ICSharpCode.PackageManagement
 
 		InvalidOperationException CreateAmbiguousPackageException (string packageId)
 		{
-			string message = String.Format ("Multiple versions of '{0} found. Please specify the version.", packageId);
+			string message = String.Format ("Multiple versions of '{0}' found. Please specify the version.", packageId);
 			return new InvalidOperationException (message);
 		}
 	}
