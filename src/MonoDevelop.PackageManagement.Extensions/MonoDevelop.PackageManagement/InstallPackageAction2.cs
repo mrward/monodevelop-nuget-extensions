@@ -40,9 +40,11 @@ namespace ICSharpCode.PackageManagement
 			IPackageManagementEvents packageManagementEvents)
 			: base(project, packageManagementEvents)
 		{
+			DependencyVersion = DependencyVersion.Lowest;
 		}
 
 		public bool IgnoreDependencies { get; set; }
+		public DependencyVersion DependencyVersion { get; set; }
 
 		protected override IEnumerable<PackageOperation> GetPackageOperations()
 		{
