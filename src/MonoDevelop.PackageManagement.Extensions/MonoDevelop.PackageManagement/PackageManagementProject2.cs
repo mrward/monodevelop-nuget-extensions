@@ -216,7 +216,7 @@ namespace ICSharpCode.PackageManagement
 			return projectManager.LocalRepository.FindPackage (packageId);
 		}
 
-		public IPackage FindLocalPackage (string packageId, SemanticVersion packageVersion)
+		public IPackage FindPackage (string packageId, SemanticVersion packageVersion)
 		{
 			IPackage package = projectManager
 				.LocalRepository
@@ -241,6 +241,11 @@ namespace ICSharpCode.PackageManagement
 		{
 			string message = String.Format ("Multiple versions of '{0}' found. Please specify the version.", packageId);
 			return new InvalidOperationException (message);
+		}
+
+		public ReinstallPackageAction2 CreateReinstallPackageAction()
+		{
+			return new ReinstallPackageAction2 (this, packageManagementEvents);
 		}
 	}
 }

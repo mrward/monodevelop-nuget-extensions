@@ -71,7 +71,7 @@ namespace ICSharpCode.PackageManagement
 		protected override IPackage FindPackage ()
 		{
 			var extendedProject = (ExtendedPackageManagementProject)Project;
-			return extendedProject.FindLocalPackage (PackageId, PackageVersion);
+			return extendedProject.FindPackage (PackageId, PackageVersion);
 		}
 	}
 }

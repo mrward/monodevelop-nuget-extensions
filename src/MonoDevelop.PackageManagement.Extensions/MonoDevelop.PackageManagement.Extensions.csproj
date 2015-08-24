@@ -237,6 +237,9 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\MSBuildProjectImportsMerger.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\GlobalMSBuildProjectCollectionMSBuildExtension.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ProjectRootElementExtensions.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageFromRepositoryExtensions2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\IPackageRepositoryExtensions2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ReinstallPackageAction2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

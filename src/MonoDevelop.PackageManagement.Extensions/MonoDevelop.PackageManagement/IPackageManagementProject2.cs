@@ -74,7 +74,10 @@ namespace ICSharpCode.PackageManagement
 		UninstallPackageAction2 CreateUninstallPackageAction();
 		UpdatePackageAction2 CreateUpdatePackageAction();
 		UpdatePackagesAction2 CreateUpdatePackagesAction();
+		ReinstallPackageAction2 CreateReinstallPackageAction();
 
 		void RunPackageOperations(IEnumerable<PackageOperation> expectedOperations);
+
+		IPackage FindPackage (string packageId, SemanticVersion version);
 	}
 }
