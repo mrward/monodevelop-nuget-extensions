@@ -66,7 +66,7 @@ namespace MonoDevelop.PackageManagement
 
 		protected override void Update (CommandInfo info)
 		{
-			info.Enabled = !IsDotNetProjectSelected ();
+			info.Enabled = PackageManagementServices.Solution.IsOpen && !IsDotNetProjectSelected ();
 		}
 	}
 }
