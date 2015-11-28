@@ -93,7 +93,12 @@ namespace MonoDevelop.PackageManagement
 
 		bool IsProjectSelected ()
 		{
-			return PackageManagementExtendedServices.ProjectService.CurrentProject != null;
+			try {
+				return PackageManagementExtendedServices.ProjectService.CurrentProject != null;
+			} catch (Exception ex) {
+				LoggingService.LogError ("Error getting current project.", ex);
+			}
+			return false;
 		}
 
 		void ISearchDataSource.Activate (int item)
