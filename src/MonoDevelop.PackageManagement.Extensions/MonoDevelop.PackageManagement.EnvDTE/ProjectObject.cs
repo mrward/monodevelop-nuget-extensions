@@ -30,7 +30,7 @@ using System;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ProjectObject : MarshalByRefObject//, global::EnvDTE.ProjectObject
+	public class ProjectObject : MarshalByRefObject, global::EnvDTE.ProjectObject
 	{
 		public ProjectObject(Project project)
 		{
@@ -38,13 +38,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			References = new References (project);
 		}
 		
-//		public global::EnvDTE.References References { get; private set; }
-		public References References { get; private set; }
-//		public global::EnvDTE.Project Project { get; private set; }
-		public Project Project { get; private set; }
-		
-//		public global::EnvDTE.DTE DTE {
-		public DTE DTE {
+		public global::EnvDTE.References References { get; private set; }
+		public global::EnvDTE.Project Project { get; private set; }
+
+		public global::EnvDTE.DTE DTE {
 			get { return Project.DTE; }
 		}
 	}

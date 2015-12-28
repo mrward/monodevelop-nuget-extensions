@@ -42,8 +42,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			this.projectItem = projectItem;
 		}
 
-		//		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
-		protected override IEnumerable<ProjectItem> GetProjectItems ()
+		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
 		{
 			return new ChildProjectItems (projectItem);
 		}

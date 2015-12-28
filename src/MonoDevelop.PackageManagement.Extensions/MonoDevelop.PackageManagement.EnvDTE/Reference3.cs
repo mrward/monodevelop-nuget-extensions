@@ -32,7 +32,7 @@ using MD = MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Reference3 : Reference//, global::EnvDTE.Reference3
+	public class Reference3 : Reference, global::EnvDTE.Reference3
 	{
 		public Reference3 (Project project, MD.ProjectReference referenceProjectItem)
 			: base (project, referenceProjectItem)

@@ -35,7 +35,7 @@ using MonoDevelop.Core;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ProjectItems : MarshalByRefObject, IEnumerable//, global::EnvDTE.ProjectItems
+	public class ProjectItems : MarshalByRefObject, IEnumerable, global::EnvDTE.ProjectItems
 	{
 		IPackageManagementFileService fileService;
 		object parent;
@@ -62,8 +62,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return parent; }
 		}
 
-//		public virtual void AddFromFileCopy (string filePath)
-//		{
+		public virtual void AddFromFileCopy (string filePath)
+		{
+			throw new NotImplementedException ();
 //			string fileAdded = filePath;
 //			if (IsFileInsideProjectFolder (filePath)) {
 //				ThrowExceptionIfFileDoesNotExist (filePath);
@@ -73,7 +74,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 //			
 //			AddFileProjectItemToProject (fileAdded);
 //			Project.Save ();
-//		}
+		}
 
 		/// <summary>
 		/// The file will be copied inside the folder for the parent containing 
@@ -127,8 +128,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return GetProjectItems ().GetEnumerator ();
 		}
 
-//		protected virtual IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
-		protected virtual IEnumerable<ProjectItem> GetProjectItems ()
+		protected virtual IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
 		{
 			return new ProjectItemsInsideProject (Project, fileService);
 		}
@@ -150,8 +150,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 				.First () as ProjectItem;
 		}
 
-//		public virtual global::EnvDTE.ProjectItem Item (object index)
-		public virtual ProjectItem Item (object index)
+		public virtual global::EnvDTE.ProjectItem Item (object index)
 		{
 			if (index is int) {
 				return Item ((int)index);
@@ -159,19 +158,21 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return Item (index as string);
 		}
 
-//		public virtual global::EnvDTE.ProjectItem AddFromDirectory (string directory)
-//		{
+		public virtual global::EnvDTE.ProjectItem AddFromDirectory (string directory)
+		{
+			throw new NotImplementedException ();
 //			ProjectItem directoryItem = Project.AddDirectoryProjectItemUsingFullPath (directory);
 //			Project.Save ();
 //			return directoryItem;
-//		}
+		}
 
-//		public virtual global::EnvDTE.ProjectItem AddFromFile (string fileName)
-//		{
+		public virtual global::EnvDTE.ProjectItem AddFromFile (string fileName)
+		{
+			throw new NotImplementedException ();
 //			ProjectItem projectItem = AddFileProjectItemToProject (fileName);
 //			Project.Save ();
 //			return projectItem;
-//		}
+		}
 
 		/// <summary>
 		/// Adds a file to the project with this ProjectItems as its parent.

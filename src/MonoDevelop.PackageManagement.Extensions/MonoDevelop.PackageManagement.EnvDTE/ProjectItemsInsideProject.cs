@@ -48,8 +48,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			this.fileService = fileService;
 		}
 
-//		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
-		protected override IEnumerable<ProjectItem> GetProjectItems ()
+		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
 		{
 			foreach (MD.ProjectItem item in project.DotNetProject.Items) {
 				ProjectItem projectItem = ConvertToProjectItem (item);

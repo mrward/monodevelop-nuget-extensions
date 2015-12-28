@@ -35,7 +35,7 @@ using MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ProjectItem //: global::EnvDTE.ProjectItemBase, global::EnvDTE.ProjectItem
+	public class ProjectItem : global::EnvDTE.ProjectItemBase, global::EnvDTE.ProjectItem
 	{
 		MD.ProjectFile projectItem;
 		Project containingProject;
@@ -54,8 +54,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			Kind = GetKindFromFileProjectItemType ();
 		}
 
-//		global::EnvDTE.ProjectItems CreateProjectItems (MD.ProjectFile projectItem)
-		ProjectItems CreateProjectItems (MD.ProjectFile projectItem)
+		global::EnvDTE.ProjectItems CreateProjectItems (MD.ProjectFile projectItem)
 		{
 			if (projectItem.FilePath.IsDirectory) {
 				return new DirectoryProjectItems (this);
@@ -114,13 +113,11 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public virtual global::EnvDTE.Properties Properties { get; private set; }
 
-//		public virtual global::EnvDTE.Project ContainingProject {
-		public virtual Project ContainingProject {
+		public virtual global::EnvDTE.Project ContainingProject {
 			get { return this.containingProject; }
 		}
 
-//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
-		public virtual ProjectItems ProjectItems { get; private set; }
+		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
 
 		internal virtual object GetProperty (string name)
 		{
@@ -170,7 +167,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			var fileItem = msbuildProjectItem as MD.ProjectFile;
 			if (fileItem != null) {
 				string directory = fileItem.FilePath.ParentDirectory;
-				string relativePath = ContainingProject.GetRelativePath (directory);
+				string relativePath = GetPathRelativeToProject (directory);
 				return IsMatchByName (relativePath);
 			}
 			return false;
@@ -190,15 +187,15 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			});
 		}
 
-//		public global::EnvDTE.FileCodeModel2 FileCodeModel {
-//			get {
+		public global::EnvDTE.FileCodeModel2 FileCodeModel {
+			get {
 //				if (!IsDirectory) {
 //					return new FileCodeModel2 (CreateModelContext (), containingProject);
 //				}
-//				return null;
-//			}
-//		}
-//
+				return null;
+			}
+		}
+
 //		CodeModelContext CreateModelContext ()
 //		{
 //			return new CodeModelContext {
@@ -235,10 +232,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return projectItem; }
 		}
 
-//		protected override string GetFileNames (short index)
-//		{
-//			return FileName;
-//		}
+		protected override string GetFileNames (short index)
+		{
+			return FileName;
+		}
 
 		string FileName {
 			get { return projectItem.FilePath; }
@@ -267,8 +264,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return 1; }
 		}
 
-		//		public global::EnvDTE.ProjectItems Collection {
-		public ProjectItems Collection {
+		public global::EnvDTE.ProjectItems Collection {
 			get {
 				string relativePath = GetProjectItemRelativeDirectoryToProject ();
 				if (String.IsNullOrEmpty (relativePath)) {
@@ -292,6 +288,11 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 					document.Save ();
 				}
 			});
+		}
+
+		protected string GetPathRelativeToProject (string directory)
+		{
+			return containingProject.GetRelativePath (directory);
 		}
 	}
 }

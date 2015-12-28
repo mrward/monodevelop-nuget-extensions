@@ -36,7 +36,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class References : MarshalByRefObject, IEnumerable//, global::EnvDTE.References
+	public class References : MarshalByRefObject, IEnumerable, global::EnvDTE.References
 	{
 		MD.DotNetProject msbuildProject;
 		IExtendedPackageManagementProjectService projectService;
@@ -78,22 +78,19 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return GetReferences ().ToList ().GetEnumerator ();
 		}
 
-//		IEnumerable<global::EnvDTE.Reference> GetReferences ()
-		IEnumerable<Reference> GetReferences ()
+		IEnumerable<global::EnvDTE.Reference> GetReferences ()
 		{
 			foreach (MD.ProjectReference referenceProjectItem in project.GetReferences ()) {
 				yield return new Reference3 (project, referenceProjectItem);
 			}
 		}
 
-//		public global::EnvDTE.Reference Item (string identity)
-		public Reference Item (string identity)
+		public global::EnvDTE.Reference Item (string identity)
 		{
 			return Find (identity);
 		}
 
-//		public global::EnvDTE.Reference Find (string identity)
-		public Reference Find (string identity)
+		public global::EnvDTE.Reference Find (string identity)
 		{
 			foreach (Reference reference in this) {
 				if (IsMatch (reference, identity)) {

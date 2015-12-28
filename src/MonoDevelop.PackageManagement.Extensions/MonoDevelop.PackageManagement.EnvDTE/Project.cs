@@ -39,7 +39,7 @@ using MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Project : MarshalByRefObject//, global::EnvDTE.Project
+	public class Project : MarshalByRefObject, global::EnvDTE.Project
 	{
 		IExtendedPackageManagementProjectService projectService;
 		IPackageManagementFileService fileService;
@@ -106,11 +106,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public virtual global::EnvDTE.Properties Properties { get; private set; }
 
-//		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
-		public virtual ProjectItems ProjectItems { get; private set; }
+		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
 
-		//		public virtual global::EnvDTE.DTE DTE {
-		public virtual DTE DTE {
+		public virtual global::EnvDTE.DTE DTE {
 			get {
 				if (dte == null) {
 					dte = new DTE (projectService, fileService);
@@ -257,14 +255,16 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return names;
 		}
 
-		//		public virtual global::EnvDTE.CodeModel CodeModel {
-		//			get { return new CodeModel(projectService.GetProjectContent(DotNetProject) ); }
-		//		}
-		//
-		//		public virtual global::EnvDTE.ConfigurationManager ConfigurationManager {
-		//			get { return new ConfigurationManager(this); }
-		//		}
-		//
+		public virtual global::EnvDTE.CodeModel CodeModel {
+//			get { return new CodeModel(projectService.GetProjectContent(DotNetProject) ); }
+			get { throw new NotImplementedException (); }
+		}
+
+		public virtual global::EnvDTE.ConfigurationManager ConfigurationManager {
+//			get { return new ConfigurationManager(this); }
+			get { throw new NotImplementedException (); }
+		}
+
 		//		internal virtual string GetLowercaseFileExtension()
 		//		{
 		//			return Path.GetExtension(FileName).ToLowerInvariant();

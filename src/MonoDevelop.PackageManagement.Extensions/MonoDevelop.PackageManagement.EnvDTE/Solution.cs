@@ -35,7 +35,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Solution : MarshalByRefObject//, global::EnvDTE.Solution
+	public class Solution : MarshalByRefObject, global::EnvDTE.Solution
 	{
 		IExtendedPackageManagementProjectService projectService;
 		MD.Solution solution;
@@ -68,10 +68,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return projectService.OpenSolution == solution; }
 		}
 
-//		public global::EnvDTE.Projects Projects { get; private set; }
-		public Projects Projects { get; private set; }
+		public global::EnvDTE.Projects Projects { get; private set; }
 
-//		public global::EnvDTE.Globals Globals { get; private set; }
+		public global::EnvDTE.Globals Globals { get; private set; }
 //
 //		internal ICollection<SD.SolutionSection> Sections {
 //			get { return solution.GlobalSections; }
@@ -84,18 +83,18 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			});
 		}
 
-//		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)
-//		{
+		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)
+		{
 //			foreach (Project project in Projects) {
 //				ProjectItem item = project.FindProjectItem (fileName);
 //				if (item != null) {
 //					return item;
 //				}
 //			}
-//			return null;
-//		}
-//
-//		public global::EnvDTE.SolutionBuild SolutionBuild { get; private set; }
+			return null;
+		}
+
+		public global::EnvDTE.SolutionBuild SolutionBuild { get; private set; }
 
 		public global::EnvDTE.Properties Properties { get; private set; }
 

@@ -35,7 +35,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Projects : MarshalByRefObject, IEnumerable<Project>//, global::EnvDTE.Projects
+	public class Projects : MarshalByRefObject, IEnumerable<Project>, global::EnvDTE.Projects
 	{
 		IExtendedPackageManagementProjectService projectService;
 
@@ -69,8 +69,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		/// <summary>
 		/// Index of 1 returns the first project.
 		/// </summary>
-//		public global::EnvDTE.Project Item (object index)
-		public Project Item (object index)
+		public global::EnvDTE.Project Item (object index)
 		{
 			if (index is int) {
 				return Item ((int)index);
@@ -78,16 +77,14 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return Item ((string)index);
 		}
 
-//		global::EnvDTE.Project Item (int index)
-		Project Item (int index)
+		global::EnvDTE.Project Item (int index)
 		{
 			return GetProjectsInSolution ()
 				.Skip (index - 1)
 				.First ();
 		}
 
-//		global::EnvDTE.Project Item (string uniqueName)
-		Project Item (string uniqueName)
+		global::EnvDTE.Project Item (string uniqueName)
 		{
 			return GetProjectsInSolution ()
 				.Where (p => p.UniqueName == uniqueName)

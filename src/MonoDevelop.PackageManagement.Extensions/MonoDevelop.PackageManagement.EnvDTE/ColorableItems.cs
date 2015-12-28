@@ -33,7 +33,7 @@ using System;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ColorableItems : MarshalByRefObject//, global::EnvDTE.ColorableItems
+	public class ColorableItems : MarshalByRefObject, global::EnvDTE.ColorableItems
 	{
 		//		public static readonly Wpf.Color DefaultForegroundColor = System.Windows.SystemColors.WindowTextColor;
 		//		public static readonly Wpf.Color DefaultBackgroundColor = System.Windows.SystemColors.WindowColor;
@@ -53,29 +53,32 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public string Name { get; private set; }
 
-//		public bool Bold {
+		public bool Bold {
+			get; set; 
 //			get { return color.Bold; }
 //			set {
 //				color.Bold = value;
 //				SaveChanges();
 //			}
-//		}
+		}
 
-//		public uint Foreground {
+		public uint Foreground {
+			get; set;
 //			get { return GetOleColor (color.Foreground, DefaultForegroundColor); }
 //			set {
 //				SetForegroundColor (value);
 //				SaveChanges ();
 //			}
-//		}
+		}
 
-//		public UInt32 Background {
+		public UInt32 Background {
+			get; set; 
 //			get { return GetOleColor (color.Background, DefaultBackgroundColor); }
 //			set { 
 //				SetBackgroundColor (value);
 //				SaveChanges ();
 //			}
-//		}
+		}
 
 //		UInt32 GetOleColor (Wpf.Color? color, Wpf.Color defaultColor)
 //		{

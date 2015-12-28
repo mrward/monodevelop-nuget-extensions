@@ -34,7 +34,7 @@ using MD = MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Reference : MarshalByRefObject//, global::EnvDTE.Reference
+	public class Reference : MarshalByRefObject, global::EnvDTE.Reference
 	{
 		MD.ProjectReference referenceProjectItem;
 		Project project;
@@ -61,8 +61,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			project.Save ();
 		}
 
-//		public global::EnvDTE.Project SourceProject {
-		public Project SourceProject {
+		public global::EnvDTE.Project SourceProject {
 			get {
 				return new Project (referenceProjectItem.OwnerProject as MD.DotNetProject);
 			}

@@ -67,7 +67,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			if (fileItem == null)
 				return false;
 
-			string relativePath = ContainingProject.GetRelativePath (fileItem.FilePath);
+			string relativePath = GetPathRelativeToProject (fileItem.FilePath);
 			string directory = Path.GetDirectoryName (relativePath);
 			if (directory == relativePath) {
 				return true;

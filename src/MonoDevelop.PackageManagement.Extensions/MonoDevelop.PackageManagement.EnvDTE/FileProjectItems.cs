@@ -50,8 +50,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			this.fileService = Project.FileService;
 		}
 
-		//		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
-		protected override IEnumerable<ProjectItem> GetProjectItems ()
+		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
 		{
 			return GetChildDependentProjectItems ().ToList ();
 		}

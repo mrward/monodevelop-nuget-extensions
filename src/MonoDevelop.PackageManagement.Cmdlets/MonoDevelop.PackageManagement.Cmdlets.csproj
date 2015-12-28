@@ -60,6 +60,9 @@
     <Reference Include="MonoDevelop.PackageManagement">
       <HintPath>..\..\lib\MonoDevelop.PackageManagement.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDevelop.EnvDTE">
+      <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\AssemblyInfo.cs" />

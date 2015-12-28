@@ -50,8 +50,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		List<ProjectItem> ProjectItems { get; set; }
 
-		//		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
-		protected override IEnumerable<ProjectItem> GetProjectItems ()
+		protected override IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
 		{
 			foreach (MD.ProjectItem msbuildProjectItem in Project.DotNetProject.Items.OfType<MD.ProjectFile> ()) {
 				ProjectItem item = GetChildProjectItem (msbuildProjectItem);

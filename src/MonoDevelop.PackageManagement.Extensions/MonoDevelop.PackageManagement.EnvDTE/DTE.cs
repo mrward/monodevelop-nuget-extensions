@@ -37,7 +37,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class DTE : MarshalByRefObject//, global::EnvDTE.DTE, IServiceProvider
+	public class DTE : MarshalByRefObject, global::EnvDTE.DTE//, IServiceProvider
 	{
 		IExtendedPackageManagementProjectService projectService;
 		IPackageManagementFileService fileService;
@@ -62,8 +62,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return "10.0"; }
 		}
 
-//		public global::EnvDTE.Solution Solution {
-		public Solution Solution {
+		public global::EnvDTE.Solution Solution {
 			get {
 				if (IsSolutionOpen) {
 					CreateSolution ();
@@ -92,8 +91,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return false;
 		}
 		
-//		public global::EnvDTE.ItemOperations ItemOperations { get; private set; }
-		public ItemOperations ItemOperations { get; private set; }
+		public global::EnvDTE.ItemOperations ItemOperations { get; private set; }
 
 		public global::EnvDTE.Properties Properties(string category, string page)
 		{
@@ -114,13 +112,13 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			get { return null; }
 		}
 
-		//		/// <summary>
-		//		/// HACK - EnvDTE.DTE actually implements Microsoft.VisualStudio.OLE.Interop.IServiceProvider
-		//		/// which is COM specific and has a QueryInterface method.
-		//		/// </summary>
-		//		object IServiceProvider.GetService(Type serviceType)
-		//		{
-		//			return Package.GetGlobalService(serviceType);
-		//		}
+//		/// <summary>
+//		/// HACK - EnvDTE.DTE actually implements Microsoft.VisualStudio.OLE.Interop.IServiceProvider
+//		/// which is COM specific and has a QueryInterface method.
+//		/// </summary>
+//		object IServiceProvider.GetService(Type serviceType)
+//		{
+//			return Package.GetGlobalService(serviceType);
+//		}
 	}
 }
