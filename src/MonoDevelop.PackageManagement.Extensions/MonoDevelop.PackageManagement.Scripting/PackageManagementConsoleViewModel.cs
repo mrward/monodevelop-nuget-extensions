@@ -106,6 +106,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void ClearConsole ()
 		{
 			consoleHost.Clear ();
+			consoleHost.WritePrompt ();
 		}
 
 		void UpdatePackageSourceViewModels ()

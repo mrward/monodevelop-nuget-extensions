@@ -175,7 +175,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void RedefineClearHostFunction()
 		{
 //			string command = "function Clear-Host { $host.PrivateData.ClearHost() }";
-			//powerShellHost.ExecuteCommand(command);
+			string command = "function Clear-Host { (Get-Host).PrivateData.ClearHost() }";
+			powerShellHost.ExecuteCommand(command);
 		}
 		
 //		void DefineTabExpansionFunction()

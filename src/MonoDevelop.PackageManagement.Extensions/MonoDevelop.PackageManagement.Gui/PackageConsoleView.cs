@@ -44,7 +44,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			// HACK - to allow text to appear before first prompt.
 			PromptString = String.Empty;
-			Clear ();
+			base.Clear ();
 			
 			SetFont (FontService.MonospaceFont);
 		}
@@ -144,6 +144,13 @@ namespace MonoDevelop.PackageManagement
 			});
 			
 			return maxVisibleColumns;
+		}
+
+		void IScriptingConsole.Clear ()
+		{
+			DispatchService.GuiSyncDispatch (() => {
+				base.ClearWithoutPrompt ();
+			});
 		}
 	}
 }

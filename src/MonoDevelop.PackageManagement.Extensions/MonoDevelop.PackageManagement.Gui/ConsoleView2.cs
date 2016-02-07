@@ -407,6 +407,12 @@ namespace MonoDevelop.Components
 			Prompt (false);
 		}
 
+		public void ClearWithoutPrompt ()
+		{
+			Buffer.Text = "";
+			scriptLines = "";
+		}
+
 		public void ClearHistory ()
 		{
 			commandHistoryFuture.Clear ();
