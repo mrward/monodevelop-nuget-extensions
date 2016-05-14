@@ -35,7 +35,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageManagementSolution2
+	internal interface IPackageManagementSolution2
 	{
 		IPackageManagementProject2 GetActiveProject ();
 		IPackageManagementProject2 GetActiveProject (IPackageRepository sourceRepository);

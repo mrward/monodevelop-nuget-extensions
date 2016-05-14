@@ -47,7 +47,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public UpdatePackageCmdlet (
+		internal UpdatePackageCmdlet (
 			IUpdatePackageActionsFactory updatePackageActionsFactory,
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)

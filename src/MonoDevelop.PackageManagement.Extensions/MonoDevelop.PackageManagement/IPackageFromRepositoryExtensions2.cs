@@ -30,7 +30,7 @@ using ICSharpCode.PackageManagement;
 
 namespace MonoDevelop.PackageManagement
 {
-	public static class IPackageFromRepositoryExtensions2
+	internal static class IPackageFromRepositoryExtensions2
 	{
 		public static IDisposable StartReintallOperation (this IPackageFromRepository package)
 		{

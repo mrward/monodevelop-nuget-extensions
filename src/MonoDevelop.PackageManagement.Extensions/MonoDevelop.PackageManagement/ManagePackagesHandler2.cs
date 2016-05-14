@@ -34,17 +34,17 @@ using MonoDevelop.PackageManagement.Commands;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ManagePackagesHandler2 : PackagesCommandHandler
+	internal class ManagePackagesHandler2 : PackagesCommandHandler
 	{
 		protected override void Run ()
 		{
 			try {
 				ManagePackagesViewModel2 viewModel = CreateViewModel ();
-				IPackageManagementEvents packageEvents = PackageManagementServices.PackageManagementEvents;
+				var packageEvents = new ThreadSafePackageManagementEvents (PackageManagementServices.PackageManagementEvents);
 				var dialog = new ManagePackagesDialog2 (viewModel, packageEvents);
 				MessageService.ShowCustomDialog (dialog);
 			} catch (Exception ex) {
-				MessageService.ShowException (ex);
+				MessageService.ShowError (ex.Message);
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace MonoDevelop.PackageManagement
 				PackageManagementServices.Solution,
 				PackageManagementServices.RegisteredPackageRepositories,
 				packageEvents,
-				PackageManagementServices.PackageActionRunner,
+				new PackageActionRunner2 (),
 				new PackageManagementTaskFactory());
 
 			return new ManagePackagesViewModel2 (

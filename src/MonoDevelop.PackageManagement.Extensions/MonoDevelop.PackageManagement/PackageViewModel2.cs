@@ -36,7 +36,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class PackageViewModel2 : ViewModelBase<PackageViewModel2>
+	internal class PackageViewModel2 : ViewModelBase<PackageViewModel2>
 	{
 		DelegateCommand addPackageCommand;
 		DelegateCommand removePackageCommand;

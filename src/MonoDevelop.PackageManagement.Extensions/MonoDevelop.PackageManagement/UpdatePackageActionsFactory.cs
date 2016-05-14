@@ -31,7 +31,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UpdatePackageActionsFactory : IUpdatePackageActionsFactory
+	internal class UpdatePackageActionsFactory : IUpdatePackageActionsFactory
 	{
 		public IUpdatePackageActions2 CreateUpdateAllPackagesInProject (IPackageManagementProject2 project)
 		{

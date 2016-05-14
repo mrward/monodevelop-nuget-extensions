@@ -47,7 +47,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public InvokeUpdateWorkingDirectoryCmdlet (
+		internal InvokeUpdateWorkingDirectoryCmdlet (
 			IExtendedPackageManagementProjectService projectService,
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)

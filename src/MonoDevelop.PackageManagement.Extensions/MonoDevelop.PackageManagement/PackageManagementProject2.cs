@@ -30,16 +30,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet;
 using System.Runtime.Versioning;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class PackageManagementProject2 : IPackageManagementProject2
+	internal class PackageManagementProject2 : IPackageManagementProject2
 	{
-		IMonoDevelopPackageManager packageManager;
-		ISharpDevelopProjectManager projectManager;
+		IMonoDevelopPackageManager2 packageManager;
+		IMonoDevelopProjectManager projectManager;
 		IPackageManagementEvents packageManagementEvents;
 		DotNetProject msbuildProject;
 		ProjectTargetFramework2 targetFramework;

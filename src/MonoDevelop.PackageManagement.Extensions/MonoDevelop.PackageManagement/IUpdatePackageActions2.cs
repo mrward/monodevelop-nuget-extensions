@@ -28,10 +28,11 @@
 
 using System;
 using System.Collections.Generic;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IUpdatePackageActions2 : IUpdatePackageSettings
+	internal interface IUpdatePackageActions2 : IUpdatePackageSettings
 	{
 		//IPackageScriptRunner PackageScriptRunner { get; set; }
 

@@ -53,7 +53,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public GetPackageCmdlet (
+		internal GetPackageCmdlet (
 			IRegisteredPackageRepositories registeredPackageRepositories,
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)

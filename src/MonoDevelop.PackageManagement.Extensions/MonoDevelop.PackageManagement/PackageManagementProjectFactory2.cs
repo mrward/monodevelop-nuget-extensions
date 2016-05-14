@@ -33,7 +33,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class PackageManagementProjectFactory2 : IPackageManagementProjectFactory2
+	internal class PackageManagementProjectFactory2 : IPackageManagementProjectFactory2
 	{
 		ExtendedPackageManagerFactory factory = new ExtendedPackageManagerFactory ();
 		IPackageManagementEvents packageManagementEvents;

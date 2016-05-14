@@ -25,12 +25,12 @@
 // THE SOFTWARE.
 
 using System;
-using ICSharpCode.PackageManagement;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class ReinstallPackageAction2 : ProcessPackageAction2
+	internal class ReinstallPackageAction2 : ProcessPackageAction2
 	{
 		public ReinstallPackageAction2 (
 			IPackageManagementProject2 project,

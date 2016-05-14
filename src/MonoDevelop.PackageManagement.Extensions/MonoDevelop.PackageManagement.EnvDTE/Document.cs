@@ -27,7 +27,7 @@
 //
 
 using System;
-using MonoDevelop.Ide;
+using MonoDevelop.Core;
 using MD = MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
@@ -45,7 +45,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public virtual bool Saved {
 			get { return !document.IsDirty; }
 			set { 
-				DispatchService.GuiSyncDispatch (() => {
+				Runtime.RunInMainThread (() => {
 					document.IsDirty = !value;
 				});
 			}

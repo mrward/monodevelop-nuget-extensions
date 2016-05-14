@@ -31,13 +31,14 @@ using System.Linq;
 using Microsoft.Build.Evaluation;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using DotNetProject = MonoDevelop.Projects.DotNetProject;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class GlobalMSBuildProjectCollection : IGlobalMSBuildProjectCollection
+	internal class GlobalMSBuildProjectCollection : IGlobalMSBuildProjectCollection
 	{
 		class  GlobalAndInternalProject
 		{
@@ -80,7 +81,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void Dispose ()
 		{
 			foreach (GlobalAndInternalProject msbuildProjects in projects) {
-				DispatchService.GuiSyncDispatch (() => UpdateProject (msbuildProjects));
+				Runtime.RunInMainThread (() => UpdateProject (msbuildProjects)).Wait ();
 				GetGlobalProjectCollection ().UnloadProject (msbuildProjects.GlobalMSBuildProject);
 			}
 		}
@@ -104,7 +105,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 				msbuildProjects.DotNetProject);
 
 			GlobalMSBuildProjectCollectionMSBuildExtension.ImportsMerger = importsMerger;
-			msbuildProjects.DotNetProject.Save ();
+			msbuildProjects.DotNetProject.SaveAsync (new ProgressMonitor ()).Wait ();
 
 			LogProjectImportMergeResult (msbuildProjects.DotNetProject, importsMerger.Result);
 		}

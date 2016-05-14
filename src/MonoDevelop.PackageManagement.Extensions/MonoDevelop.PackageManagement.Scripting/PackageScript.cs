@@ -35,7 +35,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageScript : IPackageScript
+	internal class PackageScript : IPackageScript
 	{
 		bool lookedForTargetSpecificScript;
 

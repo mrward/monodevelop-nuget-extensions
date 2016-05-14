@@ -28,19 +28,21 @@
 
 using System;
 using System.Collections.Generic;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IMonoDevelopPackageManager : IPackageManager
+	internal interface IMonoDevelopPackageManager2 : IPackageManager
 	{
-		ISharpDevelopProjectManager ProjectManager { get; }
+		IMonoDevelopProjectManager ProjectManager { get; }
 
 		void InstallPackage (IPackage package, InstallPackageAction2 installAction);
 		void UninstallPackage (IPackage package, UninstallPackageAction2 uninstallAction);
 		void UpdatePackage (IPackage package, UpdatePackageAction2 updateAction);
 		void UpdatePackages (UpdatePackagesAction2 updateAction);
 		void UpdatePackageReference (IPackage package, IUpdatePackageSettings settings);
+		void InstallPackageIntoSolutionRepository (IPackage package);
 
 		IEnumerable<PackageOperation> GetInstallPackageOperations (IPackage package, InstallPackageAction2 installAction);
 		IEnumerable<PackageOperation> GetUpdatePackageOperations (IEnumerable<IPackage> packages, IUpdatePackageSettings settings);

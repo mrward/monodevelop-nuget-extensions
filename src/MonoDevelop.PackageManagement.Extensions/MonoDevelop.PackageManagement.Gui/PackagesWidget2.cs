@@ -40,7 +40,7 @@ using NuGet;
 namespace MonoDevelop.PackageManagement
 {
 	[System.ComponentModel.ToolboxItem(true)]
-	public partial class PackagesWidget2 : Gtk.Bin
+	internal partial class PackagesWidget2 : Gtk.Bin
 	{
 		PackagesViewModel2 viewModel;
 		List<PackageSource> packageSources;

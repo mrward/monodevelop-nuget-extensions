@@ -35,7 +35,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class PackageManagementSolution2 : IPackageManagementSolution2
+	internal class PackageManagementSolution2 : IPackageManagementSolution2
 	{
 		IRegisteredPackageRepositories registeredPackageRepositories;
 		IExtendedPackageManagementProjectService projectService;

@@ -36,7 +36,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ManagePackagesUserPrompts : IDisposable
+	internal class ManagePackagesUserPrompts : IDisposable
 	{
 		ILicenseAcceptanceService licenseAcceptanceService;
 		ISelectProjectsService selectProjectsService;
@@ -85,12 +85,16 @@ namespace MonoDevelop.PackageManagement
 
 		void AcceptLicenses (object sender, AcceptLicensesEventArgs e)
 		{
-			e.IsAccepted = licenseAcceptanceService.AcceptLicenses (e.Packages);
+			Runtime.RunInMainThread (() => {
+				e.IsAccepted = licenseAcceptanceService.AcceptLicenses (e.Packages);
+			}).Wait ();
 		}
 
 		void SelectProjects (object sender, SelectProjectsEventArgs e)
 		{
-			e.IsAccepted = selectProjectsService.SelectProjects (e.SelectedProjects);
+			Runtime.RunInMainThread (() => {
+				e.IsAccepted = selectProjectsService.SelectProjects (e.SelectedProjects);
+			}).Wait ();
 		}
 
 		void ResolveFileConflict (object sender, ResolveFileConflictEventArgs e)
@@ -137,7 +141,7 @@ namespace MonoDevelop.PackageManagement
 
 		void NotifyFilesChanged ()
 		{
-			DispatchService.GuiDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				FilePath[] files = fileChangedEvents
 					.SelectMany (fileChangedEvent => fileChangedEvent.ToArray ())
 					.Select (fileInfo => fileInfo.FileName)

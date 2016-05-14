@@ -30,15 +30,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class SolutionPackageRepository2 : ISolutionPackageRepository2
+	internal class SolutionPackageRepository2 : ISolutionPackageRepository2
 	{
 		SolutionPackageRepositoryPath2 repositoryPath;
-		ISharpDevelopPackageRepositoryFactory repositoryFactory;
+		IMonoDevelopPackageRepositoryFactory repositoryFactory;
 		DefaultPackagePathResolver packagePathResolver;
 		PhysicalFileSystem fileSystem;
 		ISharedPackageRepository repository;
@@ -46,14 +47,14 @@ namespace ICSharpCode.PackageManagement
 		public SolutionPackageRepository2 (Solution solution)
 			: this (
 				solution,
-				new SharpDevelopPackageRepositoryFactory (),
+				new MonoDevelopPackageRepositoryFactory (),
 				PackageManagementServices.Options)
 		{
 		}
 
 		public SolutionPackageRepository2 (
 			Solution solution,
-			ISharpDevelopPackageRepositoryFactory repositoryFactory,
+			IMonoDevelopPackageRepositoryFactory repositoryFactory,
 			PackageManagementOptions options)
 		{
 			this.repositoryFactory = repositoryFactory;

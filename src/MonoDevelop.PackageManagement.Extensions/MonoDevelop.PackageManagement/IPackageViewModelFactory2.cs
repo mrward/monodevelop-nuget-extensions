@@ -27,11 +27,12 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageViewModelFactory2
+	internal interface IPackageViewModelFactory2
 	{
 		PackageViewModel2 CreatePackageViewModel (IPackageViewModelParent2 parent, IPackageFromRepository package);
 		IPackageManagementSolution Solution { get; }

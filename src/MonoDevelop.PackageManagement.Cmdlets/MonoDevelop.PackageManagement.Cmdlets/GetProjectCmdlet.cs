@@ -52,7 +52,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public GetProjectCmdlet (
+		internal GetProjectCmdlet (
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)
 			: base (consoleHost, terminatingError)

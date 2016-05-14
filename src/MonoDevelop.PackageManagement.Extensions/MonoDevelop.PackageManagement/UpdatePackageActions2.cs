@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 namespace ICSharpCode.PackageManagement
 {
-	public abstract class UpdatePackageActions2 : IUpdatePackageActions2
+	internal abstract class UpdatePackageActions2 : IUpdatePackageActions2
 	{
 		public bool UpdateDependencies { get; set; }
 		public bool AllowPrereleaseVersions { get; set; }

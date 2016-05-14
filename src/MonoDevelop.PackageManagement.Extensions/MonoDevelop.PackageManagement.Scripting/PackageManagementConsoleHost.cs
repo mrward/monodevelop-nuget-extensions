@@ -39,7 +39,7 @@ using System.IO;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageManagementConsoleHost : IPackageManagementConsoleHost
+	internal class PackageManagementConsoleHost : IPackageManagementConsoleHost
 	{
 //		IThread thread;
 		IRegisteredPackageRepositories registeredRepositories;
@@ -111,7 +111,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		public void Run()
 		{
-			DispatchService.BackgroundDispatch(() => {
+			PackageManagementBackgroundDispatcher.Dispatch (() => {
 				RunSynchronous();
 				IsRunning = true;
 			});
@@ -237,7 +237,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		public void ProcessUserInput (string line)
 		{
-			DispatchService.BackgroundDispatch(() => {
+			PackageManagementBackgroundDispatcher.Dispatch (() => {
 				ProcessLine (line);
 				WritePrompt ();
 			});

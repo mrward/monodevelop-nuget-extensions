@@ -34,7 +34,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class InstalledPackagesViewModel2 : PackagesViewModel2
+	internal class InstalledPackagesViewModel2 : PackagesViewModel2
 	{
 		IPackageManagementSolution solution;
 		IPackageManagementEvents packageManagementEvents;

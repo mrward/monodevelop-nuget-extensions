@@ -33,7 +33,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageInitializationScripts : IPackageInitializationScripts
+	internal class PackageInitializationScripts : IPackageInitializationScripts
 	{
 		ISolutionPackageRepository2 solutionPackageRepository;
 		IPackageScriptFactory scriptFactory;

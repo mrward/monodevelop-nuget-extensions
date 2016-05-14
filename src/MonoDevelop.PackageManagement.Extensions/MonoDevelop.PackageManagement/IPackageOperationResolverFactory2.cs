@@ -27,11 +27,12 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageOperationResolverFactory2
+	internal interface IPackageOperationResolverFactory2
 	{
 		IPackageOperationResolver CreateInstallPackageOperationResolver (
 			IPackageRepository localRepository,

@@ -29,11 +29,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class InstallPackageAction2 : ProcessPackageOperationsAction2
+	internal class InstallPackageAction2 : ProcessPackageOperationsAction2
 	{
 		public InstallPackageAction2(
 			IPackageManagementProject2 project,

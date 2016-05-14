@@ -32,7 +32,7 @@ using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
 {
-	public static class PackageManagementExtendedServices
+	internal static class PackageManagementExtendedServices
 	{
 		static readonly PackageManagementConsoleHostProvider consoleHostProvider;
 		static readonly ExtendedPackageManagementProjectService projectService;

@@ -42,7 +42,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		IPackageManagementConsoleHost consoleHost;
 		ICmdletTerminatingError terminatingError;
 		
-		public PackageManagementCmdlet(
+		internal PackageManagementCmdlet(
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)
 		{
@@ -50,7 +50,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			this.terminatingError = terminatingError;
 		}
 		
-		protected IPackageManagementConsoleHost ConsoleHost {
+		internal IPackageManagementConsoleHost ConsoleHost {
 			get { return consoleHost; }
 		}
 		
@@ -129,7 +129,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			}
 		}
 		
-		public void Run(IPackageScript script)
+		void IPackageScriptRunner.Run(IPackageScript script)
 		{
 			if (script.Exists()) {
 				script.Run(this);
@@ -141,7 +141,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			return ConsoleHost.CreateEventsMonitor (this);
 		}
 
-		protected void ExecuteWithScriptRunner (IPackageManagementProject2 project, Action action)
+		internal void ExecuteWithScriptRunner (IPackageManagementProject2 project, Action action)
 		{
 			using (RunPackageScriptsAction runScriptsAction = CreateRunPackageScriptsAction (project)) {
 				action ();

@@ -31,7 +31,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageScriptFactory
+	internal interface IPackageScriptFactory
 	{
 		IPackageScript CreatePackageInitializeScript(IPackage package, string packageInstallDirectory);
 		IPackageScript CreatePackageUninstallScript(IPackage package, string packageInstallDirectory);

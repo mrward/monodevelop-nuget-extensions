@@ -45,7 +45,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public UninstallPackageCmdlet (
+		internal UninstallPackageCmdlet (
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)
 			: base (consoleHost, terminatingError)

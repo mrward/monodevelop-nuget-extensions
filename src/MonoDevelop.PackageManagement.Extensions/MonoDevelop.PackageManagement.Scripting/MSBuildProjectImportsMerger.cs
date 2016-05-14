@@ -30,13 +30,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
-using MonoDevelop.Projects.Formats.MSBuild;
+using MonoDevelop.PackageManagement;
+using MonoDevelop.Projects.MSBuild;
 using NuGet;
 using DotNetProject = MonoDevelop.Projects.DotNetProject;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class MSBuildProjectImportsMerger
+	internal class MSBuildProjectImportsMerger
 	{
 		IPackageManagementProjectService projectService;
 		Project msbuildProject;
@@ -85,7 +86,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 
 			foreach (MSBuildImport importToRemove in importsToRemove) {
-				importToRemove.Element.ParentNode.RemoveChild (importToRemove.Element);
+				importToRemove.ParentProject.RemoveImport (importToRemove);
 			}
 
 			result.AddProjectImportsRemoved (importsToRemove);

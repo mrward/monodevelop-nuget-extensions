@@ -26,28 +26,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class MonoDevelopPackageManagerFactory : IPackageManagerFactory2
+	internal class MonoDevelopPackageManagerFactory2 : IPackageManagerFactory2
 	{
 		PackageManagementOptions options;
-		ISharpDevelopPackageRepositoryFactory packageRepositoryFactory;
-		ISharpDevelopProjectSystemFactory projectSystemFactory;
+		IMonoDevelopPackageRepositoryFactory packageRepositoryFactory;
+		IMonoDevelopProjectSystemFactory projectSystemFactory;
 
-		public MonoDevelopPackageManagerFactory ()
+		public MonoDevelopPackageManagerFactory2 ()
 			: this(
-				new SharpDevelopPackageRepositoryFactory(),
-				new SharpDevelopProjectSystemFactory(),
+				new MonoDevelopPackageRepositoryFactory(),
+				new MonoDevelopProjectSystemFactory(),
 				new PackageManagementOptions())
 		{
 		}
 
-		public MonoDevelopPackageManagerFactory (
-			ISharpDevelopPackageRepositoryFactory packageRepositoryFactory,
-			ISharpDevelopProjectSystemFactory projectSystemFactory,
+		public MonoDevelopPackageManagerFactory2 (
+			IMonoDevelopPackageRepositoryFactory packageRepositoryFactory,
+			IMonoDevelopProjectSystemFactory projectSystemFactory,
 			PackageManagementOptions options)
 		{
 			this.packageRepositoryFactory = packageRepositoryFactory;
@@ -55,7 +56,7 @@ namespace ICSharpCode.PackageManagement
 			this.options = options;
 		}
 
-		public IMonoDevelopPackageManager CreatePackageManager(
+		public IMonoDevelopPackageManager2 CreatePackageManager(
 			IPackageRepository sourceRepository,
 			DotNetProject project)
 		{

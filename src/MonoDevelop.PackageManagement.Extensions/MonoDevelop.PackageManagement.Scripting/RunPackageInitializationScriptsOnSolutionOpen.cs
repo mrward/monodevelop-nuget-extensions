@@ -33,7 +33,7 @@ using MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class RunPackageInitializationScriptsOnSolutionOpen
+	internal class RunPackageInitializationScriptsOnSolutionOpen
 	{
 		IPackageInitializationScriptsFactory scriptsFactory;
 		PackageInitializationScriptsConsole scriptsConsole;

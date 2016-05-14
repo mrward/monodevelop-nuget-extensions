@@ -27,10 +27,11 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class InstalledPackageViewModelFactory2 : PackageViewModelFactory2
+	internal class InstalledPackageViewModelFactory2 : PackageViewModelFactory2
 	{
 		SelectedProjectsForInstalledPackages selectedProjectsForInstalledPackages;
 

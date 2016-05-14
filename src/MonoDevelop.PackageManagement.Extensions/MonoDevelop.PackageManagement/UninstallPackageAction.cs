@@ -33,7 +33,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UninstallPackageAction2 : ProcessPackageAction2
+	internal class UninstallPackageAction2 : ProcessPackageAction2
 	{
 		public UninstallPackageAction2 (
 			IPackageManagementProject2 project,

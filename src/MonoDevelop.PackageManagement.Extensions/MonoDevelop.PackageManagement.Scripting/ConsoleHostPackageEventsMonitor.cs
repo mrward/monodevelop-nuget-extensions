@@ -34,7 +34,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ConsoleHostPackageEventsMonitor : IDisposable
+	internal class ConsoleHostPackageEventsMonitor : IDisposable
 	{
 		IPackageManagementEvents packageManagementEvents;
 		ILogger logger;
@@ -77,7 +77,7 @@ namespace MonoDevelop.PackageManagement
 
 		void NotifyFilesChanged ()
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				FilePath[] files = fileChangedEvents
 					.SelectMany (fileChangedEvent => fileChangedEvent.ToArray ())
 					.Select (fileInfo => fileInfo.FileName)

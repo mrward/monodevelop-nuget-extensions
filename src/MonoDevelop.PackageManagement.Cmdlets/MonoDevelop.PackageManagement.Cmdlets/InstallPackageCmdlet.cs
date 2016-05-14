@@ -44,7 +44,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public InstallPackageCmdlet (
+		internal InstallPackageCmdlet (
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)
 			: base (consoleHost, terminatingError)

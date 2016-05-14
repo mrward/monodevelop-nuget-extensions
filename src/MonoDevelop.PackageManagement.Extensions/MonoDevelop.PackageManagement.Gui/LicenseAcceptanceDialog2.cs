@@ -32,7 +32,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public partial class LicenseAcceptanceDialog2 : Gtk.Dialog
+	internal partial class LicenseAcceptanceDialog2 : Gtk.Dialog
 	{
 		LicenseAcceptanceViewModel viewModel;
 

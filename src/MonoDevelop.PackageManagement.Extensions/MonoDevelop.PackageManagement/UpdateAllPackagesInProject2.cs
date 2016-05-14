@@ -30,7 +30,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UpdateAllPackagesInProject2 : UpdatePackageActions2
+	internal class UpdateAllPackagesInProject2 : UpdatePackageActions2
 	{
 		IPackageManagementProject2 project;
 

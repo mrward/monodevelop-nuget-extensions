@@ -29,6 +29,7 @@
 using System;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -40,9 +41,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public void OpenFile (string fileName)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				OpenFile (new FilePath (fileName));
-			});
+			}).Wait ();
 		}
 
 		void OpenFile (FilePath filePath)

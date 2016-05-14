@@ -32,7 +32,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class RunPackageScriptsAction : IDisposable
+	internal class RunPackageScriptsAction : IDisposable
 	{
 		IPackageManagementProject2 project;
 		IPackageScriptFactory scriptFactory;

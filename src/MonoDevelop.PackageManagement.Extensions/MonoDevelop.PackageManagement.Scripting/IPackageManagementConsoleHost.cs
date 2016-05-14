@@ -34,7 +34,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	internal interface IPackageManagementConsoleHost : IDisposable
 	{
 		Project DefaultProject { get; set; }
 		PackageSource ActivePackageSource { get; set; }

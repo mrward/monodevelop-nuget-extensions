@@ -29,12 +29,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class AvailablePackagesViewModel2 : PackagesViewModel2
+	internal class AvailablePackagesViewModel2 : PackagesViewModel2
 	{
 		IPackageRepository repository;
 		string errorMessage;

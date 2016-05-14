@@ -29,11 +29,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class MonoDevelopPackageManager : PackageManager, IMonoDevelopPackageManager
+	internal class MonoDevelopPackageManager : PackageManager, IMonoDevelopPackageManager2
 	{
 		IProjectSystem projectSystem;
 		IPackageOperationResolverFactory2 packageOperationResolverFactory;
@@ -74,11 +75,11 @@ namespace ICSharpCode.PackageManagement
 			return packageRefRepository;
 		}
 
-		public ISharpDevelopProjectManager ProjectManager { get; set; }
+		public IMonoDevelopProjectManager ProjectManager { get; set; }
 
-		SharpDevelopProjectManager CreateProjectManager (PackageReferenceRepository packageRefRepository)
+		MonoDevelopProjectManager CreateProjectManager (PackageReferenceRepository packageRefRepository)
 		{
-			return new SharpDevelopProjectManager (LocalRepository, PathResolver, projectSystem, packageRefRepository);
+			return new MonoDevelopProjectManager (LocalRepository, PathResolver, projectSystem, packageRefRepository);
 		}
 
 		public void InstallPackage (IPackage package)
@@ -96,7 +97,7 @@ namespace ICSharpCode.PackageManagement
 
 		void AddPackageReference (IPackage package, bool ignoreDependencies, bool allowPrereleaseVersions)
 		{
-			var monitor = new RemovedPackageReferenceMonitor (ProjectManager);
+			var monitor = new PackageReferenceMonitor2 (ProjectManager, this);
 			using (monitor) {
 				ProjectManager.AddPackageReference (package.Id, package.Version, ignoreDependencies, allowPrereleaseVersions);
 			}
@@ -174,7 +175,7 @@ namespace ICSharpCode.PackageManagement
 
 		void UpdatePackageReference (IPackage package, bool updateDependencies, bool allowPrereleaseVersions)
 		{
-			var monitor = new RemovedPackageReferenceMonitor (ProjectManager);
+			var monitor = new PackageReferenceMonitor2 (ProjectManager, this);
 			using (monitor) {
 				ProjectManager.UpdatePackageReference (package.Id, package.Version, updateDependencies, allowPrereleaseVersions);
 			}
@@ -214,6 +215,13 @@ namespace ICSharpCode.PackageManagement
 		{
 			foreach (PackageOperation operation in operations) {
 				Execute (operation);
+			}
+		}
+
+		public void InstallPackageIntoSolutionRepository (IPackage package)
+		{
+			if (!LocalRepository.Exists (package)) {
+				ExecuteInstall (package);
 			}
 		}
 	}

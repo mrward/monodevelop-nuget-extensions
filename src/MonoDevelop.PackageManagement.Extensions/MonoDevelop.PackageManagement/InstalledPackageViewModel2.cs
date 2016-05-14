@@ -28,11 +28,12 @@
 
 using System;
 using System.Collections.Generic;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class InstalledPackageViewModel2 : PackageViewModel2
+	internal class InstalledPackageViewModel2 : PackageViewModel2
 	{
 		public InstalledPackageViewModel2 (
 			IPackageViewModelParent2 parent,

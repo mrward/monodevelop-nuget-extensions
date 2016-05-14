@@ -37,7 +37,7 @@ using MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
-	public class OpenProjects
+	internal class OpenProjects
 	{
 		IPackageManagementSolution2 solution;
 		

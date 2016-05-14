@@ -33,7 +33,7 @@ using NuGet;
 namespace MonoDevelop.PackageManagement
 {
 	[System.ComponentModel.ToolboxItem(true)]
-	public partial class PackageLicenseWidget2 : Gtk.Bin
+	internal partial class PackageLicenseWidget2 : Gtk.Bin
 	{
 		public PackageLicenseWidget2 (PackageLicenseViewModel viewModel)
 		{

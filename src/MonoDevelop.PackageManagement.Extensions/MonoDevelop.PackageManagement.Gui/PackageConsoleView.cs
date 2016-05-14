@@ -31,7 +31,7 @@ using ICSharpCode.PackageManagement;
 using ICSharpCode.PackageManagement.Scripting;
 using ICSharpCode.Scripting;
 using MonoDevelop.Components;
-using MonoDevelop.Ide;
+using MonoDevelop.Core;
 using MonoDevelop.Ide.Execution;
 using MonoDevelop.Ide.Fonts;
 using Pango;
@@ -85,14 +85,14 @@ namespace MonoDevelop.PackageManagement
 		
 		public void WriteLine ()
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				WriteOutput (String.Empty);
-			});
+			}).Wait ();
 		}
 		
 		public void WriteLine (string text, ScriptingStyle style)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				if (style == ScriptingStyle.Prompt) {
 					WriteOutputLine (text, style);
 					ConfigurePromptString ();
@@ -100,7 +100,7 @@ namespace MonoDevelop.PackageManagement
 				} else {
 					WriteOutputLine (text, style);
 				}
-			});
+			}).Wait ();
 		}
 		
 		void ConfigurePromptString()
@@ -110,14 +110,14 @@ namespace MonoDevelop.PackageManagement
 		
 		public void Write (string text, ScriptingStyle style)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				if (style == ScriptingStyle.Prompt) {
 					ConfigurePromptString ();
 					Prompt (false);
 				} else {
 					WriteOutput (text);
 				}
-			});
+			}).Wait ();
 		}
 		
 		public string ReadLine (int autoIndentSize)
@@ -134,14 +134,14 @@ namespace MonoDevelop.PackageManagement
 		{
 			int maxVisibleColumns = 160;
 			
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				int windowWidth = Allocation.Width;
 				
 				if (windowWidth > 0) {
 					maxVisibleColumns = windowWidth / 5;
 				}
 				
-			});
+			}).Wait ();
 			
 			return maxVisibleColumns;
 		}

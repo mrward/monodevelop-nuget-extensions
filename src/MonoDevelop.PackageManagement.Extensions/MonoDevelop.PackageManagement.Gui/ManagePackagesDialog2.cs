@@ -29,10 +29,11 @@
 using System;
 using Gtk;
 using ICSharpCode.PackageManagement;
+using MonoDevelop.Core;
 
 namespace MonoDevelop.PackageManagement
 {
-	public partial class ManagePackagesDialog2 : Gtk.Dialog
+	internal partial class ManagePackagesDialog2 : Gtk.Dialog
 	{
 		ManagePackagesViewModel2 viewModel;
 		IPackageManagementEvents packageManagementEvents;
@@ -65,7 +66,9 @@ namespace MonoDevelop.PackageManagement
 
 		void PackageOperationMessageLogged (object sender, PackageOperationMessageLoggedEventArgs e)
 		{
-			AppendMessage (e.Message.ToString ());
+			Runtime.RunInMainThread (() => {
+				AppendMessage (e.Message.ToString ());
+			});
 		}
 
 		void PackageOperationError (object sender, PackageOperationExceptionEventArgs e)

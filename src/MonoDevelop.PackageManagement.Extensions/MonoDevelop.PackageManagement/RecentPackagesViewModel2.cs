@@ -33,7 +33,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class RecentPackagesViewModel2 : PackagesViewModel2
+	internal class RecentPackagesViewModel2 : PackagesViewModel2
 	{
 		IPackageManagementEvents packageManagementEvents;
 		IPackageRepository recentPackageRepository;

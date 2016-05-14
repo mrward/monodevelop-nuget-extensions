@@ -27,7 +27,6 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Docking;
@@ -35,7 +34,7 @@ using MonoDevelop.Ide.Gui;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class PackageConsolePad : IPadContent
+	public class PackageConsolePad : PadContent
 	{
 		PackageConsoleView view;
 		PackageManagementConsoleViewModel viewModel;
@@ -45,11 +44,11 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 		
-		public Gtk.Widget Control {
+		public override Control Control {
 			get { return view; }
 		}
 		
-		public void Initialize (IPadWindow window)
+		protected override void Initialize (IPadWindow window)
 		{
 			CreateToolbar (window);
 			CreatePackageConsoleView ();
@@ -71,7 +70,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			toolbarWidget = new PackageConsoleToolbarWidget ();
 			toolbarWidget.ClearButtonClicked += ClearButtonClicked;
-			DockItemToolbar toolbar = window.GetToolbar (Gtk.PositionType.Top);
+			DockItemToolbar toolbar = window.GetToolbar (DockPositionType.Top);
 			toolbar.Add (toolbarWidget, false);
 			toolbar.ShowAll ();
 		}
@@ -98,7 +97,7 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 		
-		public void Dispose ()
+		public override void Dispose ()
 		{
 		}
 		

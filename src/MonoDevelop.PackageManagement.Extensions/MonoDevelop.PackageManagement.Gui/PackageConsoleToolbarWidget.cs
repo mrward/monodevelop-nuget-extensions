@@ -35,7 +35,7 @@ using MonoDevelop.Projects;
 namespace MonoDevelop.PackageManagement
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class PackageConsoleToolbarWidget : Gtk.Bin
+	internal partial class PackageConsoleToolbarWidget : Gtk.Bin
 	{
 		Button clearButton;
 		PackageManagementConsoleViewModel viewModel;

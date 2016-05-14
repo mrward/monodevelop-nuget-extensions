@@ -9,7 +9,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UpdatePackageInAllProjects : UpdatePackageActions2
+	internal class UpdatePackageInAllProjects : UpdatePackageActions2
 	{
 		IPackageManagementSolution2 solution;
 		IPackageRepository sourceRepository;

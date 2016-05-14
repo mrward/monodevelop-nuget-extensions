@@ -28,10 +28,11 @@
 
 using System;
 using ICSharpCode.PackageManagement;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageManagementConsoleHostProvider
+	internal class PackageManagementConsoleHostProvider
 	{
 		IPackageManagementSolution2 solution;
 		IRegisteredPackageRepositories registeredRepositories;

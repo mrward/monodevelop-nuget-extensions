@@ -31,7 +31,7 @@ using NuGet;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class ExtendedPackageManagementProject : PackageManagementProject2
+	internal class ExtendedPackageManagementProject : PackageManagementProject2
 	{
 		ExtendedPackageManagerFactory packageManagerFactory;
 
@@ -61,7 +61,7 @@ namespace MonoDevelop.PackageManagement
 			this.packageManagerFactory = (ExtendedPackageManagerFactory)packageManagerFactory;
 		}
 
-		public ISharpDevelopProjectManager ProjectManager {
+		public IMonoDevelopProjectManager ProjectManager {
 			get { return packageManagerFactory.ProjectManager; }
 		}
 	}

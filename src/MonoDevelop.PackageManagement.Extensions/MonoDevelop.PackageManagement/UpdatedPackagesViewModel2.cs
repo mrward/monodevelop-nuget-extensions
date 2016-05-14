@@ -35,7 +35,7 @@ using ICSharpCode.PackageManagement;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class UpdatedPackagesViewModel2 : PackagesViewModel2
+	internal class UpdatedPackagesViewModel2 : PackagesViewModel2
 	{
 		PackageManagementSelectedProjects selectedProjects;
 		UpdatedPackages2 updatedPackages;

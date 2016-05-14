@@ -29,7 +29,7 @@
 using System;
 using System.Collections.Generic;
 using MD = MonoDevelop.Projects;
-using MonoDevelop.Core.ProgressMonitoring;
+using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 
@@ -79,9 +79,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		internal void Save ()
 		{
-			DispatchService.GuiSyncDispatch (() => {
-				solution.Save (new NullProgressMonitor ());
-			});
+			Runtime.RunInMainThread (() => {
+				solution.SaveAsync (new ProgressMonitor ());
+			}).Wait ();
 		}
 
 //		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)

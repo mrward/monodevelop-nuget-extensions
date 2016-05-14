@@ -31,7 +31,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class PackagesForSelectedPageQuery2
+	internal class PackagesForSelectedPageQuery2
 	{
 		public PackagesForSelectedPageQuery2 (
 			PackagesViewModel2 viewModel,

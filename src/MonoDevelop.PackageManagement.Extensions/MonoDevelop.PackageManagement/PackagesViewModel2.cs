@@ -34,11 +34,12 @@ using System.Linq;
 using System.Text;
 
 using MonoDevelop.Core;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public abstract class PackagesViewModel2 : ViewModelBase<PackagesViewModel2>, IDisposable, IPackageViewModelParent2
+	internal abstract class PackagesViewModel2 : ViewModelBase<PackagesViewModel2>, IDisposable, IPackageViewModelParent2
 	{
 		Pages pages = new Pages ();
 

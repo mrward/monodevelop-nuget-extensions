@@ -32,11 +32,12 @@ using System.Linq;
 
 using NuGet;
 using System.Runtime.Versioning;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageManagementProject2
+	internal interface IPackageManagementProject2
 	{
 		event EventHandler<PackageOperationEventArgs> PackageInstalled;
 		event EventHandler<PackageOperationEventArgs> PackageUninstalled;

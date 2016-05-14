@@ -35,24 +35,35 @@ namespace MonoDevelop.PackageManagement
 {
 	public class InstallPackageSearchCategory : SearchCategory
 	{
+		string[] tags = new [] {"command"};
+
 		public InstallPackageSearchCategory ()
 			: base (GettextCatalog.GetString("Command"))
 		{
 		}
 
-		public override Task<ISearchDataSource> GetResults (SearchPopupSearchPattern searchPattern, int resultsCount, CancellationToken token)
+		public override Task GetResults (
+			ISearchResultCallback searchResultCallback,
+			SearchPopupSearchPattern pattern,
+			CancellationToken token)
 		{
-			return Task.Factory.StartNew (() => {
-				if ((searchPattern.Tag == null) || IsValidTag (searchPattern.Tag)) {
-					return (ISearchDataSource)new InstallPackageDataSource (searchPattern);
+			if (pattern.Tag == null || IsValidTag (pattern.Tag)) {
+				var command = new InstallPackageCommand (pattern.Pattern);
+				var result = new InstallPackageSearchResult (command);
+				if (result.CanBeDisplayed ()) {
+					searchResultCallback.ReportResult (result);
 				}
-				return null;
-			});
+			}
+			return Task.FromResult (0);
 		}
 
 		public override bool IsValidTag (string tag)
 		{
 			return tag == "command";
+		}
+
+		public override string[] Tags {
+			get { return tags; }
 		}
 	}
 }

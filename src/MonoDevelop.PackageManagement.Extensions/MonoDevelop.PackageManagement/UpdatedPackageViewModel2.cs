@@ -27,11 +27,12 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UpdatedPackageViewModel2 : PackageViewModel2
+	internal class UpdatedPackageViewModel2 : PackageViewModel2
 	{
 		public UpdatedPackageViewModel2 (
 			IPackageViewModelParent2 parent,

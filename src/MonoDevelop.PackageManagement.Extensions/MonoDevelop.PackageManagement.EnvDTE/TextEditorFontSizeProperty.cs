@@ -30,7 +30,7 @@ using System;
 using System.ComponentModel;
 using MonoDevelop.Ide.Fonts;
 using Pango;
-using MonoDevelop.Ide;
+using MonoDevelop.Core;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -52,9 +52,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			int fontSize = Convert.ToInt32 (value) * 1024;
 			FontDescription fontDescription = FontService.MonospaceFont.Copy ();
 			fontDescription.Size = fontSize;
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				FontService.SetFont ("Editor", fontDescription.ToString ());
-			});
+			}).Wait ();
 		}
 	}
 }

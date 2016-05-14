@@ -45,10 +45,6 @@
       <HintPath>..\..\lib\Xwt.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\..\lib\ICSharpCode.NRefactory.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="NuGet.Core">
       <HintPath>..\..\lib\NuGet.Core.dll</HintPath>
       <Private>False</Private>
@@ -70,16 +66,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MonoDevelop.PackageManagement\InstallPackageSearchCategory.cs" />
     <Compile Include="MonoDevelop.PackageManagement\InstallPackageCommand.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\InstallPackageDataSource.cs" />
     <Compile Include="MonoDevelop.PackageManagement\MonoPclCommandLine.cs" />
     <Compile Include="MonoDevelop.PackageManagement\MonoPclExe.cs" />
     <Compile Include="MonoDevelop.PackageManagement\MonoPclRunner.cs" />
     <Compile Include="MonoDevelop.PackageManagement\PortableClassLibrarySearchCategory.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\PortableClassLibraryDataSource.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PortableClassLibrarySearchResult.cs" />
     <Compile Include="MonoDevelop.PackageManagement\PackageSearchCommand.cs" />
     <Compile Include="MonoDevelop.PackageManagement\PackageInstaller.cs" />
     <Compile Include="MonoDevelop.PackageManagement\NuGetPackageSearchCategory.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\NuGetPackageDataSource.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\NuGetPackageSearchResult.cs" />
     <Compile Include="MonoDevelop.PackageManagement\PackagesViewModels2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ManagePackagesViewModel2.cs" />
     <Compile Include="gtk-gui\generated.cs" />
@@ -240,6 +235,9 @@
     <Compile Include="MonoDevelop.PackageManagement\IPackageFromRepositoryExtensions2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\IPackageRepositoryExtensions2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ReinstallPackageAction2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\InstallPackageSearchResult.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageReferenceMonitor2.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\PackageActionRunner2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

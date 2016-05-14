@@ -50,7 +50,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public InvokeInitializePackagesCmdlet (
+		internal InvokeInitializePackagesCmdlet (
 			IExtendedPackageManagementProjectService projectService,
 			IPackageInitializationScriptsFactory scriptsFactory,
 			IPackageManagementConsoleHost consoleHost,

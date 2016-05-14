@@ -35,7 +35,7 @@ using System.ComponentModel;
 namespace MonoDevelop.PackageManagement
 {
 	[System.ComponentModel.ToolboxItem(true)]
-	public partial class PagedResultsWidget2 : Gtk.Bin
+	internal partial class PagedResultsWidget2 : Gtk.Bin
 	{
 		PackagesViewModel2 viewModel;
 		List<Button> buttons;

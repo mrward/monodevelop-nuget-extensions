@@ -31,7 +31,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageManagementProjectFactory2
+	internal interface IPackageManagementProjectFactory2
 	{
 		IPackageManagementProject2 CreateProject(IPackageRepository sourceRepository, DotNetProject project);
 	}

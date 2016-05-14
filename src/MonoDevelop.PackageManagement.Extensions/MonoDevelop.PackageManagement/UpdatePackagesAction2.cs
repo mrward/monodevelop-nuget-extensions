@@ -28,11 +28,12 @@
 
 using System;
 using System.Collections.Generic;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UpdatePackagesAction2 : IUpdatePackagesAction
+	internal class UpdatePackagesAction2 : IUpdatePackagesAction
 	{
 		List<IPackage> packages = new List<IPackage> ();
 		List<PackageOperation> operations = new List<PackageOperation> ();

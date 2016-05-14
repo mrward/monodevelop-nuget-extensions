@@ -48,7 +48,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 		}
 
-		public DTE (
+		internal DTE (
 			IExtendedPackageManagementProjectService projectService,
 			IPackageManagementFileService fileService)
 		{

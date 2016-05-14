@@ -34,7 +34,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class UpdatedPackages2
+	internal class UpdatedPackages2
 	{
 		IPackageRepository sourceRepository;
 		IQueryable<IPackage> installedPackages;

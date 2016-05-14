@@ -34,7 +34,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class SolutionPackageRepositoryPath2
+	internal class SolutionPackageRepositoryPath2
 	{
 		Solution solution;
 		DefaultPackagePathResolver pathResolver;

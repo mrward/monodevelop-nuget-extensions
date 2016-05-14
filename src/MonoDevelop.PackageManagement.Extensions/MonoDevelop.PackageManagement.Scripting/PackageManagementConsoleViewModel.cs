@@ -40,7 +40,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
+	internal class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
 	{
 		RegisteredPackageSources registeredPackageSources;
 		IExtendedPackageManagementProjectService projectService;

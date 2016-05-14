@@ -53,7 +53,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 		}
 
-		public Project (
+		internal Project (
 			DotNetProject project,
 			IExtendedPackageManagementProjectService projectService,
 			IPackageManagementFileService fileService)
@@ -141,23 +141,23 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public virtual void Save ()
 		{
-			DispatchService.GuiSyncDispatch (() => {
-				DotNetProject.Save ();
-			});
+			Runtime.RunInMainThread (async () => {
+				await DotNetProject.SaveAsync (new ProgressMonitor ());
+			}).Wait ();
 		}
 
 		internal virtual void AddReference (string path)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				if (!HasReference (path)) {
 					if (Path.IsPathRooted (path)) {
 						DotNetProject.AddReference (path);
 					} else {
-						var reference = new MD.ProjectReference (MD.ReferenceType.Package, path);
+						var reference = MD.ProjectReference.CreateAssemblyFileReference (path);
 						DotNetProject.References.Add (reference);
 					}
 				}
-			});
+			}).Wait ();
 		}
 
 		bool HasReference (string include)
@@ -272,9 +272,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		internal virtual void DeleteFile (string fileName)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				FileService.RemoveFile (fileName);
-			});
+			}).Wait ();
 		}
 
 //		internal ProjectItem AddDirectoryProjectItemUsingFullPath (string directory)
@@ -318,9 +318,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		internal void RemoveProjectItem (ProjectItem projectItem)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				DotNetProject.Files.Remove (projectItem.MSBuildProjectItem);
-			});
+			}).Wait ();
 		}
 
 		//		internal ProjectItem FindProjectItem(string fileName)
@@ -336,18 +336,18 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			MonoDevelop.Ide.Gui.Document document = null;
 
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				document = IdeApp.Workbench.GetDocument (fileName);
-			});
+			}).Wait ();
 
 			return document;
 		}
 
 		internal void OpenFile (string fileName)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				IdeApp.Workbench.OpenDocument (fileName, DotNetProject, true);
-			});
+			}).Wait ();
 		}
 
 		internal bool IsFileFileInsideProjectFolder (string filePath)

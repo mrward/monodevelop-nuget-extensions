@@ -31,7 +31,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageScript
+	internal interface IPackageScript
 	{
 		IPackageManagementProject2 Project { get; set; }
 		IPackage Package { get; set; }

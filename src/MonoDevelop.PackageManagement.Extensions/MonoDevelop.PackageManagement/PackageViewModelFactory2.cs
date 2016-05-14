@@ -27,11 +27,12 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class PackageViewModelFactory2 : IPackageViewModelFactory2
+	internal class PackageViewModelFactory2 : IPackageViewModelFactory2
 	{
 		public PackageViewModelFactory2 (IPackageViewModelFactory2 packageViewModelFactory)
 			: this (

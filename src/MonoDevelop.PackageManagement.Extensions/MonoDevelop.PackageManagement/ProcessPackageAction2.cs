@@ -36,7 +36,7 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public abstract class ProcessPackageAction2 : IPackageAction
+	internal abstract class ProcessPackageAction2 : IPackageAction
 	{
 		IPackageManagementEvents packageManagementEvents;
 		bool hasBeforeExecuteBeenRun;

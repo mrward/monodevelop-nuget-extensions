@@ -27,11 +27,12 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement;
 using NuGet;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class ConsoleHostFileConflictResolver : IConsoleHostFileConflictResolver
+	internal class ConsoleHostFileConflictResolver : IConsoleHostFileConflictResolver
 	{
 		IPackageManagementEvents packageEvents;
 		FileConflictResolution conflictResolution;

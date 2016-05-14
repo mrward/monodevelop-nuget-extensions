@@ -30,7 +30,7 @@ using System;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageInitializationScriptsConsole
+	internal class PackageInitializationScriptsConsole
 	{
 		IPackageManagementConsoleHost consoleHost;
 		

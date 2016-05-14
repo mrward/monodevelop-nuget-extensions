@@ -32,9 +32,9 @@ using NuGet;
 
 namespace ICSharpCode.PackageManagement
 {
-	public interface IPackageManagerFactory2
+	internal interface IPackageManagerFactory2
 	{
-		IMonoDevelopPackageManager CreatePackageManager (
+		IMonoDevelopPackageManager2 CreatePackageManager (
 			IPackageRepository sourceRepository, 
 			DotNetProject project);
 	}

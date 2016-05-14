@@ -31,7 +31,7 @@ using ICSharpCode.PackageManagement;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class PackagesViewModels2 : IDisposable
+	internal class PackagesViewModels2 : IDisposable
 	{
 		public PackagesViewModels2 (
 			IPackageManagementSolution solution,

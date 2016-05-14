@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 //
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.Components.MainToolbar;
@@ -35,24 +34,31 @@ namespace MonoDevelop.PackageManagement
 {
 	public class PortableClassLibrarySearchCategory : SearchCategory
 	{
+		string[] tags = new [] {"command"};
+
 		public PortableClassLibrarySearchCategory ()
 			: base (GettextCatalog.GetString("Command"))
 		{
 		}
 
-		public override Task<ISearchDataSource> GetResults (SearchPopupSearchPattern searchPattern, int resultsCount, CancellationToken token)
+		public override Task GetResults (
+			ISearchResultCallback searchResultCallback,
+			SearchPopupSearchPattern pattern,
+			CancellationToken token)
 		{
-			return Task.Factory.StartNew (() => {
-				if ((searchPattern.Tag == null) || IsValidTag (searchPattern.Tag)) {
-					return (ISearchDataSource)new PortableClassLibraryDataSource (searchPattern);
-				}
-				return null;
-			});
+			if (pattern.Tag == null || IsValidTag (pattern.Tag)) {
+				searchResultCallback.ReportResult (new PortableClassLibrarySearchResult ());
+			}
+			return Task.FromResult (1);
 		}
 
 		public override bool IsValidTag (string tag)
 		{
 			return tag == "command";
+		}
+
+		public override string [] Tags {
+			get { return tags; }
 		}
 	}
 }

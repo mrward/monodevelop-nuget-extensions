@@ -35,7 +35,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement
 {
-	public class ManagePackagesViewModel2 : ViewModelBase<ManagePackagesViewModel2>, IDisposable
+	internal class ManagePackagesViewModel2 : ViewModelBase<ManagePackagesViewModel2>, IDisposable
 	{
 		IThreadSafePackageManagementEvents packageManagementEvents;
 		PackagesViewModels2 packagesViewModels;
