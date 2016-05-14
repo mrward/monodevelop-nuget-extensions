@@ -76,7 +76,7 @@ namespace MonoDevelop.PackageManagement
 
 		void SubscribeToEvents ()
 		{
-			packageManagementEvents.AcceptLicenses += AcceptLicenses;
+			//packageManagementEvents.AcceptLicenses += AcceptLicenses;
 			packageManagementEvents.SelectProjects += SelectProjects;
 			packageManagementEvents.ResolveFileConflict += ResolveFileConflict;
 			packageManagementEvents.PackageOperationsStarting += PackageOperationsStarting;
@@ -128,7 +128,7 @@ namespace MonoDevelop.PackageManagement
 		public void UnsubscribeFromEvents ()
 		{
 			packageManagementEvents.SelectProjects -= SelectProjects;
-			packageManagementEvents.AcceptLicenses -= AcceptLicenses;
+			//packageManagementEvents.AcceptLicenses -= AcceptLicenses;
 			packageManagementEvents.ResolveFileConflict -= ResolveFileConflict;
 			packageManagementEvents.PackageOperationsStarting -= PackageOperationsStarting;
 			packageManagementEvents.FileChanged -= FileChanged;
