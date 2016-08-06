@@ -68,7 +68,7 @@
 			_label="Package Console Extension" />
 	</Extension>
 
-	<Extension path="/MonoDevelop/ProjectModel/MSBuildExtensions">
+	<Extension path="/MonoDevelop/ProjectModel/ProjectModelExtensions">
 		<Class class="MonoDevelop.PackageManagement.Scripting.GlobalMSBuildProjectCollectionMSBuildExtension" />
 	</Extension>
 </Addin>
