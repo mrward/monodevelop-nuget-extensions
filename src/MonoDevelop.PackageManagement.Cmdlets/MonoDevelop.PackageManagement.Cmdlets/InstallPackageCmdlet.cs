@@ -37,12 +37,12 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 	[Cmdlet (VerbsLifecycle.Install, "Package", DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
 	public class InstallPackageCmdlet : PackageManagementCmdlet
 	{
-		public InstallPackageCmdlet ()
-			: this (
-				PackageManagementExtendedServices.ConsoleHost,
-				null)
-		{
-		}
+//		public InstallPackageCmdlet ()
+//			: this (
+//				PackageManagementExtendedServices.ConsoleHost,
+//				null)
+//		{
+//		}
 
 		internal InstallPackageCmdlet (
 			IPackageManagementConsoleHost consoleHost,
@@ -75,48 +75,48 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		[Parameter]
 		public DependencyVersion? DependencyVersion { get; set; }
 
-		protected override void ProcessRecord ()
-		{
-			ThrowErrorIfProjectNotOpen ();
-			using (IConsoleHostFileConflictResolver resolver = CreateFileConflictResolver ()) {
-				using (IDisposable monitor = CreateEventsMonitor ()) {
-					InstallPackage ();
-				}
-			}
-		}
-
-		IConsoleHostFileConflictResolver CreateFileConflictResolver ()
-		{
-			return ConsoleHost.CreateFileConflictResolver (FileConflictAction);
-		}
-
-		void InstallPackage ()
-		{
-			IPackageManagementProject2 project = GetProject ();
-			using (project.SourceRepository.StartInstallOperation (Id)) {
-				InstallPackageAction2 action = CreateInstallPackageTask (project);
-				ExecuteWithScriptRunner (project, () => {
-					action.Execute ();
-				});
-			}
-		}
-
-		IPackageManagementProject2 GetProject ()
-		{
-			return ConsoleHost.GetProject (Source, ProjectName);
-		}
-
-		InstallPackageAction2 CreateInstallPackageTask (IPackageManagementProject2 project)
-		{
-			InstallPackageAction2 action = project.CreateInstallPackageAction ();
-			action.PackageId = Id;
-			action.PackageVersion = Version;
-			action.IgnoreDependencies = IgnoreDependencies.IsPresent;
-			action.AllowPrereleaseVersions = IncludePrerelease.IsPresent;
-			if (DependencyVersion.HasValue) {
-				action.DependencyVersion = DependencyVersion.Value;
-			}
-			return action;
-		}
+//		protected override void ProcessRecord ()
+//		{
+//			ThrowErrorIfProjectNotOpen ();
+//			using (IConsoleHostFileConflictResolver resolver = CreateFileConflictResolver ()) {
+//				using (IDisposable monitor = CreateEventsMonitor ()) {
+//					InstallPackage ();
+//				}
+//			}
+//		}
+//
+//		IConsoleHostFileConflictResolver CreateFileConflictResolver ()
+//		{
+//			return ConsoleHost.CreateFileConflictResolver (FileConflictAction);
+//		}
+//
+//		void InstallPackage ()
+//		{
+//			IPackageManagementProject2 project = GetProject ();
+//			using (project.SourceRepository.StartInstallOperation (Id)) {
+//				InstallPackageAction2 action = CreateInstallPackageTask (project);
+//				ExecuteWithScriptRunner (project, () => {
+//					action.Execute ();
+//				});
+//			}
+//		}
+//
+//		IPackageManagementProject2 GetProject ()
+//		{
+//			return ConsoleHost.GetProject (Source, ProjectName);
+//		}
+//
+//		InstallPackageAction2 CreateInstallPackageTask (IPackageManagementProject2 project)
+//		{
+//			InstallPackageAction2 action = project.CreateInstallPackageAction ();
+//			action.PackageId = Id;
+//			action.PackageVersion = Version;
+//			action.IgnoreDependencies = IgnoreDependencies.IsPresent;
+//			action.AllowPrereleaseVersions = IncludePrerelease.IsPresent;
+//			if (DependencyVersion.HasValue) {
+//				action.DependencyVersion = DependencyVersion.Value;
+//			}
+//			return action;
+//		}
 	}
 }

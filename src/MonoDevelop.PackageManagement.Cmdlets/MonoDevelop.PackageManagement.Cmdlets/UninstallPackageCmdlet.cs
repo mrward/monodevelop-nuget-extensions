@@ -38,12 +38,12 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 	[Cmdlet (VerbsLifecycle.Uninstall, "Package", DefaultParameterSetName = ParameterAttribute.AllParameterSets)]
 	public class UninstallPackageCmdlet : PackageManagementCmdlet
 	{
-		public UninstallPackageCmdlet ()
-			: this (
-				PackageManagementExtendedServices.ConsoleHost,
-				null)
-		{
-		}
+//		public UninstallPackageCmdlet ()
+//			: this (
+//				PackageManagementExtendedServices.ConsoleHost,
+//				null)
+//		{
+//		}
 
 		internal UninstallPackageCmdlet (
 			IPackageManagementConsoleHost consoleHost,
@@ -67,39 +67,39 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		[Parameter]
 		public SwitchParameter RemoveDependencies { get; set; }
 
-		protected override void ProcessRecord ()
-		{
-			ThrowErrorIfProjectNotOpen ();
-			using (IDisposable monitor = CreateEventsMonitor ()) {
-				UninstallPackage ();
-			}
-		}
-
-		void UninstallPackage ()
-		{
-			ExtendedPackageManagementProject project = GetProject ();
-			UninstallPackageAction2 action = CreateUninstallPackageAction (project);
-			ExecuteWithScriptRunner (project, () => {
-				action.Execute ();
-			});
-		}
-
-		ExtendedPackageManagementProject GetProject ()
-		{
-			string source = null; 
-			return (ExtendedPackageManagementProject)ConsoleHost.GetProject (source, ProjectName);
-		}
-
-		UninstallPackageAction2 CreateUninstallPackageAction (ExtendedPackageManagementProject project)
-		{
-			UninstallPackageAction2 action = project.CreateUninstallPackageAction ();
-			action.PackageId = Id;
-			action.PackageVersion = Version;
-			action.ForceRemove = Force.IsPresent;
-			action.RemoveDependencies = RemoveDependencies.IsPresent;
-//			action.PackageScriptRunner = this;
-
-			return action;
-		}
+//		protected override void ProcessRecord ()
+//		{
+//			ThrowErrorIfProjectNotOpen ();
+//			using (IDisposable monitor = CreateEventsMonitor ()) {
+//				UninstallPackage ();
+//			}
+//		}
+//
+//		void UninstallPackage ()
+//		{
+//			ExtendedPackageManagementProject project = GetProject ();
+//			UninstallPackageAction2 action = CreateUninstallPackageAction (project);
+//			ExecuteWithScriptRunner (project, () => {
+//				action.Execute ();
+//			});
+//		}
+//
+//		ExtendedPackageManagementProject GetProject ()
+//		{
+//			string source = null; 
+//			return (ExtendedPackageManagementProject)ConsoleHost.GetProject (source, ProjectName);
+//		}
+//
+//		UninstallPackageAction2 CreateUninstallPackageAction (ExtendedPackageManagementProject project)
+//		{
+//			UninstallPackageAction2 action = project.CreateUninstallPackageAction ();
+//			action.PackageId = Id;
+//			action.PackageVersion = Version;
+//			action.ForceRemove = Force.IsPresent;
+//			action.RemoveDependencies = RemoveDependencies.IsPresent;
+////			action.PackageScriptRunner = this;
+//
+//			return action;
+//		}
 	}
 }

@@ -49,7 +49,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		void ResolveFileConflict (object sender, ResolveFileConflictEventArgs e)
 		{
-			e.Resolution = conflictResolution;
+			throw new NotImplementedException ();
+//			e.Resolution = conflictResolution;
 		}
 		
 		FileConflictResolution GetFileConflictResolution (FileConflictAction fileConflictAction)

@@ -41,14 +41,14 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		IExtendedPackageManagementProjectService projectService;
 		IPackageInitializationScriptsFactory scriptsFactory;
 
-		public InvokeInitializePackagesCmdlet ()
-			: this (
-				PackageManagementExtendedServices.ProjectService,
-				new PackageInitializationScriptsFactory (),
-				PackageManagementExtendedServices.ConsoleHost,
-				null)
-		{
-		}
+//		public InvokeInitializePackagesCmdlet ()
+//			: this (
+//				PackageManagementExtendedServices.ProjectService,
+//				new PackageInitializationScriptsFactory (),
+//				PackageManagementExtendedServices.ConsoleHost,
+//				null)
+//		{
+//		}
 
 		internal InvokeInitializePackagesCmdlet (
 			IExtendedPackageManagementProjectService projectService,

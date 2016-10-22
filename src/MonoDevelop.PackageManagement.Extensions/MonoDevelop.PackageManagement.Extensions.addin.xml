@@ -22,9 +22,9 @@
 	</Runtime>
 
 	<Dependencies>
-		<Addin id="Core" version="6.0.2"/>
-		<Addin id="Ide" version="6.0.2"/>
-		<Addin id="PackageManagement" version="6.0.2"/>
+		<Addin id="Core" version="6.1"/>
+		<Addin id="Ide" version="6.1"/>
+		<Addin id="PackageManagement" version="6.1"/>
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
@@ -33,7 +33,7 @@
 		<Class class="MonoDevelop.PackageManagement.PortableClassLibrarySearchCategory" />
 	</Extension>
 
-	<Extension path="/MonoDevelop/Ide/Commands">
+<!--	<Extension path="/MonoDevelop/Ide/Commands">
 		<Command
 			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
 			_description="Manage packages"
@@ -70,5 +70,5 @@
 
 	<Extension path="/MonoDevelop/ProjectModel/ProjectModelExtensions">
 		<Class class="MonoDevelop.PackageManagement.Scripting.GlobalMSBuildProjectCollectionMSBuildExtension" />
-	</Extension>
+	</Extension>-->
 </Addin>

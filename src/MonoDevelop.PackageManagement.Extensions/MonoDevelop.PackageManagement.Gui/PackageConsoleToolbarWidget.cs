@@ -38,7 +38,7 @@ namespace MonoDevelop.PackageManagement
 	internal partial class PackageConsoleToolbarWidget : Gtk.Bin
 	{
 		Button clearButton;
-		PackageManagementConsoleViewModel viewModel;
+//		PackageManagementConsoleViewModel viewModel;
 		bool reloadingPackageSources;
 		bool reloadingProjects;
 		ListStore projectListStore;
@@ -62,38 +62,38 @@ namespace MonoDevelop.PackageManagement
 		
 		public event EventHandler ClearButtonClicked;
 		
-		public void LoadViewModel (PackageManagementConsoleViewModel viewModel)
-		{
-			this.viewModel = viewModel;
-			
-			LoadPackageSources ();
-			
-			SetUpProjectsComboBox ();
-			LoadProjects ();
-			
-			RegisterEvents();
-		}
-		
-		void RegisterEvents()
-		{
-			viewModel.PackageSources.CollectionChanged += ViewModelPackageSourcesChanged;
-			packageSourcesComboBox.Changed += PackageSourcesComboBoxChanged;
-			
-			viewModel.Projects.CollectionChanged += ViewModelProjectsChanged;
-			projectsComboBox.Changed += ProjectsComboBoxChanged;
-		}
-		
-		void LoadPackageSources ()
-		{
-			ClearPackageSources ();
-			
-			for (int index = 0; index < viewModel.PackageSources.Count; ++index) {
-				PackageSourceViewModel packageSource = viewModel.PackageSources [index];
-				packageSourcesComboBox.InsertText (index, packageSource.Name);
-			}
-			
-			packageSourcesComboBox.Active = GetActivePackageSourceIndexFromViewModel ();
-		}
+//		public void LoadViewModel (PackageManagementConsoleViewModel viewModel)
+//		{
+//			this.viewModel = viewModel;
+//			
+//			LoadPackageSources ();
+//			
+//			SetUpProjectsComboBox ();
+//			LoadProjects ();
+//			
+//			RegisterEvents();
+//		}
+//		
+//		void RegisterEvents()
+//		{
+//			viewModel.PackageSources.CollectionChanged += ViewModelPackageSourcesChanged;
+//			packageSourcesComboBox.Changed += PackageSourcesComboBoxChanged;
+//			
+//			viewModel.Projects.CollectionChanged += ViewModelProjectsChanged;
+//			projectsComboBox.Changed += ProjectsComboBoxChanged;
+//		}
+//		
+//		void LoadPackageSources ()
+//		{
+//			ClearPackageSources ();
+//			
+//			for (int index = 0; index < viewModel.PackageSources.Count; ++index) {
+//				PackageSourceViewModel packageSource = viewModel.PackageSources [index];
+//				packageSourcesComboBox.InsertText (index, packageSource.Name);
+//			}
+//			
+//			packageSourcesComboBox.Active = GetActivePackageSourceIndexFromViewModel ();
+//		}
 		
 		void SetUpProjectsComboBox ()
 		{
@@ -115,56 +115,56 @@ namespace MonoDevelop.PackageManagement
 		{
 			reloadingPackageSources = true;
 			
-			LoadPackageSources ();
+//			LoadPackageSources ();
 			
 			reloadingPackageSources = false;
 		}
 		
 		int GetActivePackageSourceIndexFromViewModel ()
 		{
-			if (viewModel.ActivePackageSource == null) {
-				if (viewModel.PackageSources.Count > 0) {
-					return 0;
-				}
-				return -1;
-			}
-			
-			int index = viewModel.PackageSources.IndexOf (viewModel.ActivePackageSource);
-			if (index >= 0) {
-				return index;
-			}
+//			if (viewModel.ActivePackageSource == null) {
+//				if (viewModel.PackageSources.Count > 0) {
+//					return 0;
+//				}
+//				return -1;
+//			}
+//			
+//			int index = viewModel.PackageSources.IndexOf (viewModel.ActivePackageSource);
+//			if (index >= 0) {
+//				return index;
+//			}
 			
 			return 0;
 		}
 		
 		void PackageSourcesComboBoxChanged (object sender, EventArgs e)
 		{
-			if (reloadingPackageSources)
-				return;
-			
-			viewModel.ActivePackageSource = GetSelectedPackageSource ();
+//			if (reloadingPackageSources)
+//				return;
+//			
+//			viewModel.ActivePackageSource = GetSelectedPackageSource ();
 		}
 		
 		PackageSourceViewModel GetSelectedPackageSource ()
 		{
-			if (packageSourcesComboBox.Active == -1) {
+//			if (packageSourcesComboBox.Active == -1) {
 				return null;
-			}
+//			}
 			
-			return viewModel.PackageSources [packageSourcesComboBox.Active];
+//			return viewModel.PackageSources [packageSourcesComboBox.Active];
 		}
 		
 		void LoadProjects ()
 		{
 			projectListStore.Clear ();
 			
-			foreach (Project project in viewModel.Projects) {
-				projectListStore.AppendValues (project.Name, project);
-			}
-			
-			if (viewModel.Projects.Count > 0) {
-				projectsComboBox.Active = 0;
-			}
+//			foreach (Project project in viewModel.Projects) {
+//				projectListStore.AppendValues (project.Name, project);
+//			}
+//			
+//			if (viewModel.Projects.Count > 0) {
+//				projectsComboBox.Active = 0;
+//			}
 		}
 		
 		void ViewModelProjectsChanged (object sender, NotifyCollectionChangedEventArgs e)
@@ -186,17 +186,17 @@ namespace MonoDevelop.PackageManagement
 		
 		void UpdateDefaultProject ()
 		{
-			int selectedIndex = projectsComboBox.Active;
-			
-			if (selectedIndex < 0) {
-				viewModel.DefaultProject = null;
-				return;
-			}
-			
-			TreeIter iter;
-			projectListStore.IterNthChild (out iter, selectedIndex);
-			var project = (Project)projectListStore.GetValue (iter, 1);
-			viewModel.DefaultProject = project;
+//			int selectedIndex = projectsComboBox.Active;
+//			
+//			if (selectedIndex < 0) {
+//				viewModel.DefaultProject = null;
+//				return;
+//			}
+//			
+//			TreeIter iter;
+//			projectListStore.IterNthChild (out iter, selectedIndex);
+//			var project = (Project)projectListStore.GetValue (iter, 1);
+//			viewModel.DefaultProject = project;
 		}
 	}
 }

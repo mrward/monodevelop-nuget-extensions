@@ -103,7 +103,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 			foreach (ProjectImportElement importToAdd in importsToAdd) {
 				string condition = GetCondition (importToAdd.Project);
-				originalMSBuildProject.AddImport (importToAdd.Project, ProjectImportLocation.Bottom, condition);
+//				originalMSBuildProject.AddImport (importToAdd.Project, ImportLocation.Bottom, condition);
 			}
 
 			result.AddProjectImportsAdded (importsToAdd);

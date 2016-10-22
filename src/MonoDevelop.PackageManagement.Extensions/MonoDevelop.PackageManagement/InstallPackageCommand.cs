@@ -67,7 +67,16 @@ namespace MonoDevelop.PackageManagement
 
 			return new SemanticVersion (Version);
 		}
-	
+
+		public string GetVersionString ()
+		{
+			SemanticVersion version = GetVersion ();
+			if (version != null)
+				return version.ToNormalizedString ();
+
+			return null;
+		}
+
 		string RemoveWhitespace (string text)
 		{
 			if (String.IsNullOrWhiteSpace (text))

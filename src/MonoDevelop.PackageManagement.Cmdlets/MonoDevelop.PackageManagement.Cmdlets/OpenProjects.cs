@@ -39,18 +39,19 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 {
 	internal class OpenProjects
 	{
-		IPackageManagementSolution2 solution;
-		
-		public OpenProjects(IPackageManagementSolution2 solution)
-		{
-			this.solution = solution;
-		}
+//		IPackageManagementSolution2 solution;
+//		
+//		public OpenProjects(IPackageManagementSolution2 solution)
+//		{
+//			this.solution = solution;
+//		}
 		
 		public IEnumerable<EnvDTE.Project> GetAllProjects()
 		{
-			foreach (Project project in solution.GetDotNetProjects()) {
-				yield return CreateProject(project);
-			}
+			throw new NotImplementedException ();
+//			foreach (Project project in solution.GetDotNetProjects()) {
+//				yield return CreateProject(project);
+//			}
 		}
 		
 		DTEProject CreateProject(Project project)

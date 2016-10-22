@@ -42,7 +42,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 	internal class PackageManagementConsoleHost : IPackageManagementConsoleHost
 	{
 //		IThread thread;
-		IRegisteredPackageRepositories registeredRepositories;
+//		IRegisteredPackageRepositories registeredRepositories;
 		IPowerShellHostFactory powerShellHostFactory;
 		IPowerShellHost powerShellHost;
 		IPackageManagementAddInPath addinPath;
@@ -50,26 +50,26 @@ namespace ICSharpCode.PackageManagement.Scripting
 		string prompt = "PM> ";
 		
 		public PackageManagementConsoleHost (
-			IPackageManagementSolution2 solution,
-			IRegisteredPackageRepositories registeredRepositories,
+//			IPackageManagementSolution2 solution,
+//			IRegisteredPackageRepositories registeredRepositories,
 			IPackageManagementEvents packageEvents,
 			IPowerShellHostFactory powerShellHostFactory,
 			IPackageManagementAddInPath addinPath)
 		{
-			this.Solution = solution;
-			this.registeredRepositories = registeredRepositories;
+//			this.Solution = solution;
+//			this.registeredRepositories = registeredRepositories;
 			this.powerShellHostFactory = powerShellHostFactory;
 			this.addinPath = addinPath;
 			this.packageEvents = packageEvents;
 		}
 		
 		public PackageManagementConsoleHost (
-			IPackageManagementSolution2 solution,
-			IRegisteredPackageRepositories registeredRepositories,
+//			IPackageManagementSolution2 solution,
+//			IRegisteredPackageRepositories registeredRepositories,
 			IPackageManagementEvents packageEvents)
 			: this (
-				solution,
-				registeredRepositories,
+//				solution,
+//				registeredRepositories,
 				packageEvents,
 				new PowerShellHostFactory (),
 				new PackageManagementAddInPath ())
@@ -80,12 +80,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public Project DefaultProject { get; set; }
 		
 		public PackageSource ActivePackageSource {
-			get { return registeredRepositories.ActivePackageSource; }
-			set { registeredRepositories.ActivePackageSource = value; }
+			get; set;
+//			get { return registeredRepositories.ActivePackageSource; }
+//			set { registeredRepositories.ActivePackageSource = value; }
 		}
 		
 		public IScriptingConsole ScriptingConsole { get; set; }
-		public IPackageManagementSolution2 Solution { get; private set; }
+//		public IPackageManagementSolution2 Solution { get; private set; }
 		
 		public void Dispose()
 		{
@@ -208,10 +209,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		void InitializePackageScriptsForOpenSolution()
 		{
-			if (Solution.IsOpen) {
-				string command = "Invoke-InitializePackages";
-				powerShellHost.ExecuteCommand(command);
-			}
+//			if (Solution.IsOpen) {
+//				string command = "Invoke-InitializePackages";
+//				powerShellHost.ExecuteCommand(command);
+//			}
 		}
 		
 		void WriteLine(string message)
@@ -249,21 +250,22 @@ namespace ICSharpCode.PackageManagement.Scripting
 			powerShellHost.ExecuteCommand (preprocessedLine);
 		}
 		
-		public IPackageManagementProject2 GetProject(string packageSource, string projectName)
-		{
-			PackageSource source = GetActivePackageSource(packageSource);
-			projectName = GetActiveProjectName(projectName);
-
-			IPackageRepository repository = GetPackageRepository (source);
-			DotNetProject project = GetDotNetProject (projectName);
-
-			return new ExtendedPackageManagementProject (repository, project, PackageManagementServices.PackageManagementEvents);
-		}
+//		public IPackageManagementProject2 GetProject(string packageSource, string projectName)
+//		{
+//			PackageSource source = GetActivePackageSource(packageSource);
+//			projectName = GetActiveProjectName(projectName);
+//
+//			IPackageRepository repository = GetPackageRepository (source);
+//			DotNetProject project = GetDotNetProject (projectName);
+//
+//			return new ExtendedPackageManagementProject (repository, project, PackageManagementServices.PackageManagementEvents);
+//		}
 
 		DotNetProject GetDotNetProject(string name)
 		{
-			var openProjects = new OpenDotNetProjects2 (PackageManagementExtendedServices.ProjectService);
-			return openProjects.FindProject (name);
+			throw new NotImplementedException ();
+//			var openProjects = new OpenDotNetProjects2 (PackageManagementExtendedServices.ProjectService);
+//			return openProjects.FindProject (name);
 		}
 		
 		public PackageSource GetActivePackageSource(string source)
@@ -282,11 +284,11 @@ namespace ICSharpCode.PackageManagement.Scripting
 			return DefaultProject.Name;
 		}
 		
-		public IPackageManagementProject2 GetProject(IPackageRepository sourceRepository, string projectName)
-		{
-			projectName = GetActiveProjectName(projectName);
-			return Solution.GetProject(sourceRepository, projectName);
-		}
+//		public IPackageManagementProject2 GetProject(IPackageRepository sourceRepository, string projectName)
+//		{
+//			projectName = GetActiveProjectName(projectName);
+//			return Solution.GetProject(sourceRepository, projectName);
+//		}
 		
 		public void ShutdownConsole()
 		{
@@ -302,7 +304,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		public IPackageRepository GetPackageRepository(PackageSource packageSource)
 		{
-			return registeredRepositories.CreateRepository(packageSource);
+			throw new NotImplementedException ();
+//			return registeredRepositories.CreateRepository(packageSource);
 		}
 		
 		public void SetDefaultRunspace()

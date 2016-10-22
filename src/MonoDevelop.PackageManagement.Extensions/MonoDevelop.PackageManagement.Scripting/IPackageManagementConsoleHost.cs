@@ -39,7 +39,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		Project DefaultProject { get; set; }
 		PackageSource ActivePackageSource { get; set; }
 		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution2 Solution { get; }
+//		IPackageManagementSolution2 Solution { get; }
 		bool IsRunning { get; }
 
 		void Clear ();
@@ -54,8 +54,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
 		IDisposable CreateEventsMonitor (ILogger logger);
 
-		IPackageManagementProject2 GetProject (string packageSource, string projectName);
-		IPackageManagementProject2 GetProject (IPackageRepository sourceRepository, string projectName);
+//		IPackageManagementProject2 GetProject (string packageSource, string projectName);
+//		IPackageManagementProject2 GetProject (IPackageRepository sourceRepository, string projectName);
 		PackageSource GetActivePackageSource (string source);
 		
 		IPackageRepository GetPackageRepository (PackageSource packageSource);

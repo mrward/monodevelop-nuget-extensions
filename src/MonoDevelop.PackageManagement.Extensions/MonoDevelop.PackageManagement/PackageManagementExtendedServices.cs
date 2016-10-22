@@ -1,65 +1,65 @@
-﻿//
-// PackageManagementExtendedServices.cs
+﻿////
+//// PackageManagementExtendedServices.cs
+////
+//// Author:
+////       Matt Ward <matt.ward@xamarin.com>
+////
+//// Copyright (c) 2014 Xamarin Inc. (http://xamarin.com)
+////
+//// Permission is hereby granted, free of charge, to any person obtaining a copy
+//// of this software and associated documentation files (the "Software"), to deal
+//// in the Software without restriction, including without limitation the rights
+//// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//// copies of the Software, and to permit persons to whom the Software is
+//// furnished to do so, subject to the following conditions:
+////
+//// The above copyright notice and this permission notice shall be included in
+//// all copies or substantial portions of the Software.
+////
+//// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//// THE SOFTWARE.
+////
 //
-// Author:
-//       Matt Ward <matt.ward@xamarin.com>
+//using System;
+//using ICSharpCode.PackageManagement;
+//using ICSharpCode.PackageManagement.Scripting;
+//using MonoDevelop.Projects;
 //
-// Copyright (c) 2014 Xamarin Inc. (http://xamarin.com)
+//namespace MonoDevelop.PackageManagement
+//{
+//	internal static class PackageManagementExtendedServices
+//	{
+//		static readonly PackageManagementConsoleHostProvider consoleHostProvider;
+//		static readonly ExtendedPackageManagementProjectService projectService;
+//		static readonly PackageManagementSolution2 solution;
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+//		static PackageManagementExtendedServices ()
+//		{
+//			projectService = new ExtendedPackageManagementProjectService ();
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+//			solution = new PackageManagementSolution2 (PackageManagementServices.RegisteredPackageRepositories, PackageManagementServices.PackageManagementEvents);
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+//			consoleHostProvider = new PackageManagementConsoleHostProvider (
+//				solution,
+//				PackageManagementServices.RegisteredPackageRepositories);
+//		}
 //
-
-using System;
-using ICSharpCode.PackageManagement;
-using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
-
-namespace MonoDevelop.PackageManagement
-{
-	internal static class PackageManagementExtendedServices
-	{
-		static readonly PackageManagementConsoleHostProvider consoleHostProvider;
-		static readonly ExtendedPackageManagementProjectService projectService;
-		static readonly PackageManagementSolution2 solution;
-
-		static PackageManagementExtendedServices ()
-		{
-			projectService = new ExtendedPackageManagementProjectService ();
-
-			solution = new PackageManagementSolution2 (PackageManagementServices.RegisteredPackageRepositories, PackageManagementServices.PackageManagementEvents);
-
-			consoleHostProvider = new PackageManagementConsoleHostProvider (
-				solution,
-				PackageManagementServices.RegisteredPackageRepositories);
-		}
-
-		public static IPackageManagementConsoleHost ConsoleHost {
-			get { return consoleHostProvider.ConsoleHost; }
-		}
-
-		public static IExtendedPackageManagementProjectService ProjectService {
-			get { return projectService; }
-		}
-
-		public static IPackageManagementSolution2 Solution {
-			get { return solution; }
-		}
-	}
-}
-
+//		public static IPackageManagementConsoleHost ConsoleHost {
+//			get { return consoleHostProvider.ConsoleHost; }
+//		}
+//
+//		public static IExtendedPackageManagementProjectService ProjectService {
+//			get { return projectService; }
+//		}
+//
+//		public static IPackageManagementSolution2 Solution {
+//			get { return solution; }
+//		}
+//	}
+//}
+//

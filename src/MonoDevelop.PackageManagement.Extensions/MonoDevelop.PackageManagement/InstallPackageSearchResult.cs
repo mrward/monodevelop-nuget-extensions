@@ -28,6 +28,7 @@
 using System;
 using MonoDevelop.Core;
 using MonoDevelop.Components.MainToolbar;
+using MonoDevelop.Ide;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -69,7 +70,7 @@ namespace MonoDevelop.PackageManagement
 		bool IsProjectSelected ()
 		{
 			try {
-				return PackageManagementExtendedServices.ProjectService.CurrentProject != null;
+				return IdeApp.ProjectOperations.CurrentSelectedProject != null;
 			} catch (Exception ex) {
 				LoggingService.LogError ("Error getting current project.", ex);
 			}

@@ -141,17 +141,17 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			return ConsoleHost.CreateEventsMonitor (this);
 		}
 
-		internal void ExecuteWithScriptRunner (IPackageManagementProject2 project, Action action)
-		{
-			using (RunPackageScriptsAction runScriptsAction = CreateRunPackageScriptsAction (project)) {
-				action ();
-			}
-		}
-
-		RunPackageScriptsAction CreateRunPackageScriptsAction (IPackageManagementProject2 project)
-		{
-			return new RunPackageScriptsAction (this, project);
-		}
+//		internal void ExecuteWithScriptRunner (IPackageManagementProject2 project, Action action)
+//		{
+//			using (RunPackageScriptsAction runScriptsAction = CreateRunPackageScriptsAction (project)) {
+//				action ();
+//			}
+//		}
+//
+//		RunPackageScriptsAction CreateRunPackageScriptsAction (IPackageManagementProject2 project)
+//		{
+//			return new RunPackageScriptsAction (this, project);
+//		}
 
 		public void Log (MessageLevel level, string message, params object[] args)
 		{

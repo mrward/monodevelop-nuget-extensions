@@ -45,13 +45,13 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		const string ParameterSetAllProjects = "AllProjects";
 		const string ParameterSetProjectsFilteredByName = "ProjectsFilteredByName";
 
-		public GetProjectCmdlet ()
-			: this (
-				PackageManagementExtendedServices.ConsoleHost,
-				null)
-		{
-		}
-
+//		public GetProjectCmdlet ()
+//			: this (
+//				PackageManagementExtendedServices.ConsoleHost,
+//				null)
+//		{
+//		}
+//
 		internal GetProjectCmdlet (
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)
@@ -65,58 +65,58 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		[Parameter (Position = 0, ParameterSetName = ParameterSetProjectsFilteredByName, ValueFromPipelineByPropertyName = true)]
 		public string[] Name { get; set; }
 
-		protected override void ProcessRecord ()
-		{
-			ThrowErrorIfProjectNotOpen ();
-			
-			if (All.IsPresent) {
-				WriteAllProjectsToPipeline ();
-			} else if (Name != null) {
-				WriteFilteredProjectsToPipeline ();
-			} else {
-				WriteDefaultProjectToPipeline ();
-			}
-		}
-
-		void WriteAllProjectsToPipeline ()
-		{
-			IEnumerable<EnvDTE.Project> allProjects = GetAllProjects ();
-			WriteProjectsToPipeline (allProjects);
-		}
-
-		IEnumerable<EnvDTE.Project> GetAllProjects ()
-		{
-			var projects = new OpenProjects (ConsoleHost.Solution);
-			return projects.GetAllProjects ();
-		}
-
-		void WriteProjectsToPipeline (IEnumerable<EnvDTE.Project> projects)
-		{
-			bool enumerateCollection = true;
-			WriteObject (projects, enumerateCollection);
-		}
-
-		void WriteFilteredProjectsToPipeline ()
-		{
-			IEnumerable<EnvDTE.Project> projects = GetFilteredProjects ();
-			WriteProjectsToPipeline (projects);
-		}
-
-		IEnumerable<EnvDTE.Project> GetFilteredProjects ()
-		{
-			var projects = new OpenProjects (ConsoleHost.Solution);
-			return projects.GetFilteredProjects (Name);
-		}
-
-		void WriteDefaultProjectToPipeline ()
-		{
-			EnvDTE.Project project = GetDefaultProject ();
-			WriteObject (project);
-		}
-
-		EnvDTE.Project GetDefaultProject ()
-		{
-			return new EnvDTE.Project (DefaultProject as DotNetProject);
-		}
+//		protected override void ProcessRecord ()
+//		{
+//			ThrowErrorIfProjectNotOpen ();
+//			
+//			if (All.IsPresent) {
+//				WriteAllProjectsToPipeline ();
+//			} else if (Name != null) {
+//				WriteFilteredProjectsToPipeline ();
+//			} else {
+//				WriteDefaultProjectToPipeline ();
+//			}
+//		}
+//
+//		void WriteAllProjectsToPipeline ()
+//		{
+//			IEnumerable<EnvDTE.Project> allProjects = GetAllProjects ();
+//			WriteProjectsToPipeline (allProjects);
+//		}
+//
+//		IEnumerable<EnvDTE.Project> GetAllProjects ()
+//		{
+//			var projects = new OpenProjects (ConsoleHost.Solution);
+//			return projects.GetAllProjects ();
+//		}
+//
+//		void WriteProjectsToPipeline (IEnumerable<EnvDTE.Project> projects)
+//		{
+//			bool enumerateCollection = true;
+//			WriteObject (projects, enumerateCollection);
+//		}
+//
+//		void WriteFilteredProjectsToPipeline ()
+//		{
+//			IEnumerable<EnvDTE.Project> projects = GetFilteredProjects ();
+//			WriteProjectsToPipeline (projects);
+//		}
+//
+//		IEnumerable<EnvDTE.Project> GetFilteredProjects ()
+//		{
+//			var projects = new OpenProjects (ConsoleHost.Solution);
+//			return projects.GetFilteredProjects (Name);
+//		}
+//
+//		void WriteDefaultProjectToPipeline ()
+//		{
+//			EnvDTE.Project project = GetDefaultProject ();
+//			WriteObject (project);
+//		}
+//
+//		EnvDTE.Project GetDefaultProject ()
+//		{
+//			return new EnvDTE.Project (DefaultProject as DotNetProject);
+//		}
 	}
 }

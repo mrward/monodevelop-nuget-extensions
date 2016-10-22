@@ -28,6 +28,7 @@
 
 using System;
 using System.IO;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
@@ -90,7 +91,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		string GetTargetFrameworkMoniker ()
 		{
-			var targetFramework = new ProjectTargetFramework2 (MSBuildProject);
+			var targetFramework = new ProjectTargetFramework (new DotNetProjectProxy (MSBuildProject));
 			return targetFramework.TargetFrameworkName.ToString ();
 		}
 

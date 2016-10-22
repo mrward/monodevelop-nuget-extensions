@@ -54,15 +54,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		List<GlobalAndInternalProject> projects = new List<GlobalAndInternalProject> ();
 
-		PackageManagementLogger logger = new PackageManagementLogger (
-			new ThreadSafePackageManagementEvents (PackageManagementServices.PackageManagementEvents));
+		PackageManagementLogger logger = new PackageManagementLogger (PackageManagementServices.PackageManagementEvents);
 
-		public void AddProject (IPackageManagementProject2 packageManagementProject)
-		{
-			AddProject (packageManagementProject.DotNetProject);
-		}
-
-		void AddProject (DotNetProject dotNetProject)
+		public void AddProject (DotNetProject dotNetProject)
 		{
 			Project globalProject = GetGlobalProjectCollection ().LoadProject (dotNetProject.FileName);
 

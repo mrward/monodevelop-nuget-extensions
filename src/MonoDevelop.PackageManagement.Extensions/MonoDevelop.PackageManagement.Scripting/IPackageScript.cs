@@ -33,7 +33,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 {
 	internal interface IPackageScript
 	{
-		IPackageManagementProject2 Project { get; set; }
+//		IPackageManagementProject2 Project { get; set; }
 		IPackage Package { get; set; }
 	
 		bool Exists();

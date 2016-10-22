@@ -50,7 +50,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		protected bool UseTargetSpecificScript { get; set; }
 		
 		public IPackage Package { get; set; }
-		public IPackageManagementProject2 Project { get; set; }
+//		public IPackageManagementProject2 Project { get; set; }
 		
 		public bool Exists()
 		{
@@ -88,9 +88,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		Project GetProject ()
 		{
-			if (Project != null) {
-				return new EnvDTE.Project (Project.DotNetProject);
-			}
+//			if (Project != null) {
+//				return new EnvDTE.Project (Project.DotNetProject);
+//			}
 			return null;
 		}
 		
@@ -125,7 +125,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		FrameworkName GetTargetFramework ()
 		{
-			return Project.TargetFramework;
+			throw new NotImplementedException ();
+//			return Project.TargetFramework;
 		}
 	}
 }
