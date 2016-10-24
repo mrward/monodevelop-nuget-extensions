@@ -34,15 +34,14 @@ using ICSharpCode.Scripting;
 using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
-using NuGet;
-using System.IO;
+using NuGet.Configuration;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHost : IPackageManagementConsoleHost
 	{
 //		IThread thread;
-//		IRegisteredPackageRepositories registeredRepositories;
+		RegisteredPackageSources registeredPackageSources;
 		IPowerShellHostFactory powerShellHostFactory;
 		IPowerShellHost powerShellHost;
 		IPackageManagementAddInPath addinPath;
@@ -51,13 +50,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		public PackageManagementConsoleHost (
 //			IPackageManagementSolution2 solution,
-//			IRegisteredPackageRepositories registeredRepositories,
+			RegisteredPackageSources registeredPackageSources,
 			IPackageManagementEvents packageEvents,
 			IPowerShellHostFactory powerShellHostFactory,
 			IPackageManagementAddInPath addinPath)
 		{
 //			this.Solution = solution;
-//			this.registeredRepositories = registeredRepositories;
+			this.registeredPackageSources = registeredPackageSources;
 			this.powerShellHostFactory = powerShellHostFactory;
 			this.addinPath = addinPath;
 			this.packageEvents = packageEvents;
@@ -65,11 +64,11 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		public PackageManagementConsoleHost (
 //			IPackageManagementSolution2 solution,
-//			IRegisteredPackageRepositories registeredRepositories,
+			RegisteredPackageSources registeredPackageSources,
 			IPackageManagementEvents packageEvents)
 			: this (
 //				solution,
-//				registeredRepositories,
+				registeredPackageSources,
 				packageEvents,
 				new PowerShellHostFactory (),
 				new PackageManagementAddInPath ())
@@ -79,10 +78,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public bool IsRunning { get; private set; }
 		public Project DefaultProject { get; set; }
 		
-		public PackageSource ActivePackageSource {
-			get; set;
-//			get { return registeredRepositories.ActivePackageSource; }
-//			set { registeredRepositories.ActivePackageSource = value; }
+		public SourceRepositoryViewModel ActivePackageSource {
+			get { return registeredPackageSources.SelectedPackageSource; }
+			set { registeredPackageSources.SelectedPackageSource = value; }
 		}
 		
 		public IScriptingConsole ScriptingConsole { get; set; }
@@ -268,12 +266,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 //			return openProjects.FindProject (name);
 		}
 		
-		public PackageSource GetActivePackageSource(string source)
+		public PackageSource GetActivePackageSource (string source)
 		{
 			if (source != null) {
-				return new PackageSource(source);
+				return new PackageSource (source);
 			}
-			return ActivePackageSource;
+			return ActivePackageSource?.PackageSource;
 		}
 		
 		string GetActiveProjectName(string projectName)
@@ -302,12 +300,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 //			ScriptingConsole.SendLine(command);
 		}
 		
-		public IPackageRepository GetPackageRepository(PackageSource packageSource)
-		{
-			throw new NotImplementedException ();
-//			return registeredRepositories.CreateRepository(packageSource);
-		}
-		
 		public void SetDefaultRunspace()
 		{
 //			powerShellHost.SetDefaultRunspace();
@@ -318,7 +310,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			return new ConsoleHostFileConflictResolver(packageEvents, fileConflictAction);
 		}
 
-		public IDisposable CreateEventsMonitor (ILogger logger)
+		public IDisposable CreateEventsMonitor (NuGet.ILogger logger)
 		{
 			return new ConsoleHostPackageEventsMonitor (logger, packageEvents);
 		}

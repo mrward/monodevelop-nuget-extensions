@@ -39,20 +39,20 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 	public class References : MarshalByRefObject, IEnumerable//, global::EnvDTE.References
 	{
 		MD.DotNetProject msbuildProject;
-//		IExtendedPackageManagementProjectService projectService;
+		IExtendedPackageManagementProjectService projectService;
 		Project project;
 
 		public References (MD.DotNetProject project)
-//			: this (project, PackageManagementExtendedServices.ProjectService)
-//		{
-//		}
+			: this (project, PackageManagementExtendedServices.ProjectService)
+		{
+		}
 
-//		public References (
-//			MD.DotNetProject project,
-//			IExtendedPackageManagementProjectService projectService)
+		public References (
+			MD.DotNetProject project,
+			IExtendedPackageManagementProjectService projectService)
 		{
 			this.msbuildProject = project;
-//			this.projectService = projectService;
+			this.projectService = projectService;
 		}
 
 		public References (Project project)

@@ -27,17 +27,17 @@
 //
 
 using System;
-using System.Collections.Generic;
 using ICSharpCode.Scripting;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
-using NuGet;
+using NuGet.Configuration;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	internal interface IPackageManagementConsoleHost : IDisposable
 	{
 		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
+		SourceRepositoryViewModel ActivePackageSource { get; set; }
 		IScriptingConsole ScriptingConsole { get; set; }
 //		IPackageManagementSolution2 Solution { get; }
 		bool IsRunning { get; }
@@ -52,12 +52,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void SetDefaultRunspace ();
 		
 		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
-		IDisposable CreateEventsMonitor (ILogger logger);
+		IDisposable CreateEventsMonitor (NuGet.ILogger logger);
 
 //		IPackageManagementProject2 GetProject (string packageSource, string projectName);
 //		IPackageManagementProject2 GetProject (IPackageRepository sourceRepository, string projectName);
 		PackageSource GetActivePackageSource (string source);
 		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+//		IPackageRepository GetPackageRepository (PackageSource packageSource);
 	}
 }

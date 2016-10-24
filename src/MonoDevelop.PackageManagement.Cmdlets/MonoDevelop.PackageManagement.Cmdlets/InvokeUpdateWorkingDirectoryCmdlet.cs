@@ -39,13 +39,13 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 	{
 		IExtendedPackageManagementProjectService projectService;
 
-//		public InvokeUpdateWorkingDirectoryCmdlet ()
-//			: this (
-//				PackageManagementExtendedServices.ProjectService,
-//				PackageManagementExtendedServices.ConsoleHost,
-//				null)
-//		{
-//		}
+		public InvokeUpdateWorkingDirectoryCmdlet ()
+			: this (
+				PackageManagementExtendedServices.ProjectService,
+				PackageManagementExtendedServices.ConsoleHost,
+				null)
+		{
+		}
 
 		internal InvokeUpdateWorkingDirectoryCmdlet (
 			IExtendedPackageManagementProjectService projectService,

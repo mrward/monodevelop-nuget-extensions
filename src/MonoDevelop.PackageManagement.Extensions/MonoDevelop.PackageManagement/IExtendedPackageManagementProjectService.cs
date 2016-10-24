@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 //
 
-using System;
 using System.Collections.Generic;
 using MonoDevelop.Projects;
 
@@ -33,9 +32,6 @@ namespace MonoDevelop.PackageManagement
 {
 	public interface IExtendedPackageManagementProjectService
 	{
-		event EventHandler SolutionLoaded;
-		event EventHandler SolutionUnloaded;
-
 		DotNetProject CurrentProject { get; }
 		Solution OpenSolution { get; }
 

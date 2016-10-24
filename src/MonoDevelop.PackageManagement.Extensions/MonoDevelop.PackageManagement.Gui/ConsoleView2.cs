@@ -31,11 +31,21 @@ using System.Collections.Generic;
 
 using Gtk;
 using MonoDevelop.Core;
-using MonoDevelop.Ide.Execution;
 using Pango;
 
 namespace MonoDevelop.Components
 {
+	public enum LogLevel
+	{
+		Default,
+		Error,
+		Critical,
+		Warning,
+		Message,
+		Info,
+		Debug
+	}
+
 	public class ConsoleView2: ScrolledWindow
 	{
 		string scriptLines = "";

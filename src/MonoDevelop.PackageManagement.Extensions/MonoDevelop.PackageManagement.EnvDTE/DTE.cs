@@ -44,7 +44,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		Solution solution;
 		
 		public DTE ()
-//			: this (PackageManagementExtendedServices.ProjectService, new PackageManagementFileService ())
+			: this (PackageManagementExtendedServices.ProjectService, new PackageManagementFileService ())
 		{
 		}
 

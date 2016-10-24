@@ -35,45 +35,15 @@ namespace MonoDevelop.PackageManagement
 {
 	public class ExtendedPackageManagementProjectService : IExtendedPackageManagementProjectService
 	{
-		public ExtendedPackageManagementProjectService ()
-		{
-			IdeApp.Workspace.SolutionLoaded += (sender, e) => OnSolutionLoaded (e.Solution);
-			IdeApp.Workspace.SolutionUnloaded += (sender, e) => OnSolutionUnloaded ();
-
-			OpenSolution = IdeApp.ProjectOperations.CurrentSelectedSolution;
-		}
-
-		public event EventHandler SolutionLoaded;
-
-		void OnSolutionLoaded (Solution solution)
-		{
-			OpenSolution = solution;
-
-			EventHandler handler = SolutionLoaded;
-			if (handler != null) {
-				handler (this, new EventArgs ());
-			}
-		}
-
-		public event EventHandler SolutionUnloaded;
-
-		void OnSolutionUnloaded ()
-		{
-			OpenSolution = null;
-
-			var handler = SolutionUnloaded;
-			if (handler != null) {
-				handler (this, new EventArgs ());
-			}
-		}
-
 		public DotNetProject CurrentProject {
 			get {
 				return IdeApp.ProjectOperations.CurrentSelectedProject as DotNetProject;
 			}
 		}
 
-		public Solution OpenSolution { get; private set; }
+		public Solution OpenSolution {
+			get { return IdeApp.ProjectOperations.CurrentSelectedSolution; }
+		}
 
 		public IEnumerable<DotNetProject> GetOpenProjects ()
 		{

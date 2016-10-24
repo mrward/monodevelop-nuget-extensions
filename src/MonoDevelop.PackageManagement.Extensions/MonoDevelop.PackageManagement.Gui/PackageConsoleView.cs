@@ -32,7 +32,6 @@ using ICSharpCode.PackageManagement.Scripting;
 using ICSharpCode.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Core;
-using MonoDevelop.Ide.Execution;
 using MonoDevelop.Ide.Fonts;
 using Pango;
 

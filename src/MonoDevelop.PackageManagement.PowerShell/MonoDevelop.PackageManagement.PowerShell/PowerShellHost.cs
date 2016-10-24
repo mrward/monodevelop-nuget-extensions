@@ -99,7 +99,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 				}
 				
 			} catch (Exception ex) {
-				scriptingConsole.WriteLine(ex.Message, ScriptingStyle.Error);
+				scriptingConsole.WriteLine (ex.Message, ScriptingStyle.Error);
 			}
 		}
 		
