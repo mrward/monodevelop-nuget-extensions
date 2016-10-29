@@ -26,7 +26,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -36,29 +35,24 @@ using ICSharpCode.Scripting;
 using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
-using NuGet.Configuration;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
 	{
-		RegisteredPackageSources registeredPackageSources;
 		IPackageManagementProjectService projectService;
 		IPackageManagementConsoleHost consoleHost;
 
 		DelegateCommand clearConsoleCommand;
 
 		ObservableCollection<SourceRepositoryViewModel> packageSources = new ObservableCollection<SourceRepositoryViewModel> ();
-		SourceRepositoryViewModel activePackageSource;
 
 		IScriptingConsole packageManagementConsole;
 
 		public PackageManagementConsoleViewModel (
-			RegisteredPackageSources registeredPackageSources,
 			IPackageManagementProjectService projectService,
 			IPackageManagementConsoleHost consoleHost)
 		{
-			this.registeredPackageSources = registeredPackageSources;
 			this.projectService = projectService;
 			this.consoleHost = consoleHost;
 		}
@@ -73,7 +67,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 			CreateCommands ();
 			UpdatePackageSourceViewModels ();
-			ReceiveNotificationsWhenPackageSourcesUpdated ();
 			UpdateDefaultProject ();
 			InitConsoleHost ();
 		}
@@ -117,7 +110,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void AddEnabledPackageSourceViewModels ()
 		{
-			foreach (SourceRepositoryViewModel packageSource in registeredPackageSources.PackageSources) {
+			foreach (SourceRepositoryViewModel packageSource in consoleHost.PackageSources) {
 				AddPackageSourceViewModel (packageSource);
 			}
 		}
@@ -147,11 +140,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 		}
 
-		void ReceiveNotificationsWhenPackageSourcesUpdated ()
-		{
-			//registeredPackageSources.CollectionChanged += PackageSourcesChanged;
-		}
-
 		void PackageSourcesChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			UpdatePackageSourceViewModels ();
@@ -174,10 +162,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 
 		public SourceRepositoryViewModel ActivePackageSource {
-			get { return activePackageSource; }
+			get { return consoleHost.ActivePackageSource; }
 			set {
-				activePackageSource = value;
-				consoleHost.ActivePackageSource = activePackageSource;
+				consoleHost.ActivePackageSource = value;
 				OnPropertyChanged (viewModel => viewModel.ActivePackageSource);
 			}
 		}
@@ -210,6 +197,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void ProcessUserInput (string line)
 		{
 			consoleHost.ProcessUserInput (line);
+		}
+
+		public void UpdatePackageSources ()
+		{
+			consoleHost.ReloadPackageSources ();
+			UpdatePackageSourceViewModels ();
 		}
 	}
 }

@@ -26,14 +26,14 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
+using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
-using System.Linq;
-using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -160,7 +160,7 @@ namespace MonoDevelop.PackageManagement
 			if (solutionManager != null) {
 				var currentSolution = IdeApp.ProjectOperations.CurrentSelectedSolution;
 				if (currentSolution != null) {
-					if (currentSolution.BaseDirectory == solutionManager.SolutionDirectory) {
+					if (currentSolution.FileName == solutionManager.Solution.FileName) {
 						return;
 					}
 				}
@@ -169,7 +169,7 @@ namespace MonoDevelop.PackageManagement
 			var solution = IdeApp.ProjectOperations.CurrentSelectedSolution;
 			if (solution != null) {
 				Runtime.RunInMainThread (() => {
-					solutionManager = new MonoDevelopSolutionManager (new SolutionProxy (solution));
+					solutionManager = PackageManagementServices.Workspace.GetSolutionManager (solution) as MonoDevelopSolutionManager;
 				}).Wait ();
 			} else {
 				solutionManager = null;

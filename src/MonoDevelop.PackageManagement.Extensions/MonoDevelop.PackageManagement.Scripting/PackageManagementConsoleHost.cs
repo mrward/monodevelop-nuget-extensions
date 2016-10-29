@@ -36,7 +36,6 @@ using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.ProjectManagement;
-using NuGet.PackageManagement;
 using NuGet.Protocol.Core.Types;
 
 namespace ICSharpCode.PackageManagement.Scripting
@@ -53,13 +52,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 		string prompt = "PM> ";
 
 		public PackageManagementConsoleHost (
-			RegisteredPackageSources registeredPackageSources,
 			IPackageManagementEvents packageEvents,
 			IMonoDevelopSolutionManager solutionManager,
 			IPowerShellHostFactory powerShellHostFactory,
 			IPackageManagementAddInPath addinPath)
 		{
-			this.registeredPackageSources = registeredPackageSources;
+			this.registeredPackageSources = new RegisteredPackageSources (solutionManager);
 			this.powerShellHostFactory = powerShellHostFactory;
 			this.solutionManager = solutionManager;
 			this.addinPath = addinPath;
@@ -67,10 +65,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 
 		public PackageManagementConsoleHost (
-			RegisteredPackageSources registeredPackageSources,
 			IPackageManagementEvents packageEvents)
 			: this (
-				registeredPackageSources,
 				packageEvents,
 				new ConsoleHostSolutionManager (),
 				new PowerShellHostFactory (),
@@ -86,6 +82,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 			set { registeredPackageSources.SelectedPackageSource = value; }
 		}
 
+		public IEnumerable<SourceRepositoryViewModel> PackageSources {
+			get { return registeredPackageSources.PackageSources; }
+		}
+
 		public IScriptingConsole ScriptingConsole { get; set; }
 
 		public bool IsSolutionOpen {
@@ -96,7 +96,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			get { return CancellationToken.None; }
 		}
 
-		public ISolutionManager SolutionManager {
+		public IMonoDevelopSolutionManager SolutionManager {
 			get { return solutionManager; }
 		}
 
@@ -343,6 +343,11 @@ namespace ICSharpCode.PackageManagement.Scripting
 				return sourceRepositoryProvider.GetRepositories ();
 
 			return Enumerable.Empty<SourceRepository> ();
+		}
+
+		public void ReloadPackageSources ()
+		{
+			registeredPackageSources.ReloadSettings ();
 		}
 	}
 }

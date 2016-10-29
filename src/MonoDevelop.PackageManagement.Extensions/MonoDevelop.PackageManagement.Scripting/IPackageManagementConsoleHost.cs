@@ -34,7 +34,6 @@ using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.ProjectManagement;
-using NuGet.PackageManagement;
 using NuGet.Protocol.Core.Types;
 
 namespace ICSharpCode.PackageManagement.Scripting
@@ -43,8 +42,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 	{
 		Project DefaultProject { get; set; }
 		SourceRepositoryViewModel ActivePackageSource { get; set; }
+		IEnumerable<SourceRepositoryViewModel> PackageSources { get; }
 		IScriptingConsole ScriptingConsole { get; set; }
-		ISolutionManager SolutionManager { get; }
+		IMonoDevelopSolutionManager SolutionManager { get; }
 		ISettings Settings { get; }
 		bool IsRunning { get; } 
 		bool IsSolutionOpen { get; }
@@ -70,5 +70,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		IEnumerable<PackageSource> LoadPackageSources ();
 		SourceRepository CreateRepository (PackageSource source);
 		IEnumerable<SourceRepository> GetRepositories ();
+
+		void ReloadPackageSources ();
 	}
 }

@@ -59,27 +59,15 @@ namespace MonoDevelop.PackageManagement
 		
 		void CreatePackageConsoleViewModel()
 		{
-			var solutionManager = GetSolutionManager ();
-			var packageSources = new RegisteredPackageSources (solutionManager);
-			var consoleHostProvider = new PackageManagementConsoleHostProvider (packageSources);
+			var consoleHostProvider = new PackageManagementConsoleHostProvider ();
 
 			PackageManagementExtendedServices.ConsoleHost = consoleHostProvider.ConsoleHost;
 
 			viewModel = new PackageManagementConsoleViewModel (
-				packageSources,
 				PackageManagementServices.ProjectService,
 				consoleHostProvider.ConsoleHost
 			);
 			viewModel.RegisterConsole (view);
-		}
-
-		IMonoDevelopSolutionManager GetSolutionManager ()
-		{
-			var solution = IdeApp.ProjectOperations.CurrentSelectedSolution;
-			if (solution != null) {
-				return PackageManagementServices.Workspace.GetSolutionManager (solution);
-			}
-			return new NullMonoDevelopSolutionManager ();
 		}
 
 		void CreateToolbar (IPadWindow window)
@@ -100,6 +88,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			view = new PackageConsoleView ();
 			view.ConsoleInput += OnConsoleInput;
+			view.TextViewFocused += TextViewFocused;
 			view.ShadowType = Gtk.ShadowType.None;
 			view.ShowAll ();
 		}
@@ -115,11 +104,18 @@ namespace MonoDevelop.PackageManagement
 		
 		public override void Dispose ()
 		{
+			view.ConsoleInput -= OnConsoleInput;
+			view.TextViewFocused -= TextViewFocused;
 		}
 		
 		void BindingViewModelToView ()
 		{
 			toolbarWidget.LoadViewModel (viewModel);
+		}
+
+		void TextViewFocused (object sender, EventArgs e)
+		{
+			viewModel.UpdatePackageSources ();
 		}
 	}
 }

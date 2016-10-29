@@ -45,6 +45,13 @@ namespace MonoDevelop.PackageManagement
 			this.solutionManager = solutionManager;
 		}
 
+		public void ReloadSettings ()
+		{
+			selectedPackageSource = null;
+			packageSources = null;
+			packageSourceProvider = null;
+		}
+
 		public IEnumerable<SourceRepositoryViewModel> PackageSources {
 			get {
 				if (packageSources == null) {

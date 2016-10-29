@@ -27,13 +27,10 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement;
-using ICSharpCode.PackageManagement.Scripting;
 using ICSharpCode.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Core;
 using MonoDevelop.Ide.Fonts;
-using Pango;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -46,7 +43,13 @@ namespace MonoDevelop.PackageManagement
 			Clear ();
 			
 			SetFont (FontService.MonospaceFont);
+
+			TextView.FocusInEvent += (o, args) => {
+				TextViewFocused?.Invoke (this, args);
+			};
 		}
+
+		public event EventHandler TextViewFocused;
 
 		void WriteOutputLine (string message, ScriptingStyle style)
 		{
