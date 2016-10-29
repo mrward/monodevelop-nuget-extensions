@@ -1,5 +1,5 @@
 ﻿// 
-// PackageConsoleView.cs
+// NuGetVersion.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using NuGet;
+using NuGet.Configuration;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
@@ -36,9 +36,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 	{
 		static readonly Version version;
 		
-		static NuGetVersion()
+		static NuGetVersion ()
 		{
-			AssemblyName name = typeof(PackageSource).Assembly.GetName();
+			AssemblyName name = typeof(PackageSource).Assembly.GetName ();
 			version = name.Version;
 		}
 		
