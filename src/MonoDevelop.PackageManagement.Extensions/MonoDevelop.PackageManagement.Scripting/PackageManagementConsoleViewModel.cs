@@ -131,7 +131,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			SourceRepositoryViewModel activePackageSource = consoleHost.ActivePackageSource;
 			foreach (SourceRepositoryViewModel packageSourceViewModel in packageSources) {
-				if (packageSourceViewModel.PackageSource.Equals (activePackageSource)) {
+				if (packageSourceViewModel.PackageSource.Equals (activePackageSource.PackageSource)) {
 					ActivePackageSource = packageSourceViewModel;
 					return;
 				}
