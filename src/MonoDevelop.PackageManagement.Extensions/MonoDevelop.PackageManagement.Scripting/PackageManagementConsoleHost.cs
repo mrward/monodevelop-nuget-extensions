@@ -28,125 +28,143 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 using ICSharpCode.Scripting;
-using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
+using NuGet.ProjectManagement;
+using NuGet.PackageManagement;
+using NuGet.Protocol.Core.Types;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHost : IPackageManagementConsoleHost
 	{
-//		IThread thread;
 		RegisteredPackageSources registeredPackageSources;
 		IPowerShellHostFactory powerShellHostFactory;
 		IPowerShellHost powerShellHost;
+		IMonoDevelopSolutionManager solutionManager;
+		ISourceRepositoryProvider sourceRepositoryProvider;
 		IPackageManagementAddInPath addinPath;
 		IPackageManagementEvents packageEvents;
 		string prompt = "PM> ";
-		
+
 		public PackageManagementConsoleHost (
-//			IPackageManagementSolution2 solution,
 			RegisteredPackageSources registeredPackageSources,
 			IPackageManagementEvents packageEvents,
+			IMonoDevelopSolutionManager solutionManager,
 			IPowerShellHostFactory powerShellHostFactory,
 			IPackageManagementAddInPath addinPath)
 		{
-//			this.Solution = solution;
 			this.registeredPackageSources = registeredPackageSources;
 			this.powerShellHostFactory = powerShellHostFactory;
+			this.solutionManager = solutionManager;
 			this.addinPath = addinPath;
 			this.packageEvents = packageEvents;
 		}
-		
+
 		public PackageManagementConsoleHost (
-//			IPackageManagementSolution2 solution,
 			RegisteredPackageSources registeredPackageSources,
 			IPackageManagementEvents packageEvents)
 			: this (
-//				solution,
 				registeredPackageSources,
 				packageEvents,
+				new ConsoleHostSolutionManager (),
 				new PowerShellHostFactory (),
 				new PackageManagementAddInPath ())
 		{
 		}
-		
+
 		public bool IsRunning { get; private set; }
 		public Project DefaultProject { get; set; }
-		
+
 		public SourceRepositoryViewModel ActivePackageSource {
 			get { return registeredPackageSources.SelectedPackageSource; }
 			set { registeredPackageSources.SelectedPackageSource = value; }
 		}
-		
+
 		public IScriptingConsole ScriptingConsole { get; set; }
-//		public IPackageManagementSolution2 Solution { get; private set; }
-		
-		public void Dispose()
-		{
-//			ShutdownConsole();
-//			
-//			if (thread != null) {
-//				if (thread.Join(100)) {
-//					thread = null;
-//					IsRunning = false;
-//				}
-//			}
+
+		public bool IsSolutionOpen {
+			get { return solutionManager.IsSolutionOpen; }
 		}
-		
-		public void Clear()
-		{
-			ScriptingConsole.Clear();
+
+		public CancellationToken Token {
+			get { return CancellationToken.None; }
 		}
-		
-		public void WritePrompt()
-		{
-			ScriptingConsole.Write(prompt, ScriptingStyle.Prompt);
+
+		public ISolutionManager SolutionManager {
+			get { return solutionManager; }
 		}
-		
-		public void Run()
+
+		public ISettings Settings {
+			get { return solutionManager.Settings; }
+		}
+
+		public void Dispose ()
+		{
+			//			ShutdownConsole();
+			//			
+			//			if (thread != null) {
+			//				if (thread.Join(100)) {
+			//					thread = null;
+			//					IsRunning = false;
+			//				}
+			//			}
+		}
+
+		public void Clear ()
+		{
+			ScriptingConsole.Clear ();
+		}
+
+		public void WritePrompt ()
+		{
+			ScriptingConsole.Write (prompt, ScriptingStyle.Prompt);
+		}
+
+		public void Run ()
 		{
 			PackageManagementBackgroundDispatcher.Dispatch (() => {
-				RunSynchronous();
+				RunSynchronous ();
 				IsRunning = true;
 			});
-//			thread = CreateThread(RunSynchronous);
-//			thread.Start();
+			//			thread = CreateThread(RunSynchronous);
+			//			thread.Start();
 		}
-		
-//		protected virtual IThread CreateThread(ThreadStart threadStart)
-//		{
-//			return new PackageManagementThread(threadStart);
-//		}
-//		
-		void RunSynchronous()
+
+		//		protected virtual IThread CreateThread(ThreadStart threadStart)
+		//		{
+		//			return new PackageManagementThread(threadStart);
+		//		}
+		//		
+		void RunSynchronous ()
 		{
-			InitPowerShell();
-			WriteInfoBeforeFirstPrompt();
-			InitializePackageScriptsForOpenSolution();
-			WritePrompt();
-//			ProcessUserCommands();
+			InitPowerShell ();
+			WriteInfoBeforeFirstPrompt ();
+			InitializePackageScriptsForOpenSolution ();
+			WritePrompt ();
+			//			ProcessUserCommands();
 		}
-		
-		void InitPowerShell()
+
+		void InitPowerShell ()
 		{
-			CreatePowerShellHost();
-			AddModulesToImport();
-//			powerShellHost.SetRemoteSignedExecutionPolicy();
-//			UpdateFormatting();
-			RedefineClearHostFunction();
-//			DefineTabExpansionFunction();
-			UpdateWorkingDirectory();
+			CreatePowerShellHost ();
+			AddModulesToImport ();
+			//			powerShellHost.SetRemoteSignedExecutionPolicy();
+			//			UpdateFormatting();
+			RedefineClearHostFunction ();
+			//			DefineTabExpansionFunction();
+			UpdateWorkingDirectory ();
 		}
-		
-		void CreatePowerShellHost()
+
+		void CreatePowerShellHost ()
 		{
 			var clearConsoleHostCommand = new ClearPackageManagementConsoleHostCommand (this);
-			powerShellHost = 
+			powerShellHost =
 				powerShellHostFactory.CreatePowerShellHost (
 					this.ScriptingConsole,
 					GetNuGetVersion (),
@@ -154,86 +172,86 @@ namespace ICSharpCode.PackageManagement.Scripting
 					new EnvDTE.DTE ());
 		}
 
-		protected virtual Version GetNuGetVersion()
+		protected virtual Version GetNuGetVersion ()
 		{
 			return NuGetVersion.Version;
 		}
-		
-		void AddModulesToImport()
+
+		void AddModulesToImport ()
 		{
 			string module = addinPath.CmdletsAssemblyFileName;
-			powerShellHost.ModulesToImport.Add(module);
+			powerShellHost.ModulesToImport.Add (module);
 		}
-		
-//		void UpdateFormatting()
-//		{
-//			IEnumerable<string> fileNames = addinPath.GetPowerShellFormattingFileNames();
-//			powerShellHost.UpdateFormatting(fileNames);
-//		}
-//		
-		void RedefineClearHostFunction()
+
+		//		void UpdateFormatting()
+		//		{
+		//			IEnumerable<string> fileNames = addinPath.GetPowerShellFormattingFileNames();
+		//			powerShellHost.UpdateFormatting(fileNames);
+		//		}
+		//		
+		void RedefineClearHostFunction ()
 		{
-//			string command = "function Clear-Host { $host.PrivateData.ClearHost() }";
+			//			string command = "function Clear-Host { $host.PrivateData.ClearHost() }";
 			//powerShellHost.ExecuteCommand(command);
 		}
-		
-//		void DefineTabExpansionFunction()
-//		{
-//			string command =
-//				"function TabExpansion($line, $lastWord) {" +
-//				"    return New-Object PSObject -Property @{ NoResult = $true }" +
-//				"}";
-//			powerShellHost.ExecuteCommand(command);
-//		}
-		
-		void WriteInfoBeforeFirstPrompt()
+
+		//		void DefineTabExpansionFunction()
+		//		{
+		//			string command =
+		//				"function TabExpansion($line, $lastWord) {" +
+		//				"    return New-Object PSObject -Property @{ NoResult = $true }" +
+		//				"}";
+		//			powerShellHost.ExecuteCommand(command);
+		//		}
+
+		void WriteInfoBeforeFirstPrompt ()
 		{
-			WriteNuGetVersionInfo();
-			WriteHelpInfo();
-			WriteLine();
+			WriteNuGetVersionInfo ();
+			WriteHelpInfo ();
+			WriteLine ();
 		}
-		
-		void WriteNuGetVersionInfo()
+
+		void WriteNuGetVersionInfo ()
 		{
-			string versionInfo = String.Format("NuGet {0}", powerShellHost.Version);
-			WriteLine(versionInfo);
+			string versionInfo = String.Format ("NuGet {0}", powerShellHost.Version);
+			WriteLine (versionInfo);
 		}
-		
-		void UpdateWorkingDirectory()
+
+		void UpdateWorkingDirectory ()
 		{
 			string command = "Invoke-UpdateWorkingDirectory";
-			powerShellHost.ExecuteCommand(command);
+			powerShellHost.ExecuteCommand (command);
 		}
-		
-		void InitializePackageScriptsForOpenSolution()
+
+		void InitializePackageScriptsForOpenSolution ()
 		{
-//			if (Solution.IsOpen) {
-//				string command = "Invoke-InitializePackages";
-//				powerShellHost.ExecuteCommand(command);
-//			}
+			//			if (Solution.IsOpen) {
+			//				string command = "Invoke-InitializePackages";
+			//				powerShellHost.ExecuteCommand(command);
+			//			}
 		}
-		
-		void WriteLine(string message)
+
+		void WriteLine (string message)
 		{
-			ScriptingConsole.WriteLine(message, ScriptingStyle.Out);
+			ScriptingConsole.WriteLine (message, ScriptingStyle.Out);
 		}
-		
-		void WriteLine()
+
+		void WriteLine ()
 		{
-			WriteLine(String.Empty);
+			WriteLine (String.Empty);
 		}
-		
-		void WriteHelpInfo()
+
+		void WriteHelpInfo ()
 		{
-			string helpInfo = GetHelpInfo();
-			WriteLine(helpInfo);
+			string helpInfo = GetHelpInfo ();
+			WriteLine (helpInfo);
 		}
-		
-		protected virtual string GetHelpInfo()
+
+		protected virtual string GetHelpInfo ()
 		{
 			return "Type 'get-help NuGet' for more information.";
 		}
-		
+
 		public void ProcessUserInput (string line)
 		{
 			PackageManagementBackgroundDispatcher.Dispatch (() => {
@@ -241,78 +259,90 @@ namespace ICSharpCode.PackageManagement.Scripting
 				WritePrompt ();
 			});
 		}
-	
-		void ProcessLine(string line)
+
+		void ProcessLine (string line)
 		{
 			string preprocessedLine = PashCommandLinePreprocessor.Process (line);
 			powerShellHost.ExecuteCommand (preprocessedLine);
 		}
-		
-//		public IPackageManagementProject2 GetProject(string packageSource, string projectName)
-//		{
-//			PackageSource source = GetActivePackageSource(packageSource);
-//			projectName = GetActiveProjectName(projectName);
-//
-//			IPackageRepository repository = GetPackageRepository (source);
-//			DotNetProject project = GetDotNetProject (projectName);
-//
-//			return new ExtendedPackageManagementProject (repository, project, PackageManagementServices.PackageManagementEvents);
-//		}
 
-		DotNetProject GetDotNetProject(string name)
+		DotNetProject GetDotNetProject (string name)
 		{
 			throw new NotImplementedException ();
-//			var openProjects = new OpenDotNetProjects2 (PackageManagementExtendedServices.ProjectService);
-//			return openProjects.FindProject (name);
+			//			var openProjects = new OpenDotNetProjects2 (PackageManagementExtendedServices.ProjectService);
+			//			return openProjects.FindProject (name);
 		}
-		
-		public PackageSource GetActivePackageSource (string source)
+
+		public string GetActivePackageSource (string source)
 		{
 			if (source != null) {
-				return new PackageSource (source);
+				return source;
 			}
-			return ActivePackageSource?.PackageSource;
+			return ActivePackageSource?.PackageSource?.Name;
 		}
-		
-		string GetActiveProjectName(string projectName)
+
+		string GetActiveProjectName (string projectName)
 		{
 			if (projectName != null) {
 				return projectName;
 			}
 			return DefaultProject.Name;
 		}
-		
-//		public IPackageManagementProject2 GetProject(IPackageRepository sourceRepository, string projectName)
-//		{
-//			projectName = GetActiveProjectName(projectName);
-//			return Solution.GetProject(sourceRepository, projectName);
-//		}
-		
-		public void ShutdownConsole()
+
+		public void ShutdownConsole ()
 		{
-//			if (ScriptingConsole != null) {
-//				ScriptingConsole.Dispose();
-//			}
+			//			if (ScriptingConsole != null) {
+			//				ScriptingConsole.Dispose();
+			//			}
 		}
-		
-		public void ExecuteCommand(string command)
+
+		public void ExecuteCommand (string command)
 		{
-//			ScriptingConsole.SendLine(command);
+			//			ScriptingConsole.SendLine(command);
 		}
-		
-		public void SetDefaultRunspace()
+
+		public void SetDefaultRunspace ()
 		{
-//			powerShellHost.SetDefaultRunspace();
+			//			powerShellHost.SetDefaultRunspace();
 		}
-		
-		public IConsoleHostFileConflictResolver CreateFileConflictResolver(FileConflictAction fileConflictAction)
+
+		public IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction)
 		{
-			return new ConsoleHostFileConflictResolver(packageEvents, fileConflictAction);
+			return new ConsoleHostFileConflictResolver (packageEvents, fileConflictAction);
 		}
 
 		public IDisposable CreateEventsMonitor (NuGet.ILogger logger)
 		{
 			return new ConsoleHostPackageEventsMonitor (logger, packageEvents);
+		}
+
+		public IEnumerable<NuGetProject> GetNuGetProjects ()
+		{
+			return solutionManager.GetNuGetProjects ().ToList ();
+		}
+
+		public NuGetProject GetNuGetProject (string projectName)
+		{
+			return solutionManager.GetNuGetProject (projectName);
+		}
+
+		public IEnumerable<PackageSource> LoadPackageSources ()
+		{
+			sourceRepositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
+			return sourceRepositoryProvider.PackageSourceProvider?.LoadPackageSources ();
+		}
+
+		public SourceRepository CreateRepository (PackageSource source)
+		{
+			return sourceRepositoryProvider?.CreateRepository (source);
+		}
+
+		public IEnumerable<SourceRepository> GetRepositories ()
+		{
+			if (sourceRepositoryProvider != null)
+				return sourceRepositoryProvider.GetRepositories ();
+
+			return Enumerable.Empty<SourceRepository> ();
 		}
 	}
 }

@@ -66,7 +66,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 		}
 		
-		void CreateConsoleHost()
+		void CreateConsoleHost ()
 		{
 //			if (powerShellDetection.IsPowerShell2Installed()) {
 		consoleHost = new PackageManagementConsoleHost (packageSources, packageEvents);

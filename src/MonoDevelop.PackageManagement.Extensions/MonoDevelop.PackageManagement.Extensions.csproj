@@ -70,6 +70,7 @@
     </Reference>
     <Reference Include="NuGet.Protocol.Core.Types">
       <HintPath>..\..\lib\NuGet.Protocol.Core.Types.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="NuGet.ProjectManagement">
       <HintPath>..\..\lib\NuGet.ProjectManagement.dll</HintPath>
@@ -188,6 +189,8 @@
     <Compile Include="MonoDevelop.PackageManagement\PackageActionRunner2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\RegisteredPackageSources.cs" />
     <Compile Include="MonoDevelop.PackageManagement\NullMonoDevelopSolutionManager.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostSolutionManager.cs" />
+    <Compile Include="NuGet.PackageManagement.UI\PackageFeedEnumerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -201,6 +204,7 @@
     <Folder Include="MonoDevelop.PackageManagement\" />
     <Folder Include="MonoDevelop.PackageManagement.Scripting\" />
     <Folder Include="MonoDevelop.PackageManagement.EnvDTE\" />
+    <Folder Include="NuGet.PackageManagement.UI\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj">

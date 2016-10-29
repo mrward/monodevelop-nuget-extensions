@@ -27,10 +27,15 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using ICSharpCode.Scripting;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
+using NuGet.ProjectManagement;
+using NuGet.PackageManagement;
+using NuGet.Protocol.Core.Types;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
@@ -39,25 +44,31 @@ namespace ICSharpCode.PackageManagement.Scripting
 		Project DefaultProject { get; set; }
 		SourceRepositoryViewModel ActivePackageSource { get; set; }
 		IScriptingConsole ScriptingConsole { get; set; }
-//		IPackageManagementSolution2 Solution { get; }
-		bool IsRunning { get; }
+		ISolutionManager SolutionManager { get; }
+		ISettings Settings { get; }
+		bool IsRunning { get; } 
+		bool IsSolutionOpen { get; }
 
+		CancellationToken Token { get; }
 		void Clear ();
 		void WritePrompt ();
 		void Run ();
 		void ShutdownConsole ();
 		void ExecuteCommand (string command);
 		void ProcessUserInput (string line);
-		
+
 		void SetDefaultRunspace ();
-		
+
 		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
 		IDisposable CreateEventsMonitor (NuGet.ILogger logger);
 
-//		IPackageManagementProject2 GetProject (string packageSource, string projectName);
-//		IPackageManagementProject2 GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-//		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		string GetActivePackageSource (string source);
+
+		IEnumerable<NuGetProject> GetNuGetProjects ();
+		NuGetProject GetNuGetProject (string projectName);
+
+		IEnumerable<PackageSource> LoadPackageSources ();
+		SourceRepository CreateRepository (PackageSource source);
+		IEnumerable<SourceRepository> GetRepositories ();
 	}
 }
