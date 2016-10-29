@@ -55,6 +55,7 @@
     <Compile Include="MonoDevelop.PackageManagement.PowerShell\PowerShellHostUserInterface.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IScriptingConsole.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptingStyle.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.PowerShell\ExceptionUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\external\pash\Libraries\Irony\Irony\010.Irony.2010.csproj">

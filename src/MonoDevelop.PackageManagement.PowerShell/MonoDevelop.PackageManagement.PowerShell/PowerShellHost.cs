@@ -27,16 +27,15 @@
 //
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
-using System.Reflection;
 using System.Threading;
 
 using ICSharpCode.Scripting;
+using NuGet.Common;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
@@ -99,7 +98,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 				}
 				
 			} catch (Exception ex) {
-				scriptingConsole.WriteLine (ex.Message, ScriptingStyle.Error);
+				string errorMessage = ExceptionUtilities.DisplayMessage (ex);
+				scriptingConsole.WriteLine (errorMessage, ScriptingStyle.Error);
 			}
 		}
 		
@@ -197,7 +197,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 				}
 				
 			} catch (Exception ex) {
-				scriptingConsole.WriteLine(ex.Message, ScriptingStyle.Error);
+				string errorMessage = ExceptionUtilities.DisplayMessage (ex);
+				scriptingConsole.WriteLine (errorMessage, ScriptingStyle.Error);
 			}
 		}
 		
