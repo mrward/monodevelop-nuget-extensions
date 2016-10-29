@@ -212,4 +212,10 @@
       <Name>MonoDevelop.PackageManagement.PowerShell</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\NuGet-LICENSE.txt">
+      <Link>NuGet-LICENSE.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
