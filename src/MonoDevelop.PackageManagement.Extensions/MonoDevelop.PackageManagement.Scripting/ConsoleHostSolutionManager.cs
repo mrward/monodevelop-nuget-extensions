@@ -105,7 +105,11 @@ namespace MonoDevelop.PackageManagement
 		public ISourceRepositoryProvider CreateSourceRepositoryProvider ()
 		{
 			GetSolutionManager ();
-			return solutionManager?.CreateSourceRepositoryProvider ();
+			if (solutionManager != null)
+				return solutionManager.CreateSourceRepositoryProvider ();
+
+			var nullSolutionManager = new NullMonoDevelopSolutionManager ();
+			return nullSolutionManager.CreateSourceRepositoryProvider ();
 		}
 
 		public NuGetProject GetNuGetProject (IDotNetProject project)
@@ -133,6 +137,9 @@ namespace MonoDevelop.PackageManagement
 		{
 			GetSolutionManager ();
 
+			if (solutionManager == null)
+				return Enumerable.Empty<NuGetProject> ();
+			
 			List<NuGetProject> projects = null;
 
 			Runtime.RunInMainThread (() => {

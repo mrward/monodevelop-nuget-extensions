@@ -86,7 +86,6 @@
     </Reference>
     <Reference Include="NuGet.Packaging">
       <HintPath>..\..\lib\NuGet.Packaging.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="NuGet.Frameworks">
@@ -95,7 +94,6 @@
     </Reference>
     <Reference Include="NuGet.Packaging.Core.Types">
       <HintPath>..\..\lib\NuGet.Packaging.Core.Types.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="NuGet.Protocol.Core.Types">
