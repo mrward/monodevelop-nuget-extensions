@@ -266,13 +266,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 			powerShellHost.ExecuteCommand (preprocessedLine);
 		}
 
-		DotNetProject GetDotNetProject (string name)
-		{
-			throw new NotImplementedException ();
-			//			var openProjects = new OpenDotNetProjects2 (PackageManagementExtendedServices.ProjectService);
-			//			return openProjects.FindProject (name);
-		}
-
 		public string GetActivePackageSource (string source)
 		{
 			if (source != null) {
@@ -323,7 +316,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public NuGetProject GetNuGetProject (string projectName)
 		{
-			return solutionManager.GetNuGetProject (projectName);
+			string activeProjectName = GetActiveProjectName (projectName);
+			return solutionManager.GetNuGetProject (activeProjectName);
 		}
 
 		public IEnumerable<PackageSource> LoadPackageSources ()
@@ -348,6 +342,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void ReloadPackageSources ()
 		{
 			registeredPackageSources.ReloadSettings ();
+		}
+
+		public MonoDevelopNuGetPackageManager CreatePackageManager ()
+		{
+			var consoleHostSolutionManager = (ConsoleHostSolutionManager)solutionManager;
+			return new MonoDevelopNuGetPackageManager (consoleHostSolutionManager.GetMonoDevelopSolutionManager ());
 		}
 	}
 }

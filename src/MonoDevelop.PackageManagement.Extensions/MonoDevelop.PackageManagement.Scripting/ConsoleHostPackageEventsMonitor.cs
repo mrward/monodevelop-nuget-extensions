@@ -58,6 +58,8 @@ namespace MonoDevelop.PackageManagement
 
 		public void Dispose ()
 		{
+			packageManagementEvents.OnPackageOperationsFinished ();
+ 
 			packageManagementEvents.PackageOperationMessageLogged -= PackageOperationMessageLogged;
 			packageManagementEvents.FileChanged -= FileChanged;
 			NotifyFilesChanged ();
@@ -81,7 +83,8 @@ namespace MonoDevelop.PackageManagement
 					.Select (fileInfo => fileInfo.FileName)
 					.ToArray ();
 
-				NotifyFilesChanged (files);
+				if (files.Any ())
+					NotifyFilesChanged (files);
 			});
 		}
 

@@ -162,6 +162,13 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 
+
+		public IMonoDevelopSolutionManager GetMonoDevelopSolutionManager ()
+		{
+			GetSolutionManager ();
+			return solutionManager;
+		}
+
 		void GetSolutionManager ()
 		{
 			if (solutionManager != null) {

@@ -8,11 +8,14 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.Projects;
 using NuGet;
+using NuGet.PackageManagement;
 using NuGet.PackageManagement.UI;
+using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
@@ -21,7 +24,7 @@ using MessageLevel = NuGet.MessageLevel;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
-	public abstract class PackageManagementCmdlet : PSCmdlet, ITerminatingCmdlet, IPackageScriptSession, IPackageScriptRunner, ILogger
+	public abstract class PackageManagementCmdlet : PSCmdlet, ITerminatingCmdlet, IPackageScriptSession, IPackageScriptRunner, ILogger, INuGetProjectContext
 	{
 		IPackageManagementConsoleHost consoleHost;
 		ICmdletTerminatingError terminatingError;
@@ -126,25 +129,13 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			return ConsoleHost.CreateEventsMonitor (this);
 		}
 
-//		internal void ExecuteWithScriptRunner (IPackageManagementProject2 project, Action action)
-//		{
-//			using (RunPackageScriptsAction runScriptsAction = CreateRunPackageScriptsAction (project)) {
-//				action ();
-//			}
-//		}
-//
-//		RunPackageScriptsAction CreateRunPackageScriptsAction (IPackageManagementProject2 project)
-//		{
-//			return new RunPackageScriptsAction (this, project);
-//		}
-
 		public void Log (MessageLevel level, string message, params object[] args)
 		{
 			string fullMessage = String.Format (message, args);
 
 			switch (level) {
 				case MessageLevel.Error:
-					WriteError (CreateErrorRecord (message));
+					WriteError (CreateErrorRecord (fullMessage));
 					break;
 				case MessageLevel.Warning:
 					WriteWarning (fullMessage);
@@ -153,7 +144,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 					WriteVerbose (fullMessage);
 					break;
 				default:
-					Host.UI.WriteLine (message);
+					Host.UI.WriteLine (fullMessage);
 					break;
 			}
 		}
@@ -176,7 +167,6 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 			if (!ConsoleHost.IsSolutionOpen) {
 				ThrowSolutionNotOpenTerminatingError ();
-				TerminatingError.ThrowNoProjectOpenError();
 			}
 		}
 
@@ -298,6 +288,12 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			}
 		}
 
+		public PackageExtractionContext PackageExtractionContext { get; set; }
+		public ISourceControlManagerProvider SourceControlManagerProvider { get; private set; }
+		public NuGet.ProjectManagement.ExecutionContext ExecutionContext { get; protected set; }
+		public XDocument OriginalPackagesConfig { get; set; }
+		public NuGetActionType ActionType { get; set; }
+
 		protected IEnumerable<IPackageSearchMetadata> GetPackagesFromRemoteSource (
 			string searchString,
 			bool includePrerelease)
@@ -323,6 +319,31 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 				optionalGlobalLocalRepository: null,
 				logger: NuGet.Logging.NullLogger.Instance);
 			return await metadataProvider.GetLatestPackageMetadataAsync (identity, includePrerelease, ConsoleHost.Token);
+		}
+
+		protected void PreviewNuGetPackageActions (IEnumerable<NuGetProjectAction> actions)
+		{
+			if (actions == null || !actions.Any ()) {
+				Log (MessageLevel.Info, GettextCatalog.GetString ("No package actions available to be executed."));
+			} else {
+				foreach (NuGetProjectAction action in actions) {
+					Log (MessageLevel.Info, action.NuGetProjectActionType + " " + action.PackageIdentity);
+				}
+			}
+		}
+
+		public void Log (NuGet.ProjectManagement.MessageLevel level, string message, params object [] args)
+		{
+			Log ((MessageLevel)level, message, args);
+		}
+
+		public void ReportError (string message)
+		{
+		}
+
+		NuGet.ProjectManagement.FileConflictAction INuGetProjectContext.ResolveFileConflict (string message)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }
