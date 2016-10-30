@@ -33,6 +33,7 @@ using System.Threading;
 
 using ICSharpCode.Scripting;
 using MonoDevelop.PackageManagement;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.ProjectManagement;
@@ -344,10 +345,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 			registeredPackageSources.ReloadSettings ();
 		}
 
-		public MonoDevelopNuGetPackageManager CreatePackageManager ()
+		public ConsoleHostNuGetPackageManager CreatePackageManager ()
 		{
 			var consoleHostSolutionManager = (ConsoleHostSolutionManager)solutionManager;
-			return new MonoDevelopNuGetPackageManager (consoleHostSolutionManager.GetMonoDevelopSolutionManager ());
+			return new ConsoleHostNuGetPackageManager (consoleHostSolutionManager.GetMonoDevelopSolutionManager ());
 		}
 	}
 }

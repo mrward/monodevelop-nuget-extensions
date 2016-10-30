@@ -76,6 +76,21 @@
       <HintPath>..\..\lib\NuGet.ProjectManagement.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NuGet.Logging">
+      <HintPath>..\..\lib\NuGet.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Versioning">
+      <HintPath>..\..\lib\NuGet.Versioning.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Packaging.Core">
+      <HintPath>..\..\lib\NuGet.Packaging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Packaging.Core.Types">
+      <HintPath>..\..\lib\NuGet.Packaging.Core.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Frameworks">
+      <HintPath>..\..\lib\NuGet.Frameworks.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -190,6 +205,7 @@
     <Compile Include="MonoDevelop.PackageManagement\NullMonoDevelopSolutionManager.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostSolutionManager.cs" />
     <Compile Include="NuGet.PackageManagement.UI\PackageFeedEnumerator.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostNuGetPackageManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

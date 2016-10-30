@@ -7,6 +7,7 @@ using System.Management.Automation;
 using System.Threading.Tasks;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.PackageManagement;
+using MonoDevelop.PackageManagement.Scripting;
 using NuGet;
 using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
@@ -74,7 +75,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			INuGetProjectContext projectContext,
 			bool isPreview)
 		{
-			MonoDevelopNuGetPackageManager packageManager = ConsoleHost.CreatePackageManager ();
+			ConsoleHostNuGetPackageManager packageManager = ConsoleHost.CreatePackageManager ();
 			IEnumerable<NuGetProjectAction> actions = await packageManager.PreviewUninstallPackageAsync (project, packageId, uninstallContext, projectContext, ConsoleHost.Token);
 
 			if (isPreview) {

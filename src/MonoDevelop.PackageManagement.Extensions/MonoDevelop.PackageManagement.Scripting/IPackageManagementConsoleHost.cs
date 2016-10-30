@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Threading;
 using ICSharpCode.Scripting;
 using MonoDevelop.PackageManagement;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.ProjectManagement;
@@ -52,7 +53,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		bool IsSolutionOpen { get; }
 
 		CancellationToken Token { get; }
-		MonoDevelopNuGetPackageManager CreatePackageManager ();
+		ConsoleHostNuGetPackageManager CreatePackageManager ();
 
 		void Clear ();
 		void WritePrompt ();
