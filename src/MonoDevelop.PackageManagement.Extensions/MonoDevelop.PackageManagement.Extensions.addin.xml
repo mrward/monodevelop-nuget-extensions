@@ -21,6 +21,7 @@
 		<Import file="NuGet.Logging.dll" />
 		<Import file="NuGet.Packaging.dll" />
 		<Import file="NuGet.Packaging.Core.Types.dll" />
+		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
 		<Import assembly="SharpDevelop.EnvDTE.dll" />
 	</Runtime>

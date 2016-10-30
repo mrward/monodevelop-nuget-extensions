@@ -26,40 +26,49 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
 using MonoDevelop.PackageManagement;
-using NuGet;
+using NuGet.ProjectManagement;
+using MonoDevelop.Core;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	internal class ConsoleHostFileConflictResolver : IConsoleHostFileConflictResolver
 	{
 		IPackageManagementEvents packageEvents;
-		FileConflictResolution conflictResolution;
+		FileConflictAction? conflictResolution;
+		FileConflictResolver fileConflictResolver;
 		
 		public ConsoleHostFileConflictResolver (
 			IPackageManagementEvents packageEvents,
-			FileConflictAction fileConflictAction)
+			FileConflictAction? fileConflictAction)
 		{
 			this.packageEvents = packageEvents;
-			
-			conflictResolution = GetFileConflictResolution (fileConflictAction);
+			fileConflictResolver = new FileConflictResolver ();
+
+			if (fileConflictAction.HasValue) {
+				conflictResolution = GetFileConflictResolution (fileConflictAction.Value);
+			}
 			packageEvents.ResolveFileConflict += ResolveFileConflict;
 		}
 		
 		void ResolveFileConflict (object sender, ResolveFileConflictEventArgs e)
 		{
-			throw new NotImplementedException ();
-//			e.Resolution = conflictResolution;
+			if (conflictResolution.HasValue) {
+				e.Resolution = conflictResolution.Value;
+			} else {
+				Runtime.RunInMainThread (() => {
+					e.Resolution = fileConflictResolver.ResolveFileConflict (e.Message);
+				}).Wait ();
+			}
 		}
 		
-		FileConflictResolution GetFileConflictResolution (FileConflictAction fileConflictAction)
+		FileConflictAction GetFileConflictResolution (FileConflictAction fileConflictAction)
 		{
 			switch (fileConflictAction) {
 				case FileConflictAction.Overwrite:
-					return FileConflictResolution.Overwrite;
+					return FileConflictAction.Overwrite;
 				default:
-					return FileConflictResolution.Ignore;
+					return FileConflictAction.Ignore;
 			}
 		}
 		

@@ -299,7 +299,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			//			powerShellHost.SetDefaultRunspace();
 		}
 
-		public IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction)
+		public IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction? fileConflictAction)
 		{
 			return new ConsoleHostFileConflictResolver (packageEvents, fileConflictAction);
 		}

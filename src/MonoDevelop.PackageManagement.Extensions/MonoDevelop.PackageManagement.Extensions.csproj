@@ -103,7 +103,6 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\NuGetVersion.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ClearPackageManagementConsoleHostCommand.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostFileConflictResolver.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\FileConflictAction.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IConsoleHostFileConflictResolver.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageInitializationScripts.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageInitializationScriptsFactory.cs" />

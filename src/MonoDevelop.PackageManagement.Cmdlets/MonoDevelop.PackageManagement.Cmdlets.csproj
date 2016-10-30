@@ -103,6 +103,11 @@
     <Reference Include="NuGet.Logging">
       <HintPath>..\..\lib\NuGet.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="NuGet.Resolver">
+      <HintPath>..\..\lib\NuGet.Resolver.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\AssemblyInfo.cs" />
@@ -126,6 +131,7 @@
     <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Model\PowerShellUpdatePackage.cs" />
     <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Model\VersionType.cs" />
     <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Utility\PowerShellCmdletsUtility.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Cmdlets\PackageActionBaseCmdlet.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\external\pash\Source\System.Management\System.Management.csproj">

@@ -33,9 +33,10 @@ using ICSharpCode.Scripting;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
-using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
+
+using FileConflictAction = NuGet.ProjectManagement.FileConflictAction;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
@@ -62,7 +63,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void SetDefaultRunspace ();
 
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
+		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction? fileConflictAction);
 		IDisposable CreateEventsMonitor (NuGet.ILogger logger);
 
 		string GetActivePackageSource (string source);

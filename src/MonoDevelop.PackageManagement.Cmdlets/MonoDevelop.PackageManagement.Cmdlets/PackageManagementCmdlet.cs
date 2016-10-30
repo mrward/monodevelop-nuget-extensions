@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Core;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using NuGet;
 using NuGet.PackageManagement;
@@ -29,6 +30,8 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		IPackageManagementConsoleHost consoleHost;
 		ICmdletTerminatingError terminatingError;
 		SourceRepository activeSourceRepository;
+		bool overwriteAll;
+		bool ignoreAll;
 
 		internal PackageManagementCmdlet(
 			IPackageManagementConsoleHost consoleHost,
@@ -341,9 +344,32 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		NuGet.ProjectManagement.FileConflictAction INuGetProjectContext.ResolveFileConflict (string message)
+		protected FileConflictAction? ConflictAction { get; set; }
+
+		FileConflictAction INuGetProjectContext.ResolveFileConflict (string message)
 		{
-			throw new NotImplementedException ();
+			if (overwriteAll) {
+				return FileConflictAction.OverwriteAll;
+			}
+
+			if (ignoreAll) {
+				return FileConflictAction.IgnoreAll;
+			}
+
+			if (ConflictAction != null && ConflictAction != FileConflictAction.PromptUser) {
+				return (FileConflictAction)ConflictAction;
+			}
+
+			FileConflictAction result = PackageManagementServices.PackageManagementEvents.OnResolveFileConflict (message);
+			switch (result) {
+				case FileConflictAction.IgnoreAll:
+					ignoreAll = true;
+				break;
+				case FileConflictAction.OverwriteAll:
+					overwriteAll = true;
+				break;
+			}
+			return result;
 		}
 	}
 }

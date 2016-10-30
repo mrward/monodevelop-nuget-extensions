@@ -31,6 +31,7 @@ using System.Management.Automation;
 using ICSharpCode.PackageManagement.Scripting;
 using NuGet;
 using MonoDevelop.PackageManagement;
+using NuGet.ProjectManagement;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
