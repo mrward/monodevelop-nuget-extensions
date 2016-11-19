@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,6 +51,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		ISourceRepositoryProvider sourceRepositoryProvider;
 		IPackageManagementAddInPath addinPath;
 		IPackageManagementEvents packageEvents;
+		ConsoleHostScriptRunner scriptRunner;
 		string prompt = "PM> ";
 
 		public PackageManagementConsoleHost (
@@ -65,6 +65,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 			this.solutionManager = solutionManager;
 			this.addinPath = addinPath;
 			this.packageEvents = packageEvents;
+
+			scriptRunner = new ConsoleHostScriptRunner ();
 		}
 
 		public PackageManagementConsoleHost (
@@ -361,24 +363,18 @@ namespace ICSharpCode.PackageManagement.Scripting
 			INuGetProjectContext nuGetProjectContext,
 			bool throwOnFailure)
 		{
-			string scriptPath = Path.Combine (packageInstallPath, scriptRelativePath);
-
-			if (!File.Exists(scriptPath)) {
-				return Task.FromResult (0);
-			}
-
-			var packageScript = new PackageScript (
-				scriptPath,
-				packageInstallPath,
+			return scriptRunner.ExecuteScriptAsync (
 				identity,
-				project);
+				packageInstallPath,
+				scriptRelativePath,
+				project,
+				nuGetProjectContext,
+				throwOnFailure);
+		}
 
-			var scriptRunner = nuGetProjectContext as IPackageScriptRunner;
-			if (scriptRunner != null) {
-				scriptRunner.Run (packageScript);
-			}
-
-			return Task.FromResult (0);
+		public void OnSolutionUnloaded ()
+		{
+			scriptRunner.Reset ();
 		}
 	}
 }

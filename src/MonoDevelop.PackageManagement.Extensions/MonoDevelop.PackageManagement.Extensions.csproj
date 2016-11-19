@@ -213,6 +213,8 @@
     <Compile Include="NuGet.PackageManagement.VisualStudio\IScriptPackage.cs" />
     <Compile Include="NuGet.PackageManagement.VisualStudio\PackageAssemblyReference.cs" />
     <Compile Include="NuGet.PackageManagement.VisualStudio\IPackageAssemblyReference.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostScriptRunner.cs" />
+    <Compile Include="NuGet.PackageManagement.VisualStudio\PackageInitPS1State.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

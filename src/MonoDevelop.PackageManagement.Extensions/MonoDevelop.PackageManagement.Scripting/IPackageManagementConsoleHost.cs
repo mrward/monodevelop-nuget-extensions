@@ -80,6 +80,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void ReloadPackageSources ();
 
+		void OnSolutionUnloaded ();
+
 		Task ExecuteScriptAsync (
 			PackageIdentity identity,
 			string packageInstallPath,

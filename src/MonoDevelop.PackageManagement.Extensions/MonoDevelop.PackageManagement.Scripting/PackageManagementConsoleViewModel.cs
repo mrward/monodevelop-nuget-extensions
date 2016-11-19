@@ -74,6 +74,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void SolutionUnloaded (object sender, SolutionEventArgs e)
 		{
 			ProjectsChanged (new Project[0]);
+			consoleHost.OnSolutionUnloaded ();
 		}
 
 		void SolutionLoaded (object sender, SolutionEventArgs e)
