@@ -32,10 +32,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ICSharpCode.Scripting;
+using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
+using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
@@ -153,6 +155,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 			InitializePackageScriptsForOpenSolution ();
 			WritePrompt ();
 			//			ProcessUserCommands();
+
+			IdeApp.Workspace.SolutionLoaded += SolutionLoaded;
 		}
 
 		void InitPowerShell ()
@@ -230,10 +234,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void InitializePackageScriptsForOpenSolution ()
 		{
-			//			if (Solution.IsOpen) {
-			//				string command = "Invoke-InitializePackages";
-			//				powerShellHost.ExecuteCommand(command);
-			//			}
+			if (IsSolutionOpen) {
+				string command = "Invoke-InitializePackages";
+				powerShellHost.ExecuteCommand (command);
+			}
 		}
 
 		void WriteLine (string message)
@@ -296,7 +300,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void ExecuteCommand (string command)
 		{
-			//			ScriptingConsole.SendLine(command);
+			PackageManagementBackgroundDispatcher.Dispatch (() => {
+				powerShellHost.ExecuteCommand (command);
+				WritePrompt ();
+			});
 		}
 
 		public void SetDefaultRunspace ()
@@ -375,6 +382,16 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void OnSolutionUnloaded ()
 		{
 			scriptRunner.Reset ();
+		}
+
+		void SolutionLoaded (object sender, SolutionEventArgs e)
+		{
+			ExecuteCommand ("Invoke-InitializePackages");
+		}
+
+		public bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State initPS1State)
+		{
+			return scriptRunner.TryMarkVisited (package, initPS1State);
 		}
 	}
 }

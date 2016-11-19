@@ -63,6 +63,10 @@ namespace MonoDevelop.PackageManagement.Scripting
 			this.packageManager = packageManager;
 		}
 
+		public NuGetPackageManager PackageManager {
+			get { return packageManager; }
+		}
+
 		public void ClearDirectInstall (INuGetProjectContext nuGetProjectContext)
 		{
 			NuGetPackageManager.ClearDirectInstall (nuGetProjectContext);

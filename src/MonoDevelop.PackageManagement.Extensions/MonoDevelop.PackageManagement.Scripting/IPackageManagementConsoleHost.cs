@@ -35,6 +35,7 @@ using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
+using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
@@ -89,5 +90,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			IDotNetProject project,
 			INuGetProjectContext nuGetProjectContext,
 			bool throwOnFailure);
+
+		bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State foundAndExecuted);
 	}
 }

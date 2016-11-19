@@ -134,14 +134,10 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptRunner.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptSession.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializationScripts.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializationScriptsConsole.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageInitializationScriptsFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementAddInPath.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageScript.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PashCommandLinePreprocessor.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PowerShellWorkingDirectory.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\RunPackageInitializationScriptsOnSolutionOpen.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RunPackageScriptsAction.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\DTE.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Project.cs" />

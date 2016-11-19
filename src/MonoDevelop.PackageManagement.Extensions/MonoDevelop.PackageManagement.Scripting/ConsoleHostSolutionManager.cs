@@ -43,6 +43,12 @@ namespace MonoDevelop.PackageManagement
 
 		public ConsoleHostSolutionManager ()
 		{
+			IdeApp.Workspace.SolutionUnloaded += SolutionUnloaded;
+		}
+
+		void SolutionUnloaded (object sender, SolutionEventArgs e)
+		{
+			solutionManager = null;
 		}
 
 		public NuGetProject DefaultNuGetProject {
@@ -144,7 +150,7 @@ namespace MonoDevelop.PackageManagement
 			List<NuGetProject> projects = null;
 
 			Runtime.RunInMainThread (() => {
-				return GetNuGetProjects (solutionManager);
+				projects = GetNuGetProjects (solutionManager).ToList ();
 			}).Wait ();
 
 			return projects;
