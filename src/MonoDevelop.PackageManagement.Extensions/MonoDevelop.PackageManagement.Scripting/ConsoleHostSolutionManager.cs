@@ -44,9 +44,16 @@ namespace MonoDevelop.PackageManagement
 		public ConsoleHostSolutionManager ()
 		{
 			IdeApp.Workspace.SolutionUnloaded += SolutionUnloaded;
+			IdeApp.Workspace.ItemAddedToSolution += ProjectsChangedInSolution;
+			IdeApp.Workspace.ItemRemovedFromSolution += ProjectsChangedInSolution;
 		}
 
 		void SolutionUnloaded (object sender, SolutionEventArgs e)
+		{
+			solutionManager = null;
+		}
+
+		void ProjectsChangedInSolution (object sender, EventArgs e)
 		{
 			solutionManager = null;
 		}

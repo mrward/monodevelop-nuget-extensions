@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -63,6 +64,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 			IdeApp.Workspace.SolutionLoaded += SolutionLoaded;
 			IdeApp.Workspace.SolutionUnloaded += SolutionUnloaded;
+			IdeApp.Workspace.ItemAddedToSolution += ProjectsChangedInSolution;
+			IdeApp.Workspace.ItemRemovedFromSolution += ProjectsChangedInSolution;
 			projects = new ObservableCollection<Project> (projectService.GetOpenProjects ().Select (p => p.DotNetProject));
 
 			CreateCommands ();
@@ -78,6 +81,11 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 
 		void SolutionLoaded (object sender, SolutionEventArgs e)
+		{
+			ProjectsChanged (e.Solution.GetAllProjects ().OfType<DotNetProject> ());
+		}
+
+		void ProjectsChangedInSolution (object sender, SolutionItemChangeEventArgs e)
 		{
 			ProjectsChanged (e.Solution.GetAllProjects ().OfType<DotNetProject> ());
 		}

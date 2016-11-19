@@ -55,7 +55,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		async Task ExecuteInitScriptsAsync ()
 		{
-			var projects = ConsoleHost.SolutionManager.GetNuGetProjects ().ToList ();
+			var projects = ConsoleHost.GetNuGetProjects ().ToList ();
 			var packageManager = ConsoleHost.CreatePackageManager ();
 
 			// if A -> B, we invoke B's init.ps1 before A's.
