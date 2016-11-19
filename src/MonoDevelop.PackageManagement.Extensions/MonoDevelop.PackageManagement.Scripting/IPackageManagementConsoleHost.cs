@@ -29,11 +29,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using ICSharpCode.Scripting;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
+using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 
@@ -77,5 +79,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 		IEnumerable<SourceRepository> GetRepositories ();
 
 		void ReloadPackageSources ();
+
+		Task ExecuteScriptAsync (
+			PackageIdentity identity,
+			string packageInstallPath,
+			string scriptRelativePath,
+			IDotNetProject project,
+			INuGetProjectContext nuGetProjectContext,
+			bool throwOnFailure);
 	}
 }

@@ -126,7 +126,8 @@ namespace MonoDevelop.PackageManagement
 			Runtime.RunInMainThread (() => {
 				var dotNetProject = IdeApp.ProjectOperations.CurrentSelectedSolution?.FindProjectByName (nuGetProjectSafeName) as DotNetProject;
 				if (dotNetProject != null) {
-					project = solutionManager.GetNuGetProject (new DotNetProjectProxy (dotNetProject));
+					var factory = new ConsoleHostNuGetProjectFactory (solutionManager.Settings);
+					project = factory.CreateNuGetProject (dotNetProject);
 				}
 			}).Wait ();
 
@@ -143,10 +144,18 @@ namespace MonoDevelop.PackageManagement
 			List<NuGetProject> projects = null;
 
 			Runtime.RunInMainThread (() => {
-				projects = solutionManager.GetNuGetProjects ().ToList ();
+				return GetNuGetProjects (solutionManager);
 			}).Wait ();
 
 			return projects;
+		}
+
+		static IEnumerable<NuGetProject> GetNuGetProjects (MonoDevelopSolutionManager solutionManager)
+		{
+			var factory = new ConsoleHostNuGetProjectFactory (solutionManager.Settings);
+			foreach (DotNetProject project in solutionManager.Solution.GetAllDotNetProjects ()) {
+				yield return factory.CreateNuGetProject (project);
+			}
 		}
 
 		public string GetNuGetProjectSafeName (NuGetProject nuGetProject)
@@ -161,7 +170,6 @@ namespace MonoDevelop.PackageManagement
 		public void ReloadSettings ()
 		{
 		}
-
 
 		public IMonoDevelopSolutionManager GetMonoDevelopSolutionManager ()
 		{

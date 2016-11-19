@@ -26,17 +26,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using NuGet;
+using NuGet.Packaging.Core;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
 	internal interface IPackageScript
 	{
-//		IPackageManagementProject2 Project { get; set; }
-		IPackage Package { get; set; }
+		IDotNetProject Project { get; }
+		PackageIdentity Identity { get; }
 	
-		bool Exists();
-		void Run(IPackageScriptSession session);
+		void Run (IPackageScriptSession session);
 	}
 }

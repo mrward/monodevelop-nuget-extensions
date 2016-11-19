@@ -120,11 +120,9 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			}
 		}
 		
-		void IPackageScriptRunner.Run(IPackageScript script)
+		void IPackageScriptRunner.Run (IPackageScript script)
 		{
-			if (script.Exists()) {
-				script.Run(this);
-			}
+			script.Run (this);
 		}
 
 		protected IDisposable CreateEventsMonitor ()

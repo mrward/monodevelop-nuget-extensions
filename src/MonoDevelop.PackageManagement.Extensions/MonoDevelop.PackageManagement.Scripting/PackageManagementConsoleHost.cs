@@ -28,14 +28,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
-
+using System.Threading.Tasks;
 using ICSharpCode.Scripting;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
+using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 
@@ -349,6 +351,34 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			var consoleHostSolutionManager = (ConsoleHostSolutionManager)solutionManager;
 			return new ConsoleHostNuGetPackageManager (consoleHostSolutionManager.GetMonoDevelopSolutionManager ());
+		}
+
+		public Task ExecuteScriptAsync (
+			PackageIdentity identity,
+			string packageInstallPath,
+			string scriptRelativePath,
+			IDotNetProject project,
+			INuGetProjectContext nuGetProjectContext,
+			bool throwOnFailure)
+		{
+			string scriptPath = Path.Combine (packageInstallPath, scriptRelativePath);
+
+			if (!File.Exists(scriptPath)) {
+				return Task.FromResult (0);
+			}
+
+			var packageScript = new PackageScript (
+				scriptPath,
+				packageInstallPath,
+				identity,
+				project);
+
+			var scriptRunner = nuGetProjectContext as IPackageScriptRunner;
+			if (scriptRunner != null) {
+				scriptRunner.Run (packageScript);
+			}
+
+			return Task.FromResult (0);
 		}
 	}
 }
