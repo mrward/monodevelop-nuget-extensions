@@ -211,6 +211,19 @@
     <Compile Include="NuGet.PackageManagement.VisualStudio\IPackageAssemblyReference.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostScriptRunner.cs" />
     <Compile Include="NuGet.PackageManagement.VisualStudio\PackageInitPS1State.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesDialog.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesDialog.UI.cs">
+      <DependentUpon>ManagePackagesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesDialogRunner.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesViewModel.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ManagedPackagesSearchResultViewModelComparer.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesSearchResultViewModel.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\RecentManagedNuGetPackagesRepository.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesCellView.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesCellViewEventArgs.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesLoadContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -38,12 +38,12 @@
 		<Class class="MonoDevelop.PackageManagement.PortableClassLibrarySearchCategory" />
 	</Extension>
 
-<!--	<Extension path="/MonoDevelop/Ide/Commands">
+	<Extension path="/MonoDevelop/Ide/Commands">
 		<Command
 			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
-			_description="Manage packages"
+			_description="Manage packages for the solution"
 			_label="_Manage Packages..."
-			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler2" />
+			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler" />
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/MainMenu/Project">
@@ -61,7 +61,7 @@
 				insertbefore="AddSectionEnd" />
 		</Condition>
 	</Extension>
-	-->
+
 	<Extension path="/MonoDevelop/Ide/Pads">
 		<Pad
 			id="MonoDevelop.PackageManagement.PackageConsolePad"
