@@ -301,7 +301,7 @@ namespace MonoDevelop.PackageManagement
 
 		public override bool Equals (object obj)
 		{
-			var other = obj as PackageSearchResultViewModel;
+			var other = obj as ManagePackagesSearchResultViewModel;
 			if (other == null)
 				return false;
 
