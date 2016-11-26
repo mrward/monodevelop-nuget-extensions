@@ -115,6 +115,10 @@ namespace MonoDevelop.PackageManagement
 			get { return dotNetProjects[0]; }
 		}
 
+		public IEnumerable<IDotNetProject> DotNetProjects {
+			get { return dotNetProjects; }
+		}
+
 		public string SearchTerms { get; set; }
 
 		public IEnumerable<SourceRepositoryViewModel> PackageSources {
@@ -457,19 +461,22 @@ namespace MonoDevelop.PackageManagement
 				.FirstOrDefault (item => item.Id == packageId);
 		}
 
-		public IPackageAction CreateInstallPackageAction (ManagePackagesSearchResultViewModel packageViewModel)
+		public IEnumerable<IPackageAction> CreateInstallPackageActions (
+			ManagePackagesSearchResultViewModel packageViewModel,
+			IEnumerable<IDotNetProject> projects)
 		{
-			MessageService.ShowError ("Not implemented");
-			return new InstallNuGetPackageAction (
-				SelectedPackageSource.GetSourceRepositories (),
-				solutionManager,
-				dotNetProjects[0],
-				projectContext
-			) {
-				IncludePrerelease = IncludePrerelease,
-				PackageId = packageViewModel.Id,
-				Version = packageViewModel.SelectedVersion
-			};
+			return projects.Select (project => {
+				return new InstallNuGetPackageAction (
+					SelectedPackageSource.GetSourceRepositories (),
+					solutionManager,
+					project,
+					projectContext
+				) {
+					IncludePrerelease = IncludePrerelease,
+					PackageId = packageViewModel.Id,
+					Version = packageViewModel.SelectedVersion
+				};
+			});
 		}
 
 		public ManagePackagesSearchResultViewModel SelectedPackage { get; set; }

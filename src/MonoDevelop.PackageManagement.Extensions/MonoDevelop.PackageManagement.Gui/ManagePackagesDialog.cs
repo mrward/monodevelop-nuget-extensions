@@ -494,11 +494,27 @@ namespace MonoDevelop.PackageManagement
 		void AddPackagesButtonClicked (object sender, EventArgs e)
 		{
 			try {
-				List<IPackageAction> packageActions = CreateInstallPackageActionsForSelectedPackages ();
-				InstallPackages (packageActions);
+				var projects = SelectProjects ().ToList ();
+				if (projects.Any ()) {
+					List<IPackageAction> packageActions = CreateInstallPackageActionsForSelectedPackages (projects);
+					InstallPackages (packageActions);
+				}
 			} catch (Exception ex) {
 				LoggingService.LogError ("Adding packages failed.", ex);
 				ShowErrorMessage (ex.Message);
+			}
+		}
+
+		IEnumerable<IDotNetProject> SelectProjects ()
+		{
+			int packagesCount = GetPackagesCountForAddPackagesButtonLabel ();
+			using (var dialog = new SelectProjectsDialog (viewModel.DotNetProjects, packagesCount)) {
+				Command result = dialog.ShowWithParent ();
+				if (result == Command.Ok) {
+					return dialog.GetSelectedProjects ();
+				} else {
+					return Enumerable.Empty<IDotNetProject> ();
+				}
 			}
 		}
 
@@ -513,11 +529,11 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 
-		List<IPackageAction> CreateInstallPackageActionsForSelectedPackages ()
+		List<IPackageAction> CreateInstallPackageActionsForSelectedPackages (IEnumerable<IDotNetProject> selectedProjects)
 		{
 			List<ManagePackagesSearchResultViewModel> packageViewModels = GetSelectedPackageViewModels ();
 			if (packageViewModels.Count > 0) {
-				return CreateInstallPackageActions (packageViewModels);
+				return CreateInstallPackageActions (packageViewModels, selectedProjects);
 			}
 			return new List<IPackageAction> ();
 		}
@@ -548,9 +564,15 @@ namespace MonoDevelop.PackageManagement
 			return packageViewModels;
 		}
 
-		List<IPackageAction> CreateInstallPackageActions (IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels)
+		List<IPackageAction> CreateInstallPackageActions (
+			IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels,
+			IEnumerable<IDotNetProject> selectedProjects)
 		{
-			return packageViewModels.Select (packageViewModel => viewModel.CreateInstallPackageAction (packageViewModel)).ToList ();
+			var actions = new List<IPackageAction> ();
+			foreach (var packageViewModel in packageViewModels) {
+				actions.AddRange (viewModel.CreateInstallPackageActions (packageViewModel, selectedProjects));
+			}
+			return actions;
 		}
 
 		void PackageSearchEntryChanged (object sender, EventArgs e)
@@ -596,8 +618,13 @@ namespace MonoDevelop.PackageManagement
 		{
 			try {
 				if (packageViewModel != null) {
+					var projects = SelectProjects ().ToList ();
+					if (!projects.Any ())
+						return;
+
 					List<IPackageAction> packageActions = CreateInstallPackageActions (
-						new ManagePackagesSearchResultViewModel [] { packageViewModel });
+						new ManagePackagesSearchResultViewModel [] { packageViewModel },
+						projects);
 					InstallPackages (packageActions);
 				}
 			} catch (Exception ex) {

@@ -224,6 +224,12 @@
     <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesCellView.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesCellViewEventArgs.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ManagePackagesLoadContext.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\SelectProjectsDialog.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\SelectProjectsDialog.UI.cs">
+      <DependentUpon>SelectProjectsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MonoDevelop.PackageManagement\SelectProjectsViewModel.cs" />
+    <Compile Include="MonoDevelop.PackageManagement\SelectedProjectViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
