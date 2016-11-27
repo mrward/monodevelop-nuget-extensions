@@ -83,7 +83,7 @@ namespace MonoDevelop.PackageManagement
 			Build ();
 
 			UpdatePackageSearchEntryWithInitialText (initialSearch);
-			UpdatePackagesResultsPageLabels ();
+			UpdatePackageResultsPageLabels ();
 
 			InitializeListView ();
 			UpdateAddPackagesButton ();
@@ -683,12 +683,28 @@ namespace MonoDevelop.PackageManagement
 
 		void UpdateAddPackagesButton ()
 		{
-			string label = Catalog.GetPluralString ("Add Package", "Add Packages", GetPackagesCountForAddPackagesButtonLabel ());
-			if (PackagesCheckedCount <= 1 && OlderPackageInstalledThanPackageSelected ()) {
-				label = Catalog.GetString ("Update Package");
-			}
-			addPackagesButton.Label = label;
+			addPackagesButton.Label = GetAddPackagesButtonLabel ();
 			addPackagesButton.Sensitive = IsAddPackagesButtonEnabled ();
+		}
+
+		string GetAddPackagesButtonLabel ()
+		{
+			int packagesSelectedCount = GetPackagesCountForAddPackagesButtonLabel ();
+			if (viewModel.PageSelected == ManagePackagesPage.Browse) {
+				string label = Catalog.GetPluralString ("Add Package", "Add Packages", packagesSelectedCount);
+				if (PackagesCheckedCount <= 1 && OlderPackageInstalledThanPackageSelected ()) {
+					label = Catalog.GetString ("Update Package");
+				}
+				return label;
+			} else if (viewModel.PageSelected == ManagePackagesPage.Installed) {
+				return Catalog.GetPluralString ("Remove Package", "Remove Packages", packagesSelectedCount);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Updates) {
+				return Catalog.GetPluralString ("Update Package", "Update Packages", packagesSelectedCount);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Consolidate) {
+				return Catalog.GetString ("Consolidate");
+			}
+
+			throw new NotImplementedException ("Unknown package results page");
 		}
 
 		int GetPackagesCountForAddPackagesButtonLabel ()
@@ -850,7 +866,7 @@ namespace MonoDevelop.PackageManagement
 			return false;
 		}
 
-		void UpdatePackagesResultsPageLabels ()
+		void UpdatePackageResultsPageLabels ()
 		{
 			UpdatePackageResultsLabel (ManagePackagesPage.Browse, browseLabel);
 			UpdatePackageResultsLabel (ManagePackagesPage.Installed, installedLabel);
@@ -871,25 +887,34 @@ namespace MonoDevelop.PackageManagement
 		void BrowseLabelButtonPressed (object sender, ButtonEventArgs e)
 		{
 			viewModel.PageSelected = ManagePackagesPage.Browse;
-			UpdatePackagesResultsPageLabels ();
+			OnPackageResultsPageSelected ();
 		}
 
 		void InstalledLabelButtonPressed (object sender, ButtonEventArgs e)
 		{
 			viewModel.PageSelected = ManagePackagesPage.Installed;
-			UpdatePackagesResultsPageLabels ();
+			OnPackageResultsPageSelected ();
 		}
 
 		void UpdatesLabelButtonPressed (object sender, ButtonEventArgs e)
 		{
 			viewModel.PageSelected = ManagePackagesPage.Updates;
-			UpdatePackagesResultsPageLabels ();
+			OnPackageResultsPageSelected ();
 		}
 
 		void ConsolidateLabelButtonPressed (object sender, ButtonEventArgs e)
 		{
 			viewModel.PageSelected = ManagePackagesPage.Consolidate;
-			UpdatePackagesResultsPageLabels ();
+			OnPackageResultsPageSelected ();
+		}
+
+		void OnPackageResultsPageSelected ()
+		{
+			UpdatePackageResultsPageLabels ();
+			ClearErrorMessage ();
+			ClearPackages ();
+			UpdateAddPackagesButton ();
+			Search ();
 		}
 	}
 }

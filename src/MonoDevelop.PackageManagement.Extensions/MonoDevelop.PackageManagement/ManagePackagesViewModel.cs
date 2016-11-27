@@ -40,6 +40,7 @@ using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using NuGet.Logging;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -287,7 +288,7 @@ namespace MonoDevelop.PackageManagement
 			
 			var loader = new PackageItemLoader (
 				context,
-				CreatePackageFeed (context.SourceRepositories),
+				CreatePackageFeed (context),
 				SearchTerms,
 				IncludePrerelease
 			);
@@ -297,9 +298,15 @@ namespace MonoDevelop.PackageManagement
 			return loader;
 		}
 
-		protected virtual IPackageFeed CreatePackageFeed (IEnumerable<SourceRepository> sourceRepositories)
+		protected virtual IPackageFeed CreatePackageFeed (ManagePackagesLoadContext context)
 		{
-			return new MultiSourcePackageFeed (sourceRepositories, this);
+			if (PageSelected == ManagePackagesPage.Browse)
+				return new MultiSourcePackageFeed (context.SourceRepositories, this);
+
+			if (PageSelected == ManagePackagesPage.Installed)
+				return new InstalledPackageFeed (context, CreatePackageMetadataProvider (), new NullLogger ());
+
+			throw new InvalidOperationException ("Unsupported package feed");
 		}
 
 		protected virtual Task LoadPackagesAsync (PackageItemLoader loader, CancellationToken token)
@@ -412,7 +419,15 @@ namespace MonoDevelop.PackageManagement
 
 		ManagePackagesSearchResultViewModel CreatePackageViewModel (PackageItemListViewModel viewModel)
 		{
-			return new ManagePackagesSearchResultViewModel (this, viewModel);
+			bool showVersion = ShowPackageVersionInsteadOfDownloadCount ();
+			return new ManagePackagesSearchResultViewModel (this, viewModel) {
+				ShowVersionInsteadOfDownloadCount = showVersion
+			};
+		}
+
+		bool ShowPackageVersionInsteadOfDownloadCount ()
+		{
+			return PageSelected != ManagePackagesPage.Browse;
 		}
 
 		void ClearPackages ()
@@ -533,13 +548,18 @@ namespace MonoDevelop.PackageManagement
 
 		public void LoadPackageMetadata (ManagePackagesSearchResultViewModel packageViewModel)
 		{
-			var provider = new MultiSourcePackageMetadataProvider (
+			IPackageMetadataProvider provider = CreatePackageMetadataProvider ();
+
+			packageViewModel.LoadPackageMetadata (provider, cancellationTokenSource.Token);
+		}
+
+		IPackageMetadataProvider CreatePackageMetadataProvider ()
+		{
+			return new MultiSourcePackageMetadataProvider (
 				selectedPackageSource.GetSourceRepositories (),
 				packageManager.PackagesFolderSourceRepository,
 				packageManager.GlobalPackagesFolderSourceRepository,
-				new NuGet.Logging.NullLogger ());
-
-			packageViewModel.LoadPackageMetadata (provider, cancellationTokenSource.Token);
+				new NullLogger ());
 		}
 
 		public void OnInstallingSelectedPackages ()

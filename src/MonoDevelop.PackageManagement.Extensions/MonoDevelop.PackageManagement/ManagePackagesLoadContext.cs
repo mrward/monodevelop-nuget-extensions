@@ -28,6 +28,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using NuGet.PackageManagement.UI;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
@@ -36,6 +38,8 @@ namespace MonoDevelop.PackageManagement
 {
 	class ManagePackagesLoadContext : PackageLoadContext
 	{
+		readonly Task<PackageCollection> installedPackagesTask;
+
 		public ManagePackagesLoadContext (
 			IEnumerable<SourceRepository> sourceRepositories,
 			bool isSolution,
@@ -44,6 +48,10 @@ namespace MonoDevelop.PackageManagement
 		{
 			var propertyInfo = typeof (PackageLoadContext).GetProperty ("Projects", BindingFlags.Instance | BindingFlags.Public);
 			propertyInfo.SetValue (this, projects.ToArray (), null);
+
+			installedPackagesTask = PackageCollection.FromProjectsAsync (Projects, CancellationToken.None);
 		}
+
+		public Task<PackageCollection> GetInstalledPackagesAsync () =>installedPackagesTask;
 	}
 }

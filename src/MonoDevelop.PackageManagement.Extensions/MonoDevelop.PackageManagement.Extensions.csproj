@@ -231,6 +231,9 @@
     <Compile Include="MonoDevelop.PackageManagement\SelectProjectsViewModel.cs" />
     <Compile Include="MonoDevelop.PackageManagement\SelectedProjectViewModel.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ManagePackagesPage.cs" />
+    <Compile Include="NuGet.PackageManagement.UI\InstalledPackageFeed.cs" />
+    <Compile Include="NuGet.PackageManagement.UI\PlainPackageFeedBase.cs" />
+    <Compile Include="NuGet.PackageManagement.UI\PackageCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

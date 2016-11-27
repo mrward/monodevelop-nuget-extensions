@@ -86,7 +86,7 @@ namespace MonoDevelop.PackageManagement
 			double packageIdWidth = cellArea.Width - packageDescriptionPadding.HorizontalSpacing - packageDescriptionLeftOffset;
 
 			// Package download count.
-			if (packageViewModel.HasDownloadCount) {
+			if (packageViewModel.HasDownloadCount || packageViewModel.ShowVersionInsteadOfDownloadCount) {
 				var downloadCountTextLayout = new TextLayout ();
 				downloadCountTextLayout.Text = packageViewModel.GetDownloadCountOrVersionDisplayText ();
 				Size size = downloadCountTextLayout.GetSize ();
