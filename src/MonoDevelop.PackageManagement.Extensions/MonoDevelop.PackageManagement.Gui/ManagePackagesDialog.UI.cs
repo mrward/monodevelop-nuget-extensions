@@ -62,6 +62,10 @@ namespace MonoDevelop.PackageManagement
 		FrameBox noPackagesFoundFrame;
 		ComboBox packageVersionComboBox;
 		HBox packageVersionsHBox;
+		Label browseLabel;
+		Label installedLabel;
+		Label updatesLabel;
+		Label consolidateLabel;
 		int packageInfoFontSize = 11;
 
 		void Build ()
@@ -84,6 +88,32 @@ namespace MonoDevelop.PackageManagement
 			packageSourceComboBox.Name = "packageSourceComboBox";
 			packageSourceComboBox.MinWidth = 200;
 			topHBox.PackStart (packageSourceComboBox);
+
+			int tabLabelMinWidth = 60;
+			browseLabel = new Label ();
+			browseLabel.Text = GettextCatalog.GetString ("Browse");
+			browseLabel.Tag = browseLabel.Text;
+			browseLabel.MinWidth = tabLabelMinWidth;
+			browseLabel.MarginLeft = 10;
+			topHBox.PackStart (browseLabel);
+
+			installedLabel = new Label ();
+			installedLabel.Text = GettextCatalog.GetString ("Installed");
+			installedLabel.Tag = installedLabel.Text;
+			installedLabel.MinWidth = tabLabelMinWidth;
+			topHBox.PackStart (installedLabel);
+
+			updatesLabel = new Label ();
+			updatesLabel.Text = GettextCatalog.GetString ("Updates");
+			updatesLabel.Tag = updatesLabel.Text;
+			updatesLabel.MinWidth = tabLabelMinWidth;
+			topHBox.PackStart (updatesLabel);
+
+			consolidateLabel = new Label ();
+			consolidateLabel.Text = GettextCatalog.GetString ("Consolidate");
+			consolidateLabel.Tag = consolidateLabel.Text;
+			consolidateLabel.MinWidth = tabLabelMinWidth;
+			topHBox.PackStart (consolidateLabel);
 
 			packageSearchEntry = new SearchTextEntry ();
 			packageSearchEntry.WidthRequest = 187;

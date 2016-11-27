@@ -93,6 +93,7 @@ namespace MonoDevelop.PackageManagement
 			PackageViewModels = new ObservableCollection<ManagePackagesSearchResultViewModel> ();
 			CheckedPackageViewModels = new ObservableCollection<ManagePackagesSearchResultViewModel> ();
 			ErrorMessage = String.Empty;
+			PageSelected = ManagePackagesPage.Browse;
 
 			packageManager = new NuGetPackageManager (
 				solutionManager.CreateSourceRepositoryProvider (),
@@ -120,6 +121,8 @@ namespace MonoDevelop.PackageManagement
 		}
 
 		public string SearchTerms { get; set; }
+
+		public ManagePackagesPage PageSelected { get; set; }
 
 		public IEnumerable<SourceRepositoryViewModel> PackageSources {
 			get {

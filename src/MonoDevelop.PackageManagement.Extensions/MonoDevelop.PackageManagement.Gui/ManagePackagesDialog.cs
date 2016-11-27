@@ -83,6 +83,7 @@ namespace MonoDevelop.PackageManagement
 			Build ();
 
 			UpdatePackageSearchEntryWithInitialText (initialSearch);
+			UpdatePackagesResultsPageLabels ();
 
 			InitializeListView ();
 			UpdateAddPackagesButton ();
@@ -96,6 +97,11 @@ namespace MonoDevelop.PackageManagement
 			this.packageSearchEntry.Activated += PackageSearchEntryActivated;
 			this.packageVersionComboBox.SelectionChanged += PackageVersionChanged;
 			imageLoader.Loaded += ImageLoaded;
+
+			browseLabel.ButtonPressed += BrowseLabelButtonPressed;
+			installedLabel.ButtonPressed += InstalledLabelButtonPressed;
+			updatesLabel.ButtonPressed += UpdatesLabelButtonPressed;
+			consolidateLabel.ButtonPressed += ConsolidateLabelButtonPressed;
 		}
 
 		public bool ShowPreferencesForPackageSources { get; private set; }
@@ -842,6 +848,48 @@ namespace MonoDevelop.PackageManagement
 			}
 
 			return false;
+		}
+
+		void UpdatePackagesResultsPageLabels ()
+		{
+			UpdatePackageResultsLabel (ManagePackagesPage.Browse, browseLabel);
+			UpdatePackageResultsLabel (ManagePackagesPage.Installed, installedLabel);
+			UpdatePackageResultsLabel (ManagePackagesPage.Updates, updatesLabel);
+			UpdatePackageResultsLabel (ManagePackagesPage.Consolidate, consolidateLabel);
+		}
+
+		void UpdatePackageResultsLabel (ManagePackagesPage page, Label label)
+		{
+			string text = (string)label.Tag;
+			if (page == viewModel.PageSelected) {
+				label.Markup = string.Format ("<b><u>{0}</u></b>", text);
+			} else {
+				label.Markup = text;
+			}
+		}
+
+		void BrowseLabelButtonPressed (object sender, ButtonEventArgs e)
+		{
+			viewModel.PageSelected = ManagePackagesPage.Browse;
+			UpdatePackagesResultsPageLabels ();
+		}
+
+		void InstalledLabelButtonPressed (object sender, ButtonEventArgs e)
+		{
+			viewModel.PageSelected = ManagePackagesPage.Installed;
+			UpdatePackagesResultsPageLabels ();
+		}
+
+		void UpdatesLabelButtonPressed (object sender, ButtonEventArgs e)
+		{
+			viewModel.PageSelected = ManagePackagesPage.Updates;
+			UpdatePackagesResultsPageLabels ();
+		}
+
+		void ConsolidateLabelButtonPressed (object sender, ButtonEventArgs e)
+		{
+			viewModel.PageSelected = ManagePackagesPage.Consolidate;
+			UpdatePackagesResultsPageLabels ();
 		}
 	}
 }
