@@ -606,7 +606,8 @@ namespace MonoDevelop.PackageManagement
 		{
 			if (PackageViewModels.Count == 0 &&
 				String.IsNullOrEmpty (SearchTerms) &&
-				selectedPackageSource != null) {
+				selectedPackageSource != null &&
+				PageSelected == ManagePackagesPage.Browse) {
 				return recentPackagesRepository.GetPackages (SelectedPackageSource.Name)
 					.Where (SelectedVersionMatchesIncludePreleaseFilter);
 			}
