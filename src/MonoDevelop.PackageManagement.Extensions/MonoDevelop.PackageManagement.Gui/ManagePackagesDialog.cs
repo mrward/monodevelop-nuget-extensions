@@ -502,8 +502,8 @@ namespace MonoDevelop.PackageManagement
 			try {
 				var projects = SelectProjects ().ToList ();
 				if (projects.Any ()) {
-					List<IPackageAction> packageActions = CreateInstallPackageActionsForSelectedPackages (projects);
-					InstallPackages (packageActions);
+					List<IPackageAction> packageActions = CreatePackageActionsForSelectedPackages (projects);
+					RunPackageActions (packageActions);
 				}
 			} catch (Exception ex) {
 				LoggingService.LogError ("Adding packages failed.", ex);
@@ -513,8 +513,22 @@ namespace MonoDevelop.PackageManagement
 
 		IEnumerable<IDotNetProject> SelectProjects ()
 		{
-			int packagesCount = GetPackagesCountForAddPackagesButtonLabel ();
-			using (var dialog = new SelectProjectsDialog (viewModel.DotNetProjects, packagesCount)) {
+			return SelectProjects (GetSelectedPackageViewModels ());
+		}
+
+		IEnumerable<IDotNetProject> SelectProjects (ManagePackagesSearchResultViewModel packageViewModel)
+		{
+			return SelectProjects (new [] { packageViewModel });
+		}
+
+		IEnumerable<IDotNetProject> SelectProjects (IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels)
+		{
+			var selectProjectsViewModel = new SelectProjectsViewModel (
+				GetFilteredDotNetProjectsToSelect (packageViewModels),
+				GetPackagesCountForAddPackagesButtonLabel (),
+				viewModel.PageSelected);
+
+			using (var dialog = new SelectProjectsDialog (selectProjectsViewModel)) {
 				Command result = dialog.ShowWithParent ();
 				if (result == Command.Ok) {
 					return dialog.GetSelectedProjects ();
@@ -524,27 +538,54 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 
-		void InstallPackages (List<IPackageAction> packageActions)
+		/// <summary>
+		/// Remove projects that do not make sense based on the currently selected filter.
+		/// If we are on the Installed page that do not include any projects that do not have
+		/// the selected NuGet package installed.
+		/// </summary>
+		IEnumerable<IDotNetProject> GetFilteredDotNetProjectsToSelect (IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels)
+		{
+			if (viewModel.PageSelected == ManagePackagesPage.Installed) {
+				var packageIds = packageViewModels.Select (pvm => pvm.Id).ToList ();
+				return viewModel.GetDotNetProjectsToSelect (packageIds);
+			}
+
+			return viewModel.DotNetProjects;
+		}
+
+		void RunPackageActions (List<IPackageAction> packageActions)
 		{
 			if (packageActions.Count > 0) {
 				ProgressMonitorStatusMessage progressMessage = GetProgressMonitorStatusMessages (packageActions);
 				backgroundActionRunner.Run (progressMessage, packageActions);
 
-				viewModel.OnInstallingSelectedPackages ();
+				if (viewModel.PageSelected == ManagePackagesPage.Browse) {
+					viewModel.OnInstallingSelectedPackages ();
+				}
 				Close ();
 			}
 		}
 
-		List<IPackageAction> CreateInstallPackageActionsForSelectedPackages (IEnumerable<IDotNetProject> selectedProjects)
+		List<IPackageAction> CreatePackageActionsForSelectedPackages (IEnumerable<IDotNetProject> selectedProjects)
 		{
 			List<ManagePackagesSearchResultViewModel> packageViewModels = GetSelectedPackageViewModels ();
 			if (packageViewModels.Count > 0) {
-				return CreateInstallPackageActions (packageViewModels, selectedProjects);
+				return CreatePackageActions (packageViewModels, selectedProjects);
 			}
 			return new List<IPackageAction> ();
 		}
 
 		ProgressMonitorStatusMessage GetProgressMonitorStatusMessages (List<IPackageAction> packageActions)
+		{
+			if (viewModel.PageSelected == ManagePackagesPage.Browse) {
+				return GetProgressMonitorInstallMessages (packageActions);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Installed) {
+				return GetProgressMonitorUninstallMessages (packageActions);
+			}
+			return null;
+		}
+
+		ProgressMonitorStatusMessage GetProgressMonitorInstallMessages (List<IPackageAction> packageActions)
 		{
 			if (packageActions.Count == 1) {
 				string packageId = packageActions.OfType<INuGetPackageAction> ().First ().PackageId;
@@ -554,6 +595,22 @@ namespace MonoDevelop.PackageManagement
 				return ProgressMonitorStatusMessageFactory.CreateInstallingSinglePackageMessage (packageId);
 			}
 			return ProgressMonitorStatusMessageFactory.CreateInstallingMultiplePackagesMessage (packageActions.Count);
+		}
+
+		static ProgressMonitorStatusMessage GetProgressMonitorUninstallMessages (List<IPackageAction> packageActions)
+		{
+			int count = packageActions.Count;
+			if (count == 1) {
+				string packageId = packageActions.OfType<INuGetPackageAction> ().First ().PackageId;
+				return ProgressMonitorStatusMessageFactory.CreateRemoveSinglePackageMessage (packageId);
+			}
+
+			return new ProgressMonitorStatusMessage (
+				GettextCatalog.GetString ("Removing {0} packages...", count),
+				GettextCatalog.GetString ("{0} packages successfully removed.", count),
+				GettextCatalog.GetString ("Could not remove packages."),
+				GettextCatalog.GetString ("{0} packages removed with warnings.", count)
+			);
 		}
 
 		List<ManagePackagesSearchResultViewModel> GetSelectedPackageViewModels ()
@@ -570,6 +627,18 @@ namespace MonoDevelop.PackageManagement
 			return packageViewModels;
 		}
 
+		List<IPackageAction> CreatePackageActions (
+			IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels,
+			IEnumerable<IDotNetProject> selectedProjects)
+		{
+			if (viewModel.PageSelected == ManagePackagesPage.Browse) {
+				return CreateInstallPackageActions (packageViewModels, selectedProjects);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Installed) {
+				return CreateUninstallPackageActions (packageViewModels, selectedProjects);
+			}
+			return null;
+		}
+
 		List<IPackageAction> CreateInstallPackageActions (
 			IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels,
 			IEnumerable<IDotNetProject> selectedProjects)
@@ -577,6 +646,17 @@ namespace MonoDevelop.PackageManagement
 			var actions = new List<IPackageAction> ();
 			foreach (var packageViewModel in packageViewModels) {
 				actions.AddRange (viewModel.CreateInstallPackageActions (packageViewModel, selectedProjects));
+			}
+			return actions;
+		}
+
+		List<IPackageAction> CreateUninstallPackageActions (
+			IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels,
+			IEnumerable<IDotNetProject> selectedProjects)
+		{
+			var actions = new List<IPackageAction> ();
+			foreach (var packageViewModel in packageViewModels) {
+				actions.AddRange (viewModel.CreateUninstallPackageActions (packageViewModel, selectedProjects));
 			}
 			return actions;
 		}
@@ -616,25 +696,25 @@ namespace MonoDevelop.PackageManagement
 				AddPackagesButtonClicked (sender, e);
 			} else {
 				ManagePackagesSearchResultViewModel packageViewModel = packageStore.GetValue (e.RowIndex, packageViewModelField);
-				InstallPackage (packageViewModel);
+				ManagePackage (packageViewModel);
 			}
 		}
 
-		void InstallPackage (ManagePackagesSearchResultViewModel packageViewModel)
+		void ManagePackage (ManagePackagesSearchResultViewModel packageViewModel)
 		{
 			try {
 				if (packageViewModel != null) {
-					var projects = SelectProjects ().ToList ();
+					var projects = SelectProjects (packageViewModel).ToList ();
 					if (!projects.Any ())
 						return;
 
-					List<IPackageAction> packageActions = CreateInstallPackageActions (
+					List<IPackageAction> packageActions = CreatePackageActions (
 						new ManagePackagesSearchResultViewModel [] { packageViewModel },
 						projects);
-					InstallPackages (packageActions);
+					RunPackageActions (packageActions);
 				}
 			} catch (Exception ex) {
-				LoggingService.LogError ("Installing package failed.", ex);
+				LoggingService.LogError ("ManagePackage failed.", ex);
 				ShowErrorMessage (ex.Message);
 			}
 		}
@@ -648,7 +728,7 @@ namespace MonoDevelop.PackageManagement
 				AddPackagesButtonClicked (sender, e);
 			} else {
 				ManagePackagesSearchResultViewModel selectedPackageViewModel = GetSelectedPackageViewModel ();
-				InstallPackage (selectedPackageViewModel);
+				ManagePackage (selectedPackageViewModel);
 			}
 		}
 

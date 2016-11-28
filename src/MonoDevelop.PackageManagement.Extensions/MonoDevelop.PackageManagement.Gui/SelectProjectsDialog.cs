@@ -34,15 +34,13 @@ namespace MonoDevelop.PackageManagement
 	{
 		SelectProjectsViewModel viewModel;
 
-		public SelectProjectsDialog (
-			IEnumerable<IDotNetProject> projects,
-			int packagesCount)
+		public SelectProjectsDialog (SelectProjectsViewModel viewModel)
 		{
+			this.viewModel = viewModel;
+
 			Build ();
 
-			viewModel = new SelectProjectsViewModel (projects, packagesCount);
-
-			UpdateTopLabel (projects.Count ());
+			UpdateTopLabel (viewModel.Projects.Count ());
 
 			AddProjects ();
 		}
@@ -57,12 +55,22 @@ namespace MonoDevelop.PackageManagement
 			if (viewModel.IsAddingSinglePackage) {
 				topLabel.Text = GettextCatalog.GetPluralString (
 					"Add the package to the project:",
-					"Select the projects to add the package to:",
+					"Add the package to the projects:",
 					projectsCount);
 			} else if (viewModel.IsAddingMultiplePackages) {
 				topLabel.Text = GettextCatalog.GetPluralString (
 					"Add the packages to the project:",
-					"Select the projects to add packages to:",
+					"Add the packages to the projects:",
+					projectsCount);
+			} else if (viewModel.IsRemovingSinglePackage) {
+				topLabel.Text = GettextCatalog.GetPluralString (
+					"Remove the package from the project:",
+					"Remove the package from the projects:",
+					projectsCount);
+			} else if (viewModel.IsRemovingMultiplePackages) {
+				topLabel.Text = GettextCatalog.GetPluralString (
+					"Remove the packages from the project:",
+					"Remove the packages from the projects:",
 					projectsCount);
 			}
 		}

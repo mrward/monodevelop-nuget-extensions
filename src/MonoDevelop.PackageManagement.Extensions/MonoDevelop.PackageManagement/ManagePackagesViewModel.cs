@@ -61,6 +61,7 @@ namespace MonoDevelop.PackageManagement
 		AggregatePackageSourceErrorMessage aggregateErrorMessage;
 		NuGetPackageManager packageManager;
 		RecentManagedNuGetPackagesRepository recentPackagesRepository;
+		List<ManagePackagesProjectInfo> projectInformation = new List<ManagePackagesProjectInfo> ();
 
 		public static ManagePackagesViewModel Create (RecentManagedNuGetPackagesRepository recentPackagesRepository)
 		{
@@ -106,7 +107,8 @@ namespace MonoDevelop.PackageManagement
 			nugetProjects = dotNetProjects
 				.Select (dotNetProject => solutionManager.GetNuGetProject (dotNetProject))
 				.ToList ();
-			//GetPackagesInstalledInProject ();
+
+			GetPackagesInstalledInProjects ();
 		}
 
 		public IEnumerable<NuGetProject> NuGetProjects { 
@@ -497,6 +499,28 @@ namespace MonoDevelop.PackageManagement
 			});
 		}
 
+		public IEnumerable<IPackageAction> CreateUninstallPackageActions (
+			ManagePackagesSearchResultViewModel packageViewModel,
+			IEnumerable<IDotNetProject> projects)
+		{
+			foreach (IDotNetProject project in projects) {
+				if (IsPackageInstalledInProject (project, packageViewModel.Id)) {
+					yield return new UninstallNuGetPackageAction (
+						solutionManager,
+						project
+					) {
+						PackageId = packageViewModel.Id,
+					};
+				}
+			}
+		}
+
+		bool IsPackageInstalledInProject (IDotNetProject project, string packageId)
+		{
+			var matchedProjectInfo = projectInformation.FirstOrDefault (p => p.Project == project);
+			return matchedProjectInfo.Packages.Any (package => StringComparer.OrdinalIgnoreCase.Equals (packageId, package.Id));
+		}
+
 		public ManagePackagesSearchResultViewModel SelectedPackage { get; set; }
 
 		public bool IsOlderPackageInstalled (string id, NuGetVersion version)
@@ -510,25 +534,35 @@ namespace MonoDevelop.PackageManagement
 				packageReference.PackageIdentity.Version < version;
 		}
 
-		//protected virtual Task GetPackagesInstalledInProject ()
-		//{
-		//	return nugetProject
-		//		.GetInstalledPackagesAsync (CancellationToken.None)
-		//		.ContinueWith (task => OnReadInstalledPackages (task), TaskScheduler.FromCurrentSynchronizationContext ());
-		//}
+		protected virtual Task GetPackagesInstalledInProjects ()
+		{
+			return GetInstalledPackagesProjectInfo ()
+				.ContinueWith (task => OnReadInstalledPackages (task), TaskScheduler.FromCurrentSynchronizationContext ());
+		}
 
-		//void OnReadInstalledPackages (Task<IEnumerable<PackageReference>> task)
-		//{
-		//	try {
-		//		if (task.IsFaulted) {
-		//			LoggingService.LogError ("Unable to read installed packages.", task.Exception);
-		//		} else {
-		//			packageReferences = task.Result.ToList ();
-		//		}
-		//	} catch (Exception ex) {
-		//		LoggingService.LogError ("OnReadInstalledPackages", ex);
-		//	}
-		//}
+		async Task<List<ManagePackagesProjectInfo>> GetInstalledPackagesProjectInfo ()
+		{
+			var projectInfo = new List<ManagePackagesProjectInfo> ();
+			for (int i = 0; i < nugetProjects.Count; ++i) {
+				var nugetProject = nugetProjects[i];
+				var packages = await nugetProject.GetInstalledPackagesAsync (CancellationToken.None);
+				projectInfo.Add (new ManagePackagesProjectInfo (dotNetProjects[i], packages));
+			}
+			return projectInfo;
+		}
+
+		void OnReadInstalledPackages (Task<List<ManagePackagesProjectInfo>> task)
+		{
+			try {
+				if (task.IsFaulted) {
+					LoggingService.LogError ("Unable to read installed packages.", task.Exception);
+				} else {
+					projectInformation = task.Result;
+				}
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnReadInstalledPackages", ex);
+			}
+		}
 
 		void INuGetUILogger.Log (MessageLevel level, string message, params object [] args)
 		{
@@ -622,6 +656,25 @@ namespace MonoDevelop.PackageManagement
 			}
 
 			return true;
+		}
+
+		public IEnumerable<IDotNetProject> GetDotNetProjectsToSelect (IEnumerable<string> packageIds)
+		{
+			if (PageSelected == ManagePackagesPage.Browse) {
+				return dotNetProjects;
+			}
+
+			return GetFilteredProjectsToSelect (packageIds);
+		}
+
+		IEnumerable<IDotNetProject> GetFilteredProjectsToSelect (IEnumerable<string> packageIds)
+		{
+			foreach (IDotNetProject project in dotNetProjects) {
+				var matchedProjectInfo = projectInformation.FirstOrDefault (p => p.Project == project);
+				if (matchedProjectInfo.Packages.Any (package => packageIds.Any (id => StringComparer.OrdinalIgnoreCase.Equals (package.Id, id)))) {
+					yield return project;
+				}
+			}
 		}
 	}
 }

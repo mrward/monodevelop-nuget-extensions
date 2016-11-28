@@ -35,18 +35,36 @@ namespace MonoDevelop.PackageManagement
 
 		public SelectProjectsViewModel (
 			IEnumerable<IDotNetProject> projects,
-			int packagesCount)
+			int packagesCount,
+			ManagePackagesPage page)
 		{
-			IsAddingMultiplePackages = packagesCount > 1;
-			IsAddingSinglePackage = !IsAddingMultiplePackages;
-
 			this.projects = projects
 				.OrderBy (project => project.Name)
 				.Select (project => new SelectedProjectViewModel (project))
 				.ToList ();
 
+			Init (packagesCount, page);
+		}
+
+		void Init (
+			int packagesCount,
+			ManagePackagesPage page)
+		{
 			if (projects.Count () == 1) {
-				this.projects[0].IsSelected = true;
+				projects[0].IsSelected = true;
+			}
+
+			bool multiplePackages = packagesCount > 1;
+
+			switch (page) {
+				case ManagePackagesPage.Installed:
+					IsRemovingMultiplePackages = multiplePackages;
+					IsRemovingSinglePackage = !IsAddingMultiplePackages;
+					break;
+				case ManagePackagesPage.Browse:
+					IsAddingMultiplePackages = multiplePackages;
+					IsAddingSinglePackage = !IsAddingMultiplePackages;
+					break;
 			}
 		}
 
@@ -56,6 +74,8 @@ namespace MonoDevelop.PackageManagement
 
 		public bool IsAddingSinglePackage { get; private set; }
 		public bool IsAddingMultiplePackages { get; private set; }
+		public bool IsRemovingSinglePackage { get; private set; }
+		public bool IsRemovingMultiplePackages { get; private set; }
 
 		public IEnumerable<IDotNetProject> GetSelectedProjects ()
 		{
