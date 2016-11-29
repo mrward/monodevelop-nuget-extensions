@@ -127,6 +127,13 @@ namespace MonoDevelop.PackageManagement
 
 		public ManagePackagesPage PageSelected { get; set; }
 
+		public bool PageSelectedIsInstalledOrUpdates {
+			get {
+				return PageSelected == ManagePackagesPage.Installed ||
+					PageSelected == ManagePackagesPage.Updates;
+			}
+		}
+
 		public IEnumerable<SourceRepositoryViewModel> PackageSources {
 			get {
 				if (packageSources == null) {
@@ -518,6 +525,26 @@ namespace MonoDevelop.PackageManagement
 						project
 					) {
 						PackageId = packageViewModel.Id,
+					};
+				}
+			}
+		}
+
+		public IEnumerable<IPackageAction> CreateUpdatePackageActions (
+			ManagePackagesSearchResultViewModel packageViewModel,
+			IEnumerable<IDotNetProject> projects)
+		{
+			foreach (IDotNetProject project in projects) {
+				if (IsPackageInstalledInProject (project, packageViewModel.Id)) {
+					yield return new InstallNuGetPackageAction (
+						SelectedPackageSource.GetSourceRepositories (),
+						solutionManager,
+						project,
+						projectContext
+					) {
+						IncludePrerelease = IncludePrerelease,
+						PackageId = packageViewModel.Id,
+						Version = packageViewModel.SelectedVersion
 					};
 				}
 			}

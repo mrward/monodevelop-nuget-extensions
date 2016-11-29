@@ -72,6 +72,16 @@ namespace MonoDevelop.PackageManagement
 					"Remove the packages from the project:",
 					"Remove the packages from the projects:",
 					projectsCount);
+			} else if (viewModel.IsUpdatingSinglePackage) {
+				topLabel.Text = GettextCatalog.GetPluralString (
+					"Update the package in the project:",
+					"Update the package in the projects:",
+					projectsCount);
+			} else if (viewModel.IsUpdatingMultiplePackages) {
+				topLabel.Text = GettextCatalog.GetPluralString (
+					"Update the packages in the project:",
+					"Update the packages in the projects:",
+					projectsCount);
 			}
 		}
 

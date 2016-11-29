@@ -545,7 +545,7 @@ namespace MonoDevelop.PackageManagement
 		/// </summary>
 		IEnumerable<IDotNetProject> GetFilteredDotNetProjectsToSelect (IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels)
 		{
-			if (viewModel.PageSelected == ManagePackagesPage.Installed) {
+			if (viewModel.PageSelectedIsInstalledOrUpdates) {
 				var packageIds = packageViewModels.Select (pvm => pvm.Id).ToList ();
 				return viewModel.GetDotNetProjectsToSelect (packageIds);
 			}
@@ -581,6 +581,8 @@ namespace MonoDevelop.PackageManagement
 				return GetProgressMonitorInstallMessages (packageActions);
 			} else if (viewModel.PageSelected == ManagePackagesPage.Installed) {
 				return GetProgressMonitorUninstallMessages (packageActions);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Updates) {
+				return GetProgressMonitorUpdateMessages (packageActions);
 			}
 			return null;
 		}
@@ -613,6 +615,22 @@ namespace MonoDevelop.PackageManagement
 			);
 		}
 
+		static ProgressMonitorStatusMessage GetProgressMonitorUpdateMessages (List<IPackageAction> packageActions)
+		{
+			int count = packageActions.Count;
+			if (count == 1) {
+				string packageId = packageActions.OfType<INuGetPackageAction> ().First ().PackageId;
+				return ProgressMonitorStatusMessageFactory.CreateUpdatingSinglePackageMessage (packageId);
+			}
+
+			return new ProgressMonitorStatusMessage (
+				GettextCatalog.GetString ("Updating {0} packages...", count),
+				GettextCatalog.GetString ("{0} packages successfully updated.", count),
+				GettextCatalog.GetString ("Could not update packages."),
+				GettextCatalog.GetString ("{0} packages updated with warnings.", count)
+			);
+		}
+
 		List<ManagePackagesSearchResultViewModel> GetSelectedPackageViewModels ()
 		{
 			List<ManagePackagesSearchResultViewModel> packageViewModels = viewModel.CheckedPackageViewModels.ToList ();
@@ -635,6 +653,8 @@ namespace MonoDevelop.PackageManagement
 				return CreateInstallPackageActions (packageViewModels, selectedProjects);
 			} else if (viewModel.PageSelected == ManagePackagesPage.Installed) {
 				return CreateUninstallPackageActions (packageViewModels, selectedProjects);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Updates) {
+				return CreateUpdatePackageActions (packageViewModels, selectedProjects);
 			}
 			return null;
 		}
@@ -657,6 +677,17 @@ namespace MonoDevelop.PackageManagement
 			var actions = new List<IPackageAction> ();
 			foreach (var packageViewModel in packageViewModels) {
 				actions.AddRange (viewModel.CreateUninstallPackageActions (packageViewModel, selectedProjects));
+			}
+			return actions;
+		}
+
+		List<IPackageAction> CreateUpdatePackageActions (
+			IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels,
+			IEnumerable<IDotNetProject> selectedProjects)
+		{
+			var actions = new List<IPackageAction> ();
+			foreach (var packageViewModel in packageViewModels) {
+				actions.AddRange (viewModel.CreateUpdatePackageActions (packageViewModel, selectedProjects));
 			}
 			return actions;
 		}

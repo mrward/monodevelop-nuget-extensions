@@ -65,6 +65,11 @@ namespace MonoDevelop.PackageManagement
 					IsAddingMultiplePackages = multiplePackages;
 					IsAddingSinglePackage = !IsAddingMultiplePackages;
 					break;
+				case ManagePackagesPage.Updates:
+					IsUpdatingMultiplePackages = multiplePackages;
+					IsUpdatingSinglePackage = !IsAddingMultiplePackages;
+					SelectAllProjectsByDefault ();
+					break;
 			}
 		}
 
@@ -76,12 +81,21 @@ namespace MonoDevelop.PackageManagement
 		public bool IsAddingMultiplePackages { get; private set; }
 		public bool IsRemovingSinglePackage { get; private set; }
 		public bool IsRemovingMultiplePackages { get; private set; }
+		public bool IsUpdatingSinglePackage { get; private set; }
+		public bool IsUpdatingMultiplePackages { get; private set; }
 
 		public IEnumerable<IDotNetProject> GetSelectedProjects ()
 		{
 			return projects
 				.Where (viewModel => viewModel.IsSelected)
 				.Select (viewModel => viewModel.Project);
+		}
+
+		void SelectAllProjectsByDefault ()
+		{
+			foreach (SelectedProjectViewModel project in projects) {
+				project.IsSelected = true;
+			}
 		}
 	}
 }
