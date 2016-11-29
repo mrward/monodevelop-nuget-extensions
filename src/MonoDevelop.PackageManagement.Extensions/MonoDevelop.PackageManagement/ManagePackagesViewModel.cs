@@ -323,6 +323,9 @@ namespace MonoDevelop.PackageManagement
 					new NullLogger ());
 			}
 
+			if (PageSelected == ManagePackagesPage.Consolidate)
+				return new ConsolidatePackageFeed (context, CreatePackageMetadataProvider (), new NullLogger ());
+
 			throw new InvalidOperationException ("Unsupported package feed");
 		}
 
