@@ -42,7 +42,7 @@
 		<Command
 			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
 			_description="Manage packages for the solution"
-			_label="_Manage Packages..."
+			_label="_Manage NuGet Packages..."
 			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler" />
 	</Extension>
 
