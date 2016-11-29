@@ -52,6 +52,6 @@ namespace MonoDevelop.PackageManagement
 			installedPackagesTask = PackageCollection.FromProjectsAsync (Projects, CancellationToken.None);
 		}
 
-		public Task<PackageCollection> GetInstalledPackagesAsync () =>installedPackagesTask;
+		public Task<PackageCollection> GetInstalledPackagesAsync () => installedPackagesTask;
 	}
 }

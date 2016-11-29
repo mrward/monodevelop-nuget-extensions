@@ -308,6 +308,14 @@ namespace MonoDevelop.PackageManagement
 			if (PageSelected == ManagePackagesPage.Installed)
 				return new InstalledPackageFeed (context, CreatePackageMetadataProvider (), new NullLogger ());
 
+			if (PageSelected == ManagePackagesPage.Updates) {
+				return new UpdatePackageFeed (
+					context,
+					CreatePackageMetadataProvider (),
+					new PackageSearchMetadataCache (),
+					new NullLogger ());
+			}
+
 			throw new InvalidOperationException ("Unsupported package feed");
 		}
 
