@@ -82,6 +82,16 @@ namespace MonoDevelop.PackageManagement
 					"Update the packages in the project:",
 					"Update the packages in the projects:",
 					projectsCount);
+			} else if (viewModel.IsConsolidatingSinglePackage) {
+				topLabel.Text = GettextCatalog.GetPluralString (
+					"Consolidate the package in the project:",
+					"Consolidate the package in the projects:",
+					projectsCount);
+			} else if (viewModel.IsConsolidatingMultiplePackages) {
+				topLabel.Text = GettextCatalog.GetPluralString (
+					"Consolidate the packages in the project:",
+					"Consolidate the packages in the projects:",
+					projectsCount);
 			}
 		}
 

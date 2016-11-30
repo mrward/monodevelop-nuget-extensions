@@ -32,15 +32,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
-using MonoDevelop.Projects;
 using NuGet.Configuration;
+using NuGet.Logging;
 using NuGet.PackageManagement;
 using NuGet.PackageManagement.UI;
 using NuGet.Packaging;
+using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using NuGet.Logging;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -126,13 +126,6 @@ namespace MonoDevelop.PackageManagement
 		public string SearchTerms { get; set; }
 
 		public ManagePackagesPage PageSelected { get; set; }
-
-		public bool PageSelectedIsInstalledOrUpdates {
-			get {
-				return PageSelected == ManagePackagesPage.Installed ||
-					PageSelected == ManagePackagesPage.Updates;
-			}
-		}
 
 		public IEnumerable<SourceRepositoryViewModel> PackageSources {
 			get {
@@ -553,10 +546,43 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 
+		public IEnumerable<IPackageAction> CreateConsolidatePackageActions (
+			ManagePackagesSearchResultViewModel packageViewModel,
+			IEnumerable<IDotNetProject> projects)
+		{
+			foreach (IDotNetProject project in projects) {
+				if (IsPackageInstalledInProjectWithDifferentVersion (project, packageViewModel.Id, packageViewModel.SelectedVersion)) {
+					yield return new InstallNuGetPackageAction (
+						SelectedPackageSource.GetSourceRepositories (),
+						solutionManager,
+						project,
+						projectContext
+					) {
+						IncludePrerelease = IncludePrerelease,
+						PackageId = packageViewModel.Id,
+						Version = packageViewModel.SelectedVersion
+					};
+				}
+			}
+		}
+
 		bool IsPackageInstalledInProject (IDotNetProject project, string packageId)
 		{
 			var matchedProjectInfo = projectInformation.FirstOrDefault (p => p.Project == project);
 			return matchedProjectInfo.Packages.Any (package => StringComparer.OrdinalIgnoreCase.Equals (packageId, package.Id));
+		}
+
+		bool IsPackageInstalledInProjectWithDifferentVersion (IDotNetProject project, string packageId, NuGetVersion version)
+		{
+			var matchPackageId = new PackageIdentity (packageId, version);
+			var matchedProjectInfo = projectInformation.FirstOrDefault (p => p.Project == project);
+			return matchedProjectInfo.Packages.Any (package => IsMatchWithDifferentVersion (package, matchPackageId));
+		}
+
+		bool IsMatchWithDifferentVersion (PackageIdentity x, PackageIdentity y)
+		{
+			return StringComparer.OrdinalIgnoreCase.Equals (x.Id, y.Id) &&
+				x.Version != y.Version;
 		}
 
 		public ManagePackagesSearchResultViewModel SelectedPackage { get; set; }

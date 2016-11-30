@@ -70,6 +70,11 @@ namespace MonoDevelop.PackageManagement
 					IsUpdatingSinglePackage = !IsAddingMultiplePackages;
 					SelectAllProjectsByDefault ();
 					break;
+				case ManagePackagesPage.Consolidate:
+					IsConsolidatingMultiplePackages = multiplePackages;
+					IsConsolidatingSinglePackage = !IsAddingMultiplePackages;
+					SelectAllProjectsByDefault ();
+					break;
 			}
 		}
 
@@ -83,6 +88,8 @@ namespace MonoDevelop.PackageManagement
 		public bool IsRemovingMultiplePackages { get; private set; }
 		public bool IsUpdatingSinglePackage { get; private set; }
 		public bool IsUpdatingMultiplePackages { get; private set; }
+		public bool IsConsolidatingSinglePackage { get; private set; }
+		public bool IsConsolidatingMultiplePackages { get; private set; }
 
 		public IEnumerable<IDotNetProject> GetSelectedProjects ()
 		{

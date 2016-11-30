@@ -545,7 +545,7 @@ namespace MonoDevelop.PackageManagement
 		/// </summary>
 		IEnumerable<IDotNetProject> GetFilteredDotNetProjectsToSelect (IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels)
 		{
-			if (viewModel.PageSelectedIsInstalledOrUpdates) {
+			if (viewModel.PageSelected != ManagePackagesPage.Browse) {
 				var packageIds = packageViewModels.Select (pvm => pvm.Id).ToList ();
 				return viewModel.GetDotNetProjectsToSelect (packageIds);
 			}
@@ -583,6 +583,8 @@ namespace MonoDevelop.PackageManagement
 				return GetProgressMonitorUninstallMessages (packageActions);
 			} else if (viewModel.PageSelected == ManagePackagesPage.Updates) {
 				return GetProgressMonitorUpdateMessages (packageActions);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Consolidate) {
+				return GetProgressMonitorConsolidateMessages (packageActions);
 			}
 			return null;
 		}
@@ -631,6 +633,27 @@ namespace MonoDevelop.PackageManagement
 			);
 		}
 
+		static ProgressMonitorStatusMessage GetProgressMonitorConsolidateMessages (List<IPackageAction> packageActions)
+		{
+			int count = packageActions.Count;
+			if (count == 1) {
+				string packageId = packageActions.OfType<INuGetPackageAction> ().First ().PackageId;
+				return new ProgressMonitorStatusMessage (
+					GettextCatalog.GetString ("Consolidating {0}...", packageId),
+					GettextCatalog.GetString ("{0} successfully consolidated.", packageId),
+					GettextCatalog.GetString ("Could not consolidate {0}.", packageId),
+					GettextCatalog.GetString ("{0} consolidated with warnings.", packageId)
+				);
+			}
+
+			return new ProgressMonitorStatusMessage (
+				GettextCatalog.GetString ("Consolidating {0} packages...", count),
+				GettextCatalog.GetString ("{0} packages successfully consolidated.", count),
+				GettextCatalog.GetString ("Could not consolidate packages."),
+				GettextCatalog.GetString ("{0} packages consolidated with warnings.", count)
+			);
+		}
+
 		List<ManagePackagesSearchResultViewModel> GetSelectedPackageViewModels ()
 		{
 			List<ManagePackagesSearchResultViewModel> packageViewModels = viewModel.CheckedPackageViewModels.ToList ();
@@ -655,6 +678,8 @@ namespace MonoDevelop.PackageManagement
 				return CreateUninstallPackageActions (packageViewModels, selectedProjects);
 			} else if (viewModel.PageSelected == ManagePackagesPage.Updates) {
 				return CreateUpdatePackageActions (packageViewModels, selectedProjects);
+			} else if (viewModel.PageSelected == ManagePackagesPage.Consolidate) {
+				return CreateConsolidatePackageActions (packageViewModels, selectedProjects);
 			}
 			return null;
 		}
@@ -688,6 +713,17 @@ namespace MonoDevelop.PackageManagement
 			var actions = new List<IPackageAction> ();
 			foreach (var packageViewModel in packageViewModels) {
 				actions.AddRange (viewModel.CreateUpdatePackageActions (packageViewModel, selectedProjects));
+			}
+			return actions;
+		}
+
+		List<IPackageAction> CreateConsolidatePackageActions (
+			IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels,
+			IEnumerable<IDotNetProject> selectedProjects)
+		{
+			var actions = new List<IPackageAction> ();
+			foreach (var packageViewModel in packageViewModels) {
+				actions.AddRange (viewModel.CreateConsolidatePackageActions (packageViewModel, selectedProjects));
 			}
 			return actions;
 		}
