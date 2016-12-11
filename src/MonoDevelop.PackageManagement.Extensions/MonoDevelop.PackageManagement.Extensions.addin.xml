@@ -39,16 +39,20 @@
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/Commands">
+		<Category _name="NuGet" id="NuGet">
 		<Command
 			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
 			_description="Manage packages for the solution"
 			_label="_Manage NuGet Packages..."
+			_displayName="Manage Packages (Solution)"
 			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler" />
 		<Command
 			id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
 			_description="Manage packages for the project"
 			_label="_Manage NuGet Packages..."
+			_displayName="Manage Packages"
 			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesInProjectHandler" />
+		</Category>
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/MainMenu/Project">
