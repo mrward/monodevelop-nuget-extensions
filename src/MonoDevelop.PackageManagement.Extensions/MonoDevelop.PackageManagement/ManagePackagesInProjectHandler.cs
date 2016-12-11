@@ -1,10 +1,10 @@
 ﻿//
-// ManagePackagesDialogRunner.cs
+// ManagePackagesInProjectHandler.cs
 //
 // Author:
 //       Matt Ward <matt.ward@xamarin.com>
 //
-// Copyright (c) 2014 Xamarin Inc. (http://xamarin.com)
+// Copyright (c) 2016 Xamarin Inc. (http://xamarin.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,48 +24,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
+using MonoDevelop.Components.Commands;
 using MonoDevelop.Ide;
-using MonoDevelop.Core;
+using MonoDevelop.PackageManagement.Commands;
+using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
 {
-	internal class ManagePackagesDialogRunner
+	class ManagePackagesInProjectHandler : PackagesCommandHandler
 	{
-		static RecentManagedNuGetPackagesRepository recentPackagesRepository = new RecentManagedNuGetPackagesRepository ();
+		DotNetProject project;
 
-		public void Run (string initialSearch = null, IDotNetProject project = null)
+		protected override void Update (CommandInfo info)
 		{
-			try {
-				bool configurePackageSources = false;
-				do {
-					using (ManagePackagesDialog dialog = CreateDialog (initialSearch, project)) {
-						dialog.ShowWithParent ();
-						configurePackageSources = dialog.ShowPreferencesForPackageSources;
-						initialSearch = dialog.SearchText;
-					}
-					if (configurePackageSources) {
-						ShowPreferencesForPackageSources ();
-					}
-				} while (configurePackageSources);
-
-			} catch (Exception ex) {
-				LoggingService.LogInternalError (ex);
-			}
+			project = IdeApp.ProjectOperations.CurrentSelectedProject as DotNetProject;
+			info.Enabled = project != null;
 		}
 
-		ManagePackagesDialog CreateDialog (string initialSearch, IDotNetProject project)
+		protected override void Run ()
 		{
-			var viewModel = ManagePackagesViewModel.Create (recentPackagesRepository, project);
-			return new ManagePackagesDialog (
-				viewModel,
-				initialSearch);
-		}
-
-		void ShowPreferencesForPackageSources ()
-		{
-			IdeApp.Workbench.ShowGlobalPreferencesDialog (null, "PackageSources");
+			var runner = new ManagePackagesDialogRunner ();
+			runner.Run (project: new DotNetProjectProxy (project));
 		}
 	}
 }
-

@@ -44,6 +44,11 @@
 			_description="Manage packages for the solution"
 			_label="_Manage NuGet Packages..."
 			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler" />
+		<Command
+			id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
+			_description="Manage packages for the project"
+			_label="_Manage NuGet Packages..."
+			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesInProjectHandler" />
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/MainMenu/Project">
@@ -59,6 +64,16 @@
 				id="MonoDevelop.PackageManagement.Commands.ManagePackages"
 				insertafter="MonoDevelop.Ide.Commands.ProjectCommands.AddReference"
 				insertbefore="AddSectionEnd" />
+		</Condition>
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
+		<Condition id="ItemType" value="MonoDevelop.PackageManagement.NodeBuilders.ProjectPackagesFolderNode">
+			<CommandItem
+				id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
+				insertbefore="MonoDevelop.PackageManagement.Commands.PackagesFolderNodeCommands.ReinstallAllPackagesInProject"
+				insertafter="MonoDevelop.PackageManagement.Commands.AddPackages"
+				_label="Manage Packages..." />
 		</Condition>
 	</Extension>
 

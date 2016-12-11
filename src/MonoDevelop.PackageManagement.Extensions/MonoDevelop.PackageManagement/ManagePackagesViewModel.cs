@@ -63,22 +63,26 @@ namespace MonoDevelop.PackageManagement
 		RecentManagedNuGetPackagesRepository recentPackagesRepository;
 		List<ManagePackagesProjectInfo> projectInformation = new List<ManagePackagesProjectInfo> ();
 
-		public static ManagePackagesViewModel Create (RecentManagedNuGetPackagesRepository recentPackagesRepository)
+		public static ManagePackagesViewModel Create (
+			RecentManagedNuGetPackagesRepository recentPackagesRepository,
+			IDotNetProject project)
 		{
 			var solutionManager = PackageManagementServices.Workspace.GetSolutionManager (IdeApp.ProjectOperations.CurrentSelectedSolution);
 			var solution = new SolutionProxy (IdeApp.ProjectOperations.CurrentSelectedSolution);
-			return new ManagePackagesViewModel (solutionManager, solution, recentPackagesRepository);
+			return new ManagePackagesViewModel (solutionManager, solution, recentPackagesRepository, project);
 		}
 
 		public ManagePackagesViewModel (
 			IMonoDevelopSolutionManager solutionManager,
 			ISolution solution,
-			RecentManagedNuGetPackagesRepository recentPackagesRepository)
+			RecentManagedNuGetPackagesRepository recentPackagesRepository,
+			IDotNetProject project)
 			: this (
 				solutionManager,
 				solution,
 				new NuGetProjectContext (),
-				recentPackagesRepository)
+				recentPackagesRepository,
+				project)
 		{
 		}
 
@@ -86,16 +90,24 @@ namespace MonoDevelop.PackageManagement
 			IMonoDevelopSolutionManager solutionManager,
 			ISolution solution,
 			INuGetProjectContext projectContext,
-			RecentManagedNuGetPackagesRepository recentPackagesRepository)
+			RecentManagedNuGetPackagesRepository recentPackagesRepository,
+			IDotNetProject project)
 		{
 			this.solutionManager = solutionManager;
-			this.dotNetProjects = solution.GetAllProjects ().ToList ();
 			this.projectContext = projectContext;
 			this.recentPackagesRepository = recentPackagesRepository;
+			IsManagingSolution = project == null;
 			PackageViewModels = new ObservableCollection<ManagePackagesSearchResultViewModel> ();
 			CheckedPackageViewModels = new ObservableCollection<ManagePackagesSearchResultViewModel> ();
 			ErrorMessage = String.Empty;
 			PageSelected = ManagePackagesPage.Browse;
+
+			if (project != null) {
+				dotNetProjects = new List<IDotNetProject> ();
+				dotNetProjects.Add (project);
+			} else {
+				dotNetProjects = solution.GetAllProjects ().ToList ();
+			}
 
 			packageManager = new NuGetPackageManager (
 				solutionManager.CreateSourceRepositoryProvider (),
@@ -110,6 +122,8 @@ namespace MonoDevelop.PackageManagement
 
 			GetPackagesInstalledInProjects ();
 		}
+
+		public bool IsManagingSolution { get; private set; }
 
 		public IEnumerable<NuGetProject> NuGetProjects { 
 			get { return nugetProjects; }

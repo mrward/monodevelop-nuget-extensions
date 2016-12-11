@@ -82,6 +82,8 @@ namespace MonoDevelop.PackageManagement
 
 			Build ();
 
+			consolidateLabel.Visible = viewModel.IsManagingSolution;
+			UpdateDialogTitle ();
 			UpdatePackageSearchEntryWithInitialText (initialSearch);
 			UpdatePackageResultsPageLabels ();
 
@@ -119,6 +121,14 @@ namespace MonoDevelop.PackageManagement
 			packageStore.Clear ();
 			viewModel = null;
 			base.Dispose (disposing);
+		}
+
+		void UpdateDialogTitle ()
+		{
+			if (viewModel.IsManagingSolution)
+				return;
+
+			Title = GettextCatalog.GetString ("Manage Packages - {0}", viewModel.Project.Name);
 		}
 
 		void UpdatePackageSearchEntryWithInitialText (string initialSearch)
@@ -523,6 +533,9 @@ namespace MonoDevelop.PackageManagement
 
 		IEnumerable<IDotNetProject> SelectProjects (IEnumerable<ManagePackagesSearchResultViewModel> packageViewModels)
 		{
+			if (!viewModel.IsManagingSolution)
+				return viewModel.DotNetProjects;
+
 			var selectProjectsViewModel = new SelectProjectsViewModel (
 				GetFilteredDotNetProjectsToSelect (packageViewModels),
 				GetPackagesCountForAddPackagesButtonLabel (),
