@@ -26,12 +26,13 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement;
 using MonoDevelop.Core;
+using MonoDevelop.Core.Execution;
+using MonoDevelop.Core.ProgressMonitoring;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class MonoPclRunner
+	internal class MonoPclRunner
 	{
 		IPackageManagementProgressMonitorFactory progressMonitorFactory;
 
@@ -49,7 +50,7 @@ namespace MonoDevelop.PackageManagement
 		public void Run ()
 		{
 			ProgressMonitorStatusMessage progressMessage = CreateProgressStatusMessage ();
-			IProgressMonitor progressMonitor = CreateProgressMonitor (progressMessage);
+			PackageManagementProgressMonitor progressMonitor = CreateProgressMonitor (progressMessage);
 
 			try {
 				RunInternal (progressMonitor, progressMessage);
@@ -72,12 +73,12 @@ namespace MonoDevelop.PackageManagement
 			);
 		}
 
-		IProgressMonitor CreateProgressMonitor (ProgressMonitorStatusMessage progressMessage)
+		PackageManagementProgressMonitor CreateProgressMonitor (ProgressMonitorStatusMessage progressMessage)
 		{
-			return progressMonitorFactory.CreateProgressMonitor (progressMessage.Status);
+			return (PackageManagementProgressMonitor)progressMonitorFactory.CreateProgressMonitor (progressMessage.Status);
 		}
 
-		void RunInternal (IProgressMonitor progressMonitor, ProgressMonitorStatusMessage progressMessage)
+		void RunInternal (PackageManagementProgressMonitor progressMonitor, ProgressMonitorStatusMessage progressMessage)
 		{
 			var commandLine = new MonoPclCommandLine () {
 				List = true
@@ -92,31 +93,30 @@ namespace MonoDevelop.PackageManagement
 		}
 
 		void RunMonoPcl (
-			IProgressMonitor progressMonitor,
+			PackageManagementProgressMonitor progressMonitor,
 			ProgressMonitorStatusMessage progressMessage,
 			MonoPclCommandLine commandLine)
 		{
-			var aggregatedMonitor = (PackageManagementProgressMonitor)progressMonitor;
-
 			Runtime.ProcessService.StartConsoleProcess (
 				commandLine.Command,
 				commandLine.Arguments,
 				commandLine.WorkingDirectory,
-				aggregatedMonitor.Console,
+				progressMonitor.Console,
+				null,
 				(sender, e) => {
 					using (progressMonitor) {
-						ReportOutcome ((IAsyncOperation)sender, progressMonitor, progressMessage);
+						ReportOutcome ((ProcessAsyncOperation)sender, progressMonitor, progressMessage);
 					}
 				}
 			);
 		}
 
 		void ReportOutcome (
-			IAsyncOperation operation,
-			IProgressMonitor progressMonitor,
+			ProcessAsyncOperation operation,
+			ProgressMonitor progressMonitor,
 			ProgressMonitorStatusMessage progressMessage)
 		{
-			if (operation.Success) {
+			if (!operation.Task.IsFaulted && operation.ExitCode == 0) {
 				progressMonitor.ReportSuccess (progressMessage.Success);
 			} else {
 				progressMonitor.ReportError (progressMessage.Error, null);

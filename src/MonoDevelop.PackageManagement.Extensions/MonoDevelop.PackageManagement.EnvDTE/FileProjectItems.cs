@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MonoDevelop.PackageManagement;
 using MD = MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.EnvDTE

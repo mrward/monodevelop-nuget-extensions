@@ -28,19 +28,35 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using ICSharpCode.Scripting;
+using MonoDevelop.PackageManagement;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
-using NuGet;
+using NuGet.Configuration;
+using NuGet.PackageManagement.VisualStudio;
+using NuGet.Packaging.Core;
+using NuGet.ProjectManagement;
+using NuGet.Protocol.Core.Types;
+
+using FileConflictAction = NuGet.ProjectManagement.FileConflictAction;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageManagementConsoleHost : IDisposable
+	internal interface IPackageManagementConsoleHost : IDisposable
 	{
 		Project DefaultProject { get; set; }
-		PackageSource ActivePackageSource { get; set; }
+		SourceRepositoryViewModel ActivePackageSource { get; set; }
+		IEnumerable<SourceRepositoryViewModel> PackageSources { get; }
 		IScriptingConsole ScriptingConsole { get; set; }
-		IPackageManagementSolution2 Solution { get; }
-		bool IsRunning { get; }
+		IMonoDevelopSolutionManager SolutionManager { get; }
+		ISettings Settings { get; }
+		bool IsRunning { get; } 
+		bool IsSolutionOpen { get; }
+
+		CancellationToken Token { get; }
+		ConsoleHostNuGetPackageManager CreatePackageManager ();
 
 		void Clear ();
 		void WritePrompt ();
@@ -48,16 +64,33 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void ShutdownConsole ();
 		void ExecuteCommand (string command);
 		void ProcessUserInput (string line);
-		
-		void SetDefaultRunspace ();
-		
-		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction fileConflictAction);
-		IDisposable CreateEventsMonitor (ILogger logger);
 
-		IPackageManagementProject2 GetProject (string packageSource, string projectName);
-		IPackageManagementProject2 GetProject (IPackageRepository sourceRepository, string projectName);
-		PackageSource GetActivePackageSource (string source);
-		
-		IPackageRepository GetPackageRepository (PackageSource packageSource);
+		void SetDefaultRunspace ();
+
+		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction? fileConflictAction);
+		IDisposable CreateEventsMonitor (NuGet.ILogger logger);
+
+		string GetActivePackageSource (string source);
+
+		IEnumerable<NuGetProject> GetNuGetProjects ();
+		NuGetProject GetNuGetProject (string projectName);
+
+		IEnumerable<PackageSource> LoadPackageSources ();
+		SourceRepository CreateRepository (PackageSource source);
+		IEnumerable<SourceRepository> GetRepositories ();
+
+		void ReloadPackageSources ();
+
+		void OnSolutionUnloaded ();
+
+		Task ExecuteScriptAsync (
+			PackageIdentity identity,
+			string packageInstallPath,
+			string scriptRelativePath,
+			IDotNetProject project,
+			INuGetProjectContext nuGetProjectContext,
+			bool throwOnFailure);
+
+		bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State foundAndExecuted);
 	}
 }

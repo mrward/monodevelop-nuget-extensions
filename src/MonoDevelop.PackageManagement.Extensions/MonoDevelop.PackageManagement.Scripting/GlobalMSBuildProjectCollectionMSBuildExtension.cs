@@ -29,24 +29,25 @@ using System;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.Projects;
-using MonoDevelop.Projects.Formats.MSBuild;
+using MonoDevelop.Projects.MSBuild;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	public class GlobalMSBuildProjectCollectionMSBuildExtension : MSBuildExtension
+	internal class GlobalMSBuildProjectCollectionMSBuildExtension : ProjectExtension
 	{
 		public static MSBuildProjectImportsMerger ImportsMerger;
 
-		public override void SaveProject (IProgressMonitor monitor, SolutionEntityItem item, MSBuildProject project)
+		protected override void OnWriteProject (ProgressMonitor monitor, MSBuildProject msproject)
 		{
 			try {
 				MSBuildProjectImportsMerger merger = ImportsMerger;
 				if (merger != null) {
-					merger.Merge (project);
+					merger.Merge (msproject);
 				}
 			} finally {
 				ImportsMerger = null;
 			}
+			base.OnWriteProject (monitor, msproject);
 		}
 	}
 }

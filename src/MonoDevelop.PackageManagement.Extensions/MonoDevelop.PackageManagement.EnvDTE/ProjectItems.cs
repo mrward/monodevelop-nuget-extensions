@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MonoDevelop.Core;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -45,7 +46,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 		}
 
-		public ProjectItems (Project project, object parent, IPackageManagementFileService fileService)
+		internal ProjectItems (Project project, object parent, IPackageManagementFileService fileService)
 		{
 			this.Project = project;
 			this.fileService = fileService;

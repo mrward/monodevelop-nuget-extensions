@@ -27,63 +27,58 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Versioning;
+using System.IO;
 using ICSharpCode.PackageManagement.EnvDTE;
-using NuGet;
+using MonoDevelop.PackageManagement;
+using NuGet.PackageManagement.VisualStudio;
+using NuGet.Packaging.Core;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageScript : IPackageScript
+	internal class PackageScript : IPackageScript
 	{
-		bool lookedForTargetSpecificScript;
+		public PackageScript (
+			string scriptPath,
+			string installPath,
+			PackageIdentity identity,
+			IDotNetProject project)
+		{
+			ScriptPath = scriptPath;
+			InstallPath = installPath;
+			Identity = identity;
+			Project = project;
 
-		public PackageScript(IPackage package, IPackageScriptFileName fileName)
-		{
-			this.Package = package;
-			this.ScriptFileName = fileName;
+			ToolsPath = Path.GetDirectoryName (ScriptPath);
+			ScriptPackage = new ScriptPackage (Identity.Id, Identity.Version.ToString (), InstallPath);
 		}
 		
-		protected IPackageScriptFileName ScriptFileName { get; private set; }
-		protected IPackageScriptSession Session { get; private set; }
-		protected bool UseTargetSpecificScript { get; set; }
+		public PackageIdentity Identity { get; private set; }
+		public IDotNetProject Project { get; private set; }
+		public string ScriptPath { get; private set; }
+		public string InstallPath { get; private set; }
+		public string ToolsPath { get; private set; }
+		public ScriptPackage ScriptPackage { get; private set; }
+		IPackageScriptSession Session { get; set; }
 		
-		public IPackage Package { get; set; }
-		public IPackageManagementProject2 Project { get; set; }
-		
-		public bool Exists()
+		public void Run (IPackageScriptSession session)
 		{
-			FindTargetSpecificScriptFileName ();
-			return ScriptFileName.FileExists();
-		}
-		
-		public void Run(IPackageScriptSession session)
-		{
-			this.Session = session;
-			Run();
+			Session = session;
+			Run ();
 		}
 		
 		void Run()
 		{
-			BeforeRun();
-			if (Exists()) {
-				AddSessionVariables();
-				RunScript();
-				RemoveSessionVariables();
-			}
+			AddSessionVariables ();
+			RunScript ();
+			RemoveSessionVariables ();
 		}
-		
-		protected virtual void BeforeRun()
+
+		void AddSessionVariables ()
 		{
-		}
-		
-		void AddSessionVariables()
-		{
-			Session.AddVariable("__rootPath", ScriptFileName.PackageInstallDirectory);
-			Session.AddVariable("__toolsPath", ScriptFileName.GetScriptDirectory());
-			Session.AddVariable("__package", Package);
-			Session.AddVariable("__project", GetProject ());
+			Session.AddVariable ("__rootPath", InstallPath);
+			Session.AddVariable ("__toolsPath", ToolsPath);
+			Session.AddVariable ("__package", ScriptPackage);
+			Session.AddVariable ("__project", GetProject ());
 		}
 		
 		Project GetProject ()
@@ -96,36 +91,23 @@ namespace ICSharpCode.PackageManagement.Scripting
 		
 		void RunScript()
 		{
-			string script = GetScript();
-			Session.InvokeScript(script);
+			string script = GetScript ();
+			Session.InvokeScript (script);
 		}
 		
-		string GetScript()
+		string GetScript ()
 		{
-			return String.Format(
+			return String.Format (
 				"& '{0}' $__rootPath $__toolsPath $__package $__project",
-				ScriptFileName);
+				ScriptPath);
 		}
 		
-		void RemoveSessionVariables()
+		void RemoveSessionVariables ()
 		{
-			Session.RemoveVariable("__rootPath");
-			Session.RemoveVariable("__toolsPath");
-			Session.RemoveVariable("__package");
-			Session.RemoveVariable("__project");
-		}
-
-		void FindTargetSpecificScriptFileName ()
-		{
-			if (UseTargetSpecificScript && !lookedForTargetSpecificScript) {
-				ScriptFileName.UseTargetSpecificFileName (Package, GetTargetFramework ());
-				lookedForTargetSpecificScript = true;
-			}
-		}
-
-		FrameworkName GetTargetFramework ()
-		{
-			return Project.TargetFramework;
+			Session.RemoveVariable ("__rootPath");
+			Session.RemoveVariable ("__toolsPath");
+			Session.RemoveVariable ("__package");
+			Session.RemoveVariable ("__project");
 		}
 	}
 }

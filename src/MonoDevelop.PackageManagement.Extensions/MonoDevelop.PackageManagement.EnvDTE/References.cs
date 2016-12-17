@@ -30,7 +30,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MonoDevelop.Ide;
+using MonoDevelop.Core;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.PackageManagement;
 
@@ -62,10 +62,10 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public void Add (string path)
 		{
-			DispatchService.GuiSyncDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				project.AddReference (path);
 				project.Save ();
-			});
+			}).Wait ();
 		}
 
 		void SaveProject ()

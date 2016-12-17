@@ -43,14 +43,20 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 
-		public override Task<ISearchDataSource> GetResults (SearchPopupSearchPattern searchPattern, int resultsCount, CancellationToken token)
+		public override Task GetResults (
+			ISearchResultCallback searchResultCallback,
+			SearchPopupSearchPattern pattern,
+			CancellationToken token)
 		{
-			return Task.Factory.StartNew (() => {
-				if (!IsValidTag (searchPattern.Tag))
-					return null;
+			if (!IsValidTag (pattern.Tag))
+				return Task.FromResult (0);
 
-				return (ISearchDataSource)new NuGetPackageDataSource (searchPattern);
-			});
+			var command = new PackageSearchCommand (pattern.Pattern);
+			var result = new NuGetPackageSearchResult (command);
+			if (result.CanBeDisplayed ()) {
+				searchResultCallback.ReportResult (result);
+			}
+			return Task.FromResult (0);
 		}
 
 		public override bool IsValidTag (string tag)
@@ -59,6 +65,10 @@ namespace MonoDevelop.PackageManagement
 				return false;
 
 			return validTags.Contains (tag);
+		}
+
+		public override string [] Tags {
+			get { return validTags; }
 		}
 	}
 }

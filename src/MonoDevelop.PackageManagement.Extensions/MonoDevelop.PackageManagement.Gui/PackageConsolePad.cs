@@ -27,15 +27,15 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Docking;
 using MonoDevelop.Ide.Gui;
+using MonoDevelop.Ide;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class PackageConsolePad : IPadContent
+	public class PackageConsolePad : PadContent
 	{
 		PackageConsoleView view;
 		PackageManagementConsoleViewModel viewModel;
@@ -45,11 +45,11 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 		
-		public Gtk.Widget Control {
+		public override Control Control {
 			get { return view; }
 		}
 		
-		public void Initialize (IPadWindow window)
+		protected override void Initialize (IPadWindow window)
 		{
 			CreateToolbar (window);
 			CreatePackageConsoleView ();
@@ -59,10 +59,13 @@ namespace MonoDevelop.PackageManagement
 		
 		void CreatePackageConsoleViewModel()
 		{
+			var consoleHostProvider = new PackageManagementConsoleHostProvider ();
+
+			PackageManagementExtendedServices.ConsoleHost = consoleHostProvider.ConsoleHost;
+
 			viewModel = new PackageManagementConsoleViewModel (
-				PackageManagementServices.RegisteredPackageRepositories.PackageSources,
-				PackageManagementExtendedServices.ProjectService,
-				PackageManagementExtendedServices.ConsoleHost
+				PackageManagementServices.ProjectService,
+				consoleHostProvider.ConsoleHost
 			);
 			viewModel.RegisterConsole (view);
 		}
@@ -71,7 +74,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			toolbarWidget = new PackageConsoleToolbarWidget ();
 			toolbarWidget.ClearButtonClicked += ClearButtonClicked;
-			DockItemToolbar toolbar = window.GetToolbar (Gtk.PositionType.Top);
+			DockItemToolbar toolbar = window.GetToolbar (DockPositionType.Top);
 			toolbar.Add (toolbarWidget, false);
 			toolbar.ShowAll ();
 		}
@@ -85,6 +88,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			view = new PackageConsoleView ();
 			view.ConsoleInput += OnConsoleInput;
+			view.TextViewFocused += TextViewFocused;
 			view.ShadowType = Gtk.ShadowType.None;
 			view.ShowAll ();
 		}
@@ -98,13 +102,20 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 		
-		public void Dispose ()
+		public override void Dispose ()
 		{
+			view.ConsoleInput -= OnConsoleInput;
+			view.TextViewFocused -= TextViewFocused;
 		}
 		
 		void BindingViewModelToView ()
 		{
 			toolbarWidget.LoadViewModel (viewModel);
+		}
+
+		void TextViewFocused (object sender, EventArgs e)
+		{
+			viewModel.UpdatePackageSources ();
 		}
 	}
 }

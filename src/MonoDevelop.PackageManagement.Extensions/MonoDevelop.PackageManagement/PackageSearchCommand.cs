@@ -41,7 +41,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			base.Parse (text);
 
-			if (HasVersion ())
+			if (HasVersion () || String.IsNullOrEmpty (text))
 				return;
 
 			string[] parts = text.Split (new [] {' '}, StringSplitOptions.RemoveEmptyEntries);

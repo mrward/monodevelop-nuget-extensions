@@ -32,11 +32,12 @@ using System.IO;
 using System.Linq;
 
 using MD = MonoDevelop.Projects;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.Core;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ProjectItemsInsideProject : EnumerableProjectItems
+	internal class ProjectItemsInsideProject : EnumerableProjectItems
 	{
 		Project project;
 		Dictionary<string, string> directoriesIncluded = new Dictionary<string, string> ();

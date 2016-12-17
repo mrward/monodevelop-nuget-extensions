@@ -25,40 +25,25 @@
 // THE SOFTWARE.
 //
 
-using System;
-using ICSharpCode.PackageManagement;
 using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
 {
-	public static class PackageManagementExtendedServices
+	internal static class PackageManagementExtendedServices
 	{
-		static readonly PackageManagementConsoleHostProvider consoleHostProvider;
 		static readonly ExtendedPackageManagementProjectService projectService;
-		static readonly PackageManagementSolution2 solution;
 
 		static PackageManagementExtendedServices ()
 		{
 			projectService = new ExtendedPackageManagementProjectService ();
-
-			solution = new PackageManagementSolution2 (PackageManagementServices.RegisteredPackageRepositories, PackageManagementServices.PackageManagementEvents);
-
-			consoleHostProvider = new PackageManagementConsoleHostProvider (
-				solution,
-				PackageManagementServices.RegisteredPackageRepositories);
 		}
 
 		public static IPackageManagementConsoleHost ConsoleHost {
-			get { return consoleHostProvider.ConsoleHost; }
+			get; internal set;
 		}
 
 		public static IExtendedPackageManagementProjectService ProjectService {
 			get { return projectService; }
-		}
-
-		public static IPackageManagementSolution2 Solution {
-			get { return solution; }
 		}
 	}
 }

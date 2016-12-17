@@ -42,17 +42,23 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		
 		public void ThrowNoProjectOpenError()
 		{
-			ErrorRecord error = CreateInvalidOperationErrorRecord("NoProjectOpen");
+			ErrorRecord error = CreateInvalidOperationErrorRecord ("NoProjectOpen", "A project must be open to run this command.");
 			cmdlet.ThrowTerminatingError(error);
 		}
 		
-		ErrorRecord CreateInvalidOperationErrorRecord(string errorId)
+		ErrorRecord CreateInvalidOperationErrorRecord (string errorId, string message)
 		{
-			return new ErrorRecord(
-				new InvalidOperationException("A project must be open to run this command."),
-				"NoProjectOpen",
+			return new ErrorRecord (
+				new InvalidOperationException (message),
+				errorId,
 				ErrorCategory.InvalidOperation,
 				null);
+		}
+
+		public void ThrowNoSolutionOpenError ()
+		{
+			ErrorRecord error = CreateInvalidOperationErrorRecord ("NoActiveSolution", "A solution must be open to run this command.");
+			cmdlet.ThrowTerminatingError (error);
 		}
 	}
 }

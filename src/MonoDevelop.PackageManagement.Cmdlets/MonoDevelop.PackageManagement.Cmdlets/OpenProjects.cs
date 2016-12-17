@@ -26,53 +26,51 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-
-using System;
 using System.Collections.Generic;
 using System.Management.Automation;
 
 using DTEProject = ICSharpCode.PackageManagement.EnvDTE.Project;
-using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Projects;
+using System.Linq;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
-	public class OpenProjects
+	internal class OpenProjects
 	{
-		IPackageManagementSolution2 solution;
-		
-		public OpenProjects(IPackageManagementSolution2 solution)
+		Solution solution;
+
+		public OpenProjects (Solution solution)
 		{
 			this.solution = solution;
 		}
 		
-		public IEnumerable<EnvDTE.Project> GetAllProjects()
+		public IEnumerable<EnvDTE.Project> GetAllProjects ()
 		{
-			foreach (Project project in solution.GetDotNetProjects()) {
-				yield return CreateProject(project);
+			foreach (Project project in solution.GetAllProjects ().OfType<DotNetProject> ()) {
+				yield return CreateProject (project);
 			}
 		}
 		
-		DTEProject CreateProject(Project project)
+		DTEProject CreateProject (Project project)
 		{
-			return new DTEProject(project as DotNetProject);
+			return new DTEProject (project as DotNetProject);
 		}
 		
-		public IEnumerable<EnvDTE.Project> GetFilteredProjects(string[] projectNames)
+		public IEnumerable<EnvDTE.Project> GetFilteredProjects (string[] projectNames)
 		{
 			foreach (string projectName in projectNames) {
-				WildcardPattern wildcard = CreateWildcard(projectName);
-				foreach (EnvDTE.Project project in GetAllProjects()) {
-					if (wildcard.IsMatch(project.Name)) {
+				WildcardPattern wildcard = CreateWildcard (projectName);
+				foreach (EnvDTE.Project project in GetAllProjects ()) {
+					if (wildcard.IsMatch (project.Name)) {
 						yield return project;
 					}
 				}
 			}
 		}
 		
-		WildcardPattern CreateWildcard(string pattern)
+		WildcardPattern CreateWildcard (string pattern)
 		{
-			return new WildcardPattern(pattern, WildcardOptions.IgnoreCase);
+			return new WildcardPattern (pattern, WildcardOptions.IgnoreCase);
 		}
 	}
 }

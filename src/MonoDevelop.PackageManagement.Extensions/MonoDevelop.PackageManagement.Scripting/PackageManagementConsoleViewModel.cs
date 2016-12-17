@@ -34,31 +34,26 @@ using System.Linq;
 
 using ICSharpCode.Scripting;
 using MonoDevelop.Ide;
-using MonoDevelop.Projects;
-using NuGet;
 using MonoDevelop.PackageManagement;
+using MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
+	internal class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
 	{
-		RegisteredPackageSources registeredPackageSources;
-		IExtendedPackageManagementProjectService projectService;
+		IPackageManagementProjectService projectService;
 		IPackageManagementConsoleHost consoleHost;
 
 		DelegateCommand clearConsoleCommand;
 
-		ObservableCollection<PackageSourceViewModel> packageSources = new ObservableCollection<PackageSourceViewModel> ();
-		PackageSourceViewModel activePackageSource;
+		ObservableCollection<SourceRepositoryViewModel> packageSources = new ObservableCollection<SourceRepositoryViewModel> ();
 
 		IScriptingConsole packageManagementConsole;
 
 		public PackageManagementConsoleViewModel (
-			RegisteredPackageSources registeredPackageSources,
-			IExtendedPackageManagementProjectService projectService,
+			IPackageManagementProjectService projectService,
 			IPackageManagementConsoleHost consoleHost)
 		{
-			this.registeredPackageSources = registeredPackageSources;
 			this.projectService = projectService;
 			this.consoleHost = consoleHost;
 		}
@@ -69,11 +64,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 			IdeApp.Workspace.SolutionLoaded += SolutionLoaded;
 			IdeApp.Workspace.SolutionUnloaded += SolutionUnloaded;
-			projects = new ObservableCollection<Project> (projectService.GetOpenProjects ());
+			IdeApp.Workspace.ItemAddedToSolution += ProjectsChangedInSolution;
+			IdeApp.Workspace.ItemRemovedFromSolution += ProjectsChangedInSolution;
+			projects = new ObservableCollection<Project> (projectService.GetOpenProjects ().Select (p => p.DotNetProject));
 
 			CreateCommands ();
 			UpdatePackageSourceViewModels ();
-			ReceiveNotificationsWhenPackageSourcesUpdated ();
 			UpdateDefaultProject ();
 			InitConsoleHost ();
 		}
@@ -81,9 +77,15 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void SolutionUnloaded (object sender, SolutionEventArgs e)
 		{
 			ProjectsChanged (new Project[0]);
+			consoleHost.OnSolutionUnloaded ();
 		}
 
 		void SolutionLoaded (object sender, SolutionEventArgs e)
+		{
+			ProjectsChanged (e.Solution.GetAllProjects ().OfType<DotNetProject> ());
+		}
+
+		void ProjectsChangedInSolution (object sender, SolutionItemChangeEventArgs e)
 		{
 			ProjectsChanged (e.Solution.GetAllProjects ().OfType<DotNetProject> ());
 		}
@@ -113,35 +115,26 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			packageSources.Clear ();
 			AddEnabledPackageSourceViewModels ();
-			AddAggregatePackageSourceViewModelIfMoreThanOnePackageSourceViewModelAdded ();
 			SelectActivePackageSource ();
 		}
 
 		void AddEnabledPackageSourceViewModels ()
 		{
-			foreach (PackageSource packageSource in registeredPackageSources.GetEnabledPackageSources()) {
+			foreach (SourceRepositoryViewModel packageSource in consoleHost.PackageSources) {
 				AddPackageSourceViewModel (packageSource);
 			}
 		}
 
-		void AddPackageSourceViewModel (PackageSource packageSource)
+		void AddPackageSourceViewModel (SourceRepositoryViewModel packageSource)
 		{
-			var viewModel = new PackageSourceViewModel (packageSource);
-			packageSources.Add (viewModel);
-		}
-
-		void AddAggregatePackageSourceViewModelIfMoreThanOnePackageSourceViewModelAdded ()
-		{
-			if (packageSources.Count > 1) {
-				AddPackageSourceViewModel (RegisteredPackageSourceSettings.AggregatePackageSource);
-			}
+			packageSources.Add (packageSource);
 		}
 
 		void SelectActivePackageSource ()
 		{
-			PackageSource activePackageSource = consoleHost.ActivePackageSource;
-			foreach (PackageSourceViewModel packageSourceViewModel in packageSources) {
-				if (packageSourceViewModel.GetPackageSource ().Equals (activePackageSource)) {
+			SourceRepositoryViewModel activePackageSource = consoleHost.ActivePackageSource;
+			foreach (SourceRepositoryViewModel packageSourceViewModel in packageSources) {
+				if (packageSourceViewModel.PackageSource.Equals (activePackageSource.PackageSource)) {
 					ActivePackageSource = packageSourceViewModel;
 					return;
 				}
@@ -157,11 +150,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 		}
 
-		void ReceiveNotificationsWhenPackageSourcesUpdated ()
-		{
-			registeredPackageSources.CollectionChanged += PackageSourcesChanged;
-		}
-
 		void PackageSourcesChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			UpdatePackageSourceViewModels ();
@@ -175,29 +163,20 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void ProjectsChanged (IEnumerable<Project> projects)
 		{
 			Projects.Clear ();
-			Projects.AddRange (projects);
+			NuGet.CollectionExtensions.AddRange (Projects, projects);
 			UpdateDefaultProject ();
 		}
 
-		public ObservableCollection<PackageSourceViewModel> PackageSources {
+		public ObservableCollection<SourceRepositoryViewModel> PackageSources {
 			get { return packageSources; }
 		}
 
-		public PackageSourceViewModel ActivePackageSource {
-			get { return activePackageSource; }
+		public SourceRepositoryViewModel ActivePackageSource {
+			get { return consoleHost.ActivePackageSource; }
 			set {
-				activePackageSource = value;
-				consoleHost.ActivePackageSource = GetPackageSourceForViewModel (activePackageSource);
+				consoleHost.ActivePackageSource = value;
 				OnPropertyChanged (viewModel => viewModel.ActivePackageSource);
 			}
-		}
-
-		PackageSource GetPackageSourceForViewModel (PackageSourceViewModel activePackageSource)
-		{
-			if (activePackageSource != null) {
-				return activePackageSource.GetPackageSource ();
-			}
-			return null;
 		}
 
 		ObservableCollection<Project> projects;
@@ -228,6 +207,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void ProcessUserInput (string line)
 		{
 			consoleHost.ProcessUserInput (line);
+		}
+
+		public void UpdatePackageSources ()
+		{
+			consoleHost.ReloadPackageSources ();
+			UpdatePackageSourceViewModels ();
 		}
 	}
 }

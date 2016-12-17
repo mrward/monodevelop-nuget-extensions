@@ -29,7 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Construction;
-using MonoDevelop.Projects.Formats.MSBuild;
+using MonoDevelop.Projects.MSBuild;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {

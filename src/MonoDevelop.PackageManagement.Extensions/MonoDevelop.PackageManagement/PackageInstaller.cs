@@ -26,7 +26,7 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement;
+using MonoDevelop.Ide;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -35,20 +35,12 @@ namespace MonoDevelop.PackageManagement
 		public void Run (InstallPackageCommand command)
 		{
 			try {
-				IPackageManagementProject project = PackageManagementServices.Solution.GetActiveProject ();
-				var action = new InstallPackageAction (project, PackageManagementServices.PackageManagementEvents);
-				action.PackageId = command.PackageId;
-				action.PackageVersion = command.GetVersion ();
-				ProgressMonitorStatusMessage progressMessage = CreateProgressMessage (action.PackageId);
-				PackageManagementServices.BackgroundPackageActionRunner.Run (progressMessage, action);
+				var project = IdeApp.ProjectOperations.CurrentSelectedProject;
+				var packageReference = new PackageManagementPackageReference (command.PackageId, command.GetVersionString ());
+				PackageManagementServices.ProjectOperations.InstallPackages (project, new [] { packageReference });
 			} catch (Exception ex) {
 				ShowStatusBarError (ex);
 			}
-		}
-
-		ProgressMonitorStatusMessage CreateProgressMessage (string packageId)
-		{
-			return ProgressMonitorStatusMessageFactory.CreateInstallingSinglePackageMessage (packageId);
 		}
 
 		void ShowStatusBarError (Exception ex)

@@ -7,7 +7,7 @@
 	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
 	description = "Provides extensions to the NuGet addin"
 	category    = "IDE extensions"
-	version     = "0.11">
+	version     = "0.11.1">
 	
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
@@ -18,13 +18,18 @@
 		<Import assembly="Microsoft.PowerShell.Commands.Utility.dll" />
 		<Import assembly="MonoDevelop.PackageManagement.Cmdlets.dll" />
 		<Import assembly="MonoDevelop.PackageManagement.PowerShell.dll" />
+		<Import file="NuGet.Logging.dll" />
+		<Import file="NuGet.Packaging.dll" />
+		<Import file="NuGet.Packaging.Core.Types.dll" />
+		<Import file="NuGet.Resolver.dll" />
+		<Import file="NuGet-LICENSE.txt" />
 		<Import assembly="SharpDevelop.EnvDTE.dll" />
 	</Runtime>
 
 	<Dependencies>
-		<Addin id="Core" version="5.10"/>
-		<Addin id="Ide" version="5.10"/>
-		<Addin id="PackageManagement" version="5.10"/>
+		<Addin id="Core" version="6.1"/>
+		<Addin id="Ide" version="6.1"/>
+		<Addin id="PackageManagement" version="6.1"/>
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
@@ -34,11 +39,20 @@
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/Commands">
+		<Category _name="NuGet" id="NuGet">
 		<Command
 			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
-			_description="Manage packages"
-			_label="_Manage Packages..."
-			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler2" />
+			_description="Manage packages for the solution"
+			_label="_Manage NuGet Packages..."
+			_displayName="Manage Packages (Solution)"
+			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler" />
+		<Command
+			id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
+			_description="Manage packages for the project"
+			_label="_Manage NuGet Packages..."
+			_displayName="Manage Packages"
+			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesInProjectHandler" />
+		</Category>
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/MainMenu/Project">
@@ -57,6 +71,16 @@
 		</Condition>
 	</Extension>
 
+	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
+		<Condition id="ItemType" value="MonoDevelop.PackageManagement.NodeBuilders.ProjectPackagesFolderNode">
+			<CommandItem
+				id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
+				insertbefore="MonoDevelop.PackageManagement.Commands.PackagesFolderNodeCommands.ReinstallAllPackagesInProject"
+				insertafter="MonoDevelop.PackageManagement.Commands.AddPackages"
+				_label="Manage Packages..." />
+		</Condition>
+	</Extension>
+
 	<Extension path="/MonoDevelop/Ide/Pads">
 		<Pad
 			id="MonoDevelop.PackageManagement.PackageConsolePad"
@@ -67,8 +91,8 @@
 			class="MonoDevelop.PackageManagement.PackageConsolePad"
 			_label="Package Console Extension" />
 	</Extension>
-
-	<Extension path="/MonoDevelop/ProjectModel/MSBuildExtensions">
+	<!--
+	<Extension path="/MonoDevelop/ProjectModel/ProjectModelExtensions">
 		<Class class="MonoDevelop.PackageManagement.Scripting.GlobalMSBuildProjectCollectionMSBuildExtension" />
-	</Extension>
+	</Extension>-->
 </Addin>

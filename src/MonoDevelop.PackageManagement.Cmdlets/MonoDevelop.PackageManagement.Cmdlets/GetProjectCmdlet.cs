@@ -34,6 +34,7 @@ using System.Management.Automation;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
+using MonoDevelop.Ide;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
@@ -52,7 +53,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		{
 		}
 
-		public GetProjectCmdlet (
+		internal GetProjectCmdlet (
 			IPackageManagementConsoleHost consoleHost,
 			ICmdletTerminatingError terminatingError)
 			: base (consoleHost, terminatingError)
@@ -86,7 +87,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		IEnumerable<EnvDTE.Project> GetAllProjects ()
 		{
-			var projects = new OpenProjects (ConsoleHost.Solution);
+			var projects = new OpenProjects (IdeApp.ProjectOperations.CurrentSelectedSolution);
 			return projects.GetAllProjects ();
 		}
 
@@ -104,7 +105,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		IEnumerable<EnvDTE.Project> GetFilteredProjects ()
 		{
-			var projects = new OpenProjects (ConsoleHost.Solution);
+			var projects = new OpenProjects (IdeApp.ProjectOperations.CurrentSelectedSolution);
 			return projects.GetFilteredProjects (Name);
 		}
 

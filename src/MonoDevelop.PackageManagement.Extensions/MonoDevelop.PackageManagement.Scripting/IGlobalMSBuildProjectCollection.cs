@@ -26,11 +26,12 @@
 //
 
 using System;
+using MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IGlobalMSBuildProjectCollection : IDisposable
+	internal interface IGlobalMSBuildProjectCollection : IDisposable
 	{
-		void AddProject (IPackageManagementProject2 project);
+		void AddProject (DotNetProject project);
 	}
 }

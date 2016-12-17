@@ -31,11 +31,13 @@ using System.Linq;
 
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
+using MonoDevelop.Core;
+using MonoDevelop.PackageManagement;
 using DotNetProject = MonoDevelop.Projects.DotNetProject;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class MSBuildProjectPropertiesMerger
+	internal class MSBuildProjectPropertiesMerger
 	{
 		IPackageManagementProjectService projectService;
 		Project msbuildProject;
@@ -67,7 +69,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 				UpdateProperty (property);
 			}
 
-			dotNetProject.Save ();
+			//if (result.AnyPropertiesChanged ()) {
+				dotNetProject.SaveAsync (new ProgressMonitor ());
+			//}
 		}
 
 		void UpdateProperty (ProjectPropertyElement msbuildProjectProperty)

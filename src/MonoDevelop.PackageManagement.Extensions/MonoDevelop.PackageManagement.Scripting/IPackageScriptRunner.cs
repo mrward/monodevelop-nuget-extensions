@@ -30,7 +30,7 @@ using System;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public interface IPackageScriptRunner
+	internal interface IPackageScriptRunner
 	{
 		void Run (IPackageScript script);
 	}

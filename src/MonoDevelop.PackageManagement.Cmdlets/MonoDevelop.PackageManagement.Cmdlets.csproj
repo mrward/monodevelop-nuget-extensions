@@ -63,6 +63,55 @@
     <Reference Include="SharpDevelop.EnvDTE">
       <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="NuGet.Common">
+      <HintPath>..\..\lib\NuGet.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Versioning">
+      <HintPath>..\..\lib\NuGet.Versioning.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.PackageManagement">
+      <HintPath>..\..\lib\NuGet.PackageManagement.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.ProjectManagement">
+      <HintPath>..\..\lib\NuGet.ProjectManagement.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Packaging.Core">
+      <HintPath>..\..\lib\NuGet.Packaging.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Configuration">
+      <HintPath>..\..\lib\NuGet.Configuration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Packaging">
+      <HintPath>..\..\lib\NuGet.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="NuGet.Frameworks">
+      <HintPath>..\..\lib\NuGet.Frameworks.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Packaging.Core.Types">
+      <HintPath>..\..\lib\NuGet.Packaging.Core.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="NuGet.Protocol.Core.Types">
+      <HintPath>..\..\lib\NuGet.Protocol.Core.Types.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Logging">
+      <HintPath>..\..\lib\NuGet.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Resolver">
+      <HintPath>..\..\lib\NuGet.Resolver.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\AssemblyInfo.cs" />
@@ -80,6 +129,13 @@
     <Compile Include="MonoDevelop.PackageManagement.Cmdlets\PackageManagementCmdlet.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Cmdlets\UninstallPackageCmdlet.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Cmdlets\UpdatePackageCmdlet.cs" />
+    <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Model\PowerShellPackage.cs" />
+    <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Model\PowerShellInstalledPackage.cs" />
+    <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Model\PowerShellRemotePackage.cs" />
+    <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Model\PowerShellUpdatePackage.cs" />
+    <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Model\VersionType.cs" />
+    <Compile Include="NuGet.PackageManagement.PowerShellCmdlets.Utility\PowerShellCmdletsUtility.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Cmdlets\PackageActionBaseCmdlet.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\external\pash\Source\System.Management\System.Management.csproj">
@@ -94,6 +150,10 @@
       <Project>{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}</Project>
       <Name>MonoDevelop.PackageManagement.Extensions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NuGet.PackageManagement.PowerShellCmdlets.Model\" />
+    <Folder Include="NuGet.PackageManagement.PowerShellCmdlets.Utility\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

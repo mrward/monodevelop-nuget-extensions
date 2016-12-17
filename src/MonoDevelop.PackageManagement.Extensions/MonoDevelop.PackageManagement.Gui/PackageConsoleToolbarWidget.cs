@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Specialized;
 using Gtk;
-using ICSharpCode.PackageManagement;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.Projects;
@@ -35,7 +34,7 @@ using MonoDevelop.Projects;
 namespace MonoDevelop.PackageManagement
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class PackageConsoleToolbarWidget : Gtk.Bin
+	internal partial class PackageConsoleToolbarWidget : Gtk.Bin
 	{
 		Button clearButton;
 		PackageManagementConsoleViewModel viewModel;
@@ -88,7 +87,7 @@ namespace MonoDevelop.PackageManagement
 			ClearPackageSources ();
 			
 			for (int index = 0; index < viewModel.PackageSources.Count; ++index) {
-				PackageSourceViewModel packageSource = viewModel.PackageSources [index];
+				SourceRepositoryViewModel packageSource = viewModel.PackageSources [index];
 				packageSourcesComboBox.InsertText (index, packageSource.Name);
 			}
 			
@@ -145,7 +144,7 @@ namespace MonoDevelop.PackageManagement
 			viewModel.ActivePackageSource = GetSelectedPackageSource ();
 		}
 		
-		PackageSourceViewModel GetSelectedPackageSource ()
+		SourceRepositoryViewModel GetSelectedPackageSource ()
 		{
 			if (packageSourcesComboBox.Active == -1) {
 				return null;

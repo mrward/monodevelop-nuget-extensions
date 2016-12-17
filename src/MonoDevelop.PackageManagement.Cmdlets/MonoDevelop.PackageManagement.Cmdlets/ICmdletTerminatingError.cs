@@ -32,6 +32,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 {
 	public interface ICmdletTerminatingError
 	{
-		void ThrowNoProjectOpenError();
+		void ThrowNoProjectOpenError ();
+		void ThrowNoSolutionOpenError ();
 	}
 }

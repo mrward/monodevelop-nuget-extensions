@@ -27,36 +27,28 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
-	public class PackageManagementConsoleHostProvider
+	internal class PackageManagementConsoleHostProvider
 	{
-		IPackageManagementSolution2 solution;
-		IRegisteredPackageRepositories registeredRepositories;
 //		IPowerShellDetection powerShellDetection;
 		IPackageManagementConsoleHost consoleHost;
 		IPackageManagementEvents packageEvents;
 		
-		public PackageManagementConsoleHostProvider (
-			IPackageManagementSolution2 solution,
-			IRegisteredPackageRepositories registeredRepositories)
-			: this(solution,
-				registeredRepositories,
+		public PackageManagementConsoleHostProvider ()
+			: this (
 //				new PowerShellDetection(),
 				PackageManagementServices.PackageManagementEvents)
 		{
 		}
 		
 		public PackageManagementConsoleHostProvider (
-			IPackageManagementSolution2 solution,
-			IRegisteredPackageRepositories registeredRepositories,
 //			IPowerShellDetection powerShellDetection,
 			IPackageManagementEvents packageEvents)
 		{
-			this.solution = solution;
-			this.registeredRepositories = registeredRepositories;
+//			this.solution = solution;
 //			this.powerShellDetection = powerShellDetection;
 			this.packageEvents = packageEvents;
 		}
@@ -70,10 +62,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 		}
 		
-		void CreateConsoleHost()
+		void CreateConsoleHost ()
 		{
 //			if (powerShellDetection.IsPowerShell2Installed()) {
-		consoleHost = new PackageManagementConsoleHost (solution, registeredRepositories, packageEvents);
+		consoleHost = new PackageManagementConsoleHost (packageEvents);
 //			} else {
 //				consoleHost = new PowerShellMissingConsoleHost();
 //			}
