@@ -53,7 +53,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			packageManager = new NuGetPackageManager (
 				solutionManager.CreateSourceRepositoryProvider (),
 				settings,
-				solutionManager,
+				new MonoDevelopSolutionManagerWrapper (solutionManager),
 				restartManager
 			);
 		}

@@ -236,6 +236,7 @@
     <Compile Include="NuGet.PackageManagement.UI\PackageSearchMetadataCache.cs" />
     <Compile Include="NuGet.PackageManagement.UI\ConsolidatePackageFeed.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ManagePackagesInProjectHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\MonoDevelopSolutionManagerWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

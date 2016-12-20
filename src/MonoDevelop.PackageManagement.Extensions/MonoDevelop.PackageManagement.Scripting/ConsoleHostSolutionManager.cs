@@ -214,21 +214,6 @@ namespace MonoDevelop.PackageManagement
 
 		public void SaveProject (NuGetProject nuGetProject)
 		{
-			var msbuildProject = nuGetProject as MSBuildNuGetProject;
-			if (msbuildProject != null) {
-				var projectSystem = msbuildProject.MSBuildNuGetProjectSystem as ConsoleHostMSBuildNuGetProjectSystem;
-				projectSystem.SaveProject ().Wait ();
-
-				return;
-			}
-
-			var buildIntegratedProject = nuGetProject as BuildIntegratedProjectSystem;
-			if (buildIntegratedProject != null) {
-				buildIntegratedProject.SaveProject ().Wait ();
-				return;
-			}
-
-			LoggingService.LogError (string.Format ("Unsupported NuGetProject type: {0}", nuGetProject.GetType ().FullName));
 		}
 	}
 }
