@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NuGet.Common;
+using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using NuGet.ProjectManagement.Projects;
@@ -36,7 +37,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				FolderNuGetProject packageFolderProject = null;
 
 				if (nugetProject is BuildIntegratedNuGetProject) {
-					packageFolder = BuildIntegratedProjectUtility.GetEffectiveGlobalPackagesFolder (solutionManager.SolutionDirectory, settings);
+					packageFolder = SettingsUtility.GetGlobalPackagesFolder (settings);
 				} else {
 					var project = nugetProject as MSBuildNuGetProject;
 

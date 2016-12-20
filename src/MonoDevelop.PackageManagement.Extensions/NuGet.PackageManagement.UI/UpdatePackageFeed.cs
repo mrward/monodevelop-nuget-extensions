@@ -27,7 +27,7 @@ namespace NuGet.PackageManagement.UI
 			ManagePackagesLoadContext context,
 			IPackageMetadataProvider metadataProvider,
 			PackageSearchMetadataCache cachedUpdates,
-			Logging.ILogger logger)
+			Common.ILogger logger)
 			: this (new PackageIdentity[0], metadataProvider, cachedUpdates, logger)
 		{
 			_context = context;
@@ -37,7 +37,7 @@ namespace NuGet.PackageManagement.UI
 			IEnumerable<PackageIdentity> installedPackages,
 			IPackageMetadataProvider metadataProvider,
 			PackageSearchMetadataCache cachedUpdates,
-			Logging.ILogger logger)
+			Common.ILogger logger)
 		{
 			if (installedPackages == null) {
 				throw new ArgumentNullException (nameof (installedPackages));

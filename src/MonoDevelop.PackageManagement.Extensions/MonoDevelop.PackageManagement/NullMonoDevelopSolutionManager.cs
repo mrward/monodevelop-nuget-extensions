@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using MonoDevelop.Core;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
+using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 
 namespace MonoDevelop.PackageManagement
@@ -88,6 +89,7 @@ namespace MonoDevelop.PackageManagement
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectAdded;
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectRemoved;
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectRenamed;
+		public event EventHandler<NuGetProjectEventArgs> AfterNuGetProjectRenamed;
 		public event EventHandler SolutionClosed;
 		public event EventHandler SolutionClosing;
 		public event EventHandler SolutionOpened;
@@ -136,6 +138,10 @@ namespace MonoDevelop.PackageManagement
 		void LoadSettings ()
 		{
 			Settings = SettingsLoader.LoadDefaultSettings (null, reportError: true);
+		}
+
+		public void SaveProject (NuGetProject nugetProject)
+		{
 		}
 	}
 }

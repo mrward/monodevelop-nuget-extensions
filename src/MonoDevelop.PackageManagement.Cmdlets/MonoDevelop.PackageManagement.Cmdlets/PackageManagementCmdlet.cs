@@ -311,14 +311,17 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		}
 
 		protected async Task<IPackageSearchMetadata> GetLatestPackageFromRemoteSourceAsync (
+			NuGetProject nugetProject,
 			PackageIdentity identity,
 			bool includePrerelease)
 		{
 			var metadataProvider = new MultiSourcePackageMetadataProvider (
 				PrimarySourceRepositories,
 				optionalLocalRepository: null,
-				optionalGlobalLocalRepository: null,
-				logger: NuGet.Logging.NullLogger.Instance);
+				optionalGlobalLocalRepositories: null,
+				projects: new [] { nugetProject },
+				isSolution: false,
+				logger: NuGet.Common.NullLogger.Instance);
 			return await metadataProvider.GetLatestPackageMetadataAsync (identity, includePrerelease, ConsoleHost.Token);
 		}
 

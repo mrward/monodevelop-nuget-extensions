@@ -76,9 +76,6 @@
       <HintPath>..\..\lib\NuGet.ProjectManagement.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NuGet.Logging">
-      <HintPath>..\..\lib\NuGet.Logging.dll</HintPath>
-    </Reference>
     <Reference Include="NuGet.Versioning">
       <HintPath>..\..\lib\NuGet.Versioning.dll</HintPath>
     </Reference>

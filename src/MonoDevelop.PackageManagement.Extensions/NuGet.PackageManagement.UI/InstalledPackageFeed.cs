@@ -24,7 +24,7 @@ namespace NuGet.PackageManagement.UI
 		public InstalledPackageFeed (
 			ManagePackagesLoadContext context,
 			IPackageMetadataProvider metadataProvider,
-			Logging.ILogger logger)
+			Common.ILogger logger)
 			: this (new PackageIdentity[0], metadataProvider, logger)
 		{
 			this._context = context;
@@ -33,7 +33,7 @@ namespace NuGet.PackageManagement.UI
 		public InstalledPackageFeed (
 			IEnumerable<PackageIdentity> installedPackages,
 			IPackageMetadataProvider metadataProvider,
-			Logging.ILogger logger)
+			Common.ILogger logger)
 		{
 			if (installedPackages == null) {
 				throw new ArgumentNullException (nameof (installedPackages));

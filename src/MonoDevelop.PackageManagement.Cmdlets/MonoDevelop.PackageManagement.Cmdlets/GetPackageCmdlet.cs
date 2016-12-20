@@ -233,12 +233,12 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 			var metadataTasks = installedPackages.Select (
 				installedPackage =>
-				Task.Run(async () => {
-				var metadata = await GetLatestPackageFromRemoteSourceAsync (installedPackage.PackageIdentity, IncludePrerelease.IsPresent);
-				if (metadata != null) {
-					await metadata.GetVersionsAsync ();
-				}
-				return metadata;
+				Task.Run (async () => {
+					var metadata = await GetLatestPackageFromRemoteSourceAsync (project, installedPackage.PackageIdentity, IncludePrerelease.IsPresent);
+					if (metadata != null) {
+						await metadata.GetVersionsAsync ();
+					}
+					return metadata;
 			}));
 
 			foreach (var task in installedPackages.Zip (metadataTasks, (p, t) => Tuple.Create (t, p))) {

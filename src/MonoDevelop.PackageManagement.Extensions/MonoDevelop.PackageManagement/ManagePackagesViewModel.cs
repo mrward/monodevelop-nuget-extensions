@@ -32,8 +32,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
+using NuGet.Common;
 using NuGet.Configuration;
-using NuGet.Logging;
 using NuGet.PackageManagement;
 using NuGet.PackageManagement.UI;
 using NuGet.Packaging;
@@ -670,7 +670,9 @@ namespace MonoDevelop.PackageManagement
 			return new MultiSourcePackageMetadataProvider (
 				selectedPackageSource.GetSourceRepositories (),
 				packageManager.PackagesFolderSourceRepository,
-				packageManager.GlobalPackagesFolderSourceRepository,
+				packageManager.GlobalPackageFolderRepositories,
+				nugetProjects.ToArray (),
+				IsManagingSolution,
 				new NullLogger ());
 		}
 

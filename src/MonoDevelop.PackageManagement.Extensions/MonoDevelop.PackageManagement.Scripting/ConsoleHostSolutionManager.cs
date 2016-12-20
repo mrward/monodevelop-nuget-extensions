@@ -109,6 +109,7 @@ namespace MonoDevelop.PackageManagement
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectAdded;
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectRemoved;
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectRenamed;
+		public event EventHandler<NuGetProjectEventArgs> AfterNuGetProjectRenamed;
 		public event EventHandler SolutionClosed;
 		public event EventHandler SolutionClosing;
 		public event EventHandler SolutionOpened;
@@ -209,6 +210,25 @@ namespace MonoDevelop.PackageManagement
 			} else {
 				solutionManager = null;
 			}
+		}
+
+		public void SaveProject (NuGetProject nuGetProject)
+		{
+			var msbuildProject = nuGetProject as MSBuildNuGetProject;
+			if (msbuildProject != null) {
+				var projectSystem = msbuildProject.MSBuildNuGetProjectSystem as ConsoleHostMSBuildNuGetProjectSystem;
+				projectSystem.SaveProject ().Wait ();
+
+				return;
+			}
+
+			var buildIntegratedProject = nuGetProject as BuildIntegratedProjectSystem;
+			if (buildIntegratedProject != null) {
+				buildIntegratedProject.SaveProject ().Wait ();
+				return;
+			}
+
+			LoggingService.LogError (string.Format ("Unsupported NuGetProject type: {0}", nuGetProject.GetType ().FullName));
 		}
 	}
 }

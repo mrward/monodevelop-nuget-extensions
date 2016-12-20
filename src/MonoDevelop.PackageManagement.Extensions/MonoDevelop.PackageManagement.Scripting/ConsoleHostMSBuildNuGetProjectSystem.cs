@@ -182,7 +182,7 @@ namespace MonoDevelop.PackageManagement
 			DebugLogFormat("Added file '{0}' to project '{1}'.", fileName, projectName);
 		}
 
-		public void AddFrameworkReference (string name)
+		public void AddFrameworkReference (string name, string packageId)
 		{
 			GuiSyncDispatch (async () => {
 				ProjectReference assemblyReference = CreateGacReference (name);
@@ -557,6 +557,11 @@ namespace MonoDevelop.PackageManagement
 		void GuiSyncDispatch (Func<Task> func)
 		{
 			guiSyncDispatcherFunc (func).Wait ();
+		}
+
+		public Task SaveProject ()
+		{
+			return project.SaveAsync ();
 		}
 	}
 }
