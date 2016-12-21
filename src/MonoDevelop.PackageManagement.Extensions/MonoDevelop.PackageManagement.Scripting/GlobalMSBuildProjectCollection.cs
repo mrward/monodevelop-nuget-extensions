@@ -34,7 +34,7 @@ using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using DotNetProject = MonoDevelop.Projects.DotNetProject;
-using NuGet;
+using NuGet.ProjectManagement;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {

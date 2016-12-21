@@ -13,7 +13,6 @@ using NuGet.ProjectManagement;
 using MonoDevelop.Core;
 using NuGet.Protocol.Core.Types;
 
-using MessageLevel = NuGet.MessageLevel;
 using System.Threading.Tasks;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
@@ -126,7 +125,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			if (view.Any ()) {
 				WritePackagesToOutputPipeline (view);
 			} else {
-				Log (NuGet.MessageLevel.Info, GettextCatalog.GetString ("No packages installed."));
+				Log (MessageLevel.Info, GettextCatalog.GetString ("No packages installed."));
 			}
 		}
 
@@ -206,7 +205,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			if (view.Any ()) {
 				WritePackagesToOutputPipeline (view);
 			} else {
-				Log (NuGet.MessageLevel.Info, GettextCatalog.GetString ("No packages available."));
+				Log (MessageLevel.Info, GettextCatalog.GetString ("No packages available."));
 			}
 		}
 

@@ -138,5 +138,14 @@ namespace MonoDevelop.PackageManagement
 
 			solutionManager.SaveProject (nuGetProject);
 		}
+
+		public bool IsSolutionDPLEnabled {
+			get { return solutionManager.IsSolutionDPLEnabled; }
+		}
+
+		public void EnsureSolutionIsLoaded ()
+		{
+			solutionManager.EnsureSolutionIsLoaded ();
+		}
 	}
 }

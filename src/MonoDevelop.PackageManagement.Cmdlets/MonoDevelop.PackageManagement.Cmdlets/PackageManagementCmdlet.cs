@@ -13,7 +13,6 @@ using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
-using NuGet;
 using NuGet.PackageManagement;
 using NuGet.PackageManagement.UI;
 using NuGet.Packaging;
@@ -21,11 +20,9 @@ using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 
-using MessageLevel = NuGet.MessageLevel;
-
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
-	public abstract class PackageManagementCmdlet : PSCmdlet, ITerminatingCmdlet, IPackageScriptSession, IPackageScriptRunner, ILogger, INuGetProjectContext
+	public abstract class PackageManagementCmdlet : PSCmdlet, ITerminatingCmdlet, IPackageScriptSession, IPackageScriptRunner, INuGetProjectContext
 	{
 		IPackageManagementConsoleHost consoleHost;
 		ICmdletTerminatingError terminatingError;
@@ -157,11 +154,6 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 				"PackageManagementErrorId",
 				ErrorCategory.NotSpecified,
 				null);
-		}
-
-		public FileConflictResolution ResolveFileConflict (string message)
-		{
-			throw new NotImplementedException ();
 		}
 
 		protected void CheckSolutionIsOpen ()
@@ -336,11 +328,6 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			}
 		}
 
-		public void Log (NuGet.ProjectManagement.MessageLevel level, string message, params object [] args)
-		{
-			Log ((MessageLevel)level, message, args);
-		}
-
 		public void ReportError (string message)
 		{
 		}
@@ -372,5 +359,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			}
 			return result;
 		}
+
+		TelemetryServiceHelper INuGetProjectContext.TelemetryService { get; set; }
 	}
 }

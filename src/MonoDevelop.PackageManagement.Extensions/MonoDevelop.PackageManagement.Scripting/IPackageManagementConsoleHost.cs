@@ -68,7 +68,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void SetDefaultRunspace ();
 
 		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction? fileConflictAction);
-		IDisposable CreateEventsMonitor (NuGet.ILogger logger);
+		IDisposable CreateEventsMonitor (INuGetProjectContext context);
 
 		string GetActivePackageSource (string source);
 

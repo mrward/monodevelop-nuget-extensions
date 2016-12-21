@@ -28,29 +28,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MonoDevelop.Core;
-using NuGet;
+using NuGet.ProjectManagement;
 
 namespace MonoDevelop.PackageManagement
 {
 	internal class ConsoleHostPackageEventsMonitor : IDisposable
 	{
 		IPackageManagementEvents packageManagementEvents;
-		ILogger logger;
+		INuGetProjectContext context;
 		List<FileEventArgs> fileChangedEvents = new List<FileEventArgs> ();
 
-		public ConsoleHostPackageEventsMonitor (ILogger logger)
+		public ConsoleHostPackageEventsMonitor (INuGetProjectContext context)
 			: this (
-				logger,
+				context,
 				PackageManagementServices.PackageManagementEvents)
 		{
 		}
 
 		public ConsoleHostPackageEventsMonitor (
-			ILogger logger,
+			INuGetProjectContext context,
 			IPackageManagementEvents packageManagementEvents)
 		{
 			this.packageManagementEvents = packageManagementEvents;
-			this.logger = logger;
+			this.context = context;
 
 			packageManagementEvents.FileChanged += FileChanged;
 			packageManagementEvents.PackageOperationMessageLogged += PackageOperationMessageLogged;
@@ -67,7 +67,7 @@ namespace MonoDevelop.PackageManagement
 
 		void PackageOperationMessageLogged (object sender, PackageOperationMessageLoggedEventArgs e)
 		{
-			logger.Log (e.Message.Level, e.Message.ToString ());
+			context.Log (e.Message.Level, e.Message.ToString ());
 		}
 
 		void FileChanged (object sender, FileEventArgs e)

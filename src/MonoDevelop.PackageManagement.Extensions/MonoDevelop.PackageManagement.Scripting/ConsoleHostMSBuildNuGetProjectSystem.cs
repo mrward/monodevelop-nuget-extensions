@@ -42,6 +42,7 @@ namespace MonoDevelop.PackageManagement
 		IDotNetProject project;
 		NuGetFramework targetFramework;
 		string projectFullPath;
+		string projectFileFullPath;
 		IPackageManagementEvents packageManagementEvents;
 		IPackageManagementFileService fileService;
 		Action<Action> guiSyncDispatcher;
@@ -82,6 +83,15 @@ namespace MonoDevelop.PackageManagement
 					projectFullPath = GuiSyncDispatch (() => project.BaseDirectory);
 				}
 				return projectFullPath;
+			}
+		}
+
+		public string ProjectFileFullPath {
+			get {
+				if (projectFileFullPath == null) {
+					projectFileFullPath = GuiSyncDispatch (() => project.FileName);
+				}
+				return projectFileFullPath;
 			}
 		}
 
@@ -288,7 +298,7 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 
-		public Task ExecuteScriptAsync (PackageIdentity identity, string packageInstallPath, string scriptRelativePath, NuGetProject nuGetProject, bool throwOnFailure)
+		public Task ExecuteScriptAsync (PackageIdentity identity, string packageInstallPath, string scriptRelativePath, bool throwOnFailure)
 		{
 			return PackageManagementExtendedServices.ConsoleHost.ExecuteScriptAsync (
 				identity,

@@ -36,6 +36,7 @@ using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
+using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
@@ -317,9 +318,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 			return new ConsoleHostFileConflictResolver (packageEvents, fileConflictAction);
 		}
 
-		public IDisposable CreateEventsMonitor (NuGet.ILogger logger)
+		public IDisposable CreateEventsMonitor (INuGetProjectContext context)
 		{
-			return new ConsoleHostPackageEventsMonitor (logger, packageEvents);
+			return new ConsoleHostPackageEventsMonitor (context, packageEvents);
 		}
 
 		public IEnumerable<NuGetProject> GetNuGetProjects ()

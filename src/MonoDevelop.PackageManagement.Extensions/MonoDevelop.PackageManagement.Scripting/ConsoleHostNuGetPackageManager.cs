@@ -32,6 +32,7 @@ using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
 using NuGet.Packaging.Core;
+using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using NuGet.ProjectManagement.Projects;
 using NuGet.Protocol.Core.Types;
@@ -144,7 +145,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			return packageManager.PreviewUpdatePackagesAsync (
 				packageId,
-				nuGetProject,
+				new [] { nuGetProject },
 				resolutionContext,
 				nuGetProjectContext,
 				primarySources,
@@ -164,7 +165,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			return packageManager.PreviewUpdatePackagesAsync (
 				packageIdentity,
-				nuGetProject,
+				new [] { nuGetProject },
 				resolutionContext,
 				nuGetProjectContext,
 				primarySources,
@@ -182,7 +183,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			CancellationToken token)
 		{
 			return packageManager.PreviewUpdatePackagesAsync (
-				nuGetProject,
+				new [] { nuGetProject },
 				resolutionContext,
 				nuGetProjectContext,
 				primarySources,
@@ -232,9 +233,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 			var readmeFilePath = String.Empty;
 
 			if (buildIntegratedProject != null) {
-				var packageFolderPath = BuildIntegratedProjectUtility.GetPackagePathFromGlobalSource (
-					SettingsUtility.GetGlobalPackagesFolder (settings),
-					package);
+				var pathContext = NuGetPathContext.Create (settings);
+				var pathResolver = new FallbackPackagePathResolver (pathContext);
+				string packageFolderPath = pathResolver.GetPackageDirectory (package.Id, package.Version);
 
 				if (Directory.Exists (packageFolderPath)) {
 					readmeFilePath = Path.Combine (packageFolderPath, Constants.ReadmeFileName);
