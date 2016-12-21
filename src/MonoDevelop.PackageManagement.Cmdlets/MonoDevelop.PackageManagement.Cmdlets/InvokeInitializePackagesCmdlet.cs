@@ -222,7 +222,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 		static void AddPathToEnvironment (string path)
 		{
-			var currentPath = Environment.GetEnvironmentVariable ("path", EnvironmentVariableTarget.Process);
+			var currentPath = Environment.GetEnvironmentVariable ("PATH", EnvironmentVariableTarget.Process) ?? string.Empty;
 
 			var currentPaths = new HashSet<string> (
 				currentPath.Split (Path.PathSeparator).Select (p => p.Trim ()),
@@ -230,7 +230,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 
 			if (currentPaths.Add (path)) {
 				var newPath = currentPath + Path.PathSeparator + path;
-				Environment.SetEnvironmentVariable ("path", newPath, EnvironmentVariableTarget.Process);
+				Environment.SetEnvironmentVariable ("PATH", newPath, EnvironmentVariableTarget.Process);
 			}
 		}
 	}
