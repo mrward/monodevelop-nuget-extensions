@@ -144,6 +144,10 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 
+		public void ClearProjectCache ()
+		{
+		}
+
 		public bool IsSolutionDPLEnabled { get; set; }
 
 		public void EnsureSolutionIsLoaded ()

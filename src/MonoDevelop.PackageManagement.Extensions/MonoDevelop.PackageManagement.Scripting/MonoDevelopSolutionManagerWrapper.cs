@@ -139,6 +139,11 @@ namespace MonoDevelop.PackageManagement
 			solutionManager.SaveProject (nuGetProject);
 		}
 
+		public void ClearProjectCache ()
+		{
+			solutionManager.ClearProjectCache ();
+		}
+
 		public bool IsSolutionDPLEnabled {
 			get { return solutionManager.IsSolutionDPLEnabled; }
 		}
