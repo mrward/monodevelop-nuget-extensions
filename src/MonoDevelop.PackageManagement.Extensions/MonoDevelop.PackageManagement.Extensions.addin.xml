@@ -5,9 +5,9 @@
 	author      = "Matt Ward"
 	copyright   = "MIT"
 	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
-	description = "Provides extensions to the NuGet addin. Supports Visual Studio for Mac Preview 3."
+	description = "Provides extensions to the NuGet addin. Supports Visual Studio for Mac 7.0 build 2740."
 	category    = "IDE extensions"
-	version     = "0.12.1">
+	version     = "0.12.2">
 	
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />

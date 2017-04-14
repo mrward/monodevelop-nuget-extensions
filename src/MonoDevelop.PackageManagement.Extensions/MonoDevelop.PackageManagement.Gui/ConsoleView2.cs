@@ -104,7 +104,7 @@ namespace MonoDevelop.Components
 
 		void TextViewPopulatePopup (object o, PopulatePopupArgs args)
 		{
-			MenuItem item = new MenuItem (Mono.Unix.Catalog.GetString ("Clear"));
+			MenuItem item = new MenuItem (GettextCatalog.GetString ("Clear"));
 			SeparatorMenuItem sep = new SeparatorMenuItem ();
 
 			item.Activated += ClearActivated;

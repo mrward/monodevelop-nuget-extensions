@@ -26,7 +26,7 @@
 
 using System;
 using System.Collections.Generic;
-using MonoDevelop.Core;
+using System.Threading.Tasks;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
@@ -85,6 +85,8 @@ namespace MonoDevelop.PackageManagement
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectAdded;
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectRemoved;
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectRenamed;
+		public event EventHandler<NuGetProjectEventArgs> NuGetProjectUpdated;
+		public event EventHandler<NuGetEventArgs<string>> AfterNuGetCacheUpdated;
 		public event EventHandler SolutionClosed;
 		public event EventHandler SolutionClosing;
 		public event EventHandler SolutionOpened;
@@ -151,6 +153,11 @@ namespace MonoDevelop.PackageManagement
 		public void EnsureSolutionIsLoaded ()
 		{
 			solutionManager.EnsureSolutionIsLoaded ();
+		}
+
+		public Task<NuGetProject> UpdateNuGetProjectToPackageRef (NuGetProject oldProject)
+		{
+			return solutionManager.UpdateNuGetProjectToPackageRef (oldProject);
 		}
 	}
 }

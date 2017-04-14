@@ -8,6 +8,9 @@
     <RootNamespace>MonoDevelop.PackageManagement</RootNamespace>
     <AssemblyName>MonoDevelop.PackageManagement.Extensions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign>True</PublicSign>
+    <AssemblyOriginatorKeyFile>..\MonoDevelop-Public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

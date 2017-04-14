@@ -291,8 +291,7 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			string searchString,
 			bool includePrerelease)
 		{
-			var searchFilter = new SearchFilter {
-				IncludePrerelease = includePrerelease,
+			var searchFilter = new SearchFilter (includePrerelease) {
 				SupportedFrameworks = Enumerable.Empty<string> (),
 				IncludeDelisted = false
 			};

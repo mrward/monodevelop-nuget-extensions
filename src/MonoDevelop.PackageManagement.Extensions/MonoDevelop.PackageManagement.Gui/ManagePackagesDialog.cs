@@ -27,8 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Mono.Unix;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.Projects;
@@ -54,7 +52,7 @@ namespace MonoDevelop.PackageManagement
 		TimeSpan searchDelayTimeSpan = TimeSpan.FromMilliseconds (500);
 		IDisposable searchTimer;
 		SourceRepositoryViewModel dummyPackageSourceRepresentingConfigureSettingsItem =
-			new SourceRepositoryViewModel (Catalog.GetString ("Configure Sources..."));
+			new SourceRepositoryViewModel (GettextCatalog.GetString ("Configure Sources..."));
 		ImageLoader imageLoader = new ImageLoader ();
 		bool loadingMessageVisible;
 		bool ignorePackageVersionChanges;
@@ -190,9 +188,9 @@ namespace MonoDevelop.PackageManagement
 		void UpdateSpinnerLabel ()
 		{
 			if (String.IsNullOrWhiteSpace (packageSearchEntry.Text)) {
-				loadingSpinnerLabel.Text = Catalog.GetString ("Loading package list...");
+				loadingSpinnerLabel.Text = GettextCatalog.GetString ("Loading package list...");
 			} else {
-				loadingSpinnerLabel.Text = Catalog.GetString ("Searching packages...");
+				loadingSpinnerLabel.Text = GettextCatalog.GetString ("Searching packages...");
 			}
 		}
 
@@ -851,17 +849,17 @@ namespace MonoDevelop.PackageManagement
 		{
 			int packagesSelectedCount = GetPackagesCountForAddPackagesButtonLabel ();
 			if (viewModel.PageSelected == ManagePackagesPage.Browse) {
-				string label = Catalog.GetPluralString ("Add Package", "Add Packages", packagesSelectedCount);
+				string label = GettextCatalog.GetPluralString ("Add Package", "Add Packages", packagesSelectedCount);
 				if (PackagesCheckedCount <= 1 && OlderPackageInstalledThanPackageSelected ()) {
-					label = Catalog.GetString ("Update Package");
+					label = GettextCatalog.GetString ("Update Package");
 				}
 				return label;
 			} else if (viewModel.PageSelected == ManagePackagesPage.Installed) {
-				return Catalog.GetPluralString ("Remove Package", "Remove Packages", packagesSelectedCount);
+				return GettextCatalog.GetPluralString ("Remove Package", "Remove Packages", packagesSelectedCount);
 			} else if (viewModel.PageSelected == ManagePackagesPage.Updates) {
-				return Catalog.GetPluralString ("Update Package", "Update Packages", packagesSelectedCount);
+				return GettextCatalog.GetPluralString ("Update Package", "Update Packages", packagesSelectedCount);
 			} else if (viewModel.PageSelected == ManagePackagesPage.Consolidate) {
-				return Catalog.GetString ("Consolidate");
+				return GettextCatalog.GetString ("Consolidate");
 			}
 
 			throw new NotImplementedException ("Unknown package results page");

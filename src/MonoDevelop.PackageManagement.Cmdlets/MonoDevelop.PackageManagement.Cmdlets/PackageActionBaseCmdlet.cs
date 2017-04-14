@@ -112,7 +112,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					throw new InvalidOperationException (GettextCatalog.GetString ("Unable to find package '{0}", packageId));
 				}
 
-				var identity = new PackageIdentity (Id, latestVersion);
+				var identity = new PackageIdentity (Id, latestVersion.LatestVersion);
 
 				var actions = await packageManager.PreviewInstallPackageAsync (
 					project,

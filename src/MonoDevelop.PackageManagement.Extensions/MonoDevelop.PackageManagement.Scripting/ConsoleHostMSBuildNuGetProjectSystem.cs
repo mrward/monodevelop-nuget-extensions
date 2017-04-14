@@ -573,6 +573,8 @@ namespace MonoDevelop.PackageManagement
 		{
 			return project.SaveAsync ();
 		}
+
+		public dynamic VSProject4 { get; private set; }
 	}
 }
 

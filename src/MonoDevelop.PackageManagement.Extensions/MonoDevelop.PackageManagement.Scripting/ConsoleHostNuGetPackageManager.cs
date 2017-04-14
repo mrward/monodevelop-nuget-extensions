@@ -91,7 +91,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 				token);
 		}
 
-		public Task<NuGetVersion> GetLatestVersionAsync (
+		public Task<ResolvedPackage> GetLatestVersionAsync (
 			string packageId,
 			NuGetProject project,
 			ResolutionContext resolutionContext,
@@ -203,6 +203,20 @@ namespace MonoDevelop.PackageManagement.Scripting
 				nuGetProject,
 				packageId,
 				uninstallationContext,
+				nuGetProjectContext,
+				token
+			);
+		}
+
+		public Task<BuildIntegratedProjectAction> PreviewBuildIntegratedProjectActionsAsync(
+			IBuildIntegratedNuGetProject buildIntegratedProject,
+			IEnumerable<NuGetProjectAction> nuGetProjectActions,
+			INuGetProjectContext nuGetProjectContext,
+			CancellationToken token)
+		{
+			return packageManager.PreviewBuildIntegratedProjectActionsAsync (
+				(BuildIntegratedNuGetProject)buildIntegratedProject,
+				nuGetProjectActions,
 				nuGetProjectContext,
 				token
 			);

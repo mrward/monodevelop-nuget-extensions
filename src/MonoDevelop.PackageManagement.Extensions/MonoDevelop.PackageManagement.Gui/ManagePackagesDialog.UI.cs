@@ -24,9 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using ExtendedTitleBarDialog = MonoDevelop.Components.ExtendedTitleBarDialog;
-using Mono.Unix;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using Xwt;
@@ -70,7 +68,7 @@ namespace MonoDevelop.PackageManagement
 
 		void Build ()
 		{
-			Title = Catalog.GetString ("Manage Packages for Solution");
+			Title = GettextCatalog.GetString ("Manage Packages for Solution");
 			Width = 820;
 			Height = 520;
 			Padding = new WidgetSpacing ();
@@ -169,7 +167,7 @@ namespace MonoDevelop.PackageManagement
 			loadingSpinnerHBox.PackStart (loadingSpinner);
 
 			loadingSpinnerLabel = new Label ();
-			loadingSpinnerLabel.Text = Catalog.GetString ("Loading package list...");
+			loadingSpinnerLabel.Text = GettextCatalog.GetString ("Loading package list...");
 			loadingSpinnerHBox.PackEnd (loadingSpinnerLabel);
 
 			loadingSpinnerFrame = new FrameBox ();
@@ -184,7 +182,7 @@ namespace MonoDevelop.PackageManagement
 			noPackagesFoundHBox.HorizontalPlacement = WidgetPlacement.Center;
 
 			var noPackagesFoundLabel = new Label ();
-			noPackagesFoundLabel.Text = Catalog.GetString ("No matching packages found.");
+			noPackagesFoundLabel.Text = GettextCatalog.GetString ("No matching packages found.");
 			noPackagesFoundHBox.PackEnd (noPackagesFoundLabel);
 
 			noPackagesFoundFrame = new FrameBox ();
@@ -240,7 +238,7 @@ namespace MonoDevelop.PackageManagement
 
 			var packageIdLabel = new Label ();
 			packageIdLabel.Font = packageInfoSmallFont;
-			packageIdLabel.Markup = Catalog.GetString ("<b>Id</b>");
+			packageIdLabel.Markup = GettextCatalog.GetString ("<b>Id</b>");
 			packageIdHBox.PackStart (packageIdLabel);
 
 			packageId = new Label ();
@@ -259,7 +257,7 @@ namespace MonoDevelop.PackageManagement
 			packageInfoVBox.PackStart (packageAuthorHBox);
 
 			var packageAuthorLabel = new Label ();
-			packageAuthorLabel.Markup = Catalog.GetString ("<b>Author</b>");
+			packageAuthorLabel.Markup = GettextCatalog.GetString ("<b>Author</b>");
 			packageAuthorLabel.Font = packageInfoSmallFont;
 			packageAuthorHBox.PackStart (packageAuthorLabel);
 
@@ -274,7 +272,7 @@ namespace MonoDevelop.PackageManagement
 			packageInfoVBox.PackStart (packagePublishedHBox);
 
 			var packagePublishedLabel = new Label ();
-			packagePublishedLabel.Markup = Catalog.GetString ("<b>Published</b>");
+			packagePublishedLabel.Markup = GettextCatalog.GetString ("<b>Published</b>");
 			packagePublishedLabel.Font = packageInfoSmallFont;
 			packagePublishedHBox.PackStart (packagePublishedLabel);
 
@@ -287,7 +285,7 @@ namespace MonoDevelop.PackageManagement
 			packageInfoVBox.PackStart (packageDownloadsHBox);
 
 			var packageDownloadsLabel = new Label ();
-			packageDownloadsLabel.Markup = Catalog.GetString ("<b>Downloads</b>");
+			packageDownloadsLabel.Markup = GettextCatalog.GetString ("<b>Downloads</b>");
 			packageDownloadsLabel.Font = packageInfoSmallFont;
 			packageDownloadsHBox.PackStart (packageDownloadsLabel);
 
@@ -300,12 +298,12 @@ namespace MonoDevelop.PackageManagement
 			packageInfoVBox.PackStart (packageLicenseHBox);
 
 			var packageLicenseLabel = new Label ();
-			packageLicenseLabel.Markup = Catalog.GetString ("<b>License</b>");
+			packageLicenseLabel.Markup = GettextCatalog.GetString ("<b>License</b>");
 			packageLicenseLabel.Font = packageInfoSmallFont;
 			packageLicenseHBox.PackStart (packageLicenseLabel);
 
 			packageLicenseLink = new LinkLabel ();
-			packageLicenseLink.Text = Catalog.GetString ("View License");
+			packageLicenseLink.Text = GettextCatalog.GetString ("View License");
 			packageLicenseLink.Font = packageInfoSmallFont;
 			packageLicenseHBox.PackEnd (packageLicenseLink);
 
@@ -314,12 +312,12 @@ namespace MonoDevelop.PackageManagement
 			packageInfoVBox.PackStart (packageProjectPageHBox);
 
 			var packageProjectPageLabel = new Label ();
-			packageProjectPageLabel.Markup = Catalog.GetString ("<b>Project Page</b>");
+			packageProjectPageLabel.Markup = GettextCatalog.GetString ("<b>Project Page</b>");
 			packageProjectPageLabel.Font = packageInfoSmallFont;
 			packageProjectPageHBox.PackStart (packageProjectPageLabel);
 
 			packageProjectPageLink = new LinkLabel ();
-			packageProjectPageLink.Text = Catalog.GetString ("Visit Page");
+			packageProjectPageLink.Text = GettextCatalog.GetString ("Visit Page");
 			packageProjectPageLink.Font = packageInfoSmallFont;
 			packageProjectPageHBox.PackEnd (packageProjectPageLink);
 
@@ -328,12 +326,12 @@ namespace MonoDevelop.PackageManagement
 			packageInfoVBox.PackStart (packageDependenciesHBox);
 
 			var packageDependenciesLabel = new Label ();
-			packageDependenciesLabel.Markup = Catalog.GetString ("<b>Dependencies</b>");
+			packageDependenciesLabel.Markup = GettextCatalog.GetString ("<b>Dependencies</b>");
 			packageDependenciesLabel.Font = packageInfoSmallFont;
 			packageDependenciesHBox.PackStart (packageDependenciesLabel);
 
 			packageDependenciesNoneLabel = new Label ();
-			packageDependenciesNoneLabel.Text = Catalog.GetString ("None");
+			packageDependenciesNoneLabel.Text = GettextCatalog.GetString ("None");
 			packageDependenciesNoneLabel.Font = packageInfoSmallFont;
 			packageDependenciesHBox.PackEnd (packageDependenciesNoneLabel);
 
@@ -355,7 +353,7 @@ namespace MonoDevelop.PackageManagement
 			packageVersionsHBox.Margin = new WidgetSpacing (15, 0, 15, 12);
 			var packageVersionsLabel = new Label ();
 			packageVersionsLabel.Font = packageInfoSmallFont;
-			packageVersionsLabel.Markup = Catalog.GetString ("<b>Version</b>");
+			packageVersionsLabel.Markup = GettextCatalog.GetString ("<b>Version</b>");
 			packageVersionsHBox.PackStart (packageVersionsLabel);
 
 			packageVersionComboBox = new ComboBox ();
@@ -378,19 +376,19 @@ namespace MonoDevelop.PackageManagement
 			mainVBox.PackStart (bottomHBox);
 
 			showPrereleaseCheckBox = new CheckBox ();
-			showPrereleaseCheckBox.Label = Catalog.GetString ("Show pre-release packages");
+			showPrereleaseCheckBox.Label = GettextCatalog.GetString ("Show pre-release packages");
 			bottomHBox.PackStart (showPrereleaseCheckBox);
 
 			addPackagesButton = new Button ();
 			addPackagesButton.MinWidth = 120;
 			addPackagesButton.MinHeight = 25;
-			addPackagesButton.Label = Catalog.GetString ("Add Package");
+			addPackagesButton.Label = GettextCatalog.GetString ("Add Package");
 			bottomHBox.PackEnd (addPackagesButton);
 
 			var closeButton = new Button ();
 			closeButton.MinWidth = 120;
 			closeButton.MinHeight = 25;
-			closeButton.Label = Catalog.GetString ("Close");
+			closeButton.Label = GettextCatalog.GetString ("Close");
 			closeButton.Clicked += (sender, e) => Close ();
 			bottomHBox.PackEnd (closeButton);
 
