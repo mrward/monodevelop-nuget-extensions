@@ -23,7 +23,7 @@ The addin is available from the [MonoDevelop addin repository](http://addins.mon
 
  * Open the **Add-in Manager** dialog.
  * Select the **Gallery** tab.
- * Select **Xamarin Studio Add-in Repository (Alpha channel)** from  the drop down list.
+ * Select **Visual Studio Extension Repository (Beta channel)** from  the drop down list.
  * Expand **IDE extensions**.
  * Select **NuGet Package Management Extensions**.
  * Click the **Refresh** button if the addin is not visible.
@@ -57,7 +57,7 @@ To install a specific version of the package you can use the **-version** option
  
 The status bar will be updated as the install progresses. Errors will be displayed in the **Package Console**.
 
-The unified search is available at the top right of the main Xamarin Studio window.
+The unified search is available at the top right of the main IDE window.
 
 ## Package search category
 
@@ -87,7 +87,7 @@ This runs the [Mono Portable Class Library command line utility](https://github.
 
 ## Managing Packages for the Solution
 
-The NuGet addin that is available for Xamarin Studio 4 included the ability to manage packages for the solution. You could install, update or uninstall packages for multiple projects in one step. This feature is has been made available for Xamarin Studio 5 by the extension addin.
+The NuGet addin that is available for Xamarin Studio 4 included the ability to manage packages for the solution. You could install, update or uninstall packages for multiple projects in one step. This feature was removed in later versions but has been made available by the extension addin.
 
 To open the Manage Packages dialog:
 
@@ -99,8 +99,8 @@ To open the Manage Packages dialog:
 
 ### Install a package into multiple projects
 
- * Select the package in the **Available** tab.
- * Click the **Manage** button.
+ * Select the package in the **Browse** tab.
+ * Click the **Add Package** button.
 
 Then a Select Projects dialog will be displayed.
 
@@ -115,13 +115,13 @@ To uninstall a package from multiple projects:
  * Open the **Manage Packages** dialog.
  * Select the **Installed** tab.
  * Select the package you want to uninstall.
- * Click the **Manage** button.
+ * Click the **Remove Package** button.
  * Untick the projects you want the package to be uninstalled from.
  * Click **OK**.
 
 ## PowerShell Console Window
 
-Please make sure you have closed and re-opened Xamarin Studio after the addin has been installed before trying to open the PowerShell Console window otherwise Xamarin Studio will crash.
+Please make sure you have closed and re-opened IDE after the addin has been installed before trying to open the PowerShell Console window otherwise the IDE will crash.
 
 To open the console window, from the **View** menu select **Pads**, then select **Package Console Extension**.
 
