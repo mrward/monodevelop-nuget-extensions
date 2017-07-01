@@ -1,4 +1,4 @@
-# Extends the NuGet Addin for MonoDevelop and Xamarin Studio
+# Extends the NuGet Addin for MonoDevelop, Xamarin Studio and Visual Studio for Mac
 
 Adds some extra features to the NuGet addin that are not currently built-in.
 
@@ -13,7 +13,9 @@ These features are experimental, subject to change, removal, and should be consi
 
 # Requirements
 
- * MonoDevelop 5.0 or Xamarin Studio 5.0
+ * MonoDevelop 5.0, 6.0, 7.0
+ * Xamarin Studio 5.0, 6.0
+ * Visual Studio for Mac 7.0
 
 # Installation
 
@@ -29,7 +31,7 @@ The addin is available from the [MonoDevelop addin repository](http://addins.mon
 
 ![NuGet package management extension addin in the addin manager dialog](doc/images/AddinManagerNuGetExtensionsAddin.png)
 
-Please make sure you close Xamarin Studio and then re-open it before opening the new Package Console window otherwise Xamarin Studio will crash.
+Please make sure you close the IDE and then re-open it before opening the new Package Console window otherwise the IDE will crash.
 
 # Features
 
