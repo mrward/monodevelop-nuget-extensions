@@ -5,9 +5,9 @@
 	author      = "Matt Ward"
 	copyright   = "MIT"
 	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
-	description = "Provides extensions to the NuGet addin. Supports Visual Studio for Mac 7.0 build 2740."
+	description = "Provides extensions to the NuGet addin. Supports Visual Studio for Mac 7.1 build 1178 and later versions."
 	category    = "IDE extensions"
-	version     = "0.12.2">
+	version     = "0.12.3">
 	
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
@@ -27,9 +27,9 @@
 	</Runtime>
 
 	<Dependencies>
-		<Addin id="Core" version="7.0"/>
-		<Addin id="Ide" version="7.0"/>
-		<Addin id="PackageManagement" version="7.0"/>
+		<Addin id="Core" version="7.1"/>
+		<Addin id="Ide" version="7.1"/>
+		<Addin id="PackageManagement" version="7.1"/>
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
