@@ -80,10 +80,6 @@
       <HintPath>..\..\lib\NuGet.PackageManagement.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NuGet.ProjectManagement">
-      <HintPath>..\..\lib\NuGet.ProjectManagement.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="NuGet.Packaging.Core">
       <HintPath>..\..\lib\NuGet.Packaging.Core.dll</HintPath>
       <Private>False</Private>
@@ -100,12 +96,9 @@
       <HintPath>..\..\lib\NuGet.Frameworks.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NuGet.Packaging.Core.Types">
-      <HintPath>..\..\lib\NuGet.Packaging.Core.Types.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="NuGet.Protocol.Core.Types">
-      <HintPath>..\..\lib\NuGet.Protocol.Core.Types.dll</HintPath>
+    <Reference Include="NuGet.Protocol.">
+      <HintPath>..\..\lib\NuGet.Protocol.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NuGet.Resolver">

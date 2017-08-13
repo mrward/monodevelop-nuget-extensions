@@ -49,15 +49,6 @@ namespace MonoDevelop.PackageManagement
 			this.solutionManager = solutionManager;
 		}
 
-		public NuGetProject DefaultNuGetProject {
-			get { return solutionManager.DefaultNuGetProject; }
-		}
-
-		public string DefaultNuGetProjectName {
-			get { return solutionManager.DefaultNuGetProjectName; }
-			set { solutionManager.DefaultNuGetProjectName = value; }
-		}
-
 		public bool IsSolutionAvailable {
 			get { return solutionManager.IsSolutionAvailable; }
 		}
@@ -100,7 +91,7 @@ namespace MonoDevelop.PackageManagement
 
 		public NuGetProject GetNuGetProject (string nuGetProjectSafeName)
 		{
-			return GetNuGetProject (nuGetProjectSafeName);
+			return solutionManager.GetNuGetProject (nuGetProjectSafeName);
 		}
 
 		public NuGetProject GetNuGetProject (IDotNetProject project)
@@ -130,15 +121,13 @@ namespace MonoDevelop.PackageManagement
 
 		public void SaveProject (NuGetProject nuGetProject)
 		{
-			var msbuildProject = nuGetProject as MSBuildNuGetProject;
-			if (msbuildProject != null) {
-				var projectSystem = msbuildProject.MSBuildNuGetProjectSystem as ConsoleHostMSBuildNuGetProjectSystem;
-				projectSystem.SaveProject ().Wait ();
-
+			var hasProject = nuGetProject as IHasDotNetProject;
+			if (hasProject != null) {
+				hasProject.SaveProject ().Wait ();
 				return;
 			}
 
-			solutionManager.SaveProject (nuGetProject);
+			throw new ApplicationException (string.Format ("Unsupported NuGetProject type: {0}", nuGetProject.GetType ().FullName));
 		}
 
 		public void ClearProjectCache ()
@@ -146,18 +135,9 @@ namespace MonoDevelop.PackageManagement
 			solutionManager.ClearProjectCache ();
 		}
 
-		public bool IsSolutionDPLEnabled {
-			get { return solutionManager.IsSolutionDPLEnabled; }
-		}
-
 		public void EnsureSolutionIsLoaded ()
 		{
 			solutionManager.EnsureSolutionIsLoaded ();
-		}
-
-		public Task<NuGetProject> UpdateNuGetProjectToPackageRef (NuGetProject oldProject)
-		{
-			return solutionManager.UpdateNuGetProjectToPackageRef (oldProject);
 		}
 	}
 }
