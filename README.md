@@ -17,11 +17,21 @@ These features are experimental, subject to change, removal, and should be consi
  * Xamarin Studio 5.0, 6.0
  * Visual Studio for Mac 7.0
 
+The NuGet Package Management Extensions addin published on the main addin server does not work for Visual Studio Mac 7.1 or 7.2. If these versions are being used the addin will need to be downloaded and installed using the Install from file button in the Extension Manager dialog. The main symptom that NuGet Package Management extensions addin does not support the version of Visual Studio for Mac being used is the Manage Packages dialog not opening when its menu is selected.
+
+ **Visual Studio for Mac 7.1.0.1178 and later**
+ 
+ - [NuGet Package Management Extensions addin 0.12.3](https://github.com/mrward/monodevelop-addins/blob/gh-pages/7.1/MonoDevelop.PackageManagement.Extensions_0.12.3.mpack)
+ 
+ **Visual Studio for Mac 7.2.0.526 and later**
+ 
+ - [NuGet Package Management Extensions addin 0.12.4](https://github.com/mrward/monodevelop-addins/blob/gh-pages/7.2/MonoDevelop.PackageManagement.Extensions_0.12.4.mpack)
+
 # Installation
 
 The addin is available from the [MonoDevelop addin repository](http://addins.monodevelop.com/). To install the addin:
 
- * Open the **Add-in Manager** dialog.
+ * Open the **Extension Manager** dialog.
  * Select the **Gallery** tab.
  * Select **Visual Studio Extension Repository (Beta channel)** from  the drop down list.
  * Expand **IDE extensions**.
