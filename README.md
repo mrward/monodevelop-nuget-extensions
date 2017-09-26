@@ -27,9 +27,9 @@ Alternatively the addin can be downloaded, from the following download links, an
  
  - [NuGet Package Management Extensions addin 0.12.3](https://github.com/mrward/monodevelop-addins/blob/gh-pages/7.1/MonoDevelop.PackageManagement.Extensions_0.12.3.mpack)
  
- **Visual Studio for Mac 7.2.0.526 and later**
+ **Visual Studio for Mac 7.2.0.617 and later**
  
- - [NuGet Package Management Extensions addin 0.12.4](https://github.com/mrward/monodevelop-addins/blob/gh-pages/7.2/MonoDevelop.PackageManagement.Extensions_0.12.4.mpack)
+ - [NuGet Package Management Extensions addin 0.12.5](https://github.com/mrward/monodevelop-addins/blob/gh-pages/7.2/MonoDevelop.PackageManagement.Extensions_0.12.5.mpack)
 
 # Installation
 
