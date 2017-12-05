@@ -70,12 +70,8 @@
       <HintPath>..\..\lib\NuGet.PackageManagement.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NuGet.Protocol.Core.Types">
-      <HintPath>..\..\lib\NuGet.Protocol.Core.Types.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NuGet.ProjectManagement">
-      <HintPath>..\..\lib\NuGet.ProjectManagement.dll</HintPath>
+    <Reference Include="NuGet.Protocol">
+      <HintPath>..\..\lib\NuGet.Protocol.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NuGet.Versioning">
@@ -83,9 +79,6 @@
     </Reference>
     <Reference Include="NuGet.Packaging.Core">
       <HintPath>..\..\lib\NuGet.Packaging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Packaging.Core.Types">
-      <HintPath>..\..\lib\NuGet.Packaging.Core.Types.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Frameworks">
       <HintPath>..\..\lib\NuGet.Frameworks.dll</HintPath>
@@ -243,6 +236,7 @@
     <Compile Include="NuGet.PackageManagement.UI\ConsolidatePackageFeed.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ManagePackagesInProjectHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\MonoDevelopSolutionManagerWrapper.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostMSBuildNuGetProject.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

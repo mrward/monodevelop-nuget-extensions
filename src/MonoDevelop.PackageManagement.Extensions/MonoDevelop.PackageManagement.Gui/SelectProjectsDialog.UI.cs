@@ -25,10 +25,9 @@
 // THE SOFTWARE.
 
 using System;
-using MonoDevelop.Core;
-using MonoDevelop.Ide;
-using Xwt;
 using System.Linq;
+using MonoDevelop.Core;
+using Xwt;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -42,7 +41,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			Title = GettextCatalog.GetString ("Select Projects");
 			Width = 420;
-			Height = 120;
+			Height = 330;
 			Padding = 20;
 
 			var mainVBox = new VBox ();
