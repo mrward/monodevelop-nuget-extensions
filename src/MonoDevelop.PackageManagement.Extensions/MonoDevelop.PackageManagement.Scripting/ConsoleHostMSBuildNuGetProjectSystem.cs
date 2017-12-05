@@ -565,6 +565,10 @@ namespace MonoDevelop.PackageManagement
 			guiSyncDispatcherFunc (func).Wait ();
 		}
 
+		public IDotNetProject Project {
+			get { return project; }
+		}
+
 		public Task SaveProject ()
 		{
 			return project.SaveAsync ();
