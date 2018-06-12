@@ -510,8 +510,9 @@ namespace MonoDevelop.PackageManagement
 			ManagePackagesSearchResultViewModel packageViewModel,
 			IEnumerable<IDotNetProject> projects)
 		{
-			return projects.Select (project => {
-				return new InstallNuGetPackageAction (
+			bool firstInstall = true;
+			foreach (IDotNetProject project in projects) {
+				yield return new InstallNuGetPackageAction (
 					SelectedPackageSource.GetSourceRepositories (),
 					solutionManager,
 					project,
@@ -519,9 +520,12 @@ namespace MonoDevelop.PackageManagement
 				) {
 					IncludePrerelease = IncludePrerelease,
 					PackageId = packageViewModel.Id,
-					Version = packageViewModel.SelectedVersion
+					Version = packageViewModel.SelectedVersion,
+					LicensesMustBeAccepted = firstInstall
 				};
-			});
+
+				firstInstall = false;
+			};
 		}
 
 		public IEnumerable<IPackageAction> CreateUninstallPackageActions (
@@ -544,6 +548,7 @@ namespace MonoDevelop.PackageManagement
 			ManagePackagesSearchResultViewModel packageViewModel,
 			IEnumerable<IDotNetProject> projects)
 		{
+			bool firstInstall = true;
 			foreach (IDotNetProject project in projects) {
 				if (IsPackageInstalledInProject (project, packageViewModel.Id)) {
 					yield return new InstallNuGetPackageAction (
@@ -554,8 +559,11 @@ namespace MonoDevelop.PackageManagement
 					) {
 						IncludePrerelease = IncludePrerelease,
 						PackageId = packageViewModel.Id,
-						Version = packageViewModel.SelectedVersion
+						Version = packageViewModel.SelectedVersion,
+						LicensesMustBeAccepted = firstInstall
 					};
+
+					firstInstall = false;
 				}
 			}
 		}
@@ -564,6 +572,7 @@ namespace MonoDevelop.PackageManagement
 			ManagePackagesSearchResultViewModel packageViewModel,
 			IEnumerable<IDotNetProject> projects)
 		{
+			bool firstInstall = true;
 			foreach (IDotNetProject project in projects) {
 				if (IsPackageInstalledInProjectWithDifferentVersion (project, packageViewModel.Id, packageViewModel.SelectedVersion)) {
 					yield return new InstallNuGetPackageAction (
@@ -574,8 +583,11 @@ namespace MonoDevelop.PackageManagement
 					) {
 						IncludePrerelease = IncludePrerelease,
 						PackageId = packageViewModel.Id,
-						Version = packageViewModel.SelectedVersion
+						Version = packageViewModel.SelectedVersion,
+						LicensesMustBeAccepted = firstInstall
 					};
+
+					firstInstall = false;
 				}
 			}
 		}
