@@ -7,7 +7,7 @@
 	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
 	description = "Provides extensions to the NuGet addin. Supports Visual Studio for Mac 7.7 build 1738 and later versions."
 	category    = "IDE extensions"
-	version     = "0.13">
+	version     = "0.14">
 	
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
