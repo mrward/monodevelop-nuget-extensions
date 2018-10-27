@@ -43,24 +43,9 @@ namespace MonoDevelop.PackageManagement
 			ReloadSettings ();
 		}
 
-		public NuGet.ProjectManagement.NuGetProject DefaultNuGetProject {
-			get {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public string DefaultNuGetProjectName {
-			get {
-				throw new NotImplementedException ();
-			}
-
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public bool IsSolutionAvailable {
-			get { return false; }
+		public Task<bool> IsSolutionAvailableAsync ()
+		{
+			return Task.FromResult (false);
 		}
 
 		public bool IsSolutionOpen {
@@ -104,7 +89,7 @@ namespace MonoDevelop.PackageManagement
 			return SourceRepositoryProviderFactory.CreateSourceRepositoryProvider (Settings);
 		}
 
-		public NuGet.ProjectManagement.NuGetProject GetNuGetProject (string nuGetProjectSafeName)
+		public Task<NuGetProject> GetNuGetProjectAsync (string nuGetProjectSafeName)
 		{
 			throw new NotImplementedException ();
 		}
@@ -114,12 +99,12 @@ namespace MonoDevelop.PackageManagement
 			throw new NotImplementedException ();
 		}
 
-		public IEnumerable<NuGet.ProjectManagement.NuGetProject> GetNuGetProjects ()
+		public Task<IEnumerable<NuGetProject>> GetNuGetProjectsAsync ()
 		{
 			throw new NotImplementedException ();
 		}
 
-		public string GetNuGetProjectSafeName (NuGet.ProjectManagement.NuGetProject nuGetProject)
+		public Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject)
 		{
 			throw new NotImplementedException ();
 		}
@@ -151,15 +136,13 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 
-		public bool IsSolutionDPLEnabled { get; set; }
-
 		public void EnsureSolutionIsLoaded ()
 		{
 		}
 
-		public Task<NuGetProject> UpdateNuGetProjectToPackageRef (NuGetProject oldProject)
+		public Task<bool> DoesNuGetSupportsAnyProjectAsync ()
 		{
-			return Task.FromResult (oldProject);
+			throw new NotImplementedException ();
 		}
 	}
 }

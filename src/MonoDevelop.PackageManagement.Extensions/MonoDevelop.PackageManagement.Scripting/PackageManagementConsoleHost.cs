@@ -325,13 +325,17 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public IEnumerable<NuGetProject> GetNuGetProjects ()
 		{
-			return solutionManager.GetNuGetProjects ().ToList ();
+			var task = solutionManager.GetNuGetProjectsAsync ();
+			task.Wait ();
+			return task.Result.ToList ();
 		}
 
 		public NuGetProject GetNuGetProject (string projectName)
 		{
 			string activeProjectName = GetActiveProjectName (projectName);
-			return solutionManager.GetNuGetProject (activeProjectName);
+			var task = solutionManager.GetNuGetProjectAsync (activeProjectName);
+			task.Wait ();
+			return task.Result;
 		}
 
 		public IEnumerable<PackageSource> LoadPackageSources ()

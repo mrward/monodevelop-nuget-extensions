@@ -359,6 +359,6 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			return result;
 		}
 
-		TelemetryServiceHelper INuGetProjectContext.TelemetryService { get; set; }
+		public Guid OperationId { get; set; }
 	}
 }

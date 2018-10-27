@@ -82,12 +82,14 @@ namespace MonoDevelop.PackageManagement.Scripting
 			NuGetProject nuGetProject,
 			IEnumerable<NuGetProjectAction> nuGetProjectActions,
 			INuGetProjectContext nuGetProjectContext,
+			SourceCacheContext sourceCacheContext,
 			CancellationToken token)
 		{
 			return packageManager.ExecuteNuGetProjectActionsAsync (
 				nuGetProject,
 				nuGetProjectActions,
 				nuGetProjectContext,
+				sourceCacheContext,
 				token);
 		}
 

@@ -39,6 +39,7 @@ using NuGet.PackageManagement;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.PackageManagement.PowerShellCmdlets;
+using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGetVersion = NuGet.Versioning.NuGetVersion;
 
@@ -201,15 +202,16 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 		async Task PreviewAndExecuteUpdateActionsforAllPackages (NuGetProject project)
 		{
 			var packageManager = ConsoleHost.CreatePackageManager ();
+			var context = CreateResolutionContext ();
 			var actions = await packageManager.PreviewUpdatePackagesAsync (
 				project,
-				CreateResolutionContext (),
+				context,
 				this,
 				PrimarySourceRepositories,
 				PrimarySourceRepositories,
 				ConsoleHost.Token);
 
-			await ExecuteActions (project, actions, packageManager);
+			await ExecuteActions (project, actions, packageManager, context.SourceCacheContext);
 		}
 
 		async Task PreviewAndExecuteUpdateActionsforSinglePackage (NuGetProject project)
@@ -226,12 +228,13 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 				packageManager = ConsoleHost.CreatePackageManager ();
 				var actions = Enumerable.Empty<NuGetProjectAction> ();
 
+				var resolutionContext = CreateResolutionContext ();
 				// If -Version switch is specified
 				if (!string.IsNullOrEmpty (Version)) {
 					actions = await packageManager.PreviewUpdatePackagesAsync (
 						new PackageIdentity (installedPackage.PackageIdentity.Id, PowerShellCmdletsUtility.GetNuGetVersionFromString (Version)),
 						project,
-						CreateResolutionContext (),
+						resolutionContext,
 						this,
 						PrimarySourceRepositories,
 						EnabledSourceRepositories,
@@ -240,18 +243,22 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 					actions = await packageManager.PreviewUpdatePackagesAsync (
 						installedPackage.PackageIdentity.Id,
 						project,
-						CreateResolutionContext (),
+						resolutionContext,
 						this,
 						PrimarySourceRepositories,
 						EnabledSourceRepositories,
 						ConsoleHost.Token);
 				}
 
-				await ExecuteActions (project, actions, packageManager);
+				await ExecuteActions (project, actions, packageManager, resolutionContext.SourceCacheContext);
 			}
 		}
 
-		async Task ExecuteActions (NuGetProject project, IEnumerable<NuGetProjectAction> actions, ConsoleHostNuGetPackageManager packageManager)
+		async Task ExecuteActions (
+			NuGetProject project,
+			IEnumerable<NuGetProjectAction> actions,
+			ConsoleHostNuGetPackageManager packageManager,
+			SourceCacheContext cacheContext)
 		{
 			if (actions.Any ()) {
 				if (WhatIf.IsPresent) {
@@ -259,7 +266,12 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 					PreviewNuGetPackageActions (actions);
 				} else {
 					// Execute project actions by Package Manager
-					await packageManager.ExecuteNuGetProjectActionsAsync (project, actions, this, ConsoleHost.Token);
+					await packageManager.ExecuteNuGetProjectActionsAsync (
+						project,
+						actions,
+						this,
+						cacheContext,
+						ConsoleHost.Token);
 				}
 			} else {
 				Log (MessageLevel.Info,

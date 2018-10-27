@@ -49,8 +49,9 @@ namespace MonoDevelop.PackageManagement
 			this.solutionManager = solutionManager;
 		}
 
-		public bool IsSolutionAvailable {
-			get { return solutionManager.IsSolutionAvailable; }
+		public Task<bool> IsSolutionAvailableAsync ()
+		{
+			return solutionManager.IsSolutionAvailableAsync ();
 		}
 
 		public bool IsSolutionOpen {
@@ -89,9 +90,9 @@ namespace MonoDevelop.PackageManagement
 			return solutionManager.CreateSourceRepositoryProvider ();
 		}
 
-		public NuGetProject GetNuGetProject (string nuGetProjectSafeName)
+		public Task<NuGetProject> GetNuGetProjectAsync (string nuGetProjectSafeName)
 		{
-			return solutionManager.GetNuGetProject (nuGetProjectSafeName);
+			return solutionManager.GetNuGetProjectAsync (nuGetProjectSafeName);
 		}
 
 		public NuGetProject GetNuGetProject (IDotNetProject project)
@@ -99,14 +100,14 @@ namespace MonoDevelop.PackageManagement
 			return solutionManager.GetNuGetProject (project);
 		}
 
-		public IEnumerable<NuGetProject> GetNuGetProjects ()
+		public Task<IEnumerable<NuGetProject>> GetNuGetProjectsAsync ()
 		{
-			return solutionManager.GetNuGetProjects ();
+			return solutionManager.GetNuGetProjectsAsync ();
 		}
 
-		public string GetNuGetProjectSafeName (NuGetProject nuGetProject)
+		public Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject)
 		{
-			return solutionManager.GetNuGetProjectSafeName (nuGetProject);
+			return solutionManager.GetNuGetProjectSafeNameAsync (nuGetProject);
 		}
 
 		public void OnActionsExecuted (IEnumerable<ResolvedAction> actions)
@@ -138,6 +139,11 @@ namespace MonoDevelop.PackageManagement
 		public void EnsureSolutionIsLoaded ()
 		{
 			solutionManager.EnsureSolutionIsLoaded ();
+		}
+
+		public Task<bool> DoesNuGetSupportsAnyProjectAsync ()
+		{
+			return solutionManager.DoesNuGetSupportsAnyProjectAsync ();
 		}
 	}
 }

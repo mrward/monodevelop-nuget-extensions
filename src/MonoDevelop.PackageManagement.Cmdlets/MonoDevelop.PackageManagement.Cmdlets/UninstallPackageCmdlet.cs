@@ -11,6 +11,7 @@ using MonoDevelop.PackageManagement.Scripting;
 using NuGet;
 using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
+using NuGet.Protocol.Core.Types;
 
 namespace ICSharpCode.PackageManagement.Cmdlets
 {
@@ -81,7 +82,12 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 			if (isPreview) {
 				PreviewNuGetPackageActions (actions);
 			} else {
-				await packageManager.ExecuteNuGetProjectActionsAsync (project, actions, projectContext, ConsoleHost.Token);
+				await packageManager.ExecuteNuGetProjectActionsAsync (
+					project,
+					actions,
+					projectContext,
+					NullSourceCacheContext.Instance,
+					ConsoleHost.Token);
 			}
 		}
 

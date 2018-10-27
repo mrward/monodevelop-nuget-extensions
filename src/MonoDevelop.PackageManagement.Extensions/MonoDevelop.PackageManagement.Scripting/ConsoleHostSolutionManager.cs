@@ -75,10 +75,9 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 
-		public bool IsSolutionAvailable {
-			get {
-				throw new NotImplementedException ();
-			}
+		public Task<bool> IsSolutionAvailableAsync ()
+		{
+			throw new NotImplementedException ();
 		}
 
 		public bool IsSolutionOpen {
@@ -134,37 +133,29 @@ namespace MonoDevelop.PackageManagement
 			throw new NotImplementedException ();
 		}
 
-		public NuGetProject GetNuGetProject (string nuGetProjectSafeName)
+		public Task<NuGetProject> GetNuGetProjectAsync (string nuGetProjectSafeName)
 		{
 			GetSolutionManager ();
 
 			NuGetProject project = null;
 
-			Runtime.RunInMainThread (() => {
-				var dotNetProject = IdeApp.ProjectOperations.CurrentSelectedSolution?.FindProjectByName (nuGetProjectSafeName) as DotNetProject;
-				if (dotNetProject != null) {
-					var factory = new ConsoleHostNuGetProjectFactory (solutionManager.Settings);
-					project = factory.CreateNuGetProject (dotNetProject);
-				}
-			}).Wait ();
+			var dotNetProject = IdeApp.ProjectOperations.CurrentSelectedSolution?.FindProjectByName (nuGetProjectSafeName) as DotNetProject;
+			if (dotNetProject != null) {
+				var factory = new ConsoleHostNuGetProjectFactory (solutionManager.Settings);
+				project = factory.CreateNuGetProject (dotNetProject);
+			}
 
-			return project;
+			return Task.FromResult (project);
 		}
 
-		public IEnumerable<NuGetProject> GetNuGetProjects ()
+		public Task<IEnumerable<NuGetProject>> GetNuGetProjectsAsync ()
 		{
 			GetSolutionManager ();
 
 			if (solutionManager == null)
-				return Enumerable.Empty<NuGetProject> ();
-			
-			List<NuGetProject> projects = null;
+				return Task.FromResult (Enumerable.Empty<NuGetProject> ());
 
-			Runtime.RunInMainThread (() => {
-				projects = GetNuGetProjects (solutionManager).ToList ();
-			}).Wait ();
-
-			return projects;
+			return Task.FromResult (GetNuGetProjects (solutionManager).ToList ().AsEnumerable ());
 		}
 
 		static IEnumerable<NuGetProject> GetNuGetProjects (MonoDevelopSolutionManager solutionManager)
@@ -175,7 +166,7 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 
-		public string GetNuGetProjectSafeName (NuGetProject nuGetProject)
+		public Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject)
 		{
 			throw new NotImplementedException ();
 		}
@@ -223,15 +214,13 @@ namespace MonoDevelop.PackageManagement
 		{
 		}
 
-		public bool IsSolutionDPLEnabled { get; set; }
-
 		public void EnsureSolutionIsLoaded ()
 		{
 		}
 
-		public Task<NuGetProject> UpdateNuGetProjectToPackageRef (NuGetProject oldProject)
+		public Task<bool> DoesNuGetSupportsAnyProjectAsync ()
 		{
-			return Task.FromResult (oldProject);
+			throw new NotImplementedException ();
 		}
 	}
 }

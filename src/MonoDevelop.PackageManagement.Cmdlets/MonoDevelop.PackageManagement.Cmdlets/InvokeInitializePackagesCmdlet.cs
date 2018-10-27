@@ -132,22 +132,25 @@ namespace ICSharpCode.PackageManagement.Cmdlets
 				.PackagesFolderSourceRepository
 				.GetResourceAsync<DependencyInfoResource> ();
 
-			// Order by the highest framework first to make this deterministic
-			// Process each framework/id/version once to avoid duplicate work
-			// Packages may have different dependendcy orders depending on the framework, but there is
-			// no way to fully solve this across an entire solution so we make a best effort here.
-			foreach (var framework in packagesConfigInstalled.Keys.OrderByDescending (fw => fw, new NuGetFrameworkSorter ())) {
-				foreach (var package in packagesConfigInstalled[framework]) {
-					if (resolvedPackages.Add (package)) {
-						var dependencyInfo = await dependencyInfoResource.ResolvePackage (
-							package,
-							framework,
-							NullLogger.Instance,
-							CancellationToken.None);
+			using (var sourceCacheContext = new SourceCacheContext ()) {
+				// Order by the highest framework first to make this deterministic
+				// Process each framework/id/version once to avoid duplicate work
+				// Packages may have different dependendcy orders depending on the framework, but there is
+				// no way to fully solve this across an entire solution so we make a best effort here.
+				foreach (var framework in packagesConfigInstalled.Keys.OrderByDescending (fw => fw, new NuGetFrameworkSorter ())) {
+					foreach (var package in packagesConfigInstalled[framework]) {
+						if (resolvedPackages.Add (package)) {
+							var dependencyInfo = await dependencyInfoResource.ResolvePackage (
+								package,
+								framework,
+								sourceCacheContext,
+								NullLogger.Instance,
+								CancellationToken.None);
 
-						// This will be null for unrestored packages
-						if (dependencyInfo != null) {
-							packagesToSort.Add (new ResolverPackage (dependencyInfo, listed: true, absent: false));
+							// This will be null for unrestored packages
+							if (dependencyInfo != null) {
+								packagesToSort.Add (new ResolverPackage (dependencyInfo, listed: true, absent: false));
+							}
 						}
 					}
 				}
