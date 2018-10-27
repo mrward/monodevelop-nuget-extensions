@@ -28,6 +28,7 @@ using System;
 using System.Collections.Specialized;
 using Gtk;
 using ICSharpCode.PackageManagement.Scripting;
+using MonoDevelop.Components;
 using MonoDevelop.Core;
 using MonoDevelop.Projects;
 
@@ -46,7 +47,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			this.Build ();
 
-			clearButton = new Button (new Image (Stock.Clear, IconSize.Menu));
+			clearButton = new Button (new ImageView (Ide.Gui.Stock.Broom, IconSize.Menu));
 			clearButton.TooltipText = GettextCatalog.GetString ("Clear Console");
 			clearButton.Clicked += OnClearButtonClicked;
 			mainHBox.PackEnd (clearButton);
