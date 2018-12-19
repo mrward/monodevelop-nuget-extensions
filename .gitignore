@@ -2,3 +2,6 @@ obj
 bin
 *.userprefs
 *.DS_Store
+.vs/
+*.mpack
+*.user
