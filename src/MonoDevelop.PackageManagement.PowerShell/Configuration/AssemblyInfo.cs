@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MonoDevelop.PackageManagement.PowerShell")]
 [assembly: AssemblyDescription("Package Management PowerShell for MonoDevelop")]
 [assembly: AssemblyProduct("MonoDevelop.PackageManagement")]
-[assembly: AssemblyCopyright("Copyright (C) 2011-2015 Matthew Ward")]
+[assembly: AssemblyCopyright("Copyright (C) 2011-2018 Matthew Ward")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -27,4 +27,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can use the default the Revision and 
 // Build Numbers by using the '*' as shown below:
-[assembly: AssemblyVersion("0.14")]
+[assembly: AssemblyVersion("0.15")]
