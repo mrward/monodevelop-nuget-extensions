@@ -78,6 +78,15 @@
 				insertafter="MonoDevelop.PackageManagement.Commands.AddPackages"
 				_label="Manage Packages..." />
 		</Condition>
+		<Condition
+			id="ItemType"
+			value="MonoDevelop.DotNetCore.NodeBuilders.DependenciesNode|MonoDevelop.DotNetCore.NodeBuilders.PackageDependenciesNode">
+			<CommandItem
+				id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
+				insertbefore="MonoDevelop.PackageManagement.Commands.UpdateAllPackagesInProject"
+				insertafter="MonoDevelop.PackageManagement.Commands.AddPackages"
+				_label="Manage Packages..." />
+		</Condition>
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/Pads">
