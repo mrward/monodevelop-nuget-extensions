@@ -82,6 +82,17 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 		}
 
+		public PackageManagementConsoleHost (
+			IPackageManagementEvents packageEvents,
+			IPowerShellHostFactory powerShellHostFactory)
+			: this (
+				packageEvents,
+				new ConsoleHostSolutionManager (),
+				powerShellHostFactory,
+				new PackageManagementAddInPath ())
+		{
+		}
+
 		public bool IsRunning { get; private set; }
 		public Project DefaultProject { get; set; }
 

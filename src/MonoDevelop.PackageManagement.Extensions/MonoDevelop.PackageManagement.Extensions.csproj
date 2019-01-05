@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>MonoDevelop.PackageManagement</RootNamespace>
     <AssemblyName>MonoDevelop.PackageManagement.Extensions</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <SignAssembly>true</SignAssembly>
     <PublicSign>True</PublicSign>
     <AssemblyOriginatorKeyFile>..\MonoDevelop-Public.snk</AssemblyOriginatorKeyFile>
@@ -237,6 +237,9 @@
     <Compile Include="MonoDevelop.PackageManagement\ManagePackagesInProjectHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\MonoDevelopSolutionManagerWrapper.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostMSBuildNuGetProject.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHostFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHost.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\PowerShellHostMessageHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -257,11 +260,19 @@
       <Project>{A406803B-C584-43A3-BCEE-A0BB3132CB5F}</Project>
       <Name>MonoDevelop.PackageManagement.PowerShell</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj">
+      <Project>{56ADE615-648E-4F93-9F7C-636AA0737A7B}</Project>
+      <Name>MonoDevelop.PackageManagement.PowerShell.Protocol</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\NuGet-LICENSE.txt">
       <Link>NuGet-LICENSE.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="StreamJsonRpc" Version="1.4.134" />
   </ItemGroup>
 </Project>

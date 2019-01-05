@@ -26,8 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
 using MonoDevelop.PackageManagement;
+using MonoDevelop.PackageManagement.Scripting;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
@@ -65,7 +65,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void CreateConsoleHost ()
 		{
 //			if (powerShellDetection.IsPowerShell2Installed()) {
-		consoleHost = new PackageManagementConsoleHost (packageEvents);
+			var factory = new RemotePowerShellHostFactory ();
+			consoleHost = new PackageManagementConsoleHost (packageEvents, factory);
 //			} else {
 //				consoleHost = new PowerShellMissingConsoleHost();
 //			}
