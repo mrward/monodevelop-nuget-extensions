@@ -12,7 +12,7 @@ namespace NuGet.Common
 	/// <summary>
 	/// For internal use only
 	/// </summary>
-	public static class ExceptionUtilities
+	static class ExceptionUtilities
 	{
 		public static string DisplayMessage (Exception exception, bool indent)
 		{
