@@ -27,8 +27,9 @@
 //
 
 using System;
-using MonoDevelop.Projects;
+using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
+using MonoDevelop.Projects;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
@@ -47,7 +48,11 @@ namespace ICSharpCode.PackageManagement.Scripting
 			if (solution != null) {
 				return QuotedDirectory(solution.BaseDirectory);
 			}
-			return "$env:USERPROFILE";
+			if (Platform.IsWindows) {
+				return "$env:USERPROFILE";
+			} else {
+				return "$env:HOME";
+			}
 		}
 		
 		string QuotedDirectory(string directory)
