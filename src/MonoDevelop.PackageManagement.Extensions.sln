@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManageme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.Cmdlets", "MonoDevelop.PackageManagement.Cmdlets\MonoDevelop.PackageManagement.Cmdlets.csproj", "{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell.Protocol", "MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj", "{56ADE615-648E-4F93-9F7C-636AA0737A7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell.ConsoleHost", "MonoDevelop.PackageManagement.PowerShell.ConsoleHost\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.csproj", "{03E63744-94E9-4920-BFD5-D0920D4AA544}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,22 @@ Global
 		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Release|x86.ActiveCfg = Release|x86
 		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Release|x86.Build.0 = Release|x86
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|x86.Build.0 = Debug|Any CPU
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|x86.ActiveCfg = Release|Any CPU
+		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|x86.Build.0 = Release|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Debug|x86.Build.0 = Debug|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Release|x86.ActiveCfg = Release|Any CPU
+		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D81F5C91-D7DB-46E5-BC99-49488FB6814C} = {9CFB788D-6152-4172-A09E-6FDC001403BF}
