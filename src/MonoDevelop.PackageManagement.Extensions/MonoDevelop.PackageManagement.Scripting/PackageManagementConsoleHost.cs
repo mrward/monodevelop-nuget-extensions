@@ -241,7 +241,19 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void UpdateWorkingDirectory ()
 		{
-			string command = "Invoke-UpdateWorkingDirectory";
+			string directory = GetWorkingDirectory ();
+			UpdateWorkingDirectory (directory);
+		}
+
+		string GetWorkingDirectory ()
+		{
+			var workingDirectory = new PowerShellWorkingDirectory (PackageManagementExtendedServices.ProjectService);
+			return workingDirectory.GetWorkingDirectory ();
+		}
+
+		void UpdateWorkingDirectory (string directory)
+		{
+			string command = String.Format ("Set-Location {0}", directory);
 			powerShellHost.ExecuteCommand (command);
 		}
 
