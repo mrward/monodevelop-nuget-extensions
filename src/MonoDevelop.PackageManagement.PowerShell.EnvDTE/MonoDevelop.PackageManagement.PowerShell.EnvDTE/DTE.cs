@@ -24,12 +24,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using EnvDTE;
+
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class DTE
+	public class DTE : MarshalByRefObject, global::EnvDTE.DTE
 	{
 		public DTE ()
 		{
+			ItemOperations = new ItemOperations ();
+		}
+
+		public string Version => "10.0";
+
+		public Solution Solution => null;
+
+		public global::EnvDTE.ItemOperations ItemOperations { get; }
+
+		public object ActiveSolutionProjects => null;
+
+		public SourceControl SourceControl => null;
+
+		public Properties Properties (string category, string page)
+		{
+			return null;
 		}
 	}
 }

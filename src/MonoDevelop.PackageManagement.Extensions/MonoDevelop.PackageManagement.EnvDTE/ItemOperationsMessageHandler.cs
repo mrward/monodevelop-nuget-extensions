@@ -1,5 +1,5 @@
 ﻿//
-// Methods.cs
+// ItemOperationsMessageHandler.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,15 +24,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+using System;
+using MonoDevelop.Core;
+using MonoDevelop.Ide;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using Newtonsoft.Json.Linq;
+using StreamJsonRpc;
+
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
-	public static class Methods
+	class ItemOperationsMessageHandler
 	{
-		public const string InvokeName = "pshost/Invoke";
+		[JsonRpcMethod (Methods.ItemOperationsNavigateName)]
+		public void OnNavigate (JToken arg)
+		{
+			try {
+				var navigateMessage = arg.ToObject<ItemOperationsNavigateParams> ();
+				DesktopService.OpenFile (navigateMessage.Url);
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnNavigate error: {0}", ex);
+			}
+		}
 
-		public const string LogName = "ps/Log";
+		[JsonRpcMethod (Methods.ItemOperationsOpenFileName)]
+		public void OnOpenFile (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ItemOperationsOpenFileParams> ();
+				Runtime.RunInMainThread (() => {
+					OpenFile (new FilePath (message.FileName));
+				}).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnNavigate error: {0}", ex);
+			}
+		}
 
-		public const string ItemOperationsNavigateName = "itemOperations/navigate";
-		public const string ItemOperationsOpenFileName = "itemOperations/openFile";
+		void OpenFile (FilePath filePath)
+		{
+			IdeApp.Workbench.OpenDocument (filePath, null, true).Ignore ();
+		}
 	}
 }

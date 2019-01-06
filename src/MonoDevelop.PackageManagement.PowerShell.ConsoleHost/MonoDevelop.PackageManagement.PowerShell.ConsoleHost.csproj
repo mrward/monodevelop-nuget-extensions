@@ -19,4 +19,9 @@
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Cmdlets\MonoDevelop.PackageManagement.PowerShell.Cmdlets.csproj" />
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.EnvDTE\MonoDevelop.PackageManagement.PowerShell.EnvDTE.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDevelop.EnvDTE">
+      <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

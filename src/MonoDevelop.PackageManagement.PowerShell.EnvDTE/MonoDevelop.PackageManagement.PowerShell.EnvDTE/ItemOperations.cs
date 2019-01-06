@@ -1,5 +1,5 @@
 ﻿//
-// Methods.cs
+// ItemOperations.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,15 +24,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+using System;
+using EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
+
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public static class Methods
+	public class ItemOperations : MarshalByRefObject, global::EnvDTE.ItemOperations
 	{
-		public const string InvokeName = "pshost/Invoke";
+		public void Navigate (string url)
+		{
+			var message = new ItemOperationsNavigateParams {
+				Url = url
+			};
+			JsonRpcProvider.Rpc.InvokeAsync (Methods.ItemOperationsNavigateName, message).Wait ();
+		}
 
-		public const string LogName = "ps/Log";
+		public Window NewFile (string fileName)
+		{
+			return null;
+		}
 
-		public const string ItemOperationsNavigateName = "itemOperations/navigate";
-		public const string ItemOperationsOpenFileName = "itemOperations/openFile";
+		public void OpenFile (string fileName)
+		{
+			var message = new ItemOperationsOpenFileParams {
+				FileName = fileName
+			};
+			JsonRpcProvider.Rpc.InvokeAsync (Methods.ItemOperationsOpenFileName, message).Wait ();
+		}
 	}
 }
