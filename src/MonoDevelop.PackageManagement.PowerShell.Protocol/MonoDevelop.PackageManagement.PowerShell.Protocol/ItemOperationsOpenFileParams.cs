@@ -1,5 +1,5 @@
 ﻿//
-// Methods.cs
+// ItemOperationsOpenFileParams.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,15 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Runtime.Serialization;
+
 namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	public static class Methods
+	[DataContract]
+	public class ItemOperationsOpenFileParams
 	{
-		public const string InvokeName = "pshost/Invoke";
-
-		public const string LogName = "ps/Log";
-
-		public const string ItemOperationsNavigateName = "itemOperations/navigate";
-		public const string ItemOperationsOpenFileName = "itemOperations/openFile";
+		[DataMember (Name = "fileName")]
+		public string FileName { get; set; }
 	}
 }

@@ -240,6 +240,7 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHostFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PowerShellHostMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ItemOperationsMessageHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

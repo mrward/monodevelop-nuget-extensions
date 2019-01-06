@@ -17,4 +17,7 @@
       <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
+  </ItemGroup>
 </Project>

@@ -32,6 +32,7 @@ using ICSharpCode.PackageManagement.Scripting;
 using ICSharpCode.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.Core.Execution;
+using MonoDevelop.PackageManagement.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using Newtonsoft.Json;
 using NuGet.Common;
@@ -44,6 +45,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		Process process;
 		JsonRpc rpc;
 		PowerShellHostMessageHandler messageHandler;
+		ItemOperationsMessageHandler itemOperationsMessageHandler;
 		List<string> modulesToImport = new List<string> ();
 		IScriptingConsole scriptingConsole;
 
@@ -88,8 +90,10 @@ namespace MonoDevelop.PackageManagement.Scripting
 			process.Exited += Process_Exited;
 
 			messageHandler = new PowerShellHostMessageHandler (scriptingConsole);
+			itemOperationsMessageHandler = new ItemOperationsMessageHandler ();
 			rpc = new JsonRpc (process.StandardInput.BaseStream, process.StandardOutput.BaseStream, messageHandler);
 			rpc.Disconnected += JsonRpcDisconnected;
+			rpc.AddLocalRpcTarget (itemOperationsMessageHandler);
 			rpc.StartListening ();
 			rpc.JsonSerializer.NullValueHandling = NullValueHandling.Ignore;
 		}
