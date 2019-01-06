@@ -26,6 +26,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Management.Automation.Runspaces;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using StreamJsonRpc;
@@ -56,7 +57,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 			host = new PowerShellHost ();
 
-			var initialSessionState = InitialSessionState.CreateDefault ();
+			var initialSessionState = CreateInitialSessionState ();
 			runspace = RunspaceFactory.CreateRunspace (host, initialSessionState);
 			runspace.Open ();
 
@@ -66,6 +67,14 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			Logger.Log ("PowerShellConsoleHost running...");
 
 			rpc.Completion.Wait ();
+		}
+
+		InitialSessionState CreateInitialSessionState ()
+		{
+			var initialSessionState = InitialSessionState.CreateDefault ();
+			string[] modulesToImport = PowerShellModules.GetModules ().ToArray ();
+			initialSessionState.ImportPSModule (modulesToImport);
+			return initialSessionState;
 		}
 
 		void OnRpcDisconnected (object sender, JsonRpcDisconnectedEventArgs e)
