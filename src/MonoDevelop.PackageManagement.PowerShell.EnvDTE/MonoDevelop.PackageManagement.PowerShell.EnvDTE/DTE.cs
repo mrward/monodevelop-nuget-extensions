@@ -1,5 +1,5 @@
 ﻿//
-// JsonRpcProvider.cs
+// DTE.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,16 +24,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using StreamJsonRpc;
-
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	/// <summary>
-	/// Allows the PowerShell console host to provide the JsonRpc so the
-	/// cmdlets can use the same instance.
-	/// </summary>
-	public static class JsonRpcProvider
+	public class DTE
 	{
-		public static JsonRpc Rpc { get; set; }
+		public DTE ()
+		{
+		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿//
-// SendGreetingCommand.cs
+// AssemblyInfo.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,31 +24,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Management.Automation;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace MonoDevelop.PackageManagement.PowerShell.Cmdlets
-{
-	[Cmdlet (VerbsCommunications.Send, "Greeting")]
-	public class SendGreetingCommand : Cmdlet
-	{
-		// Declare the parameters for the cmdlet.
-		[Parameter (Mandatory = true)]
-		public string Name { get; set; }
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle ("MonoDevelop.PackageManagement.PowerShell.EnvDTE")]
+[assembly: AssemblyDescription ("Package Management PowerShell EnvDTE for MonoDevelop")]
+[assembly: AssemblyProduct ("MonoDevelop.PackageManagement")]
+[assembly: AssemblyCopyright ("Copyright (C) 2019 Matthew Ward")]
+[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
 
-		// Overide the ProcessRecord method to process
-		// the supplied user name and write out a
-		// greeting to the user by calling the WriteObject
-		// method.
-		protected override void ProcessRecord ()
-		{
-			var log = new LogMessageParams {
-				Level = LogLevel.Info,
-				Message = "SendGreetingCommand " + Name
-			};
-			JsonRpcProvider.Rpc.NotifyAsync (Methods.LogName, log);
-			WriteObject ("Hello " + Name + "!");
-		}
-	}
-}
+// This sets the default COM visibility of types in the assembly to invisible.
+// If you need to expose a type to COM, use [ComVisible(true)] on that type.
+[assembly: ComVisible (false)]
+
+// The assembly version has following format :
+//
+// Major.Minor.Build.Revision
+//
+// You can specify all the values or you can use the default the Revision and 
+// Build Numbers by using the '*' as shown below:
+[assembly: AssemblyVersion ("0.15")]
