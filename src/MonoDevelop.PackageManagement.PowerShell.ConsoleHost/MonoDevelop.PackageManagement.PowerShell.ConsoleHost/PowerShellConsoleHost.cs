@@ -64,6 +64,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			rpc = JsonRpc.Attach (sender, reader, this);
 			rpc.Disconnected += OnRpcDisconnected;
 
+			JsonRpcProvider.Rpc = rpc;
+
 			Logger.Log ("PowerShellConsoleHost running...");
 
 			rpc.Completion.Wait ();
