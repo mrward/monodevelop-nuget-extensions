@@ -27,7 +27,9 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using StreamJsonRpc;
 
@@ -40,6 +42,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		JsonRpc rpc;
 		Runspace runspace;
 		PowerShellHost host;
+		DTE dte;
 
 		public static PowerShellConsoleHost Instance => instance;
 
@@ -76,7 +79,16 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			var initialSessionState = InitialSessionState.CreateDefault ();
 			string[] modulesToImport = PowerShellModules.GetModules ().ToArray ();
 			initialSessionState.ImportPSModule (modulesToImport);
+			SessionStateVariableEntry variable = CreateDTESessionVariable ();
+			initialSessionState.Variables.Add (variable);
 			return initialSessionState;
+		}
+
+		SessionStateVariableEntry CreateDTESessionVariable ()
+		{
+			dte = new DTE ();
+			var options = ScopedItemOptions.AllScope | ScopedItemOptions.Constant;
+			return new SessionStateVariableEntry ("DTE", dte, "DTE object", options);
 		}
 
 		void OnRpcDisconnected (object sender, JsonRpcDisconnectedEventArgs e)

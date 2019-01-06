@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
+    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.EnvDTE\MonoDevelop.PackageManagement.PowerShell.EnvDTE.csproj" />
   </ItemGroup>
 </Project>
