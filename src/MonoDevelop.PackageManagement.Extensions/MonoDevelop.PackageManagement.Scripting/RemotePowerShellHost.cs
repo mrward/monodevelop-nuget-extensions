@@ -96,7 +96,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		static Process StartPowerShellHost ()
 		{
-			var programPath = Path.Combine (Path.GetDirectoryName (typeof (RemotePowerShellHost).Assembly.Location), "PowerShellConsoleHost", "netcoreapp2.1", "MonoDevelop.PackageManagement.PowerShell.ConsoleHost.dll");
+			var programPath = Path.Combine (Path.GetDirectoryName (typeof (RemotePowerShellHost).Assembly.Location), "PowerShellConsoleHost", "MonoDevelop.PackageManagement.PowerShell.ConsoleHost.dll");
 
 			var argumentBuilder = new ProcessArgumentBuilder ();
 			argumentBuilder.AddQuoted (programPath);
