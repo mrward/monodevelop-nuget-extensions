@@ -1,5 +1,5 @@
 ﻿//
-// SendGreetingCommand.cs
+// JsonRpcProvider.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,30 +24,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Management.Automation;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using StreamJsonRpc;
 
-namespace MonoDevelop.PackageManagement.PowerShell.Cmdlets
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	[Cmdlet (VerbsCommunications.Send, "Greeting")]
-	public class SendGreetingCommand : Cmdlet
+	/// <summary>
+	/// Allows the PowerShell console host to provide the JsonRpc so the
+	/// cmdlets can use the same instance.
+	/// </summary>
+	public static class JsonRpcProvider
 	{
-		// Declare the parameters for the cmdlet.
-		[Parameter (Mandatory = true)]
-		public string Name { get; set; }
-
-		// Overide the ProcessRecord method to process
-		// the supplied user name and write out a
-		// greeting to the user by calling the WriteObject
-		// method.
-		protected override void ProcessRecord ()
-		{
-			var log = new LogMessageParams {
-				Level = LogLevel.Info,
-				Message = "SendGreetingCommand " + Name
-			};
-			JsonRpcProvider.Rpc.NotifyAsync (Methods.LogName, log);
-			WriteObject ("Hello " + Name + "!");
-		}
+		public static JsonRpc Rpc { get; set; }
 	}
 }
