@@ -105,7 +105,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 					pipeline.Invoke ();
 				}
 			} catch (Exception ex) {
-				Logger.Log ("PowerShellConsoleHost.Invoke error: {0}", ex);
+				string errorMessage = NuGet.Common.ExceptionUtilities.DisplayMessage (ex);
+				Log (LogLevel.Error, errorMessage);
 			}
 		}
 

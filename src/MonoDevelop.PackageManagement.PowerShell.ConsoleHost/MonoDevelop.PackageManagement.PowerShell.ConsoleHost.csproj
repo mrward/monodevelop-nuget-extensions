@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.4" />
     <PackageReference Include="StreamJsonRpc" Version="1.4.134" />
+    <PackageReference Include="NuGet.Common" Version="4.8.0" />
   </ItemGroup>
 
   <ItemGroup>
