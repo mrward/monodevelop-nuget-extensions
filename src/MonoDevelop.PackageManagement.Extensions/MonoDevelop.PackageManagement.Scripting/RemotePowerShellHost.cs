@@ -55,7 +55,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		}
 
 		public IList<string> ModulesToImport => modulesToImport;
-		public Version Version => new Version ("1.0");
+		public Version Version => NuGetVersion.Version;
 
 		public void ExecuteCommand (string command)
 		{
