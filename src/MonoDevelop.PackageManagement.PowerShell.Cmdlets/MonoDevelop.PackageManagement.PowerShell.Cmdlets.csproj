@@ -12,6 +12,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="StreamJsonRpc" Version="1.4.134" />
+    <PackageReference Include="NuGet.Indexing" Version="4.8.0" />
+    <PackageReference Include="NuGet.PackageManagement" Version="4.8.0" />
+    <PackageReference Include="NuGet.Protocol" Version="4.8.0" />
+    <PackageReference Include="NuGet.Versioning" Version="4.8.0" />
   </ItemGroup>
 
   <ItemGroup>
