@@ -1,0 +1,1 @@
+pwsh -NoExit -NoLogo -NoProfile -Command "Import-Module ./bin/PowerShellConsoleHost/publish/MonoDevelop.PackageManagement.PowerShell.Cmdlets.dll"
