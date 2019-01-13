@@ -29,6 +29,7 @@ using System.Globalization;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Threading;
+using MonoDevelop.PackageManagement.PowerShell.Cmdlets;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 {
@@ -52,7 +53,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		public override Guid InstanceId => instanceId;
 		public override string Name => "Package Manager Host";
 		public override PSHostUserInterface UI => ui;
-		public override Version Version => new Version (1, 0);
+		public override Version Version => NuGetVersion.Version;
 
 		public override PSObject PrivateData => privateData;
 
