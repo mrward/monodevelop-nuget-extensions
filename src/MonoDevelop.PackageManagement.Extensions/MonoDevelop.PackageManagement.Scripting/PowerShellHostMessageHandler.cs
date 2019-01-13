@@ -68,5 +68,11 @@ namespace MonoDevelop.PackageManagement.Scripting
 				LoggingService.LogError ("OnLogMessage error: {0}", ex);
 			}
 		}
+
+		[JsonRpcMethod (Methods.ClearHostName)]
+		public void OnClearHost ()
+		{
+			scriptingConsole.Clear ();
+		}
 	}
 }

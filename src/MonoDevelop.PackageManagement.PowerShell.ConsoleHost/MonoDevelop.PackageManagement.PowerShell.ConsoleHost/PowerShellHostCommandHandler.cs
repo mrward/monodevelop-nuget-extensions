@@ -1,5 +1,5 @@
 ﻿//
-// Methods.cs
+// PowerShellHostCommandHandler.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,16 +24,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+using System;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
+
+namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 {
-	public static class Methods
+	class PowerShellHostCommandHandler
 	{
-		public const string InvokeName = "pshost/Invoke";
-
-		public const string LogName = "ps/Log";
-		public const string ClearHostName = "ps/ClearHost";
-
-		public const string ItemOperationsNavigateName = "itemOperations/navigate";
-		public const string ItemOperationsOpenFileName = "itemOperations/openFile";
+		public void ClearHost ()
+		{
+			var rpc = JsonRpcProvider.Rpc;
+			if (rpc != null) {
+				rpc.NotifyAsync (Methods.ClearHostName).Ignore ();
+			}
+		}
 	}
 }

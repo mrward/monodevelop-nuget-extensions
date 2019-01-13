@@ -26,6 +26,7 @@
 
 using System;
 using System.Globalization;
+using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Threading;
 
@@ -38,6 +39,13 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		CultureInfo currentUICulture = Thread.CurrentThread.CurrentUICulture;
 		CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 		Guid instanceId = Guid.NewGuid ();
+		PSObject privateData;
+
+		public PowerShellHost ()
+		{
+			var hostCommandHandler = new PowerShellHostCommandHandler ();
+			privateData = new PSObject (hostCommandHandler);
+		}
 
 		public override CultureInfo CurrentCulture => currentCulture;
 		public override CultureInfo CurrentUICulture => currentUICulture;
@@ -45,6 +53,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		public override string Name => "Package Manager Host";
 		public override PSHostUserInterface UI => ui;
 		public override Version Version => new Version (1, 0);
+
+		public override PSObject PrivateData => privateData;
 
 		public override void EnterNestedPrompt ()
 		{
