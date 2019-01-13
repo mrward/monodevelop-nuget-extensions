@@ -40,7 +40,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 		{
 			try {
 				var navigateMessage = arg.ToObject<ItemOperationsNavigateParams> ();
-				DesktopService.OpenFile (navigateMessage.Url);
+				DesktopService.ShowUrl (navigateMessage.Url);
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnNavigate error: {0}", ex);
 			}
