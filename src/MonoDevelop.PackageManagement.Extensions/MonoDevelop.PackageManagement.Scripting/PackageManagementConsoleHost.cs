@@ -50,6 +50,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		RegisteredPackageSources registeredPackageSources;
 		IPowerShellHostFactory powerShellHostFactory;
 		IPowerShellHost powerShellHost;
+		IRemotePowerShellHost remotePowerShellHost;
 		IMonoDevelopSolutionManager solutionManager;
 		ISourceRepositoryProvider sourceRepositoryProvider;
 		IPackageManagementAddInPath addinPath;
@@ -98,7 +99,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public SourceRepositoryViewModel ActivePackageSource {
 			get { return registeredPackageSources.SelectedPackageSource; }
-			set { registeredPackageSources.SelectedPackageSource = value; }
+			set {
+				registeredPackageSources.SelectedPackageSource = value;
+				remotePowerShellHost?.OnActiveSourceChanged (value.Name);
+			}
 		}
 
 		public IEnumerable<SourceRepositoryViewModel> PackageSources {
@@ -180,6 +184,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 			RedefineClearHostFunction ();
 			//			DefineTabExpansionFunction();
 			UpdateWorkingDirectory ();
+			ConfigurePackageSources ();
+		}
+
+		void ConfigurePackageSources ()
+		{
+			remotePowerShellHost?.OnActiveSourceChanged (ActivePackageSource?.Name);
 		}
 
 		void CreatePowerShellHost ()
@@ -191,6 +201,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 					GetNuGetVersion (),
 					clearConsoleHostCommand,
 					new EnvDTE.DTE ());
+
+			remotePowerShellHost = powerShellHost as IRemotePowerShellHost;
 		}
 
 		protected virtual Version GetNuGetVersion ()

@@ -22,15 +22,16 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 	public abstract class NuGetPowerShellBaseCommand : PSCmdlet, IErrorHandler
 	{
 		SourceRepository activeSourceRepository;
+		SourceRepositoryProvider sourceRepositoryProvider;
+
+		internal const string ActivePackageSourceKey = "activePackageSource";
 
 		public NuGetPowerShellBaseCommand ()
 		{
 			string rootDirectory = null;
 			var settings = Settings.LoadDefaultSettings (rootDirectory, null, null);
 			var packageSourceProvider = new PackageSourceProvider (settings);
-			var provider = new SourceRepositoryProvider (packageSourceProvider, Repository.Provider.GetVisualStudio ());
-
-			EnabledSourceRepositories = provider.GetRepositories ();
+			sourceRepositoryProvider = new SourceRepositoryProvider (packageSourceProvider, Repository.Provider.GetVisualStudio ());
 		}
 
 		protected IEnumerable<SourceRepository> PrimarySourceRepositories {
@@ -176,11 +177,134 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 		}
 
+		protected SourceValidationResult ValidateSource (string source)
+		{
+			// If source string is not specified, get the current active package source from the host.
+			if (string.IsNullOrEmpty (source)) {
+				source = (string)GetPropertyValueFromHost (ActivePackageSourceKey);
+			}
+
+			// Look through all available sources (including those disabled) by matching source name and URL (or path).
+			var matchingSource = GetMatchingSource (source);
+			if (matchingSource != null) {
+				return SourceValidationResult.Valid (
+					source,
+					sourceRepositoryProvider?.CreateRepository (matchingSource));
+			}
+
+			// If we really can't find a source string, return an empty validation result.
+			if (string.IsNullOrEmpty (source)) {
+				return SourceValidationResult.None;
+			}
+
+			return CheckSourceValidity (source);
+		}
+
 		protected void UpdateActiveSourceRepository (string source)
 		{
-			//var result = ValidateSource (source);
-			//EnsureValidSource (result);
-			//UpdateActiveSourceRepository (result.SourceRepository);
+			var result = ValidateSource (source);
+			EnsureValidSource (result);
+			UpdateActiveSourceRepository (result.SourceRepository);
+		}
+
+		protected void EnsureValidSource (SourceValidationResult result)
+		{
+			if (result.Validity == SourceValidity.UnknownSource) {
+				throw new PackageSourceException (string.Format (
+					CultureInfo.CurrentCulture,
+					"Source '{0}' not found. Please provide an HTTP or local source.",
+					result.Source));
+			} else if (result.Validity == SourceValidity.UnknownSourceType) {
+				throw new PackageSourceException (string.Format (
+					CultureInfo.CurrentCulture,
+					"Unsupported type of source '{0}'.Please provide an HTTP or local source.",
+					result.Source));
+			}
+		}
+
+		protected void UpdateActiveSourceRepository (SourceRepository sourceRepository)
+		{
+			if (sourceRepository != null) {
+				activeSourceRepository = sourceRepository;
+			}
+
+			EnabledSourceRepositories = sourceRepositoryProvider?.GetRepositories ()
+				.Where (r => r.PackageSource.IsEnabled)
+				.ToList ();
+		}
+
+		/// <summary>
+		/// Create a package repository from the source by trying to resolve relative paths.
+		/// </summary>
+		SourceRepository CreateRepositoryFromSource (string source)
+		{
+			var packageSource = new PackageSource (source);
+			var repository = sourceRepositoryProvider.CreateRepository (packageSource);
+			var resource = repository.GetResource<PackageSearchResource> ();
+
+			return repository;
+		}
+
+		protected object GetPropertyValueFromHost (string propertyName)
+		{
+			var privateData = Host.PrivateData;
+			var propertyInfo = privateData.Properties [propertyName];
+			if (propertyInfo != null) {
+				return propertyInfo.Value;
+			}
+			return null;
+		}
+
+		PackageSource GetMatchingSource (string source)
+		{
+			var packageSources = sourceRepositoryProvider.PackageSourceProvider?.LoadPackageSources ();
+
+			var matchingSource = packageSources?.FirstOrDefault (
+				p => StringComparer.OrdinalIgnoreCase.Equals (p.Name, source) ||
+					 StringComparer.OrdinalIgnoreCase.Equals (p.Source, source));
+
+			return matchingSource;
+		}
+
+		/// <summary>
+		/// If a relative local URI is passed, it converts it into an absolute URI.
+		/// If the local URI does not exist or it is neither http nor local type, then the source is rejected.
+		/// If the URI is not relative then no action is taken.
+		/// </summary>
+		/// <param name="inputSource">The source string specified by -Source switch.</param>
+		/// <returns>The source validation result.</returns>
+		SourceValidationResult CheckSourceValidity (string inputSource)
+		{
+			// Convert file:// to a local path if needed, this noops for other types
+			var source = UriUtility.GetLocalPath (inputSource);
+
+			// Convert a relative local URI into an absolute URI
+			var packageSource = new PackageSource (source);
+			Uri sourceUri;
+			if (Uri.TryCreate (source, UriKind.Relative, out sourceUri)) {
+				string outputPath;
+				bool? exists;
+				string errorMessage;
+				if (PSPathUtility.TryTranslatePSPath (SessionState, source, out outputPath, out exists, out errorMessage) &&
+					exists == true) {
+					source = outputPath;
+					packageSource = new PackageSource (source);
+				} else if (exists == false) {
+					return SourceValidationResult.UnknownSource (source);
+				}
+			} else if (!packageSource.IsHttp) {
+				// Throw and unknown source type error if the specified source is neither local nor http
+				return SourceValidationResult.UnknownSourceType (source);
+			}
+
+			// Check if the source is a valid HTTP URI.
+			if (packageSource.IsHttp && packageSource.TrySourceAsUri == null) {
+				return SourceValidationResult.UnknownSource (source);
+			}
+
+			var sourceRepository = CreateRepositoryFromSource (source);
+
+			return SourceValidationResult.Valid (source, sourceRepository);
 		}
 
 		public void HandleError (ErrorRecord errorRecord, bool terminating)

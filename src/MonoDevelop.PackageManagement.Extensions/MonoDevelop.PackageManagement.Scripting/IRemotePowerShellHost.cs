@@ -1,5 +1,5 @@
 ﻿//
-// Methods.cs
+// IRemotePowerShellHost.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,17 +24,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+using ICSharpCode.PackageManagement.Scripting;
+
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	public static class Methods
+	interface IRemotePowerShellHost : IPowerShellHost
 	{
-		public const string InvokeName = "pshost/Invoke";
-		public const string ActiveSourceName = "pshost/ActiveSource";
-
-		public const string LogName = "ps/Log";
-		public const string ClearHostName = "ps/ClearHost";
-
-		public const string ItemOperationsNavigateName = "itemOperations/Navigate";
-		public const string ItemOperationsOpenFileName = "itemOperations/OpenFile";
+		void OnActiveSourceChanged (string source);
 	}
 }
