@@ -40,7 +40,7 @@ using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	class RemotePowerShellHost : IPowerShellHost
+	class RemotePowerShellHost : IRemotePowerShellHost
 	{
 		Process process;
 		JsonRpc rpc;
@@ -131,6 +131,15 @@ namespace MonoDevelop.PackageManagement.Scripting
 		static void Process_Exited (object sender, EventArgs e)
 		{
 			LoggingService.LogInfo ("PowerShell host exited");
+		}
+
+		public void OnActiveSourceChanged (string source)
+		{
+			try {
+				rpc.InvokeAsync (Methods.ActiveSourceName, source).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnActiveSourceChanged error", ex);
+			}
 		}
 	}
 }

@@ -29,7 +29,6 @@ using System.Globalization;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Threading;
-using MonoDevelop.PackageManagement.PowerShell.Cmdlets;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 {
@@ -80,6 +79,17 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		public override void SetShouldExit (int exitCode)
 		{
 			Logger.Log ("SetShouldExit {0}", exitCode);
+		}
+
+		internal void SetPropertyValueOnHost (string propertyName, object value)
+		{
+			PSPropertyInfo property = PrivateData.Properties [propertyName];
+			if (property == null) {
+				property = new PSNoteProperty (propertyName, value);
+				PrivateData.Properties.Add (property);
+			} else {
+				property.Value = value;
+			}
 		}
 	}
 }

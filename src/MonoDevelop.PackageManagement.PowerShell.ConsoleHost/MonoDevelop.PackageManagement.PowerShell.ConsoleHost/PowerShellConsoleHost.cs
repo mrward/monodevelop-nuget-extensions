@@ -128,5 +128,16 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			};
 			rpc.NotifyWithParameterObjectAsync (Methods.LogName, logMessage).Ignore ();
 		}
+
+		[JsonRpcMethod (Methods.ActiveSourceName)]
+		public void OnActiveSourceChanged (string source)
+		{
+			Logger.Log ("PowerShellConsoleHost.ActiveSourceChanged: {0}", source);
+			try {
+				host.SetPropertyValueOnHost ("activePackageSource", source);
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error changing active source. {0}", ex));
+			}
+		}
 	}
 }
