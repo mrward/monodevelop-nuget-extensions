@@ -110,8 +110,8 @@ The NuGet addin that is available for Xamarin Studio 4 included the ability to m
 To open the Manage Packages dialog:
 
  * Make sure the solution is selected in the **Solution** window.
- * Right click the solution and select **Manage Packages**.
- * Or select **Manage Packages** from the **Project** menu.
+ * Right click the solution and select **Manage NuGet Packages**.
+ * Or select **Manage NuGet Packages** from the **Project** menu.
 
 ![Manage Packages dialog](doc/images/ManagePackagesDialog.png)
 
