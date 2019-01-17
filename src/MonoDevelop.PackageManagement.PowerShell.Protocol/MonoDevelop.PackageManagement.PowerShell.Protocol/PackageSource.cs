@@ -1,5 +1,5 @@
 ﻿//
-// IRemotePowerShellHost.cs
+// PackageSource.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,14 +24,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using ICSharpCode.PackageManagement.Scripting;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	interface IRemotePowerShellHost : IPowerShellHost
+	[DataContract]
+	public class PackageSource
 	{
-		void OnActiveSourceChanged (string source);
-		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
+		[DataMember (Name = "name")]
+		public string Name { get; set; }
+
+		[DataMember (Name = "source")]
+		public string Source { get; set; }
+
+		[DataMember (Name = "aggregate")]
+		public bool IsAggregate { get; set; }
 	}
 }

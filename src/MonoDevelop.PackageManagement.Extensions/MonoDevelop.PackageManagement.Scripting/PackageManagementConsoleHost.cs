@@ -395,6 +395,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void ReloadPackageSources ()
 		{
 			registeredPackageSources.ReloadSettings ();
+			if (remotePowerShellHost != null) {
+				var sources = registeredPackageSources.PackageSources.ToList ();
+				remotePowerShellHost.OnPackageSourcesChanged (sources, registeredPackageSources.SelectedPackageSource);
+			}
 		}
 
 		public ConsoleHostNuGetPackageManager CreatePackageManager ()
