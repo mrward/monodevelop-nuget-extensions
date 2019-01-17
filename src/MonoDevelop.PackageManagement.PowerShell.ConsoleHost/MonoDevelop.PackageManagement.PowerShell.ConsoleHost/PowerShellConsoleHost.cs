@@ -31,6 +31,7 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using Newtonsoft.Json.Linq;
 using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
@@ -137,6 +138,23 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				host.SetPropertyValueOnHost ("activePackageSource", source);
 			} catch (Exception ex) {
 				Logger.Log (string.Format ("Error changing active source. {0}", ex));
+			}
+		}
+
+		[JsonRpcMethod (Methods.PackageSourcesChangedName)]
+		public void OnPackageSourcesChanged (JToken arg)
+		{
+			Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged");
+			try {
+				var message = arg.ToObject<PackageSourcesChangedParams> ();
+
+				Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged ActiveSource: {0}", message.ActiveSource?.Name);
+				foreach (var source in message.Sources) {
+					Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged Source: {0}", source.Name);
+				}
+				host.SetPropertyValueOnHost ("activePackageSource", message.ActiveSource?.Name);
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error updating package sources. {0}", ex));
 			}
 		}
 	}

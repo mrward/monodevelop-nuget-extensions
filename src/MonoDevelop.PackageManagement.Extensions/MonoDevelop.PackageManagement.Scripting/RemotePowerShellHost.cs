@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using ICSharpCode.PackageManagement.Scripting;
 using ICSharpCode.Scripting;
 using MonoDevelop.Core;
@@ -140,6 +141,36 @@ namespace MonoDevelop.PackageManagement.Scripting
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnActiveSourceChanged error", ex);
 			}
+		}
+
+		public void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource)
+		{
+			try {
+				var message = new PackageSourcesChangedParams {
+					ActiveSource = GetPackageSource (selectedPackageSource),
+					Sources = GetPackageSources (sources).ToArray ()
+				};
+				rpc.InvokeAsync (Methods.PackageSourcesChangedName, message).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnActiveSourceChanged error", ex);
+			}
+		}
+
+		IEnumerable<PackageSource> GetPackageSources (IEnumerable<SourceRepositoryViewModel> sources)
+		{
+			return sources.Select (source => GetPackageSource (source));
+		}
+
+		PackageSource GetPackageSource (SourceRepositoryViewModel sourceRepositoryViewModel)
+		{
+			if (sourceRepositoryViewModel == null)
+				return null;
+
+			return new PackageSource {
+				Name = sourceRepositoryViewModel.Name,
+				Source = sourceRepositoryViewModel.PackageSource.Source,
+				IsAggregate = sourceRepositoryViewModel.IsAggregate
+			};
 		}
 	}
 }
