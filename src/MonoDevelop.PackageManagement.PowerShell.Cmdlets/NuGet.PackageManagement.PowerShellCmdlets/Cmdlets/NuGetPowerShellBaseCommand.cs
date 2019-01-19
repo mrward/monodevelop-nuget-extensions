@@ -9,29 +9,26 @@ using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
+using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
-using NuGet.Protocol.VisualStudio;
 using NuGet.Versioning;
-using NuGet.Configuration;
+using NuGet.VisualStudio;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
 	public abstract class NuGetPowerShellBaseCommand : PSCmdlet, IErrorHandler
 	{
 		SourceRepository activeSourceRepository;
-		SourceRepositoryProvider sourceRepositoryProvider;
+		ISourceRepositoryProvider sourceRepositoryProvider;
 
 		internal const string ActivePackageSourceKey = "activePackageSource";
 
 		public NuGetPowerShellBaseCommand ()
 		{
-			string rootDirectory = null;
-			var settings = Settings.LoadDefaultSettings (rootDirectory, null, null);
-			var packageSourceProvider = new PackageSourceProvider (settings);
-			sourceRepositoryProvider = new SourceRepositoryProvider (packageSourceProvider, Repository.Provider.GetVisualStudio ());
+			sourceRepositoryProvider = ServiceLocator.GetInstance<ISourceRepositoryProvider> ();
 		}
 
 		protected IEnumerable<SourceRepository> PrimarySourceRepositories {

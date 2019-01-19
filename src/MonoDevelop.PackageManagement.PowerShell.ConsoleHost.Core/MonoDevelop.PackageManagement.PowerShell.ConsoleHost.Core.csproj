@@ -8,19 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PowerShellStandard.Library" Version="5.1.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="StreamJsonRpc" Version="1.4.134" />
+    <PackageReference Include="NuGet.Common" Version="4.8.0" />
     <PackageReference Include="NuGet.Indexing" Version="4.8.0" />
     <PackageReference Include="NuGet.PackageManagement" Version="4.8.0" />
     <PackageReference Include="NuGet.Protocol" Version="4.8.0" />
     <PackageReference Include="NuGet.Versioning" Version="4.8.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
-    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.EnvDTE\MonoDevelop.PackageManagement.PowerShell.EnvDTE.csproj" />
-    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core.csproj" />
   </ItemGroup>
 </Project>

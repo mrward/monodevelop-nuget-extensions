@@ -29,6 +29,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using Newtonsoft.Json.Linq;
@@ -60,6 +61,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			Stream reader = Console.OpenStandardInput ();
 
 			host = new PowerShellHost ();
+			ConsoleHostServices.Initialize ();
 
 			var initialSessionState = CreateInitialSessionState ();
 			runspace = RunspaceFactory.CreateRunspace (host, initialSessionState);
@@ -152,6 +154,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				foreach (var source in message.Sources) {
 					Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged Source: {0}", source.Name);
 				}
+				ConsoleHostServices.SourceRepositoryProvider.UpdatePackageSources (message.Sources);
 				host.SetPropertyValueOnHost ("activePackageSource", message.ActiveSource?.Name);
 			} catch (Exception ex) {
 				Logger.Log (string.Format ("Error updating package sources. {0}", ex));
