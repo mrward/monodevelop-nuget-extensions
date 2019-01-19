@@ -65,7 +65,11 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 
 		public void UpdatePackageSources (Protocol.PackageSource[] sources)
 		{
-			packageSources = sources.Select (source => source.ToNuGetPackageSource ()).ToList ();
+			// Ignore the aggregate source. The PowerShell cmdlets need real sources.
+			packageSources = sources
+				.Where (currentSource => !currentSource.IsAggregate)
+				.Select (source => source.ToNuGetPackageSource ()).ToList ();
+
 			PackageSourcesChanged?.Invoke (this, EventArgs.Empty);
 		}
 	}
