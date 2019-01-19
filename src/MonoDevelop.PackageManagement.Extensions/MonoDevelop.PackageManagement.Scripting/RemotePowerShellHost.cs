@@ -134,10 +134,13 @@ namespace MonoDevelop.PackageManagement.Scripting
 			LoggingService.LogInfo ("PowerShell host exited");
 		}
 
-		public void OnActiveSourceChanged (string source)
+		public void OnActiveSourceChanged (SourceRepositoryViewModel source)
 		{
 			try {
-				rpc.InvokeAsync (Methods.ActiveSourceName, source).Ignore ();
+				var message = new ActivePackageSourceChangedParams {
+					ActiveSource = GetPackageSource (source)
+				};
+				rpc.InvokeAsync (Methods.ActiveSourceName, message).Ignore ();
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnActiveSourceChanged error", ex);
 			}

@@ -101,7 +101,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			get { return registeredPackageSources.SelectedPackageSource; }
 			set {
 				registeredPackageSources.SelectedPackageSource = value;
-				remotePowerShellHost?.OnActiveSourceChanged (value.Name);
+				remotePowerShellHost?.OnActiveSourceChanged (value);
 			}
 		}
 
@@ -189,7 +189,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void ConfigurePackageSources ()
 		{
-			remotePowerShellHost?.OnActiveSourceChanged (ActivePackageSource?.Name);
+			remotePowerShellHost?.OnActiveSourceChanged (ActivePackageSource);
 		}
 
 		void CreatePowerShellHost ()

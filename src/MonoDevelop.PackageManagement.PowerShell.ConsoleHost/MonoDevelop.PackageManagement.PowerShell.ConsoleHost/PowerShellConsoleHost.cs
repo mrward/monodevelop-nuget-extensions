@@ -133,11 +133,14 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		}
 
 		[JsonRpcMethod (Methods.ActiveSourceName)]
-		public void OnActiveSourceChanged (string source)
+		public void OnActiveSourceChanged (JToken arg)
 		{
-			Logger.Log ("PowerShellConsoleHost.ActiveSourceChanged: {0}", source);
+			Logger.Log ("PowerShellConsoleHost.ActiveSourceChanged");
 			try {
-				host.SetPropertyValueOnHost ("activePackageSource", source);
+				var message = arg.ToObject<ActivePackageSourceChangedParams> ();
+				Logger.Log ("PowerShellConsoleHost.ActiveSourceChanged {0}", message.ActiveSource);
+
+				host.SetPropertyValueOnHost ("activePackageSource", GetActivePackageSourceName (message.ActiveSource));
 			} catch (Exception ex) {
 				Logger.Log (string.Format ("Error changing active source. {0}", ex));
 			}
@@ -154,11 +157,25 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				foreach (var source in message.Sources) {
 					Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged Source: {0}", source.Name);
 				}
+
 				ConsoleHostServices.SourceRepositoryProvider.UpdatePackageSources (message.Sources);
-				host.SetPropertyValueOnHost ("activePackageSource", message.ActiveSource?.Name);
+				host.SetPropertyValueOnHost ("activePackageSource", GetActivePackageSourceName (message.ActiveSource));
 			} catch (Exception ex) {
 				Logger.Log (string.Format ("Error updating package sources. {0}", ex));
 			}
+		}
+
+		static string GetActivePackageSourceName (PackageSource source)
+		{
+			if (source == null)
+				return null;
+
+			if (source.IsAggregate) {
+				// Cmdlets will use all enabled sources if the active package source is not defined.
+				return null;
+			}
+
+			return source.Name;
 		}
 	}
 }
