@@ -25,21 +25,29 @@
 // THE SOFTWARE.
 
 using System;
-using NuGet.Protocol.Core.Types;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using System.Collections.Generic;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
 	public class DefaultPackageServiceProvider : IServiceProvider
 	{
+		Dictionary<Type, object> services = new Dictionary<Type, object> ();
+
 		public object GetService (Type serviceType)
 		{
-			if (serviceType == typeof (ISourceRepositoryProvider)) {
-				return ConsoleHostServices.SourceRepositoryProvider;
-			} else if (serviceType == typeof (DTE)) {
-				return ConsoleHostServices.DTE;
+			lock (services) {
+				if (services.TryGetValue (serviceType, out object instance)) {
+					return instance;
+				}
 			}
 			return null;
+		}
+
+		public void AddService (Type serviceType, object instance)
+		{
+			lock (services) {
+				services [serviceType] = instance;
+			}
 		}
 	}
 }

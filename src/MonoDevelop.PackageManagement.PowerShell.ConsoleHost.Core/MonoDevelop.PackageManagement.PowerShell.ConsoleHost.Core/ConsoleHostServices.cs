@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using NuGet.Protocol.Core.Types;
 using NuGet.VisualStudio;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
@@ -35,7 +36,12 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 		{
 			DTE = dte;
 			SourceRepositoryProvider = new ConsoleHostSourceRepositoryProvider ();
-			ServiceLocator.InitializePackageServiceProvider (new DefaultPackageServiceProvider ());
+
+			var serviceProvider = new DefaultPackageServiceProvider ();
+			serviceProvider.AddService (typeof (DTE), dte);
+			serviceProvider.AddService (typeof (ISourceRepositoryProvider), SourceRepositoryProvider);
+
+			ServiceLocator.InitializePackageServiceProvider (serviceProvider);
 		}
 
 		public static ConsoleHostSourceRepositoryProvider SourceRepositoryProvider { get; private set; }
