@@ -67,11 +67,9 @@ namespace MonoDevelop.PackageManagement
 			packageSourceProvider = provider.PackageSourceProvider;
 			var repositories = provider.GetRepositories ().ToList ();
 
-			// Disable aggregate source repository. See Lucene.NET type initialization errors in the
-			// remote PowerShell console host.
-			//if (repositories.Count > 1) {
-			//	yield return new AggregateSourceRepositoryViewModel (repositories);
-			//}
+			if (repositories.Count > 1) {
+				yield return new AggregateSourceRepositoryViewModel (repositories);
+			}
 
 			foreach (SourceRepository repository in repositories) {
 				yield return new SourceRepositoryViewModel (repository);
