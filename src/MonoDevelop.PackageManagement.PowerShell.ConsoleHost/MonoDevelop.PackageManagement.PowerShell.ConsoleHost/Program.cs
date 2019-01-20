@@ -26,6 +26,8 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 {
@@ -35,6 +37,9 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		{
 			try {
 				InitializeLogger (args);
+
+				AssemblyLoadContext.Default.Resolving += AssemblyLoadContextResolving;
+
 				var host = new PowerShellConsoleHost ();
 				host.Run ();
 				return 0;
@@ -42,6 +47,12 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				Logger.Log ("Startup failed. {0}", ex);
 				return -1;
 			}
+		}
+
+		static Assembly AssemblyLoadContextResolving (AssemblyLoadContext context, AssemblyName assemblyName)
+		{
+			Logger.Log ("Assembly resolve: {0}", assemblyName);
+			return null;
 		}
 
 		static void InitializeLogger (string[] args)
