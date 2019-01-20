@@ -39,6 +39,7 @@ namespace MonoDevelop.PackageManagement
 	{
 		const int DefaultMaxVisibleColumns = 160;
 		int maxVisibleColumns = 0;
+		int originalWidth = -1;
 
 		public PackageConsoleView ()
 		{
@@ -156,24 +157,32 @@ namespace MonoDevelop.PackageManagement
 		{
 			base.OnSizeAllocated (allocation);
 
-			int originalMaxVisibleColumns = maxVisibleColumns;
 			int windowWidth = Allocation.Width;
+			if (originalWidth == windowWidth) {
+				return;
+			}
 
+			int originalMaxVisibleColumns = maxVisibleColumns;
 			if (windowWidth > 0) {
-				maxVisibleColumns = windowWidth / GetFontWidth ();
+				using (var layout = new Pango.Layout (PangoContext)) {
+					layout.FontDescription = FontService.MonospaceFont;
+					layout.SetText ("W");
+					layout.GetSize (out int characterWidth, out int _);
+					if (characterWidth > 0) {
+						double characterPixelWidth = characterWidth / Pango.Scale.PangoScale;
+						maxVisibleColumns = (int)(windowWidth / characterPixelWidth);
+					} else {
+						maxVisibleColumns = DefaultMaxVisibleColumns;
+					}
+				}
 			} else {
 				maxVisibleColumns = DefaultMaxVisibleColumns;
 			}
 
+			originalWidth = windowWidth;
 			if (originalMaxVisibleColumns != maxVisibleColumns) {
 				MaxVisibleColumnsChanged?.Invoke (this, EventArgs.Empty);
 			}
-		}
-
-		int GetFontWidth ()
-		{
-			int size = (int)(FontService.MonospaceFont.Size / Pango.Scale.PangoScale);
-			return size;
 		}
 	}
 }
