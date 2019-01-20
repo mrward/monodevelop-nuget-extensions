@@ -56,6 +56,11 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 		public override PSObject PrivateData => privateData;
 
+		public int MaxVisibleColumns {
+			get { return ui.MaxVisibleColumns; }
+			set { ui.MaxVisibleColumns = value; }
+		}
+
 		public override void EnterNestedPrompt ()
 		{
 			Logger.Log ("EnterNestedPrompt");

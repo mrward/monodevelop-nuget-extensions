@@ -33,5 +33,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 	{
 		void OnActiveSourceChanged (SourceRepositoryViewModel source);
 		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
+		void OnMaxVisibleColumnsChanged (int columns);
 	}
 }

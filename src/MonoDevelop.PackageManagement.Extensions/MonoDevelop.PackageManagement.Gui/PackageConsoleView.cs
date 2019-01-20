@@ -27,6 +27,7 @@
 //
 
 using System;
+using Gdk;
 using ICSharpCode.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Core;
@@ -36,6 +37,9 @@ namespace MonoDevelop.PackageManagement
 {
 	public class PackageConsoleView : ConsoleView2, IScriptingConsole
 	{
+		const int DefaultMaxVisibleColumns = 160;
+		int maxVisibleColumns = 0;
+
 		public PackageConsoleView ()
 		{
 			// HACK - to allow text to appear before first prompt.
@@ -50,6 +54,7 @@ namespace MonoDevelop.PackageManagement
 		}
 
 		public event EventHandler TextViewFocused;
+		public event EventHandler MaxVisibleColumnsChanged;
 
 		void WriteOutputLine (string message, ScriptingStyle style)
 		{
@@ -134,18 +139,10 @@ namespace MonoDevelop.PackageManagement
 		
 		public int GetMaximumVisibleColumns ()
 		{
-			int maxVisibleColumns = 160;
-			
-			Runtime.RunInMainThread (() => {
-				int windowWidth = Allocation.Width;
-				
-				if (windowWidth > 0) {
-					maxVisibleColumns = windowWidth / 5;
-				}
-				
-			}).Wait ();
-			
-			return maxVisibleColumns;
+			if (maxVisibleColumns > 0) {
+				return maxVisibleColumns;
+			}
+			return DefaultMaxVisibleColumns;
 		}
 
 		void IScriptingConsole.Clear ()
@@ -153,6 +150,30 @@ namespace MonoDevelop.PackageManagement
 			Runtime.RunInMainThread (() => {
 				base.ClearWithoutPrompt ();
 			});
+		}
+
+		protected override void OnSizeAllocated (Rectangle allocation)
+		{
+			base.OnSizeAllocated (allocation);
+
+			int originalMaxVisibleColumns = maxVisibleColumns;
+			int windowWidth = Allocation.Width;
+
+			if (windowWidth > 0) {
+				maxVisibleColumns = windowWidth / GetFontWidth ();
+			} else {
+				maxVisibleColumns = DefaultMaxVisibleColumns;
+			}
+
+			if (originalMaxVisibleColumns != maxVisibleColumns) {
+				MaxVisibleColumnsChanged?.Invoke (this, EventArgs.Empty);
+			}
+		}
+
+		int GetFontWidth ()
+		{
+			int size = (int)(FontService.MonospaceFont.Size / Pango.Scale.PangoScale);
+			return size;
 		}
 	}
 }

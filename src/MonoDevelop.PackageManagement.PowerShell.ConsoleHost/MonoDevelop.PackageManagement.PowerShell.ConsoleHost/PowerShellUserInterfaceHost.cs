@@ -40,6 +40,11 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 		public override PSHostRawUserInterface RawUI => rawUI;
 
+		public int MaxVisibleColumns {
+			get { return rawUI.MaxVisibleColumns; }
+			set { rawUI.MaxVisibleColumns = value; }
+		}
+
 		public override Dictionary<string, PSObject> Prompt (string caption, string message, Collection<FieldDescription> descriptions)
 		{
 			Logger.Log ("Prompt. caption: '{0}' message: '{1}'", caption, message);

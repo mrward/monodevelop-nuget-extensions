@@ -214,5 +214,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 			consoleHost.ReloadPackageSources ();
 			UpdatePackageSourceViewModels ();
 		}
+
+		public void OnMaxVisibleColumnsChanged ()
+		{
+			consoleHost.OnMaxVisibleColumnsChanged ();
+		}
 	}
 }

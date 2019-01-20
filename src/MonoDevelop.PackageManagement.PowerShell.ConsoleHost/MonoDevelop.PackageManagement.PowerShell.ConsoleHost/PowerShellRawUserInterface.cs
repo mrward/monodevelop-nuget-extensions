@@ -36,7 +36,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 		public override Size BufferSize {
 			get {
-				int columns = MinimumColumns;
+				int columns = Math.Max (MaxVisibleColumns, MinimumColumns);
 				return new Size (columns, 0);
 			}
 			set { throw new NotImplementedException (); }
@@ -65,13 +65,14 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		public override bool KeyAvailable => throw new NotImplementedException ();
 		public override Size MaxPhysicalWindowSize => throw new NotImplementedException ();
 		public override Size MaxWindowSize => throw new NotImplementedException ();
+		public int MaxVisibleColumns { get; set; }
 
 		public override Coordinates WindowPosition {
 			get => throw new NotImplementedException ();
 			set => throw new NotImplementedException ();
 		}
 		public override Size WindowSize {
-			get => throw new NotImplementedException ();
+			get => BufferSize;
 			set => throw new NotImplementedException ();
 		}
 

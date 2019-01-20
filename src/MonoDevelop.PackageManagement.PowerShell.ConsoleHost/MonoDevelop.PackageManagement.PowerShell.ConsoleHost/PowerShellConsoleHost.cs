@@ -177,5 +177,16 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 			return source.Name;
 		}
+
+		[JsonRpcMethod (Methods.MaxVisibleColumnsChangedName)]
+		public void OnMaxVisibleColumnsChanged (int maxVisibleColumns)
+		{
+			Logger.Log ("PowerShellConsoleHost.OnMaxVisibleColumnsChanged: {0}", maxVisibleColumns);
+			try {
+				host.MaxVisibleColumns = maxVisibleColumns;
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error updating package sources. {0}", ex));
+			}
+		}
 	}
 }

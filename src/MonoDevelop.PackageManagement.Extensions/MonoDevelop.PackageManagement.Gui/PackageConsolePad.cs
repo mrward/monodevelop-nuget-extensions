@@ -89,6 +89,7 @@ namespace MonoDevelop.PackageManagement
 			view = new PackageConsoleView ();
 			view.ConsoleInput += OnConsoleInput;
 			view.TextViewFocused += TextViewFocused;
+			view.MaxVisibleColumnsChanged += MaxVisibleColumnsChanged;
 			view.ShadowType = Gtk.ShadowType.None;
 			view.ShowAll ();
 		}
@@ -106,8 +107,9 @@ namespace MonoDevelop.PackageManagement
 		{
 			view.ConsoleInput -= OnConsoleInput;
 			view.TextViewFocused -= TextViewFocused;
+			view.MaxVisibleColumnsChanged -= MaxVisibleColumnsChanged;
 		}
-		
+
 		void BindingViewModelToView ()
 		{
 			toolbarWidget.LoadViewModel (viewModel);
@@ -116,6 +118,11 @@ namespace MonoDevelop.PackageManagement
 		void TextViewFocused (object sender, EventArgs e)
 		{
 			viewModel.UpdatePackageSources ();
+		}
+
+		void MaxVisibleColumnsChanged (object sender, EventArgs e)
+		{
+			viewModel.OnMaxVisibleColumnsChanged ();
 		}
 	}
 }

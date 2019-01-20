@@ -92,5 +92,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 			bool throwOnFailure);
 
 		bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State foundAndExecuted);
+		void OnMaxVisibleColumnsChanged ();
 	}
 }

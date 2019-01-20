@@ -31,6 +31,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string InvokeName = "pshost/Invoke";
 		public const string ActiveSourceName = "pshost/ActiveSource";
 		public const string PackageSourcesChangedName = "pshost/PackageSourcesChanged";
+		public const string MaxVisibleColumnsChangedName = "pshost/MaxVisibleColumnsChanged";
 
 		public const string LogName = "ps/Log";
 		public const string ClearHostName = "ps/ClearHost";

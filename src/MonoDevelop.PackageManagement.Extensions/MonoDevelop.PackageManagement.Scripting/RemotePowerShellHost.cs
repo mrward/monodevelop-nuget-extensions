@@ -175,5 +175,14 @@ namespace MonoDevelop.PackageManagement.Scripting
 				IsAggregate = sourceRepositoryViewModel.IsAggregate
 			};
 		}
+
+		public void OnMaxVisibleColumnsChanged (int columns)
+		{
+			try {
+				rpc.InvokeAsync (Methods.MaxVisibleColumnsChangedName, columns).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnMaxVisibleColumnsChanged error", ex);
+			}
+		}
 	}
 }

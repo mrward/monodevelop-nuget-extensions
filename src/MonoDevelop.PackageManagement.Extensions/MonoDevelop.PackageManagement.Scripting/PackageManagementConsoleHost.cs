@@ -438,5 +438,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			return scriptRunner.TryMarkVisited (package, initPS1State);
 		}
+
+		public void OnMaxVisibleColumnsChanged ()
+		{
+			if (remotePowerShellHost != null) {
+				int columns = ScriptingConsole.GetMaximumVisibleColumns ();
+				remotePowerShellHost.OnMaxVisibleColumnsChanged (columns);
+			}
+		}
 	}
 }
