@@ -61,7 +61,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			Stream reader = Console.OpenStandardInput ();
 
 			host = new PowerShellHost ();
-			ConsoleHostServices.Initialize ();
+			dte = new DTE ();
+			ConsoleHostServices.Initialize (dte);
 
 			var initialSessionState = CreateInitialSessionState ();
 			runspace = RunspaceFactory.CreateRunspace (host, initialSessionState);
@@ -89,7 +90,6 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 		SessionStateVariableEntry CreateDTESessionVariable ()
 		{
-			dte = new DTE ();
 			var options = ScopedItemOptions.AllScope | ScopedItemOptions.Constant;
 			return new SessionStateVariableEntry ("DTE", dte, "DTE object", options);
 		}

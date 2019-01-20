@@ -24,18 +24,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.VisualStudio;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
 	public static class ConsoleHostServices
 	{
-		public static void Initialize ()
+		public static void Initialize (DTE dte)
 		{
+			DTE = dte;
 			SourceRepositoryProvider = new ConsoleHostSourceRepositoryProvider ();
 			ServiceLocator.InitializePackageServiceProvider (new DefaultPackageServiceProvider ());
 		}
 
 		public static ConsoleHostSourceRepositoryProvider SourceRepositoryProvider { get; private set; }
+
+		public static DTE DTE { get; private set; }
 	}
 }

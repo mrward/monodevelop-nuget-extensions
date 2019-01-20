@@ -8,6 +8,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
@@ -29,6 +30,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		public NuGetPowerShellBaseCommand ()
 		{
 			sourceRepositoryProvider = ServiceLocator.GetInstance<ISourceRepositoryProvider> ();
+			DTE = ServiceLocator.GetInstance<DTE> ();
 		}
 
 		protected IEnumerable<SourceRepository> PrimarySourceRepositories {
@@ -46,6 +48,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected IErrorHandler ErrorHandler {
 			get { return this; }
 		}
+
+		/// <summary>
+		/// DTE instance for PowerShell Cmdlets
+		/// </summary>
+		protected DTE DTE { get; }
 
 		protected NuGetProject Project { get; set; }
 

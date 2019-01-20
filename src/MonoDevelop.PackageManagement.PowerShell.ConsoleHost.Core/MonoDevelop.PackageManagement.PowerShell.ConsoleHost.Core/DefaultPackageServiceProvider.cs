@@ -26,6 +26,7 @@
 
 using System;
 using NuGet.Protocol.Core.Types;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
@@ -35,6 +36,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 		{
 			if (serviceType == typeof (ISourceRepositoryProvider)) {
 				return ConsoleHostServices.SourceRepositoryProvider;
+			} else if (serviceType == typeof (DTE)) {
+				return ConsoleHostServices.DTE;
 			}
 			return null;
 		}
