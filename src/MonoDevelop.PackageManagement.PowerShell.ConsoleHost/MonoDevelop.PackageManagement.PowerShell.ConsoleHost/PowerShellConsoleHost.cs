@@ -129,7 +129,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				Level = level,
 				Message = message
 			};
-			rpc.NotifyWithParameterObjectAsync (Methods.LogName, logMessage).Ignore ();
+			rpc.InvokeAsync (Methods.LogName, logMessage).Wait ();
 		}
 
 		[JsonRpcMethod (Methods.ActiveSourceName)]
