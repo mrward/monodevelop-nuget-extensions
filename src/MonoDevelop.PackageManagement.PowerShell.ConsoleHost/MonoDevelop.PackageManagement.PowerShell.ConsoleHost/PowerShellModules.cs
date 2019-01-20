@@ -34,7 +34,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		public static IEnumerable<string> GetModules ()
 		{
 			string directory = Path.GetDirectoryName (typeof (PowerShellModules).Assembly.Location);
-			string module = Path.Combine (directory, "MonoDevelop.PackageManagement.PowerShell.Cmdlets.dll");
+			string module = Path.Combine (directory, "Modules", "NuGet", "NuGet.psd1");
 			yield return module;
 		}
 	}

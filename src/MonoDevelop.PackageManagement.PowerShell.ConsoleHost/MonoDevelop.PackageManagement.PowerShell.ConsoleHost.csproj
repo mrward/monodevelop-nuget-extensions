@@ -32,4 +32,10 @@
       <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Modules\NuGet\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
