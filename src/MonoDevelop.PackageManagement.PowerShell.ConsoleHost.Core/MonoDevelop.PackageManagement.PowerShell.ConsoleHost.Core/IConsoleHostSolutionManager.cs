@@ -1,5 +1,5 @@
 ﻿//
-// IRemotePowerShellHost.cs
+// IConsoleHostSolutionManager.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,20 +25,16 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
-using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
+using System.Threading.Tasks;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
-	interface IRemotePowerShellHost : IPowerShellHost
+	public interface IConsoleHostSolutionManager
 	{
-		void OnActiveSourceChanged (SourceRepositoryViewModel source);
-		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
+		bool IsSolutionOpen { get; }
+		string DefaultProjectName { get; set; }
 
-		void OnMaxVisibleColumnsChanged (int columns);
-
-		void SolutionLoaded (Solution solution);
-		void SolutionUnloaded ();
-		void OnDefaultProjectChanged (Project project);
+		Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ();
+		Task<global::EnvDTE.Project> GetDefaultProjectAsync ();
 	}
 }

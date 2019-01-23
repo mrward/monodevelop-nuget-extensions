@@ -23,4 +23,10 @@
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.EnvDTE\MonoDevelop.PackageManagement.PowerShell.EnvDTE.csproj" />
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SharpDevelop.EnvDTE">
+      <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

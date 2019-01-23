@@ -1,5 +1,5 @@
 ﻿//
-// ConsoleHostServices.cs
+// ConsoleHostSolutionManager.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,32 +24,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using NuGet.Protocol.Core.Types;
-using NuGet.VisualStudio;
+using System.Linq;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
-	public static class ConsoleHostServices
+	public class ConsoleHostSolutionManager : IConsoleHostSolutionManager
 	{
-		public static void Initialize (DTE dte)
-		{
-			DTE = dte;
-			SourceRepositoryProvider = new ConsoleHostSourceRepositoryProvider ();
-			SolutionManager = new ConsoleHostSolutionManager ();
+		string solutionFileName;
 
-			var serviceProvider = new DefaultPackageServiceProvider ();
-			serviceProvider.AddService (typeof (DTE), dte);
-			serviceProvider.AddService (typeof (ISourceRepositoryProvider), SourceRepositoryProvider);
-			serviceProvider.AddService (typeof (IConsoleHostSolutionManager), SolutionManager);
-
-			ServiceLocator.InitializePackageServiceProvider (serviceProvider);
+		public bool IsSolutionOpen {
+			get { return solutionFileName != null; }
 		}
 
-		public static ConsoleHostSourceRepositoryProvider SourceRepositoryProvider { get; private set; }
+		public string DefaultProjectName { get; set; }
 
-		public static DTE DTE { get; private set; }
+		public void OnSolutionLoaded (string fileName)
+		{
+			solutionFileName = fileName;
+		}
 
-		public static ConsoleHostSolutionManager SolutionManager { get; private set; }
+		public void OnSolutionUnloaded ()
+		{
+			solutionFileName = null;
+		}
+
+		public async Task<global::EnvDTE.Project> GetDefaultProjectAsync ()
+		{
+			if (string.IsNullOrEmpty (DefaultProjectName)) {
+				return null;
+			}
+
+			var projects = await GetAllProjectsAsync ();
+			return projects.FirstOrDefault (project => project.FileName == DefaultProjectName);
+		}
+
+		public Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ()
+		{
+			var dte = new DTE ();
+			var projects = new List<global::EnvDTE.Project> ();
+			foreach (var item in dte.Solution.Projects) {
+				if (item is global::EnvDTE.Project project) {
+					projects.Add (project);
+				}
+			}
+			return Task.FromResult (projects.AsEnumerable ());
+		}
 	}
 }

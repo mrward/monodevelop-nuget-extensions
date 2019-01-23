@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using EnvDTE;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
@@ -38,15 +37,19 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		public string Version => "10.0";
 
-		public Solution Solution => null;
+		public global::EnvDTE.Solution Solution {
+			get {
+				return new Solution ();
+			}
+		}
 
 		public global::EnvDTE.ItemOperations ItemOperations { get; }
 
 		public object ActiveSolutionProjects => null;
 
-		public SourceControl SourceControl => null;
+		public global::EnvDTE.SourceControl SourceControl => null;
 
-		public Properties Properties (string category, string page)
+		public global::EnvDTE.Properties Properties (string category, string page)
 		{
 			return null;
 		}

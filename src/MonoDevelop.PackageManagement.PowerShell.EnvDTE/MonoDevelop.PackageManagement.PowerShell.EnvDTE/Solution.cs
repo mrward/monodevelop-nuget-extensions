@@ -1,5 +1,5 @@
 ﻿//
-// IRemotePowerShellHost.cs
+// Solution.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -23,22 +23,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
 
-using System.Collections.Generic;
-using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
-
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	interface IRemotePowerShellHost : IPowerShellHost
+	public class Solution : MarshalByRefObject, global::EnvDTE.Solution
 	{
-		void OnActiveSourceChanged (SourceRepositoryViewModel source);
-		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
+		public Solution ()
+		{
+			Projects = new Projects (this);
+		}
 
-		void OnMaxVisibleColumnsChanged (int columns);
+		public string FullName { get; set; }
 
-		void SolutionLoaded (Solution solution);
-		void SolutionUnloaded ();
-		void OnDefaultProjectChanged (Project project);
+		public string FileName { get; set; }
+
+		public bool IsOpen { get; set; }
+
+		public global::EnvDTE.Projects Projects { get; private set; }
+
+		public global::EnvDTE.Globals Globals { get; set; }
+
+		public global::EnvDTE.SolutionBuild SolutionBuild { get; set; }
+
+		public global::EnvDTE.Properties Properties { get; set; }
+
+		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)
+		{
+			return null;
+		}
 	}
 }

@@ -188,5 +188,44 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				Logger.Log (string.Format ("Error updating package sources. {0}", ex));
 			}
 		}
+
+		[JsonRpcMethod (Methods.SolutionLoadedName)]
+		public void OnSolutionLoaded (JToken arg)
+		{
+			Logger.Log ("PowerShellConsoleHost.OnSolutionLoaded");
+			try {
+				var message = arg.ToObject<SolutionParams> ();
+				Logger.Log ("PowerShellConsoleHost.OnSolutionLoaded: {0}", message.FileName);
+
+				ConsoleHostServices.SolutionManager.OnSolutionLoaded (message.FileName);
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error on solution loaded. {0}", ex));
+			}
+		}
+
+		[JsonRpcMethod (Methods.SolutionUnloadedName)]
+		public void OnSolutionUnloaded ()
+		{
+			Logger.Log ("PowerShellConsoleHost.OnSolutionUnloaded");
+			try {
+				ConsoleHostServices.SolutionManager.OnSolutionUnloaded ();
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error on solution loaded. {0}", ex));
+			}
+		}
+
+		[JsonRpcMethod (Methods.DefaultProjectChangedName)]
+		public void OnDefaultProjectChanged (JToken arg)
+		{
+			Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged");
+			try {
+				var message = arg.ToObject<DefaultProjectChangedParams> ();
+				Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged {0}", message.FileName);
+
+				ConsoleHostServices.SolutionManager.DefaultProjectName = message.FileName;
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error changing active source. {0}", ex));
+			}
+		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿//
-// IRemotePowerShellHost.cs
+// ProjectInformationList.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,21 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	interface IRemotePowerShellHost : IPowerShellHost
+	[DataContract]
+	public class ProjectInformationList
 	{
-		void OnActiveSourceChanged (SourceRepositoryViewModel source);
-		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
-
-		void OnMaxVisibleColumnsChanged (int columns);
-
-		void SolutionLoaded (Solution solution);
-		void SolutionUnloaded ();
-		void OnDefaultProjectChanged (Project project);
+		[DataMember (Name = "projects")]
+		public ProjectInformation[] Projects { get; set; }
 	}
 }

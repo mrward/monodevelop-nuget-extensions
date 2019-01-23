@@ -8,6 +8,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
 using NuGet.Configuration;
@@ -30,8 +31,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		public NuGetPowerShellBaseCommand ()
 		{
 			sourceRepositoryProvider = ServiceLocator.GetInstance<ISourceRepositoryProvider> ();
+			SolutionManager = ServiceLocator.GetInstance<IConsoleHostSolutionManager> ();
 			DTE = ServiceLocator.GetInstance<DTE> ();
 		}
+
+		protected IConsoleHostSolutionManager SolutionManager { get; }
 
 		protected IEnumerable<SourceRepository> PrimarySourceRepositories {
 			get {
@@ -309,6 +313,89 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			var sourceRepository = CreateRepositoryFromSource (source);
 
 			return SourceValidationResult.Valid (source, sourceRepository);
+		}
+
+		/// <summary>
+		/// Check if solution is open. If not, throw terminating error
+		/// </summary>
+		protected void CheckSolutionState ()
+		{
+			if (!SolutionManager.IsSolutionOpen) {
+				ErrorHandler.ThrowSolutionNotOpenTerminatingError ();
+			}
+		}
+
+		protected Task<EnvDTE.Project> GetDefaultProjectAsync ()
+		{
+			return SolutionManager.GetDefaultProjectAsync ();
+		}
+
+		/// <summary>
+		/// Return all projects in the solution matching the provided names. Wildcards are supported.
+		/// This method will automatically generate error records for non-wildcarded project names that
+		/// are not found.
+		/// </summary>
+		/// <param name="projectNames">An array of project names that may or may not include wildcards.</param>
+		/// <returns>Projects matching the project name(s) provided.</returns>
+		protected async Task<IEnumerable<EnvDTE.Project>> GetProjectsByNameAsync (string[] projectNames)
+		{
+			var result = new List<EnvDTE.Project> ();
+			var allProjects = (await SolutionManager.GetAllProjectsAsync ()).ToList ();
+			var allValidProjectNames = await GetAllValidProjectNamesAsync (allProjects);
+
+			foreach (var projectName in projectNames) {
+				// if ctrl+c hit, leave immediately
+				if (Stopping) {
+					break;
+				}
+
+				// Treat every name as a wildcard; results in simpler code
+				var pattern = new WildcardPattern (projectName, WildcardOptions.IgnoreCase);
+
+				var matches = allValidProjectNames
+					.Where (s => pattern.IsMatch (s))
+					.ToArray ();
+
+				// We only emit non-terminating error record if a non-wildcarded name was not found.
+				// This is consistent with built-in cmdlets that support wildcarded search.
+				// A search with a wildcard that returns nothing should not be considered an error.
+				if ((matches.Length == 0)
+					&& !WildcardPattern.ContainsWildcardCharacters (projectName)) {
+					ErrorHandler.WriteProjectNotFoundError (projectName, terminating: false);
+				}
+
+				foreach (var match in matches) {
+					var matchedProject = GetProject (allProjects, match);
+					if (matchedProject != null) {
+						result.Add (matchedProject);
+					}
+				}
+			}
+
+			return result;
+		}
+
+		EnvDTE.Project GetProject (List<EnvDTE.Project> projects, string match)
+		{
+			return projects.FirstOrDefault (project => project.UniqueName == match || project.Name == match);
+		}
+
+		static bool IsProjectNameMatch (EnvDTE.Project project, string name)
+		{
+			return StringComparer.OrdinalIgnoreCase.Equals (project.UniqueName, name) ||
+				StringComparer.OrdinalIgnoreCase.Equals (project.Name, name);
+		}
+
+		/// <summary>
+		/// Return all possibly valid project names in the current solution. This includes all
+		/// unique names and safe names.
+		/// </summary>
+		Task<IEnumerable<string>> GetAllValidProjectNamesAsync (List<EnvDTE.Project> allProjects)
+		{
+			var safeNames = allProjects.Select (project => project.Name);
+			var uniqueNames = allProjects.Select (project => project.UniqueName);
+			var names = uniqueNames.Concat (safeNames).Distinct ();
+			return Task.FromResult (names);
 		}
 
 		public void HandleError (ErrorRecord errorRecord, bool terminating)

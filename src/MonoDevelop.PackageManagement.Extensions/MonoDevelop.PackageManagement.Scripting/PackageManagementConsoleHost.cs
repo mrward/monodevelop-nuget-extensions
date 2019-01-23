@@ -56,6 +56,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		IPackageManagementAddInPath addinPath;
 		IPackageManagementEvents packageEvents;
 		ConsoleHostScriptRunner scriptRunner;
+		Project defaultProject;
 		string prompt = "PM> ";
 
 		public PackageManagementConsoleHost (
@@ -95,7 +96,15 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 
 		public bool IsRunning { get; private set; }
-		public Project DefaultProject { get; set; }
+		public Project DefaultProject {
+			get { return defaultProject; }
+			set {
+				if (defaultProject != value) {
+					defaultProject = value;
+					remotePowerShellHost?.OnDefaultProjectChanged (defaultProject);
+				}
+			}
+		}
 
 		public SourceRepositoryViewModel ActivePackageSource {
 			get { return registeredPackageSources.SelectedPackageSource; }
@@ -275,6 +284,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 				string command = "Invoke-InitializePackages";
 				powerShellHost.ExecuteCommand (command);
 			}
+
+			var solution = PackageManagementServices.ProjectService.OpenSolution?.Solution;
+			if (solution != null) {
+				remotePowerShellHost?.SolutionLoaded (solution);
+				remotePowerShellHost?.OnDefaultProjectChanged (DefaultProject);
+			}
 		}
 
 		void WriteLine (string message)
@@ -426,11 +441,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void OnSolutionUnloaded ()
 		{
+			remotePowerShellHost?.SolutionUnloaded ();
 			scriptRunner.Reset ();
 		}
 
 		void SolutionLoaded (object sender, SolutionEventArgs e)
 		{
+			remotePowerShellHost?.SolutionLoaded (e.Solution);
 			ExecuteCommand ("Invoke-InitializePackages");
 		}
 

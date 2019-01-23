@@ -35,6 +35,7 @@ using MonoDevelop.Core;
 using MonoDevelop.Core.Execution;
 using MonoDevelop.PackageManagement.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using MonoDevelop.Projects;
 using Newtonsoft.Json;
 using NuGet.Common;
 using StreamJsonRpc;
@@ -47,6 +48,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		JsonRpc rpc;
 		PowerShellHostMessageHandler messageHandler;
 		ItemOperationsMessageHandler itemOperationsMessageHandler;
+		SolutionMessageHandler solutionMessageHandler;
 		List<string> modulesToImport = new List<string> ();
 		IScriptingConsole scriptingConsole;
 
@@ -91,10 +93,16 @@ namespace MonoDevelop.PackageManagement.Scripting
 			process.Exited += Process_Exited;
 
 			messageHandler = new PowerShellHostMessageHandler (scriptingConsole);
-			itemOperationsMessageHandler = new ItemOperationsMessageHandler ();
+
 			rpc = new JsonRpc (process.StandardInput.BaseStream, process.StandardOutput.BaseStream, messageHandler);
 			rpc.Disconnected += JsonRpcDisconnected;
+
+			itemOperationsMessageHandler = new ItemOperationsMessageHandler ();
 			rpc.AddLocalRpcTarget (itemOperationsMessageHandler);
+
+			solutionMessageHandler = new SolutionMessageHandler ();
+			rpc.AddLocalRpcTarget (solutionMessageHandler);
+
 			rpc.StartListening ();
 			rpc.JsonSerializer.NullValueHandling = NullValueHandling.Ignore;
 		}
@@ -182,6 +190,39 @@ namespace MonoDevelop.PackageManagement.Scripting
 				rpc.InvokeAsync (Methods.MaxVisibleColumnsChangedName, columns).Ignore ();
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnMaxVisibleColumnsChanged error", ex);
+			}
+		}
+
+		public void SolutionLoaded (Solution solution)
+		{
+			try {
+				var message = new SolutionParams {
+					FileName = solution.FileName
+				};
+				rpc.InvokeAsync (Methods.SolutionLoadedName, message).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("SolutionLoaded error", ex);
+			}
+		}
+
+		public void SolutionUnloaded ()
+		{
+			try {
+				rpc.InvokeAsync (Methods.SolutionUnloadedName).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("SolutionUnloaded error", ex);
+			}
+		}
+
+		public void OnDefaultProjectChanged (Project project)
+		{
+			try {
+				var message = new DefaultProjectChangedParams {
+					FileName = project.FileName
+				};
+				rpc.InvokeAsync (Methods.DefaultProjectChangedName, message).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnDefaultProjectChanged error", ex);
 			}
 		}
 	}

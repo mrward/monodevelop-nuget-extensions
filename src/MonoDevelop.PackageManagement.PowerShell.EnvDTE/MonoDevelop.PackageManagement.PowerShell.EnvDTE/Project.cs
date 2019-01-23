@@ -1,5 +1,5 @@
 ﻿//
-// IRemotePowerShellHost.cs
+// Project.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,21 +24,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using ICSharpCode.PackageManagement.Scripting;
-using MonoDevelop.Projects;
+using System;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	interface IRemotePowerShellHost : IPowerShellHost
+	public class Project : MarshalByRefObject, global::EnvDTE.Project
 	{
-		void OnActiveSourceChanged (SourceRepositoryViewModel source);
-		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
+		DTE dte;
 
-		void OnMaxVisibleColumnsChanged (int columns);
+		public Project (ProjectInformation info)
+		{
+			Name = info.Name;
+			FileName = info.FileName;
+		}
 
-		void SolutionLoaded (Solution solution);
-		void SolutionUnloaded ();
-		void OnDefaultProjectChanged (Project project);
+		public string Name { get; set; }
+
+		public string UniqueName { get; set; }
+
+		public string FileName { get; set; }
+
+		public string FullName { get; set; }
+
+		public object Object { get; set; }
+
+		public global::EnvDTE.Properties Properties { get; set; }
+
+		public global::EnvDTE.ProjectItems ProjectItems { get; set; }
+
+		public global::EnvDTE.DTE DTE {
+			get {
+				if (dte == null) {
+					dte = new DTE ();
+				}
+				return dte;
+			}
+		}
+
+		public string Type { get; set; }
+
+		public string Kind { get; set; }
+
+		public global::EnvDTE.CodeModel CodeModel { get; set; }
+
+		public global::EnvDTE.ConfigurationManager ConfigurationManager { get; set; }
+
+		public void Save ()
+		{
+		}
 	}
 }
