@@ -1,7 +1,7 @@
 ﻿@{
 
 # Script module or binary module file associated with this manifest
-#ModuleToProcess = 'nuget.psm1'
+ModuleToProcess = 'nuget.psm1'
 
 # Version number of this module.
 ModuleVersion = '2.0.0.0'
