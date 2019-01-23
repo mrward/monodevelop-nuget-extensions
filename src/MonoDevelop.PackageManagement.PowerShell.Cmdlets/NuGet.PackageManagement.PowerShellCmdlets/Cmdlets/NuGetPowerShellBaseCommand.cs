@@ -13,6 +13,7 @@ using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
+using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
@@ -59,6 +60,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected DTE DTE { get; }
 
 		protected NuGetProject Project { get; set; }
+
+		protected Project DTEProject { get; set; }
 
 		protected CancellationToken Token {
 			get {
@@ -325,6 +328,21 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 		}
 
+		protected async Task GetDTEProjectAsync (string projectName = null)
+		{
+			if (string.IsNullOrEmpty (projectName)) {
+				DTEProject = (await SolutionManager.GetDefaultProjectAsync ()) as Project;
+				if (DTEProject == null) {
+					ErrorHandler.WriteProjectNotFoundError ("Default", terminating: true);
+				}
+			} else {
+				DTEProject = (await SolutionManager.GetProjectAsync (projectName)) as Project;
+				if (DTEProject == null) {
+					ErrorHandler.WriteProjectNotFoundError (projectName, terminating: true);
+				}
+			}
+		}
+
 		protected Task<EnvDTE.Project> GetDefaultProjectAsync ()
 		{
 			return SolutionManager.GetDefaultProjectAsync ();
@@ -398,6 +416,39 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			var uniqueNames = allProjects.Select (project => project.UniqueName);
 			var names = uniqueNames.Concat (safeNames).Distinct ();
 			return Task.FromResult (names);
+		}
+
+		/// <summary>
+		/// Get the list of installed packages based on Filter, Skip and First parameters. Used for Get-Package.
+		/// </summary>
+		/// <returns></returns>
+		protected static async Task<Dictionary<Project, IEnumerable<PackageReference>>> GetInstalledPackagesAsync (IEnumerable<Project> projects,
+			string filter,
+			int skip,
+			int take,
+			CancellationToken token)
+		{
+			var installedPackages = new Dictionary<Project, IEnumerable<PackageReference>> ();
+
+			foreach (var project in projects) {
+				var packageRefs = await project.GetInstalledPackagesAsync (token);
+				// Filter the results by string
+				if (!string.IsNullOrEmpty (filter)) {
+					packageRefs = packageRefs.Where (p => p.PackageIdentity.Id.StartsWith (filter, StringComparison.OrdinalIgnoreCase));
+				}
+
+				// Skip and then take
+				if (skip != 0) {
+					packageRefs = packageRefs.Skip (skip);
+				}
+				if (take != 0) {
+					packageRefs = packageRefs.Take (take);
+				}
+
+				installedPackages.Add (project, packageRefs);
+			}
+
+			return installedPackages;
 		}
 
 		public void HandleError (ErrorRecord errorRecord, bool terminating)

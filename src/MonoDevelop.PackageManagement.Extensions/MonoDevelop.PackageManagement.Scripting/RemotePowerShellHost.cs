@@ -49,6 +49,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		PowerShellHostMessageHandler messageHandler;
 		ItemOperationsMessageHandler itemOperationsMessageHandler;
 		SolutionMessageHandler solutionMessageHandler;
+		ProjectMessageHandler projectMessageHandler;
 		List<string> modulesToImport = new List<string> ();
 		IScriptingConsole scriptingConsole;
 
@@ -102,6 +103,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 			solutionMessageHandler = new SolutionMessageHandler ();
 			rpc.AddLocalRpcTarget (solutionMessageHandler);
+
+			projectMessageHandler = new ProjectMessageHandler ();
+			rpc.AddLocalRpcTarget (projectMessageHandler);
 
 			rpc.StartListening ();
 			rpc.JsonSerializer.NullValueHandling = NullValueHandling.Ignore;

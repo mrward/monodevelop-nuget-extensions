@@ -44,5 +44,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string ItemOperationsOpenFileName = "itemOperations/OpenFile";
 
 		public const string SolutionProjects = "solution/Projects";
+
+		public const string ProjectInstalledPackagesName = "project/InstalledPackages";
+
 	}
 }

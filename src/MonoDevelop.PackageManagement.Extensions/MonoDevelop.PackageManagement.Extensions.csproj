@@ -243,6 +243,7 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ItemOperationsMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IRemotePowerShellHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\SolutionMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectMessageHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

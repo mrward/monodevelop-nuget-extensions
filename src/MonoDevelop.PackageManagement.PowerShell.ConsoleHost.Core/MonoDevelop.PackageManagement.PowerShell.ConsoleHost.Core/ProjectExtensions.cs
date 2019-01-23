@@ -1,5 +1,5 @@
 ﻿//
-// IConsoleHostSolutionManager.cs
+// ProjectExtensions.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,18 +24,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using NuGet.Packaging;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using NuGet.Packaging.Core;
+using NuGet.Versioning;
+using NuGet.Frameworks;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
-	public interface IConsoleHostSolutionManager
+	public static class ProjectExtensions
 	{
-		bool IsSolutionOpen { get; }
-		string DefaultProjectName { get; set; }
+		public static async Task<IEnumerable<PackageReference>> GetInstalledPackagesAsync (
+			this Project project,
+			CancellationToken token)
+		{
+			var message = new ProjectParams {
+				FileName = project.FileName
+			};
+			var list = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<ProjectPackagesList> (Methods.ProjectInstalledPackagesName, message, token);
+			return ToPackageReferences (list.Packages);
+		}
 
-		Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ();
-		Task<global::EnvDTE.Project> GetDefaultProjectAsync ();
-		Task<global::EnvDTE.Project> GetProjectAsync (string projectName);
+		static IEnumerable<PackageReference> ToPackageReferences (IEnumerable<PackageReferenceInfo> packages)
+		{
+			return packages.Select (package => CreatePackageReference (package));
+		}
+
+		static PackageReference CreatePackageReference (PackageReferenceInfo package)
+		{
+			return new PackageReference (
+				new PackageIdentity (package.Id, new NuGetVersion (package.Version)),
+				NuGetFramework.Parse (package.TargetFramework)
+			);
+		}
 	}
 }

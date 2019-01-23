@@ -1,5 +1,5 @@
 ﻿//
-// IConsoleHostSolutionManager.cs
+// PackageReferenceInfo.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,18 +24,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	public interface IConsoleHostSolutionManager
+	[DataContract]
+	public class PackageReferenceInfo
 	{
-		bool IsSolutionOpen { get; }
-		string DefaultProjectName { get; set; }
+		[DataMember (Name = "id")]
+		public string Id { get; set; }
 
-		Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ();
-		Task<global::EnvDTE.Project> GetDefaultProjectAsync ();
-		Task<global::EnvDTE.Project> GetProjectAsync (string projectName);
+		[DataMember (Name = "version")]
+		public string Version { get; set; }
+
+		[DataMember (Name = "framework")]
+		public string TargetFramework { get; set; }
 	}
 }

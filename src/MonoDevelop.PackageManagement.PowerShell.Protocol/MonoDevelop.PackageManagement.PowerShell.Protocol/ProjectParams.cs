@@ -1,5 +1,5 @@
 ﻿//
-// IConsoleHostSolutionManager.cs
+// ProjectParams.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,18 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	public interface IConsoleHostSolutionManager
+	[DataContract]
+	public class ProjectParams
 	{
-		bool IsSolutionOpen { get; }
-		string DefaultProjectName { get; set; }
-
-		Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ();
-		Task<global::EnvDTE.Project> GetDefaultProjectAsync ();
-		Task<global::EnvDTE.Project> GetProjectAsync (string projectName);
+		[DataMember (Name = "fileName")]
+		public string FileName { get; set; }
 	}
 }

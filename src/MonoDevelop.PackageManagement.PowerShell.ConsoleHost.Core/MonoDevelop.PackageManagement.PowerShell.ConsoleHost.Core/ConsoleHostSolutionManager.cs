@@ -51,14 +51,9 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			solutionFileName = null;
 		}
 
-		public async Task<global::EnvDTE.Project> GetDefaultProjectAsync ()
+		public Task<global::EnvDTE.Project> GetDefaultProjectAsync ()
 		{
-			if (string.IsNullOrEmpty (DefaultProjectName)) {
-				return null;
-			}
-
-			var projects = await GetAllProjectsAsync ();
-			return projects.FirstOrDefault (project => project.FileName == DefaultProjectName);
+			return GetProjectAsync (DefaultProjectName);
 		}
 
 		public Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ()
@@ -71,6 +66,16 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				}
 			}
 			return Task.FromResult (projects.AsEnumerable ());
+		}
+
+		public async Task<global::EnvDTE.Project> GetProjectAsync (string projectName)
+		{
+			if (string.IsNullOrEmpty (projectName)) {
+				return null;
+			}
+
+			var projects = await GetAllProjectsAsync ();
+			return projects.FirstOrDefault (project => project.FileName == DefaultProjectName);
 		}
 	}
 }
