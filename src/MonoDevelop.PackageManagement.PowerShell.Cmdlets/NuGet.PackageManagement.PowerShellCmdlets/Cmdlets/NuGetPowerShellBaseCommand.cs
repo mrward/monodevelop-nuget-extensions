@@ -367,7 +367,9 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				foreach (var match in matches) {
 					var matchedProject = GetProject (allProjects, match);
 					if (matchedProject != null) {
-						result.Add (matchedProject);
+						if (!result.Contains (matchedProject)) {
+							result.Add (matchedProject);
+						}
 					}
 				}
 			}
