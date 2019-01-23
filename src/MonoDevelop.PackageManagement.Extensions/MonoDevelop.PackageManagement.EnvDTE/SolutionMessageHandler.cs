@@ -26,11 +26,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using ICSharpCode.PackageManagement.EnvDTE;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using Newtonsoft.Json.Linq;
 using StreamJsonRpc;
-using System.Linq;
 
 namespace MonoDevelop.PackageManagement.EnvDTE
 {
@@ -67,8 +68,18 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 		{
 			return new ProjectInformation {
 				Name = project.Name,
-				FileName = project.FileName
+				FileName = project.FileName,
+				UniqueName = GetUniqueName (project),
+				Kind = ProjectKind.GetProjectKind (project),
+				Type = ProjectType.GetProjectType (project.DotNetProject)
 			};
+		}
+
+		static string GetUniqueName (IDotNetProject project)
+		{
+			return FileService.AbsoluteToRelativePath (
+				project.ParentSolution.BaseDirectory,
+				project.FileName);
 		}
 	}
 }

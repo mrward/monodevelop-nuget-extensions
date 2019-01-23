@@ -28,6 +28,7 @@
 
 using System;
 using MD = MonoDevelop.Projects;
+using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -43,16 +44,26 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		
 		string GetProjectKind(Project project)
 		{
-			string type = ProjectType.GetProjectType(project);
-			if (type == ProjectType.CSharp) {
-				return GetProjectKind(CSharp);
-			} else if (type == ProjectType.VB) {
-				return GetProjectKind(VBNet);
-			}
-			return String.Empty;
+			return GetProjectKind (project.DotNetProject);
 		}
-		
-		string GetProjectKind(string projectTypeGuid)
+
+		static string GetProjectKind (MD.DotNetProject project)
+		{
+			string type = ProjectType.GetProjectType (project);
+			if (type == ProjectType.CSharp) {
+				return GetProjectKind (CSharp);
+			} else if (type == ProjectType.VB) {
+				return GetProjectKind (VBNet);
+			}
+			return string.Empty;
+		}
+
+		internal static string GetProjectKind (IDotNetProject project)
+		{
+			return GetProjectKind (project.DotNetProject);
+		}
+
+		static string GetProjectKind(string projectTypeGuid)
 		{
 			return "{" + projectTypeGuid.ToUpperInvariant() + "}";
 		}

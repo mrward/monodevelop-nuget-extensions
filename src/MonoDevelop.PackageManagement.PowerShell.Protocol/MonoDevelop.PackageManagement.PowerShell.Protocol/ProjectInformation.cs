@@ -36,5 +36,14 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 
 		[DataMember (Name = "fileName")]
 		public string FileName { get; set; }
+
+		[DataMember (Name = "uniqueName")]
+		public string UniqueName { get; set; }
+
+		[DataMember (Name = "type")]
+		public string Type { get; set; }
+
+		[DataMember (Name = "kind")]
+		public string Kind { get; set; }
 	}
 }

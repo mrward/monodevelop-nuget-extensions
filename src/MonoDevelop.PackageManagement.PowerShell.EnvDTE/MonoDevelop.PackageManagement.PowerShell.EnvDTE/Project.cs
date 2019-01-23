@@ -37,6 +37,11 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		{
 			Name = info.Name;
 			FileName = info.FileName;
+			FullName = FileName;
+
+			Kind = info.Kind;
+			Type = info.Type;
+			UniqueName = info.UniqueName;
 		}
 
 		public string Name { get; set; }
