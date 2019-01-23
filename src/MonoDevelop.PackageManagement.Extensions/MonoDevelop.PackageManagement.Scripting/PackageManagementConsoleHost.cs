@@ -194,6 +194,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			//			DefineTabExpansionFunction();
 			UpdateWorkingDirectory ();
 			ConfigurePackageSources ();
+			OnMaxVisibleColumnsChanged ();
 		}
 
 		void ConfigurePackageSources ()
