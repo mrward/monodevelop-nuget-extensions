@@ -24,10 +24,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using System.Linq;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
@@ -75,7 +76,12 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			}
 
 			var projects = await GetAllProjectsAsync ();
-			return projects.FirstOrDefault (project => project.FileName == DefaultProjectName);
+			return projects.FirstOrDefault (project => IsMatch (project, projectName));
+		}
+
+		static bool IsMatch (global::EnvDTE.Project project, string projectName)
+		{
+			return StringComparer.OrdinalIgnoreCase.Equals (project.Name, projectName);
 		}
 	}
 }
