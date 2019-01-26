@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
+using System.Threading.Tasks;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using Task = System.Threading.Tasks.Task;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
@@ -91,7 +92,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 			Task.Run (async () => {
 				// When ProjectName is not specified, get all of the projects in the solution
-				if (!string.IsNullOrEmpty (ProjectName)) {
+				if (string.IsNullOrEmpty (ProjectName)) {
 					var projects = await SolutionManager.GetAllProjectsAsync ();
 					DTEProjects = projects.Select (project => (Project)project).ToList ();
 				} else {
@@ -151,22 +152,47 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				// Get package udpates from the current source and taking targetframeworks into account.
 				else {
 					CheckSolutionState ();
-					Task.Run (WriteUpdatePackagesFromRemoteSourceAsyncInSolutionAsync).Wait ();
+					WriteUpdatePackagesFromRemoteSourceAsyncInSolution ();
 				}
 			}
 		}
 
-		async Task WriteUpdatePackagesFromRemoteSourceAsyncInSolutionAsync ()
+		/// <summary>
+		/// This is a bit different to the NuGet.Client code. Here we are running the Task based method
+		/// directly and blocking by using .Result. Using the origin await code resulted in the
+		/// WriteObject, which was originally done outside this method, from being run on a different
+		/// thread and causing a PSInvalidOperationException: The WriteObject and WriteError methods cannot
+		/// be called from outside the overrides of the BeginProcessing, ProcessRecord, and EndProcessing
+		/// methods, and they can only be called from within the same thread.
+		/// </summary>
+		void WriteUpdatePackagesFromRemoteSourceAsyncInSolution ()
 		{
-			//foreach (var project in Projects) {
-			//	await WriteUpdatePackagesFromRemoteSourceAsync (project);
-			//}
+			foreach (var project in DTEProjects) {
+				bool projectHasUpdates = false;
+
+				var packages = GetUpdatePackagesFromRemoteSourceAsync (project).Result;
+
+				foreach (var package in packages) {
+					var versions = package.Versions ?? Enumerable.Empty<NuGetVersion> ();
+					if (versions.Any ()) {
+						projectHasUpdates = true;
+						WriteObject (package);
+					}
+				}
+
+				if (!projectHasUpdates) {
+					LogCore (MessageLevel.Info, string.Format (
+						CultureInfo.CurrentCulture,
+						"No package updates are available from the current package source for project '{0}'.",
+						project.Name));
+				}
+			}
 		}
 
 		/// <summary>
-		/// Output package updates to current project(s) found from the current remote source
+		/// Gets package updates for the project found from the current remote source
 		/// </summary>
-		async Task WriteUpdatePackagesFromRemoteSourceAsync (NuGetProject project)
+		async Task<IEnumerable<PowerShellUpdatePackage>> GetUpdatePackagesFromRemoteSourceAsync (Project project)
 		{
 			var installedPackages = await project.GetInstalledPackagesAsync (Token);
 			installedPackages = installedPackages.Where (p => !IsAutoReferenced (p));
@@ -178,11 +204,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				versionType = VersionType.Updates;
 			}
 
-			var projectHasUpdates = false;
+			var packages = new List<PowerShellUpdatePackage> ();
 
 			var metadataTasks = installedPackages.Select (installedPackage =>
 				 Task.Run (async () => {
-					 var metadata = await GetLatestPackageFromRemoteSourceAsync (installedPackage.PackageIdentity, IncludePrerelease.IsPresent);
+					 var metadata = await GetLatestPackageFromRemoteSourceAsync (installedPackages, installedPackage.PackageIdentity, IncludePrerelease.IsPresent);
 					 if (metadata != null) {
 						 await metadata.GetVersionsAsync ();
 					 }
@@ -193,22 +219,16 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				var metadata = await task.Item1;
 
 				if (metadata != null) {
-					//var package = PowerShellUpdatePackage.GetPowerShellPackageUpdateView (metadata, task.Item2.PackageIdentity.Version, versionType, project);
+					var package = PowerShellUpdatePackage.GetPowerShellPackageUpdateView (metadata, task.Item2.PackageIdentity.Version, versionType, project.Name);
 
-					//var versions = package.Versions ?? Enumerable.Empty<NuGetVersion> ();
-					//if (versions.Any ()) {
-					//	projectHasUpdates = true;
-					//	WriteObject (package);
-					//}
+					var versions = package.Versions ?? Enumerable.Empty<NuGetVersion> ();
+					if (versions.Any ()) {
+						packages.Add (package);
+					}
 				}
 			}
 
-			if (!projectHasUpdates) {
-				LogCore (MessageLevel.Info, string.Format (
-					CultureInfo.CurrentCulture,
-					"No package updates are available from the current package source for project '{0}'.",
-					project.GetMetadata<string> (NuGetProjectMetadataKeys.Name)));
-			}
+			return packages;
 		}
 
 		/// <summary>

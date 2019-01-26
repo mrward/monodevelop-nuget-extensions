@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
+using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
@@ -71,13 +74,32 @@ namespace NuGet.PackageManagement.VisualStudio
 
 		public async Task<IPackageSearchMetadata> GetLatestPackageMetadataAsync (
 			PackageIdentity identity,
+			Project project,
+			bool includePrerelease,
+			CancellationToken cancellationToken)
+		{
+			// get all package references for all the projects and cache locally
+			var packageReferences = await project.GetInstalledPackagesAsync (cancellationToken);
+			return await GetLatestPackageMetadataAsync (identity, packageReferences, includePrerelease, cancellationToken);
+		}
+
+		public async Task<IPackageSearchMetadata> GetLatestPackageMetadataAsync (
+			PackageIdentity identity,
 			NuGetProject project,
 			bool includePrerelease,
 			CancellationToken cancellationToken)
 		{
 			// get all package references for all the projects and cache locally
 			var packageReferences = await project.GetInstalledPackagesAsync (cancellationToken);
+			return await GetLatestPackageMetadataAsync (identity, packageReferences, includePrerelease, cancellationToken);
+		}
 
+		public async Task<IPackageSearchMetadata> GetLatestPackageMetadataAsync (
+			PackageIdentity identity,
+			IEnumerable<PackageReference> packageReferences,
+			bool includePrerelease,
+			CancellationToken cancellationToken)
+		{
 			// filter package references for current package identity
 			var matchedPackageReferences = packageReferences
 				.Where (r => StringComparer.OrdinalIgnoreCase.Equals (r.PackageIdentity.Id, identity.Id));

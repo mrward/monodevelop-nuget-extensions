@@ -24,17 +24,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Threading;
-using System.Threading.Tasks;
-using NuGet.Packaging;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using NuGet.Frameworks;
+using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
-using NuGet.Frameworks;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {

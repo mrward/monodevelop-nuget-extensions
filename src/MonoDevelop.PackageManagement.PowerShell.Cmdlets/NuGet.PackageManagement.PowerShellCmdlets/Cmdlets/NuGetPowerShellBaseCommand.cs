@@ -148,7 +148,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				cancellationToken: Token);
 		}
 
-		protected async Task<IPackageSearchMetadata> GetLatestPackageFromRemoteSourceAsync (PackageIdentity identity, bool includePrerelease)
+		protected async Task<IPackageSearchMetadata> GetLatestPackageFromRemoteSourceAsync (IEnumerable<PackageReference> packageReferences, PackageIdentity identity, bool includePrerelease)
 		{
 			var metadataProvider = new MultiSourcePackageMetadataProvider (
 				PrimarySourceRepositories,
@@ -156,7 +156,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				optionalGlobalLocalRepositories: null,
 				logger: Common.NullLogger.Instance);
 
-			return await metadataProvider.GetLatestPackageMetadataAsync (identity, Project, includePrerelease, Token);
+			return await metadataProvider.GetLatestPackageMetadataAsync (identity, packageReferences, includePrerelease, Token);
 		}
 
 		protected async Task<IEnumerable<string>> GetPackageIdsFromRemoteSourceAsync (string idPrefix, bool includePrerelease)
@@ -395,9 +395,9 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			return result;
 		}
 
-		EnvDTE.Project GetProject (List<EnvDTE.Project> projects, string match)
+		EnvDTE.Project GetProject (IEnumerable<EnvDTE.Project> projects, string match)
 		{
-			return projects.FirstOrDefault (project => project.UniqueName == match || project.Name == match);
+			return projects.FirstOrDefault (project => IsProjectNameMatch (project, match));
 		}
 
 		static bool IsProjectNameMatch (EnvDTE.Project project, string name)
