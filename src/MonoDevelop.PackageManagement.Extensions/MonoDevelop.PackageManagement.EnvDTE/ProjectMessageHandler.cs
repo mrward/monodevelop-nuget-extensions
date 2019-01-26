@@ -27,11 +27,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.Projects;
 using Newtonsoft.Json.Linq;
 using NuGet.Frameworks;
+using NuGet.Packaging;
+using NuGet.ProjectManagement;
 using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.EnvDTE
@@ -44,27 +48,55 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			try {
 				var message = arg.ToObject<ProjectParams> ();
 				var project = FindProject (message.FileName);
-				var packages = PackageManagementServices.ProjectOperations.GetInstalledPackages (project);
+				var packages = GetInstalledPackages (project).Result;
 				return new ProjectPackagesList {
 					Packages = CreatePackageInformation (packages).ToArray ()
 				};
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnGetInstalledPackages error: {0}", ex);
+				throw;
 			}
-			return new ProjectPackagesList ();
 		}
 
-		IEnumerable<PackageReferenceInfo> CreatePackageInformation (IEnumerable<PackageManagementPackageReference> packages)
+		async Task<IEnumerable<PackageReference>> GetInstalledPackages (DotNetProject project)
+		{
+			var solutionManager = GetSolutionManager (project);
+			var nugetProject = CreateNuGetProject (solutionManager, project);
+
+			return await Task.Run (() => nugetProject.GetInstalledPackagesAsync (CancellationToken.None)).ConfigureAwait (false);
+		}
+
+		static IMonoDevelopSolutionManager GetSolutionManager (DotNetProject project)
+		{
+			return Runtime.RunInMainThread (() => {
+				return PackageManagementServices.Workspace.GetSolutionManager (project.ParentSolution);
+			}).Result;
+		}
+
+		static NuGetProject CreateNuGetProject (IMonoDevelopSolutionManager solutionManager, DotNetProject project)
+		{
+			if (solutionManager != null) {
+				return solutionManager.GetNuGetProject (new DotNetProjectProxy (project));
+			}
+
+			return new MonoDevelopNuGetProjectFactory ().CreateNuGetProject (project);
+		}
+
+		IEnumerable<PackageReferenceInfo> CreatePackageInformation (IEnumerable<PackageReference> packages)
 		{
 			return packages.Select (package => CreatePackageInformation (package));
 		}
 
-		PackageReferenceInfo CreatePackageInformation (PackageManagementPackageReference package)
+		PackageReferenceInfo CreatePackageInformation (PackageReference package)
 		{
 			return new PackageReferenceInfo {
-				Id = package.Id,
-				Version = package.Version,
-				TargetFramework = NuGetFramework.AnyFramework.ToString ()
+				Id = package.PackageIdentity.Id,
+				Version = package.PackageIdentity.Version.ToNormalizedString (),
+				VersionRange = package.AllowedVersions?.ToNormalizedString (),
+				TargetFramework = package.TargetFramework.ToString (),
+				IsDevelopmentDependency = package.IsDevelopmentDependency,
+				IsUserInstalled = package.IsUserInstalled,
+				RequireReinstallation = package.RequireReinstallation
 			};
 		}
 

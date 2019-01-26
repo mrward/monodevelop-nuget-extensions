@@ -37,7 +37,19 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		[DataMember (Name = "version")]
 		public string Version { get; set; }
 
+		[DataMember (Name = "versionRange")]
+		public string VersionRange { get; set; }
+
 		[DataMember (Name = "framework")]
 		public string TargetFramework { get; set; }
+
+		[DataMember (Name = "userInstalled")]
+		public bool IsUserInstalled { get; set; } = true;
+
+		[DataMember (Name = "developmentDependency")]
+		public bool IsDevelopmentDependency { get; set; }
+
+		[DataMember (Name = "requireReinstallation")]
+		public bool RequireReinstallation { get; set; }
 	}
 }

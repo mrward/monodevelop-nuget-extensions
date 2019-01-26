@@ -59,8 +59,21 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 		{
 			return new PackageReference (
 				new PackageIdentity (package.Id, new NuGetVersion (package.Version)),
-				NuGetFramework.Parse (package.TargetFramework)
+				NuGetFramework.Parse (package.TargetFramework),
+				package.IsUserInstalled,
+				package.IsDevelopmentDependency,
+				package.RequireReinstallation,
+				GetVersionRange (package)
 			);
+		}
+
+		static VersionRange GetVersionRange (PackageReferenceInfo package)
+		{
+			if (string.IsNullOrEmpty (package.VersionRange)) {
+				return null;
+			}
+
+			return VersionRange.Parse (package.VersionRange);
 		}
 	}
 }
