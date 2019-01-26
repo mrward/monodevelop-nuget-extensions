@@ -48,8 +48,8 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				return list;
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnGetSolutionProjects error: {0}", ex);
+				throw;
 			}
-			return new ProjectInformationList ();
 		}
 
 		IEnumerable<ProjectInformation> GetProjectsInSolution ()

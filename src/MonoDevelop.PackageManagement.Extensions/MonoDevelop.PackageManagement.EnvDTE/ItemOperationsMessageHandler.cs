@@ -43,6 +43,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				DesktopService.ShowUrl (navigateMessage.Url);
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnNavigate error: {0}", ex);
+				throw;
 			}
 		}
 
@@ -56,6 +57,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				}).Ignore ();
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnNavigate error: {0}", ex);
+				throw;
 			}
 		}
 
