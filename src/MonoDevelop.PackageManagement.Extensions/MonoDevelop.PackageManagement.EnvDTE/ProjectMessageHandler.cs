@@ -35,8 +35,11 @@ using MonoDevelop.Projects;
 using Newtonsoft.Json.Linq;
 using NuGet.PackageManagement;
 using NuGet.Packaging;
+using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
+using NuGet.Resolver;
+using NuGet.Versioning;
 using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.EnvDTE
@@ -196,6 +199,99 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				NullSourceCacheContext.Instance,
 				CancellationToken.None
 			).ConfigureAwait (false);
+		}
+
+		[JsonRpcMethod (Methods.ProjectPreviewInstallPackage)]
+		public PackageActionList OnPreviewInstallPackage (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<InstallPackageParams> ();
+				var project = FindProject (message.ProjectFileName);
+				var actions = PreviewInstallPackage (project, message).Result;
+				return new PackageActionList {
+					Actions = CreatePackageActionInformation (actions).ToArray ()
+				};
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnPreviewUninstallPackage error: {0}", ex);
+				throw;
+			}
+		}
+
+		async Task<IEnumerable<NuGetProjectAction>> PreviewInstallPackage (DotNetProject project, InstallPackageParams message)
+		{
+			var solutionManager = GetSolutionManager (project);
+			var nugetProject = CreateNuGetProject (solutionManager, project);
+
+			var packageManager = new MonoDevelopNuGetPackageManager (solutionManager);
+
+			var repositoryProvider = SourceRepositoryProviderFactory.CreateSourceRepositoryProvider ();
+			var repositories = repositoryProvider.GetRepositories ().ToList ();
+
+			var context = new NuGetProjectContext (solutionManager.Settings);
+			var dependencyBehavior = (DependencyBehavior)Enum.Parse (typeof (DependencyBehavior), message.DependencyBehavior);
+
+			using (var sourceCacheContext = new SourceCacheContext ()) {
+
+				NuGetVersion version = null;
+				if (string.IsNullOrEmpty (message.PackageVersion)) {
+					version = await GetLatestPackageVersion (message, nugetProject, packageManager, repositories, context, dependencyBehavior, sourceCacheContext);
+				} else {
+					version = NuGetVersion.Parse (message.PackageVersion);
+				}
+
+				var resolutionContext = new ResolutionContext (
+					dependencyBehavior,
+					message.AllowPrerelease,
+					true,
+					VersionConstraints.None,
+					new GatherCache (),
+					sourceCacheContext
+				);
+
+				var identity = new PackageIdentity (message.PackageId, version);
+				return await packageManager.PreviewInstallPackageAsync (
+					nugetProject,
+					identity,
+					resolutionContext,
+					context,
+					repositories,
+					null,
+					CancellationToken.None
+				).ConfigureAwait (false);
+			}
+		}
+
+		static async Task<NuGetVersion> GetLatestPackageVersion (
+			InstallPackageParams message,
+			NuGetProject nugetProject,
+			MonoDevelopNuGetPackageManager packageManager,
+			List<SourceRepository> repositories,
+			NuGetProjectContext context,
+			DependencyBehavior dependencyBehavior,
+			SourceCacheContext sourceCacheContext)
+		{
+			var latestVersionContext = new ResolutionContext (
+				dependencyBehavior,
+				message.AllowPrerelease,
+				false,
+				VersionConstraints.None,
+				new GatherCache (),
+				sourceCacheContext
+			);
+
+			ResolvedPackage resolvedPackage = await packageManager.GetLatestVersionAsync (
+				message.PackageId,
+				nugetProject,
+				latestVersionContext,
+				repositories,
+				new ProjectContextLogger (context),
+				CancellationToken.None);
+
+			if (resolvedPackage?.LatestVersion == null) {
+				throw new InvalidOperationException (GettextCatalog.GetString ("Unable to find package '{0}", message.PackageId));
+			}
+
+			return resolvedPackage?.LatestVersion;
 		}
 	}
 }

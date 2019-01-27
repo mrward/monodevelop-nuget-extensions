@@ -35,6 +35,8 @@ using NuGet.Frameworks;
 using NuGet.PackageManagement;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
+using NuGet.Protocol.Core.Types;
+using NuGet.Resolver;
 using NuGet.Versioning;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
@@ -116,6 +118,40 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				Methods.ProjectUninstallPackage,
 				new [] { message },
 				token);
+		}
+
+		public static Task<IEnumerable<PackageActionInfo>> PreviewInstallPackageAsync (
+			this Project project,
+			string packageId,
+			DependencyBehavior dependencyBehaviour,
+			bool allowPrerelease,
+			IEnumerable<SourceRepository> sources,
+			CancellationToken token)
+		{
+			return PreviewInstallPackageAsync (project, packageId, null, dependencyBehaviour, allowPrerelease, sources, token);
+		}
+
+		public static async Task<IEnumerable<PackageActionInfo>> PreviewInstallPackageAsync (
+			this Project project,
+			string packageId,
+			string packageVersion,
+			DependencyBehavior dependencyBehaviour,
+			bool allowPrerelease,
+			IEnumerable<SourceRepository> sources,
+			CancellationToken token)
+		{
+			var message = new InstallPackageParams {
+				ProjectFileName = project.FileName,
+				PackageId = packageId,
+				PackageVersion = packageVersion,
+				DependencyBehavior = dependencyBehaviour.ToString (),
+				AllowPrerelease = allowPrerelease
+			};
+			var list = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PackageActionList> (
+				Methods.ProjectPreviewInstallPackage,
+				message,
+				token);
+			return list.Actions;
 		}
 	}
 }

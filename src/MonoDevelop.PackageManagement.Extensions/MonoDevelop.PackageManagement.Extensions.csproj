@@ -89,6 +89,11 @@
     </Reference>
     <Reference Include="NuGet.Packaging">
       <HintPath>..\..\lib\NuGet.Packaging.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Resolver">
+      <HintPath>..\..\lib\NuGet.Resolver.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Collections.Immutable">
