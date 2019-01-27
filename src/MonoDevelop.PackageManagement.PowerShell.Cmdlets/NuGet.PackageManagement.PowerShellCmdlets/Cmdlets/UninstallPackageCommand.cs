@@ -3,6 +3,7 @@
 
 using System;
 using System.Management.Automation;
+using System.Threading;
 using Microsoft.VisualStudio.Threading;
 using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
@@ -82,7 +83,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				var actions = await project.GetUninstallPackageActionsAsync (packageId, uninstallContext, Token);
 				PreviewNuGetPackageActions (actions);
 			} else {
-			//	await PackageManager.ExecuteNuGetProjectActionsAsync (project, actions, projectContext, NullSourceCacheContext.Instance, CancellationToken.None);
+				await project.UninstallPackageAsync (packageId, uninstallContext, CancellationToken.None);
 			}
 		}
 

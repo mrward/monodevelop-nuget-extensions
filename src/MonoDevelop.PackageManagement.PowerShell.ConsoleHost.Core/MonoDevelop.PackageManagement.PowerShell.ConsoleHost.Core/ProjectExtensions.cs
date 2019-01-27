@@ -99,5 +99,23 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				token);
 			return list.Actions;
 		}
+
+		public static async Task UninstallPackageAsync (
+			this Project project,
+			string packageId,
+			UninstallationContext uninstallContext,
+			CancellationToken token)
+		{
+			var message = new UninstallPackageParams {
+				ProjectFileName = project.FileName,
+				PackageId = packageId,
+				Force = uninstallContext.ForceRemove,
+				RemoveDependencies = uninstallContext.RemoveDependencies
+			};
+			await JsonRpcProvider.Rpc.InvokeWithCancellationAsync (
+				Methods.ProjectUninstallPackage,
+				new [] { message },
+				token);
+		}
 	}
 }

@@ -36,6 +36,7 @@ using Newtonsoft.Json.Linq;
 using NuGet.PackageManagement;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
+using NuGet.Protocol.Core.Types;
 using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.EnvDTE
@@ -140,7 +141,8 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				message.PackageId,
 				uninstallationContext,
 				context,
-				CancellationToken.None).ConfigureAwait (false);
+				CancellationToken.None
+			).ConfigureAwait (false);
 		}
 
 		IEnumerable<PackageActionInfo> CreatePackageActionInformation (IEnumerable<NuGetProjectAction> actions)
@@ -155,6 +157,45 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				PackageVersion = package.PackageIdentity.Version.ToNormalizedString (),
 				Type = package.NuGetProjectActionType.ToString ()
 			};
+		}
+
+		[JsonRpcMethod (Methods.ProjectUninstallPackage)]
+		public void OnUninstallPackage (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<UninstallPackageParams> ();
+				var project = FindProject (message.ProjectFileName);
+				UninstallPackageAsync (project, message).Wait ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnUninstallPackage error: {0}", ex);
+				throw;
+			}
+		}
+
+		async Task UninstallPackageAsync (DotNetProject project, UninstallPackageParams message)
+		{
+			var solutionManager = GetSolutionManager (project);
+			var nugetProject = CreateNuGetProject (solutionManager, project);
+
+			var packageManager = new MonoDevelopNuGetPackageManager (solutionManager);
+			var uninstallationContext = new UninstallationContext (message.RemoveDependencies, message.Force);
+			var context = new NuGetProjectContext (solutionManager.Settings);
+
+			var actions = await packageManager.PreviewUninstallPackageAsync (
+				nugetProject,
+				message.PackageId,
+				uninstallationContext,
+				context,
+				CancellationToken.None
+			).ConfigureAwait (false);
+
+			await packageManager.ExecuteNuGetProjectActionsAsync (
+				nugetProject,
+				actions,
+				context,
+				NullSourceCacheContext.Instance,
+				CancellationToken.None
+			).ConfigureAwait (false);
 		}
 	}
 }
