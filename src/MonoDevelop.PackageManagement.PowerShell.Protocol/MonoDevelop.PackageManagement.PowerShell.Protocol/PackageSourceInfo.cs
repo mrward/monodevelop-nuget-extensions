@@ -1,5 +1,5 @@
 ﻿//
-// InstallPackageParams.cs
+// PackageSourceInfo.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -29,24 +29,12 @@ using System.Runtime.Serialization;
 namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
 	[DataContract]
-	public class InstallPackageParams
+	public class PackageSourceInfo
 	{
-		[DataMember (Name = "projectFileName")]
-		public string ProjectFileName { get; set; }
+		[DataMember (Name = "name")]
+		public string Name { get; set; }
 
-		[DataMember (Name = "packageId")]
-		public string PackageId { get; set; }
-
-		[DataMember (Name = "packageVersion")]
-		public string PackageVersion { get; set; }
-
-		[DataMember (Name = "dependencyBehavior")]
-		public string DependencyBehavior { get; set; }
-
-		[DataMember (Name = "allowPrerelease")]
-		public bool AllowPrerelease { get; set; }
-
-		[DataMember (Name = "sources")]
-		public PackageSourceInfo[] PackageSources { get; set; }
+		[DataMember (Name = "source")]
+		public string Source { get; set; }
 	}
 }

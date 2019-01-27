@@ -145,13 +145,27 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				PackageId = packageId,
 				PackageVersion = packageVersion,
 				DependencyBehavior = dependencyBehaviour.ToString (),
-				AllowPrerelease = allowPrerelease
+				AllowPrerelease = allowPrerelease,
+				PackageSources = GetPackageSourceInfo (sources).ToArray ()
 			};
 			var list = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PackageActionList> (
 				Methods.ProjectPreviewInstallPackage,
 				message,
 				token);
 			return list.Actions;
+		}
+
+		static IEnumerable<PackageSourceInfo> GetPackageSourceInfo (IEnumerable<SourceRepository> sources)
+		{
+			return sources.Select (source => GetPackageSourceInfo (source));
+		}
+
+		static PackageSourceInfo GetPackageSourceInfo (SourceRepository source)
+		{
+			return new PackageSourceInfo {
+				Name = source.PackageSource.Name,
+				Source = source.PackageSource.Source
+			};
 		}
 	}
 }

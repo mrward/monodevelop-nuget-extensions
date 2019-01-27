@@ -223,9 +223,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			var nugetProject = CreateNuGetProject (solutionManager, project);
 
 			var packageManager = new MonoDevelopNuGetPackageManager (solutionManager);
-
-			var repositoryProvider = SourceRepositoryProviderFactory.CreateSourceRepositoryProvider ();
-			var repositories = repositoryProvider.GetRepositories ().ToList ();
+			var repositories = GetSourceRepositories (message.PackageSources);
 
 			var context = new NuGetProjectContext (solutionManager.Settings);
 			var dependencyBehavior = (DependencyBehavior)Enum.Parse (typeof (DependencyBehavior), message.DependencyBehavior);
@@ -261,11 +259,41 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			}
 		}
 
+		static IEnumerable<SourceRepository> GetSourceRepositories (IEnumerable<PackageSourceInfo> sources)
+		{
+			var repositoryProvider = SourceRepositoryProviderFactory.CreateSourceRepositoryProvider ();
+			var allRepositories = repositoryProvider.GetRepositories ().ToList ();
+
+			var repositories = new List<SourceRepository> ();
+			foreach (PackageSourceInfo source in sources) {
+				var packageSource = new NuGet.Configuration.PackageSource (source.Source, source.Name);
+				SourceRepository matchedRepository = FindSourceRepository (packageSource, allRepositories);
+				if (matchedRepository != null) {
+					repositories.Add (matchedRepository);
+				} else {
+					var repository = repositoryProvider.CreateRepository (packageSource);
+					repositories.Add (repository);
+				}
+			}
+
+			return repositories;
+		}
+
+		static SourceRepository FindSourceRepository (NuGet.Configuration.PackageSource source, List<SourceRepository> repositories)
+		{
+			foreach (SourceRepository repository in repositories) {
+				if (repository.PackageSource.Equals (source)) {
+					return repository;
+				}
+			}
+			return null;
+		}
+
 		static async Task<NuGetVersion> GetLatestPackageVersion (
 			InstallPackageParams message,
 			NuGetProject nugetProject,
 			MonoDevelopNuGetPackageManager packageManager,
-			List<SourceRepository> repositories,
+			IEnumerable<SourceRepository> repositories,
 			NuGetProjectContext context,
 			DependencyBehavior dependencyBehavior,
 			SourceCacheContext sourceCacheContext)
