@@ -27,7 +27,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 {
 	public abstract class NuGetPowerShellBaseCommand : PSCmdlet, IErrorHandler
 	{
-		readonly BlockingCollection<Message> _blockingCollection = new BlockingCollection<Message> ();
+		readonly BlockingCollection<Message> blockingCollection = new BlockingCollection<Message> ();
 
 		SourceRepository activeSourceRepository;
 		ISourceRepositoryProvider sourceRepositoryProvider;
@@ -632,6 +632,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 		}
 
-		protected BlockingCollection<Message> BlockingCollection => _blockingCollection;
+		protected BlockingCollection<Message> BlockingCollection => blockingCollection;
 	}
 }
