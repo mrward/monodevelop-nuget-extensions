@@ -32,7 +32,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 	public interface IConsoleHostSolutionManager
 	{
 		bool IsSolutionOpen { get; }
-		string DefaultProjectName { get; set; }
+		string DefaultProjectFileName { get; set; }
 
 		Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ();
 		Task<global::EnvDTE.Project> GetDefaultProjectAsync ();

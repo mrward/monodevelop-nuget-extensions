@@ -40,7 +40,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			get { return solutionFileName != null; }
 		}
 
-		public string DefaultProjectName { get; set; }
+		public string DefaultProjectFileName { get; set; }
 
 		public void OnSolutionLoaded (string fileName)
 		{
@@ -52,9 +52,15 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			solutionFileName = null;
 		}
 
-		public Task<global::EnvDTE.Project> GetDefaultProjectAsync ()
+		public async Task<global::EnvDTE.Project> GetDefaultProjectAsync ()
 		{
-			return GetProjectAsync (DefaultProjectName);
+			string fileName = DefaultProjectFileName;
+			if (string.IsNullOrEmpty (fileName)) {
+				return null;
+			}
+
+			var projects = await GetAllProjectsAsync ();
+			return projects.FirstOrDefault (project => project.FileName == fileName);
 		}
 
 		public Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ()

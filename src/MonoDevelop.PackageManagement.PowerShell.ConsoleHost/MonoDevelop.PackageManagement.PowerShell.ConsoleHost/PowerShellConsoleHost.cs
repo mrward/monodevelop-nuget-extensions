@@ -222,7 +222,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				var message = arg.ToObject<DefaultProjectChangedParams> ();
 				Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged {0}", message.FileName);
 
-				ConsoleHostServices.SolutionManager.DefaultProjectName = message.FileName;
+				ConsoleHostServices.SolutionManager.DefaultProjectFileName = message.FileName;
 			} catch (Exception ex) {
 				Logger.Log (string.Format ("Error changing active source. {0}", ex));
 			}
