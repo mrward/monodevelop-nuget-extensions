@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -31,6 +32,7 @@ using System.Threading.Tasks;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using NuGet.Frameworks;
+using NuGet.PackageManagement;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
@@ -46,7 +48,10 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			var message = new ProjectParams {
 				FileName = project.FileName
 			};
-			var list = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<ProjectPackagesList> (Methods.ProjectInstalledPackagesName, message, token);
+			var list = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<ProjectPackagesList> (
+				Methods.ProjectInstalledPackagesName,
+				message,
+				token);
 			return ToPackageReferences (list.Packages);
 		}
 
@@ -74,6 +79,25 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			}
 
 			return VersionRange.Parse (package.VersionRange);
+		}
+
+		public static async Task<IEnumerable<PackageActionInfo>> GetUninstallPackageActionsAsync (
+			this Project project,
+			string packageId,
+			UninstallationContext uninstallContext,
+			CancellationToken token)
+		{
+			var message = new UninstallPackageParams {
+				ProjectFileName = project.FileName,
+				PackageId = packageId,
+				Force = uninstallContext.ForceRemove,
+				RemoveDependencies = uninstallContext.RemoveDependencies
+			};
+			var list = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PackageActionList> (
+				Methods.ProjectPreviewUninstallPackage,
+				message,
+				token);
+			return list.Actions;
 		}
 	}
 }

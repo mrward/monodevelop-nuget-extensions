@@ -33,7 +33,7 @@ using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.Projects;
 using Newtonsoft.Json.Linq;
-using NuGet.Frameworks;
+using NuGet.PackageManagement;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using StreamJsonRpc;
@@ -108,6 +108,53 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				.FirstOrDefault (project => project.FileName == fileName);
 
 			return matchedProject.DotNetProject;
+		}
+
+		[JsonRpcMethod (Methods.ProjectPreviewUninstallPackage)]
+		public PackageActionList OnPreviewUninstallPackage (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<UninstallPackageParams> ();
+				var project = FindProject (message.ProjectFileName);
+				var actions = PreviewUninstallPackage (project, message).Result;
+				return new PackageActionList {
+					Actions = CreatePackageActionInformation (actions).ToArray ()
+				};
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnPreviewUninstallPackage error: {0}", ex);
+				throw;
+			}
+		}
+
+		async Task<IEnumerable<NuGetProjectAction>> PreviewUninstallPackage (DotNetProject project, UninstallPackageParams message)
+		{
+			var solutionManager = GetSolutionManager (project);
+			var nugetProject = CreateNuGetProject (solutionManager, project);
+
+			var packageManager = new MonoDevelopNuGetPackageManager (solutionManager);
+			var uninstallationContext = new UninstallationContext (message.RemoveDependencies, message.Force);
+			var context = new NuGetProjectContext (solutionManager.Settings);
+
+			return await packageManager.PreviewUninstallPackageAsync (
+				nugetProject,
+				message.PackageId,
+				uninstallationContext,
+				context,
+				CancellationToken.None).ConfigureAwait (false);
+		}
+
+		IEnumerable<PackageActionInfo> CreatePackageActionInformation (IEnumerable<NuGetProjectAction> actions)
+		{
+			return actions.Select (action => CreatePackageActionInformation (action));
+		}
+
+		PackageActionInfo CreatePackageActionInformation (NuGetProjectAction package)
+		{
+			return new PackageActionInfo {
+				PackageId = package.PackageIdentity.Id,
+				PackageVersion = package.PackageIdentity.Version.ToNormalizedString (),
+				Type = package.NuGetProjectActionType.ToString ()
+			};
 		}
 	}
 }

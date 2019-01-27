@@ -1,5 +1,5 @@
 ﻿//
-// Methods.cs
+// PackageActionInfo.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,28 +24,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Runtime.Serialization;
+
 namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	public static class Methods
+	[DataContract]
+	public class PackageActionInfo
 	{
-		public const string InvokeName = "pshost/Invoke";
-		public const string ActiveSourceName = "pshost/ActiveSource";
-		public const string PackageSourcesChangedName = "pshost/PackageSourcesChanged";
-		public const string MaxVisibleColumnsChangedName = "pshost/MaxVisibleColumnsChanged";
+		[DataMember (Name = "type")]
+		public string Type { get; set; }
 
-		public const string SolutionLoadedName = "pshost/SolutionLoaded";
-		public const string SolutionUnloadedName = "pshost/SolutionUnloaded";
-		public const string DefaultProjectChangedName = "pshost/DefaultProjectChanged";
+		[DataMember (Name = "packageId")]
+		public string PackageId { get; set; }
 
-		public const string LogName = "ps/Log";
-		public const string ClearHostName = "ps/ClearHost";
-
-		public const string ItemOperationsNavigateName = "itemOperations/Navigate";
-		public const string ItemOperationsOpenFileName = "itemOperations/OpenFile";
-
-		public const string SolutionProjects = "solution/Projects";
-
-		public const string ProjectInstalledPackagesName = "project/InstalledPackages";
-		public const string ProjectPreviewUninstallPackage = "project/PreviewUninstallPackage";
+		[DataMember (Name = "packageVersion")]
+		public string PackageVersion { get; set; }
 	}
 }

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,7 +12,6 @@ using System.Threading.Tasks;
 using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
-using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
@@ -19,11 +19,15 @@ using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using NuGet.VisualStudio;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using PackageSource = NuGet.Configuration.PackageSource;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
 	public abstract class NuGetPowerShellBaseCommand : PSCmdlet, IErrorHandler
 	{
+		readonly BlockingCollection<Message> _blockingCollection = new BlockingCollection<Message> ();
+
 		SourceRepository activeSourceRepository;
 		ISourceRepositoryProvider sourceRepositoryProvider;
 
@@ -170,6 +174,20 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			var autoCompleteProvider = new MultiSourceAutoCompleteProvider (PrimarySourceRepositories, logger: Common.NullLogger.Instance);
 			var results = await autoCompleteProvider.VersionStartsWithAsync (id, versionPrefix, includePrerelease, Token);
 			return results?.OrderByDescending (v => v).ToArray ();
+		}
+
+		protected void PreviewNuGetPackageActions (IEnumerable<PackageActionInfo> actions)
+		{
+			if (actions == null
+				|| !actions.Any ()) {
+				Log (MessageLevel.Info, "No package actions available to be executed.");
+			} else {
+				foreach (var action in actions) {
+					var version = NuGetVersion.Parse (action.PackageVersion);
+					var identity = new PackageIdentity (action.PackageId, version);
+					Log (MessageLevel.Info, action.Type + " " + identity);
+				}
+			}
 		}
 
 		protected override void BeginProcessing ()
@@ -558,5 +576,47 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					break;
 			}
 		}
+
+		public void Log (MessageLevel level, string message, params object[] args)
+		{
+			if (args.Length > 0) {
+				message = string.Format (CultureInfo.CurrentCulture, message, args);
+			}
+
+			BlockingCollection.Add (new LogMessage (level, message));
+		}
+
+		protected void WaitAndLogPackageActions ()
+		{
+			try {
+				while (true) {
+					var message = BlockingCollection.Take ();
+					if (message is ExecutionCompleteMessage) {
+						break;
+					}
+
+					//var scriptMessage = message as ScriptMessage;
+					//if (scriptMessage != null) {
+					//	ExecutePSScriptInternal (scriptMessage.ScriptPath);
+					//	continue;
+					//}
+
+					var logMessage = message as LogMessage;
+					if (logMessage != null) {
+						LogCore (logMessage.Level, logMessage.Content);
+						continue;
+					}
+
+					//var flushMessage = message as FlushMessage;
+					//if (flushMessage != null) {
+					//	_flushSemaphore.Release ();
+					//}
+				}
+			} catch (InvalidOperationException ex) {
+				LogCore (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
+			}
+		}
+
+		protected BlockingCollection<Message> BlockingCollection => _blockingCollection;
 	}
 }

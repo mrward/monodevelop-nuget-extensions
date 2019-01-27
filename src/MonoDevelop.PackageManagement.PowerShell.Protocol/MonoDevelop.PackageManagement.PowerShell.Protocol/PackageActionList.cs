@@ -1,5 +1,5 @@
 ﻿//
-// Methods.cs
+// PackageActionList.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,28 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Runtime.Serialization;
+
 namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	public static class Methods
+	[DataContract]
+	public class PackageActionList
 	{
-		public const string InvokeName = "pshost/Invoke";
-		public const string ActiveSourceName = "pshost/ActiveSource";
-		public const string PackageSourcesChangedName = "pshost/PackageSourcesChanged";
-		public const string MaxVisibleColumnsChangedName = "pshost/MaxVisibleColumnsChanged";
-
-		public const string SolutionLoadedName = "pshost/SolutionLoaded";
-		public const string SolutionUnloadedName = "pshost/SolutionUnloaded";
-		public const string DefaultProjectChangedName = "pshost/DefaultProjectChanged";
-
-		public const string LogName = "ps/Log";
-		public const string ClearHostName = "ps/ClearHost";
-
-		public const string ItemOperationsNavigateName = "itemOperations/Navigate";
-		public const string ItemOperationsOpenFileName = "itemOperations/OpenFile";
-
-		public const string SolutionProjects = "solution/Projects";
-
-		public const string ProjectInstalledPackagesName = "project/InstalledPackages";
-		public const string ProjectPreviewUninstallPackage = "project/PreviewUninstallPackage";
+		[DataMember (Name = "actions")]
+		public PackageActionInfo[] Actions { get; set; }
 	}
 }
