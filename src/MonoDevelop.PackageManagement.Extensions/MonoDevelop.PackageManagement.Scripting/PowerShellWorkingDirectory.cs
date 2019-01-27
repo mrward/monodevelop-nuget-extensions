@@ -55,7 +55,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 		}
 		
-		string QuotedDirectory(string directory)
+		public static string QuotedDirectory (string directory)
 		{
 			return String.Format("'{0}'", directory);
 		}

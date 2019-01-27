@@ -273,6 +273,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 			return workingDirectory.GetWorkingDirectory ();
 		}
 
+		void UpdateWorkingDirectory (Solution solution)
+		{
+			string directory = PowerShellWorkingDirectory.QuotedDirectory (solution.BaseDirectory);
+			UpdateWorkingDirectory (directory);
+		}
+
 		void UpdateWorkingDirectory (string directory)
 		{
 			string command = String.Format ("Set-Location {0}", directory);
@@ -281,15 +287,18 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void InitializePackageScriptsForOpenSolution ()
 		{
-			if (IsSolutionOpen) {
-				string command = "Invoke-InitializePackages";
-				powerShellHost.ExecuteCommand (command);
-			}
+			//if (IsSolutionOpen) {
+			//	string command = "Invoke-InitializePackages";
+			//	powerShellHost.ExecuteCommand (command);
+			//}
 
 			var solution = PackageManagementServices.ProjectService.OpenSolution?.Solution;
 			if (solution != null) {
+				UpdateWorkingDirectory (solution);
 				remotePowerShellHost?.SolutionLoaded (solution);
 				remotePowerShellHost?.OnDefaultProjectChanged (DefaultProject);
+			} else {
+				UpdateWorkingDirectory ();
 			}
 		}
 
@@ -442,14 +451,16 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void OnSolutionUnloaded ()
 		{
+			UpdateWorkingDirectory ();
 			remotePowerShellHost?.SolutionUnloaded ();
 			scriptRunner.Reset ();
 		}
 
 		void SolutionLoaded (object sender, SolutionEventArgs e)
 		{
+			UpdateWorkingDirectory (e.Solution);
 			remotePowerShellHost?.SolutionLoaded (e.Solution);
-			ExecuteCommand ("Invoke-InitializePackages");
+			//ExecuteCommand ("Invoke-InitializePackages");
 		}
 
 		public bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State initPS1State)
