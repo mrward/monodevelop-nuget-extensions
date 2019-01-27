@@ -80,7 +80,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected async Task UninstallPackageByIdAsync (Project project, string packageId, UninstallationContext uninstallContext, bool isPreview)
 		{
 			if (isPreview) {
-				var actions = await project.GetUninstallPackageActionsAsync (packageId, uninstallContext, Token);
+				var actions = await project.PreviewUninstallPackageAsync (packageId, uninstallContext, Token);
 				PreviewNuGetPackageActions (actions);
 			} else {
 				await project.UninstallPackageAsync (packageId, uninstallContext, CancellationToken.None);

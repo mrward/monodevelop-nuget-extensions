@@ -83,7 +83,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			return VersionRange.Parse (package.VersionRange);
 		}
 
-		public static async Task<IEnumerable<PackageActionInfo>> GetUninstallPackageActionsAsync (
+		public static async Task<IEnumerable<PackageActionInfo>> PreviewUninstallPackageAsync (
 			this Project project,
 			string packageId,
 			UninstallationContext uninstallContext,
