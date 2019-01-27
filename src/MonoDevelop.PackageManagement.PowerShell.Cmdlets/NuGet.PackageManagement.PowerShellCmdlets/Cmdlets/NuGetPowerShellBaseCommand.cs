@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using NuGet.Common;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging;
@@ -19,7 +21,6 @@ using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using NuGet.VisualStudio;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using PackageSource = NuGet.Configuration.PackageSource;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
@@ -59,6 +60,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		}
 
 		/// <summary>
+		/// Determine if needs to log total time elapsed or not
+		/// </summary>
+		protected virtual bool IsLoggingTimeDisabled { get; }
+
+		/// <summary>
 		/// DTE instance for PowerShell Cmdlets
 		/// </summary>
 		protected DTE DTE { get; }
@@ -85,6 +91,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 		protected override sealed void ProcessRecord ()
 		{
+			var stopWatch = new Stopwatch ();
+			stopWatch.Start ();
 			try {
 				ProcessRecordCore ();
 			} catch (Exception ex) {
@@ -92,6 +100,13 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				ErrorHandler.HandleException (ex, terminating: true);
 			} finally {
 				UnsubscribeEvents ();
+			}
+
+			stopWatch.Stop ();
+
+			// Log total time elapsed except for Tab command
+			if (!IsLoggingTimeDisabled) {
+				LogCore (MessageLevel.Info, string.Format (CultureInfo.CurrentCulture, "Time Elapsed: {0}", stopWatch.Elapsed));
 			}
 		}
 

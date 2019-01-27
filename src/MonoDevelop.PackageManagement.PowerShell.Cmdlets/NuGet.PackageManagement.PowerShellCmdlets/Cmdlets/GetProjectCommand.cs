@@ -23,6 +23,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		[Parameter (Mandatory = true, ParameterSetName = ParameterSetAllProjects)]
 		public SwitchParameter All { get; set; }
 
+		protected override bool IsLoggingTimeDisabled => true;
+
 		void Preprocess ()
 		{
 			CheckSolutionState ();

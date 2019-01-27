@@ -83,6 +83,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 		List<Project> DTEProjects { get; set; }
 
+		protected override bool IsLoggingTimeDisabled => true;
+
 		void Preprocess ()
 		{
 			UseRemoteSourceOnly = ListAvailable.IsPresent || (!String.IsNullOrEmpty (Source) && !Updates.IsPresent);
