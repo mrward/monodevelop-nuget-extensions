@@ -245,10 +245,10 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHostFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PowerShellHostMessageHandler.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ItemOperationsMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IRemotePowerShellHost.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\SolutionMessageHandler.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.EnvDTE\ProjectMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\ItemOperationsMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\SolutionMessageHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -258,12 +258,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="PostBuildEvent.proj" />
-  <ItemGroup>
-    <Folder Include="MonoDevelop.PackageManagement\" />
-    <Folder Include="MonoDevelop.PackageManagement.Scripting\" />
-    <Folder Include="MonoDevelop.PackageManagement.EnvDTE\" />
-    <Folder Include="NuGet.PackageManagement.UI\" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj">
       <Project>{A406803B-C584-43A3-BCEE-A0BB3132CB5F}</Project>

@@ -42,9 +42,9 @@ using NuGet.Resolver;
 using NuGet.Versioning;
 using StreamJsonRpc;
 
-namespace MonoDevelop.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.Protocol
 {
-	public class ProjectMessageHandler
+	class ProjectMessageHandler
 	{
 		[JsonRpcMethod (Methods.ProjectInstalledPackagesName)]
 		public ProjectPackagesList OnGetInstalledPackages (JToken arg)

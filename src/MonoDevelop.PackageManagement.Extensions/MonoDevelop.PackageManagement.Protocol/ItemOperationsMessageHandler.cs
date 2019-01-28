@@ -1,5 +1,5 @@
 ﻿//
-// SolutionMessageHandler.cs
+// ItemOperationsMessageHandler.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,61 +25,45 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using ICSharpCode.PackageManagement.EnvDTE;
 using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using Newtonsoft.Json.Linq;
 using StreamJsonRpc;
 
-namespace MonoDevelop.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.Protocol
 {
-	public class SolutionMessageHandler
+	class ItemOperationsMessageHandler
 	{
-		[JsonRpcMethod (Methods.SolutionProjects)]
-		public ProjectInformationList OnGetSolutionProjects (JToken arg)
+		[JsonRpcMethod (Methods.ItemOperationsNavigateName)]
+		public void OnNavigate (JToken arg)
 		{
 			try {
-				var message = arg.ToObject<ProjectInformationParams> ();
-				var list = new ProjectInformationList {
-					Projects = GetProjectsInSolution ().ToArray ()
-				};
-				return list;
+				var navigateMessage = arg.ToObject<ItemOperationsNavigateParams> ();
+				DesktopService.ShowUrl (navigateMessage.Url);
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnGetSolutionProjects error: {0}", ex);
+				LoggingService.LogError ("OnNavigate error: {0}", ex);
 				throw;
 			}
 		}
 
-		IEnumerable<ProjectInformation> GetProjectsInSolution ()
+		[JsonRpcMethod (Methods.ItemOperationsOpenFileName)]
+		public void OnOpenFile (JToken arg)
 		{
-			foreach (IDotNetProject project in GetOpenMSBuildProjects ()) {
-				yield return CreateProjectInformation (project);
+			try {
+				var message = arg.ToObject<ItemOperationsOpenFileParams> ();
+				Runtime.RunInMainThread (() => {
+					OpenFile (new FilePath (message.FileName));
+				}).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnNavigate error: {0}", ex);
+				throw;
 			}
 		}
 
-		IEnumerable<IDotNetProject> GetOpenMSBuildProjects ()
+		void OpenFile (FilePath filePath)
 		{
-			return PackageManagementServices.ProjectService.GetOpenProjects ();
-		}
-
-		ProjectInformation CreateProjectInformation (IDotNetProject project)
-		{
-			return new ProjectInformation {
-				Name = project.Name,
-				FileName = project.FileName,
-				UniqueName = GetUniqueName (project),
-				Kind = ProjectKind.GetProjectKind (project),
-				Type = ProjectType.GetProjectType (project.DotNetProject)
-			};
-		}
-
-		static string GetUniqueName (IDotNetProject project)
-		{
-			return FileService.AbsoluteToRelativePath (
-				project.ParentSolution.BaseDirectory,
-				project.FileName);
+			IdeApp.Workbench.OpenDocument (filePath, null, true).Ignore ();
 		}
 	}
 }
