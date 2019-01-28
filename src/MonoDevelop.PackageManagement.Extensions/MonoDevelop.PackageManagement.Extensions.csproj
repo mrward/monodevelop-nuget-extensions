@@ -249,6 +249,9 @@
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ItemOperationsMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\SolutionMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\UninstallPackageMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\DotNetProjectExtensions.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\InstallPackageMessageHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
