@@ -321,5 +321,69 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 
 			return resolvedPackage?.LatestVersion;
 		}
+
+		[JsonRpcMethod (Methods.ProjectInstallPackage)]
+		public void OnInstallPackage (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<InstallPackageParams> ();
+				var project = FindProject (message.ProjectFileName);
+				InstallPackageAsync (project, message).Wait ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnUninstallPackage error: {0}", ex);
+				throw;
+			}
+		}
+
+		async Task InstallPackageAsync (DotNetProject project, InstallPackageParams message)
+		{
+			var solutionManager = GetSolutionManager (project);
+			var nugetProject = CreateNuGetProject (solutionManager, project);
+
+			var packageManager = new MonoDevelopNuGetPackageManager (solutionManager);
+			var repositories = GetSourceRepositories (message.PackageSources);
+
+			var context = new NuGetProjectContext (solutionManager.Settings);
+			var dependencyBehavior = (DependencyBehavior)Enum.Parse (typeof (DependencyBehavior), message.DependencyBehavior);
+
+			using (var sourceCacheContext = new SourceCacheContext ()) {
+
+				NuGetVersion version = null;
+				if (string.IsNullOrEmpty (message.PackageVersion)) {
+					version = await GetLatestPackageVersion (message, nugetProject, packageManager, repositories, context, dependencyBehavior, sourceCacheContext);
+				} else {
+					version = NuGetVersion.Parse (message.PackageVersion);
+				}
+
+				var resolutionContext = new ResolutionContext (
+					dependencyBehavior,
+					message.AllowPrerelease,
+					true,
+					VersionConstraints.None,
+					new GatherCache (),
+					sourceCacheContext
+				);
+
+				var identity = new PackageIdentity (message.PackageId, version);
+				var actions = await packageManager.PreviewInstallPackageAsync (
+					nugetProject,
+					identity,
+					resolutionContext,
+					context,
+					repositories,
+					null,
+					CancellationToken.None
+				).ConfigureAwait (false);
+
+				NuGetPackageManager.SetDirectInstall (identity, context);
+				await packageManager.ExecuteNuGetProjectActionsAsync (
+					nugetProject,
+					actions,
+					context,
+					sourceCacheContext,
+					CancellationToken.None);
+				NuGetPackageManager.ClearDirectInstall (context);
+			}
+		}
 	}
 }

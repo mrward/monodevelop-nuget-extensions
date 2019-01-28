@@ -92,34 +92,23 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			bool allowPrerelease,
 			bool isPreview)
 		{
-			try {
-				//if (!ShouldContinueDueToDotnetDeprecation (actions, isPreview)) {
-				//	return;
-				//}
-
-				if (isPreview) {
-					var actions = await project.PreviewInstallPackageAsync (
-						identity.Id,
-						identity.Version.ToNormalizedString (),
-						dependencyBehavior,
-						allowPrerelease,
-						PrimarySourceRepositories,
-						CancellationToken.None);
-					PreviewNuGetPackageActions (actions);
-				} else {
-				//	NuGetPackageManager.SetDirectInstall (identity, projectContext);
-				//	await PackageManager.ExecuteNuGetProjectActionsAsync (project, actions, this, resolutionContext.SourceCacheContext, CancellationToken.None);
-				//	NuGetPackageManager.ClearDirectInstall (projectContext);
-				}
-			} catch (InvalidOperationException ex) {
-				if (ex.InnerException is PackageAlreadyInstalledException) {
-					// Set nuget operation status to NoOp for telemetry event when package
-					// is already installed.
-					//_status = NuGetOperationStatus.NoOp;
-					Log (MessageLevel.Info, ex.Message);
-				} else {
-					throw ex;
-				}
+			if (isPreview) {
+				var actions = await project.PreviewInstallPackageAsync (
+					identity.Id,
+					identity.Version.ToNormalizedString (),
+					dependencyBehavior,
+					allowPrerelease,
+					PrimarySourceRepositories,
+					CancellationToken.None);
+				PreviewNuGetPackageActions (actions);
+			} else {
+				await project.InstallPackageAsync (
+					identity.Id,
+					identity.Version.ToNormalizedString (),
+					dependencyBehavior,
+					allowPrerelease,
+					PrimarySourceRepositories,
+					CancellationToken.None);
 			}
 		}
 
@@ -133,38 +122,27 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			bool allowPrerelease,
 			bool isPreview)
 		{
-			try {
-				//if (!ShouldContinueDueToDotnetDeprecation (actions, isPreview)) {
-				//	return;
-				//}
+			//if (!ShouldContinueDueToDotnetDeprecation (actions, isPreview)) {
+			//	return;
+			//}
 
-				if (isPreview) {
-					var actions = await project.PreviewInstallPackageAsync (
-						packageId,
-						null,
-						dependencyBehavior,
-						allowPrerelease,
-						PrimarySourceRepositories,
-						Token);
-					PreviewNuGetPackageActions (actions);
-				} else {
-					//var identity = actions.Select (v => v.PackageIdentity).Where (p => p.Id.Equals (packageId, StringComparison.OrdinalIgnoreCase)).FirstOrDefault ();
-					//NuGetPackageManager.SetDirectInstall (identity, projectContext);
-					//await PackageManager.ExecuteNuGetProjectActionsAsync (project, actions, this, resolutionContext.SourceCacheContext, CancellationToken.None);
-					//NuGetPackageManager.ClearDirectInstall (projectContext);
-
-					//// Refresh Manager UI if needed
-					//RefreshUI (actions);
-				}
-			} catch (InvalidOperationException ex) {
-				if (ex.InnerException is PackageAlreadyInstalledException) {
-					// Set nuget operation status to NoOp for telemetry event when package
-					// is already installed.
-					//_status = NuGetOperationStatus.NoOp;
-					Log (MessageLevel.Info, ex.Message);
-				} else {
-					throw ex;
-				}
+			if (isPreview) {
+				var actions = await project.PreviewInstallPackageAsync (
+					packageId,
+					null,
+					dependencyBehavior,
+					allowPrerelease,
+					PrimarySourceRepositories,
+					Token);
+				PreviewNuGetPackageActions (actions);
+			} else {
+				await project.InstallPackageAsync (
+					packageId,
+					null,
+					dependencyBehavior,
+					allowPrerelease,
+					PrimarySourceRepositories,
+					Token);
 			}
 		}
 

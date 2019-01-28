@@ -51,5 +51,6 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string ProjectUninstallPackage = "project/UninstallPackage";
 
 		public const string ProjectPreviewInstallPackage = "project/PreviewInstallPackage";
+		public const string ProjectInstallPackage = "project/InstallPackage";
 	}
 }
