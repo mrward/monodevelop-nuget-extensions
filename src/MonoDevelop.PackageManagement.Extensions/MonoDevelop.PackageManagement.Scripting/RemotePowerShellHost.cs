@@ -190,6 +190,12 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void OnMaxVisibleColumnsChanged (int columns)
 		{
+			if (rpc == null) {
+				// Column information should be updated after the first PowerShell command is run with
+				// remote PowerShell host.
+				return;
+			}
+
 			try {
 				rpc.InvokeAsync (Methods.MaxVisibleColumnsChangedName, columns).Ignore ();
 			} catch (Exception ex) {
