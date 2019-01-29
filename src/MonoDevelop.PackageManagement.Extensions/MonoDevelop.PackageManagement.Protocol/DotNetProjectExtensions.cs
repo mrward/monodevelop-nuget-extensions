@@ -36,7 +36,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			return Runtime.RunInMainThread (() => {
 				return PackageManagementServices.Workspace.GetSolutionManager (project.ParentSolution);
-			}).Result;
+			}).WaitAndGetResult ();
 		}
 
 		public static NuGetProject CreateNuGetProject (this DotNetProject project, IMonoDevelopSolutionManager solutionManager)

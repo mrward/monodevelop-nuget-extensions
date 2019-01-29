@@ -47,12 +47,12 @@ namespace MonoDevelop.PackageManagement.Protocol
 			try {
 				var message = arg.ToObject<ProjectParams> ();
 				var project = FindProject (message.FileName);
-				var packages = GetInstalledPackages (project).Result;
+				var packages = GetInstalledPackages (project).WaitAndGetResult ();
 				return new ProjectPackagesList {
 					Packages = CreatePackageInformation (packages).ToArray ()
 				};
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnGetInstalledPackages error: {0}", ex);
+				LoggingService.LogError ("OnGetInstalledPackages error", ex);
 				throw;
 			}
 		}
@@ -100,12 +100,12 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UninstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new UninstallPackageMessageHandler (project, message);
-				var actions = handler.PreviewUninstallPackage (CancellationToken.None).Result;
-					return new PackageActionList {
+				var actions = handler.PreviewUninstallPackage (CancellationToken.None).WaitAndGetResult ();
+				return new PackageActionList {
 					Actions = CreatePackageActionInformation (actions).ToArray ()
 				};
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnPreviewUninstallPackage error: {0}", ex);
+				LoggingService.LogError ("OnPreviewUninstallPackage error", ex);
 				throw;
 			}
 		}
@@ -131,9 +131,9 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UninstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new UninstallPackageMessageHandler (project, message);
-				handler.UninstallPackageAsync (CancellationToken.None).Wait ();
+				handler.UninstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnUninstallPackage error: {0}", ex);
+				LoggingService.LogError ("OnUninstallPackage error", ex);
 				throw;
 			}
 		}
@@ -145,12 +145,12 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<InstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new InstallPackageMessageHandler (project, message);
-				var actions = handler.PreviewInstallPackage (CancellationToken.None).Result;
+				var actions = handler.PreviewInstallPackage (CancellationToken.None).WaitAndGetResult ();
 				return new PackageActionList {
 					Actions = CreatePackageActionInformation (actions).ToArray ()
 				};
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnPreviewUninstallPackage error: {0}", ex);
+				LoggingService.LogError ("OnPreviewInstallPackage error", ex);
 				throw;
 			}
 		}
@@ -162,9 +162,9 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<InstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new InstallPackageMessageHandler (project, message);
-				handler.InstallPackageAsync (CancellationToken.None).Wait ();
+				handler.InstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnUninstallPackage error: {0}", ex);
+				LoggingService.LogError ("OnInstallPackage error", ex);
 				throw;
 			}
 		}

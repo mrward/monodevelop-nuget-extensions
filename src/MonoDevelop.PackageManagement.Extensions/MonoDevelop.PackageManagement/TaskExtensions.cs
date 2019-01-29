@@ -1,5 +1,5 @@
 ﻿//
-// ItemOperationsMessageHandler.cs
+// TaskExtensions.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,46 +24,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using MonoDevelop.Core;
-using MonoDevelop.Ide;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
-using Newtonsoft.Json.Linq;
-using StreamJsonRpc;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement
 {
-	class ItemOperationsMessageHandler
+	static class TaskExtensions
 	{
-		[JsonRpcMethod (Methods.ItemOperationsNavigateName)]
-		public void OnNavigate (JToken arg)
+		public static T WaitAndGetResult<T> (this Task<T> task, CancellationToken cancellationToken = default (CancellationToken))
 		{
-			try {
-				var navigateMessage = arg.ToObject<ItemOperationsNavigateParams> ();
-				DesktopService.ShowUrl (navigateMessage.Url);
-			} catch (Exception ex) {
-				LoggingService.LogError ("OnNavigate error", ex);
-				throw;
-			}
+			return task.GetAwaiter ().GetResult ();
 		}
 
-		[JsonRpcMethod (Methods.ItemOperationsOpenFileName)]
-		public void OnOpenFile (JToken arg)
+		public static void WaitAndGetResult (this Task task, CancellationToken cancellationToken = default (CancellationToken))
 		{
-			try {
-				var message = arg.ToObject<ItemOperationsOpenFileParams> ();
-				Runtime.RunInMainThread (() => {
-					OpenFile (new FilePath (message.FileName));
-				}).Ignore ();
-			} catch (Exception ex) {
-				LoggingService.LogError ("OnNavigate error", ex);
-				throw;
-			}
-		}
-
-		void OpenFile (FilePath filePath)
-		{
-			IdeApp.Workbench.OpenDocument (filePath, null, true).Ignore ();
+			task.GetAwaiter ().GetResult ();
 		}
 	}
 }

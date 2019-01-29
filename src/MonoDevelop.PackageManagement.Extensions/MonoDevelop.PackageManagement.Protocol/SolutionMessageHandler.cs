@@ -47,7 +47,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				};
 				return list;
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnGetSolutionProjects error: {0}", ex);
+				LoggingService.LogError ("OnGetSolutionProjects error", ex);
 				throw;
 			}
 		}
