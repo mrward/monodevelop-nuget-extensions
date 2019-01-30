@@ -179,5 +179,30 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				new[] { message },
 				token);
 		}
+
+		public static async Task<UpdatePackageActionList> PreviewUpdatePackageAsync (
+			this Project project,
+			string packageId,
+			string packageVersion,
+			DependencyBehavior dependencyBehaviour,
+			bool allowPrerelease,
+			VersionConstraints versionConstraints,
+			IEnumerable<SourceRepository> sources,
+			CancellationToken token)
+		{
+			var message = new UpdatePackageParams {
+				ProjectFileName = project.FileName,
+				PackageId = packageId,
+				PackageVersion = packageVersion,
+				DependencyBehavior = dependencyBehaviour.ToString (),
+				VersionConstraints = versionConstraints.ToString (),
+				AllowPrerelease = allowPrerelease,
+				PackageSources = GetPackageSourceInfo (sources).ToArray ()
+			};
+			return await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<UpdatePackageActionList> (
+				Methods.ProjectPreviewUpdatePackage,
+				message,
+				token);
+		}
 	}
 }

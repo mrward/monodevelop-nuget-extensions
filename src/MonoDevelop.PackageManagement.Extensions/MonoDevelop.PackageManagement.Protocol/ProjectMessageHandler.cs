@@ -168,5 +168,23 @@ namespace MonoDevelop.PackageManagement.Protocol
 				throw;
 			}
 		}
+
+		[JsonRpcMethod (Methods.ProjectPreviewUpdatePackage)]
+		public UpdatePackageActionList OnPreviewUpdatePackage (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<UpdatePackageParams> ();
+				var project = FindProject (message.ProjectFileName);
+				var handler = new UpdatePackageMessageHandler (project, message);
+				var actions = handler.PreviewUpdatePackage (CancellationToken.None).WaitAndGetResult ();
+				return new UpdatePackageActionList {
+					IsPackageInstalled = handler.IsPackageInstalled,
+					Actions = CreatePackageActionInformation (actions).ToArray ()
+				};
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnPreviewInstallPackage error", ex);
+				throw;
+			}
+		}
 	}
 }
