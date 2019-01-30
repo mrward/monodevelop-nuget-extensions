@@ -120,17 +120,6 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				token);
 		}
 
-		public static Task<IEnumerable<PackageActionInfo>> PreviewInstallPackageAsync (
-			this Project project,
-			string packageId,
-			DependencyBehavior dependencyBehaviour,
-			bool allowPrerelease,
-			IEnumerable<SourceRepository> sources,
-			CancellationToken token)
-		{
-			return PreviewInstallPackageAsync (project, packageId, null, dependencyBehaviour, allowPrerelease, sources, token);
-		}
-
 		public static async Task<IEnumerable<PackageActionInfo>> PreviewInstallPackageAsync (
 			this Project project,
 			string packageId,
