@@ -99,7 +99,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					dependencyBehavior,
 					allowPrerelease,
 					PrimarySourceRepositories,
-					CancellationToken.None);
+					Token);
 				PreviewNuGetPackageActions (actions);
 			} else {
 				await project.InstallPackageAsync (
@@ -108,7 +108,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					dependencyBehavior,
 					allowPrerelease,
 					PrimarySourceRepositories,
-					CancellationToken.None);
+					Token);
 			}
 		}
 
