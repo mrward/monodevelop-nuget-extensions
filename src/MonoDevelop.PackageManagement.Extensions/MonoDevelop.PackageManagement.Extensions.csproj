@@ -254,6 +254,8 @@
     <Compile Include="MonoDevelop.PackageManagement.Protocol\InstallPackageMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement\TaskExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\UpdatePackageMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\SourceRepositoryProviderExtensions.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\StringExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -90,28 +90,25 @@ namespace MonoDevelop.PackageManagement.Protocol
 			CancellationToken token,
 			SourceCacheContext sourceCacheContext)
 		{
+			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
+
 			packageManager = new NuGetPackageManager (
-				solutionManager.CreateSourceRepositoryProvider (),
+				repositoryProvider,
 				solutionManager.Settings,
 				solutionManager,
 				new DeleteOnRestartManager ());
 
-			var repositoryProvider = SourceRepositoryProviderFactory.CreateSourceRepositoryProvider (solutionManager.Settings);
-			var enabledRepositories = repositoryProvider.GetRepositories ()
-				.Where (repository => repository.PackageSource.IsEnabled)
-				.ToList ();
+			var enabledRepositories = repositoryProvider.GetEnabledRepositories ();
 
-			var repositories = GetSourceRepositories (message.PackageSources);
+			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
 			projectContext = new NuGetProjectContext (solutionManager.Settings);
-			var dependencyBehavior = (DependencyBehavior)Enum.Parse (typeof (DependencyBehavior), message.DependencyBehavior);
-			var versionConstraints = (VersionConstraints)Enum.Parse (typeof (VersionConstraints), message.VersionConstraints);
 
 			var resolutionContext = new ResolutionContext (
-				dependencyBehavior,
+				message.DependencyBehavior.ToDependencyBehaviorEnum (),
 				message.AllowPrerelease,
 				false,
-				versionConstraints,
+				message.VersionConstraints.ToVersionContrainsEnum (),
 				new GatherCache (),
 				sourceCacheContext
 			);
@@ -139,36 +136,6 @@ namespace MonoDevelop.PackageManagement.Protocol
 					token
 				).ConfigureAwait (false);
 			}
-		}
-
-		static IEnumerable<SourceRepository> GetSourceRepositories (IEnumerable<PackageSourceInfo> sources)
-		{
-			var repositoryProvider = SourceRepositoryProviderFactory.CreateSourceRepositoryProvider ();
-			var allRepositories = repositoryProvider.GetRepositories ().ToList ();
-
-			var repositories = new List<SourceRepository> ();
-			foreach (PackageSourceInfo source in sources) {
-				var packageSource = new NuGet.Configuration.PackageSource (source.Source, source.Name);
-				SourceRepository matchedRepository = FindSourceRepository (packageSource, allRepositories);
-				if (matchedRepository != null) {
-					repositories.Add (matchedRepository);
-				} else {
-					var repository = repositoryProvider.CreateRepository (packageSource);
-					repositories.Add (repository);
-				}
-			}
-
-			return repositories;
-		}
-
-		static SourceRepository FindSourceRepository (NuGet.Configuration.PackageSource source, List<SourceRepository> repositories)
-		{
-			foreach (SourceRepository repository in repositories) {
-				if (repository.PackageSource.Equals (source)) {
-					return repository;
-				}
-			}
-			return null;
 		}
 	}
 }

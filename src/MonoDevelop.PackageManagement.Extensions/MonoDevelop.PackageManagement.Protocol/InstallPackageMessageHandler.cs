@@ -73,10 +73,12 @@ namespace MonoDevelop.PackageManagement.Protocol
 			nugetProject = project.CreateNuGetProject (solutionManager);
 
 			packageManager = new MonoDevelopNuGetPackageManager (solutionManager);
-			var repositories = GetSourceRepositories (message.PackageSources);
+
+			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
+			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
 			projectContext = new NuGetProjectContext (solutionManager.Settings);
-			var dependencyBehavior = (DependencyBehavior)Enum.Parse (typeof (DependencyBehavior), message.DependencyBehavior);
+			var dependencyBehavior = message.DependencyBehavior.ToDependencyBehaviorEnum ();
 
 			NuGetVersion version = null;
 			if (string.IsNullOrEmpty (message.PackageVersion)) {
@@ -105,36 +107,6 @@ namespace MonoDevelop.PackageManagement.Protocol
 				null,
 				token
 			).ConfigureAwait (false);
-		}
-
-		static IEnumerable<SourceRepository> GetSourceRepositories (IEnumerable<PackageSourceInfo> sources)
-		{
-			var repositoryProvider = SourceRepositoryProviderFactory.CreateSourceRepositoryProvider ();
-			var allRepositories = repositoryProvider.GetRepositories ().ToList ();
-
-			var repositories = new List<SourceRepository> ();
-			foreach (PackageSourceInfo source in sources) {
-				var packageSource = new NuGet.Configuration.PackageSource (source.Source, source.Name);
-				SourceRepository matchedRepository = FindSourceRepository (packageSource, allRepositories);
-				if (matchedRepository != null) {
-					repositories.Add (matchedRepository);
-				} else {
-					var repository = repositoryProvider.CreateRepository (packageSource);
-					repositories.Add (repository);
-				}
-			}
-
-			return repositories;
-		}
-
-		static SourceRepository FindSourceRepository (NuGet.Configuration.PackageSource source, List<SourceRepository> repositories)
-		{
-			foreach (SourceRepository repository in repositories) {
-				if (repository.PackageSource.Equals (source)) {
-					return repository;
-				}
-			}
-			return null;
 		}
 
 		async Task<NuGetVersion> GetLatestPackageVersion (
