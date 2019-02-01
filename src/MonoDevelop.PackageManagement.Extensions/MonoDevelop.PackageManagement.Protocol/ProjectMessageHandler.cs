@@ -100,7 +100,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UninstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new UninstallPackageMessageHandler (project, message);
-				var actions = handler.PreviewUninstallPackage (CancellationToken.None).WaitAndGetResult ();
+				var actions = handler.PreviewUninstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
 				return new PackageActionList {
 					Actions = CreatePackageActionInformation (actions).ToArray ()
 				};
@@ -145,7 +145,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<InstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new InstallPackageMessageHandler (project, message);
-				var actions = handler.PreviewInstallPackage (CancellationToken.None).WaitAndGetResult ();
+				var actions = handler.PreviewInstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
 				return new PackageActionList {
 					Actions = CreatePackageActionInformation (actions).ToArray ()
 				};
@@ -176,7 +176,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UpdatePackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new UpdatePackageMessageHandler (project, message);
-				var actions = handler.PreviewUpdatePackage (CancellationToken.None).WaitAndGetResult ();
+				var actions = handler.PreviewUpdatePackageAsync (CancellationToken.None).WaitAndGetResult ();
 				return new UpdatePackageActionList {
 					IsPackageInstalled = handler.IsPackageInstalled,
 					Actions = CreatePackageActionInformation (actions).ToArray ()

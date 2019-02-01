@@ -58,7 +58,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 		public bool IsPackageInstalled { get; private set; }
 
-		public async Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackage (
+		public async Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackageAsync (
 			CancellationToken token)
 		{
 			using (var sourceCacheContext = new SourceCacheContext ()) {

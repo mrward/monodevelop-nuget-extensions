@@ -51,7 +51,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 			this.message = message;
 		}
 
-		public async Task<IEnumerable<NuGetProjectAction>> PreviewUninstallPackage (
+		public async Task<IEnumerable<NuGetProjectAction>> PreviewUninstallPackageAsync (
 			CancellationToken token)
 		{
 			solutionManager = project.GetSolutionManager ();
@@ -72,7 +72,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 		public async Task UninstallPackageAsync (CancellationToken token)
 		{
-			var actions = await PreviewUninstallPackage (token);
+			var actions = await PreviewUninstallPackageAsync (token);
 
 			await packageManager.ExecuteNuGetProjectActionsAsync (
 				nugetProject,
