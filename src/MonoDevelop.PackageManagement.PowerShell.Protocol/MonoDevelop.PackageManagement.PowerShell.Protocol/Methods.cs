@@ -54,5 +54,6 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string ProjectInstallPackage = "project/InstallPackage";
 
 		public const string ProjectPreviewUpdatePackage = "project/PreviewUpdatePackage";
+		public const string ProjectUpdatePackage = "project/UpdatePackage";
 	}
 }

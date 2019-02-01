@@ -61,6 +61,15 @@ namespace MonoDevelop.PackageManagement.Protocol
 		public async Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackage (
 			CancellationToken token)
 		{
+			using (var sourceCacheContext = new SourceCacheContext ()) {
+				return await PreviewUpdatePackage (token, sourceCacheContext);
+			}
+		}
+
+		async Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackage (
+			CancellationToken token,
+			SourceCacheContext sourceCacheContext)
+		{
 			solutionManager = project.GetSolutionManager ();
 			nugetProject = project.CreateNuGetProject (solutionManager);
 
@@ -69,27 +78,6 @@ namespace MonoDevelop.PackageManagement.Protocol
 				return Enumerable.Empty<NuGetProjectAction> ();
 			}
 
-			using (var sourceCacheContext = new SourceCacheContext ()) {
-				return await PreviewUpdatePackage (token, sourceCacheContext);
-			}
-		}
-
-		async Task<bool> CheckPackageInstalled (CancellationToken token)
-		{
-			var installedPackages = await nugetProject.GetInstalledPackagesAsync (token);
-
-			return installedPackages.Any (package => IsMatch (message.PackageId, package));
-		}
-
-		bool IsMatch (string packageId, PackageReference package)
-		{
-			return StringComparer.OrdinalIgnoreCase.Equals (packageId, package.PackageIdentity.Id);
-		}
-
-		async Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackage (
-			CancellationToken token,
-			SourceCacheContext sourceCacheContext)
-		{
 			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
 
 			packageManager = new NuGetPackageManager (
@@ -136,6 +124,52 @@ namespace MonoDevelop.PackageManagement.Protocol
 					token
 				).ConfigureAwait (false);
 			}
+		}
+
+		async Task<bool> CheckPackageInstalled (CancellationToken token)
+		{
+			var installedPackages = await nugetProject.GetInstalledPackagesAsync (token);
+			return installedPackages.Any (package => IsMatch (message.PackageId, package));
+		}
+
+		bool IsMatch (string packageId, PackageReference package)
+		{
+			return StringComparer.OrdinalIgnoreCase.Equals (packageId, package.PackageIdentity.Id);
+		}
+
+		public async Task UpdatePackageAsync (CancellationToken token)
+		{
+			using (var sourceCacheContext = new SourceCacheContext ()) {
+				var actions = await PreviewUpdatePackage (token, sourceCacheContext);
+				if (!actions.Any ()) {
+					return;
+				}
+
+				SetDirectInstall (actions);
+
+				await packageManager.ExecuteNuGetProjectActionsAsync (
+					nugetProject,
+					actions,
+					projectContext,
+					sourceCacheContext,
+					token);
+
+				NuGetPackageManager.ClearDirectInstall (projectContext);
+			}
+		}
+
+		void SetDirectInstall (IEnumerable<NuGetProjectAction> actions)
+		{
+			var matchedAction = actions.FirstOrDefault (action => IsInstallActionForPackageBeingUpdated (action));
+			if (matchedAction != null) {
+				NuGetPackageManager.SetDirectInstall (matchedAction.PackageIdentity, projectContext);
+			}
+		}
+
+		bool IsInstallActionForPackageBeingUpdated (NuGetProjectAction action)
+		{
+			return StringComparer.OrdinalIgnoreCase.Equals (action.PackageIdentity.Id, message.PackageId) &&
+				action.NuGetProjectActionType == NuGetProjectActionType.Install;
 		}
 	}
 }
