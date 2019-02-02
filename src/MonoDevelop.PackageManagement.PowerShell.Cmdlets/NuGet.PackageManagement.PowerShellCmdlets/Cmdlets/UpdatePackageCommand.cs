@@ -168,7 +168,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
 				}
 			} else {
-				bool updated = await DTEProjects.UpdatePackageAsync (
+				var result = await DTEProjects.UpdatePackageAsync (
 					Id,
 					nugetVersion?.ToNormalizedString (),
 					GetDependencyBehavior (),
@@ -176,7 +176,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					DetermineVersionConstraints (),
 					PrimarySourceRepositories,
 					Token);
-				if (!updated) {
+				if (!result.IsPackageInstalled) {
 					Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
 				}
 			}

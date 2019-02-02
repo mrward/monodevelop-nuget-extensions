@@ -120,7 +120,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				token);
 		}
 
-		public static async Task<IEnumerable<PackageActionInfo>> PreviewInstallPackageAsync (
+		public static async Task<InstallPackageActionList> PreviewInstallPackageAsync (
 			this Project project,
 			string packageId,
 			string packageVersion,
@@ -137,11 +137,10 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				AllowPrerelease = allowPrerelease,
 				PackageSources = GetPackageSourceInfo (sources).ToArray ()
 			};
-			var list = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PackageActionList> (
+			return await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<InstallPackageActionList> (
 				Methods.ProjectPreviewInstallPackage,
 				message,
 				token);
-			return list.Actions;
 		}
 
 		static IEnumerable<PackageSourceInfo> GetPackageSourceInfo (IEnumerable<SourceRepository> sources)
@@ -157,7 +156,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			};
 		}
 
-		public static async Task InstallPackageAsync (
+		public static async Task<InstallPackageResult> InstallPackageAsync (
 			this Project project,
 			string packageId,
 			string packageVersion,
@@ -174,7 +173,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				AllowPrerelease = allowPrerelease,
 				PackageSources = GetPackageSourceInfo (sources).ToArray ()
 			};
-			await JsonRpcProvider.Rpc.InvokeWithCancellationAsync (
+			return await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<InstallPackageResult> (
 				Methods.ProjectInstallPackage,
 				new[] { message },
 				token);
@@ -205,7 +204,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				token);
 		}
 
-		public static async Task<bool> UpdatePackageAsync (
+		public static async Task<UpdatePackageResult> UpdatePackageAsync (
 			this IEnumerable<Project> projects,
 			string packageId,
 			string packageVersion,
@@ -224,11 +223,10 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				AllowPrerelease = allowPrerelease,
 				PackageSources = GetPackageSourceInfo (sources).ToArray ()
 			};
-			var result = await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<UpdatePackageResult> (
+			return await JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<UpdatePackageResult> (
 				Methods.ProjectUpdatePackage,
 				message,
 				token);
-			return result.IsPackageInstalled;
 		}
 
 		public static async Task UpdateAllPackagesAsync (

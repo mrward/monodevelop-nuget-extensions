@@ -1,12 +1,10 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
-using System.Threading;
 using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Packaging.Core;
@@ -93,23 +91,41 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			bool isPreview)
 		{
 			if (isPreview) {
-				var actions = await project.PreviewInstallPackageAsync (
+				var actionsList = await project.PreviewInstallPackageAsync (
 					identity.Id,
 					identity.Version.ToNormalizedString (),
 					dependencyBehavior,
 					allowPrerelease,
 					PrimarySourceRepositories,
 					Token);
-				PreviewNuGetPackageActions (actions);
+				if (actionsList.IsPackageAlreadyInstalled) {
+					LogPackageAlreadyInstalled (identity, project);
+				} else {
+					PreviewNuGetPackageActions (actionsList.Actions);
+				}
 			} else {
-				await project.InstallPackageAsync (
+				var result = await project.InstallPackageAsync (
 					identity.Id,
 					identity.Version.ToNormalizedString (),
 					dependencyBehavior,
 					allowPrerelease,
 					PrimarySourceRepositories,
 					Token);
+				if (result.IsPackageAlreadyInstalled) {
+					LogPackageAlreadyInstalled (identity, project);
+				}
 			}
+		}
+
+		void LogPackageAlreadyInstalled (PackageIdentity identity, Project project)
+		{
+			LogPackageAlreadyInstalled (identity.ToString (), project);
+		}
+
+		void LogPackageAlreadyInstalled (string packageId, Project project)
+		{
+			string message = string.Format ("Package '{0}' already exists in project '{1}'", packageId, project.Name);
+			Log (MessageLevel.Info, message);
 		}
 
 		/// <summary>
@@ -127,22 +143,29 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			//}
 
 			if (isPreview) {
-				var actions = await project.PreviewInstallPackageAsync (
+				var actionsList = await project.PreviewInstallPackageAsync (
 					packageId,
 					null,
 					dependencyBehavior,
 					allowPrerelease,
 					PrimarySourceRepositories,
 					Token);
-				PreviewNuGetPackageActions (actions);
+				if (actionsList.IsPackageAlreadyInstalled) {
+					LogPackageAlreadyInstalled (packageId, project);
+				} else {
+					PreviewNuGetPackageActions (actionsList.Actions);
+				}
 			} else {
-				await project.InstallPackageAsync (
+				var result = await project.InstallPackageAsync (
 					packageId,
 					null,
 					dependencyBehavior,
 					allowPrerelease,
 					PrimarySourceRepositories,
 					Token);
+				if (result.IsPackageAlreadyInstalled) {
+					LogPackageAlreadyInstalled (packageId, project);
+				}
 			}
 		}
 

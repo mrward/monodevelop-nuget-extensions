@@ -51,6 +51,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 		NuGetProjectContext projectContext;
 		PackageIdentity identity;
 
+		public bool IsPackageAlreadyInstalled { get; private set; }
+
 		public InstallPackageMessageHandler (DotNetProject project, InstallPackageParams message)
 		{
 			this.project = project;
@@ -61,13 +63,13 @@ namespace MonoDevelop.PackageManagement.Protocol
 			CancellationToken token)
 		{
 			using (var sourceCacheContext = new SourceCacheContext ()) {
-				return PreviewInstallPackage (token, sourceCacheContext);
+				return PreviewInstallPackage (sourceCacheContext, token);
 			}
 		}
 
 		public async Task<IEnumerable<NuGetProjectAction>> PreviewInstallPackage (
-			CancellationToken token,
-			SourceCacheContext sourceCacheContext)
+			SourceCacheContext sourceCacheContext,
+			CancellationToken token)
 		{
 			solutionManager = project.GetSolutionManager ();
 			nugetProject = project.CreateNuGetProject (solutionManager);
@@ -82,7 +84,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 			NuGetVersion version = null;
 			if (string.IsNullOrEmpty (message.PackageVersion)) {
-				version = await GetLatestPackageVersion (repositories, dependencyBehavior, sourceCacheContext);
+				version = await GetLatestPackageVersion (repositories, dependencyBehavior, sourceCacheContext, token);
 			} else {
 				version = NuGetVersion.Parse (message.PackageVersion);
 			}
@@ -98,21 +100,31 @@ namespace MonoDevelop.PackageManagement.Protocol
 				sourceCacheContext
 			);
 
-			return await packageManager.PreviewInstallPackageAsync (
-				nugetProject,
-				identity,
-				resolutionContext,
-				projectContext,
-				repositories,
-				null,
-				token
-			).ConfigureAwait (false);
+			try {
+				return await packageManager.PreviewInstallPackageAsync (
+					nugetProject,
+					identity,
+					resolutionContext,
+					projectContext,
+					repositories,
+					null,
+					token
+				).ConfigureAwait (false);
+			} catch (InvalidOperationException ex) {
+				if (ex.InnerException is PackageAlreadyInstalledException) {
+					IsPackageAlreadyInstalled = true;
+					return Enumerable.Empty<NuGetProjectAction> ();
+				} else {
+					throw;
+				}
+			}
 		}
 
 		async Task<NuGetVersion> GetLatestPackageVersion (
 			IEnumerable<SourceRepository> repositories,
 			DependencyBehavior dependencyBehavior,
-			SourceCacheContext sourceCacheContext)
+			SourceCacheContext sourceCacheContext,
+			CancellationToken token)
 		{
 			var latestVersionContext = new ResolutionContext (
 				dependencyBehavior,
@@ -129,7 +141,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				latestVersionContext,
 				repositories,
 				new ProjectContextLogger (projectContext),
-				CancellationToken.None);
+				token);
 
 			if (resolvedPackage?.LatestVersion == null) {
 				throw new InvalidOperationException (GettextCatalog.GetString ("Unable to find package '{0}", message.PackageId));
@@ -141,7 +153,11 @@ namespace MonoDevelop.PackageManagement.Protocol
 		public async Task InstallPackageAsync (CancellationToken token)
 		{
 			using (var sourceCacheContext = new SourceCacheContext ()) {
-				var actions = await PreviewInstallPackage (token, sourceCacheContext);
+				var actions = await PreviewInstallPackage (sourceCacheContext, token);
+
+				if (!actions.Any ()) {
+					return;
+				}
 
 				NuGetPackageManager.SetDirectInstall (identity, projectContext);
 
@@ -150,7 +166,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 					actions,
 					projectContext,
 					sourceCacheContext,
-					CancellationToken.None);
+					token);
 
 				NuGetPackageManager.ClearDirectInstall (projectContext);
 			}

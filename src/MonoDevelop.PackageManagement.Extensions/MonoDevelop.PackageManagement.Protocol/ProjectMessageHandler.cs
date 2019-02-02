@@ -158,14 +158,15 @@ namespace MonoDevelop.PackageManagement.Protocol
 		}
 
 		[JsonRpcMethod (Methods.ProjectPreviewInstallPackage)]
-		public PackageActionList OnPreviewInstallPackage (JToken arg)
+		public InstallPackageActionList OnPreviewInstallPackage (JToken arg)
 		{
 			try {
 				var message = arg.ToObject<InstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new InstallPackageMessageHandler (project, message);
 				var actions = handler.PreviewInstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
-				return new PackageActionList {
+				return new InstallPackageActionList {
+					IsPackageAlreadyInstalled = handler.IsPackageAlreadyInstalled,
 					Actions = CreatePackageActionInformation (actions).ToArray ()
 				};
 			} catch (Exception ex) {
@@ -175,13 +176,16 @@ namespace MonoDevelop.PackageManagement.Protocol
 		}
 
 		[JsonRpcMethod (Methods.ProjectInstallPackage)]
-		public void OnInstallPackage (JToken arg)
+		public InstallPackageResult OnInstallPackage (JToken arg)
 		{
 			try {
 				var message = arg.ToObject<InstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new InstallPackageMessageHandler (project, message);
 				handler.InstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
+				return new InstallPackageResult {
+					IsPackageAlreadyInstalled = handler.IsPackageAlreadyInstalled
+				};
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnInstallPackage error", ex);
 				throw;
