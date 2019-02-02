@@ -8,21 +8,18 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
 using NuGet.ProjectManagement;
-using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using System.Threading;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
 	[Cmdlet (VerbsData.Update, "Package", DefaultParameterSetName = "All")]
 	public class UpdatePackageCommand : PackageActionBaseCommand
 	{
-		//UninstallationContext uninstallcontext;
 		string id;
 		string projectName;
 		bool idSpecified;
@@ -69,8 +66,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		public SwitchParameter Reinstall { get; set; }
 
 		List<Project> DTEProjects { get; set; }
-
-		public bool IsVersionEnum { get; set; }
 
 		protected override void Preprocess ()
 		{
@@ -125,32 +120,12 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task UpdateOrReinstallAllPackagesAsync ()
 		{
 			try {
-				//using (var sourceCacheContext = new SourceCacheContext ()) {
-				//	var resolutionContext = new ResolutionContext (
-				//		GetDependencyBehavior (),
-				//		allowPrerelease,
-				//		false,
-				//		DetermineVersionConstraints (),
-				//		new GatherCache (),
-				//		sourceCacheContext);
-
-				//	// if the source is explicitly specified we will use exclusively that source otherwise use ALL enabled sources
-				//	var actions = await PackageManager.PreviewUpdatePackagesAsync (
-				//		Projects,
-				//		resolutionContext,
-				//		this,
-				//		PrimarySourceRepositories,
-				//		PrimarySourceRepositories,
-				//		Token);
-
-				//	if (!actions.Any ()) {
-				//		_status = NuGetOperationStatus.NoOp;
-				//	} else {
-				//		_packageCount = actions.Select (action => action.PackageIdentity.Id).Distinct ().Count ();
-				//	}
-
-				//	await ExecuteActions (actions, sourceCacheContext);
-				//}
+				await DTEProjects.UpdateAllPackagesAsync (
+					GetDependencyBehavior (),
+					allowPrerelease,
+					DetermineVersionConstraints (),
+					PrimarySourceRepositories,
+					Token);
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
 			} finally {
@@ -205,40 +180,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
 				}
 			}
-			//var actions = Enumerable.Empty<NuGetProjectAction> ();
-
-			//using (var sourceCacheContext = new SourceCacheContext ()) {
-			//	var resolutionContext = new ResolutionContext (
-			//		GetDependencyBehavior (),
-			//		allowPrerelease,
-			//		false,
-			//		DetermineVersionConstraints (),
-			//		new GatherCache (),
-			//		sourceCacheContext);
-
-			//	// If -Version switch is specified
-			//	if (!string.IsNullOrEmpty (Version)) {
-			//		actions = await PackageManager.PreviewUpdatePackagesAsync (
-			//			new PackageIdentity (Id, PowerShellCmdletsUtility.GetNuGetVersionFromString (Version)),
-			//			Projects,
-			//			resolutionContext,
-			//			this,
-			//			PrimarySourceRepositories,
-			//			EnabledSourceRepositories,
-			//			Token);
-			//	} else {
-			//		actions = await PackageManager.PreviewUpdatePackagesAsync (
-			//			Id,
-			//			Projects,
-			//			resolutionContext,
-			//			this,
-			//			PrimarySourceRepositories,
-			//			EnabledSourceRepositories,
-			//			Token);
-			//	}
-
-			//	await ExecuteActions (actions, sourceCacheContext);
-			//}
 		}
 
 		/// <summary>
@@ -255,16 +196,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 			allowPrerelease = IncludePrerelease.IsPresent || versionSpecifiedPrerelease;
 		}
-
-		///// <summary>
-		///// Uninstallation Context for Update-Package -Reinstall command
-		///// </summary>
-		//public UninstallationContext UninstallContext {
-		//	get {
-		//		uninstallcontext = new UninstallationContext (false, Reinstall.IsPresent);
-		//		return uninstallcontext;
-		//	}
-		//}
 
 		/// <summary>
 		/// Return dependecy behavior for Update-Package command.

@@ -222,5 +222,19 @@ namespace MonoDevelop.PackageManagement.Protocol
 				throw;
 			}
 		}
+
+		[JsonRpcMethod (Methods.ProjectUpdateAllPackages)]
+		public void OnUpdateAllPackages (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<UpdatePackageParams> ();
+				var projects = FindProjects (message.ProjectFileNames);
+				var handler = new UpdatePackageMessageHandler (projects, message);
+				handler.UpdateAllPackagesAsync (CancellationToken.None).WaitAndGetResult ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnUpdateAllPackages error", ex);
+				throw;
+			}
+		}
 	}
 }

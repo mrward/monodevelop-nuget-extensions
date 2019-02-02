@@ -61,13 +61,13 @@ namespace MonoDevelop.PackageManagement.Protocol
 			CancellationToken token)
 		{
 			using (var sourceCacheContext = new SourceCacheContext ()) {
-				return await PreviewUpdatePackage (token, sourceCacheContext);
+				return await PreviewUpdatePackagesAsync (sourceCacheContext, token);
 			}
 		}
 
-		async Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackage (
-			CancellationToken token,
-			SourceCacheContext sourceCacheContext)
+		async Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackagesAsync (
+			SourceCacheContext sourceCacheContext,
+			CancellationToken token)
 		{
 			solutionManager = projects.FirstOrDefault ().GetSolutionManager ();
 			nugetProjects = projects
@@ -146,7 +146,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 		public async Task UpdatePackageAsync (CancellationToken token)
 		{
 			using (var sourceCacheContext = new SourceCacheContext ()) {
-				var actions = await PreviewUpdatePackage (token, sourceCacheContext);
+				var actions = await PreviewUpdatePackagesAsync (sourceCacheContext, token);
 
 				await packageManager.ExecuteNuGetProjectActionsAsync (
 					nugetProjects,
@@ -155,6 +155,65 @@ namespace MonoDevelop.PackageManagement.Protocol
 					sourceCacheContext,
 					token);
 			}
+		}
+
+		/// <summary>
+		/// NuGet's Update-Command when updating all packages only uses the sources selected in the
+		/// PowerShell console. This is different to how updating a single package works. Not sure
+		/// why this is done.
+		/// </summary>
+		public async Task UpdateAllPackagesAsync (CancellationToken token)
+		{
+			using (var sourceCacheContext = new SourceCacheContext ()) {
+				var actions = await PreviewUpdateAllPackagesAsync (sourceCacheContext, token);
+
+				await packageManager.ExecuteNuGetProjectActionsAsync (
+					nugetProjects,
+					actions,
+					projectContext,
+					sourceCacheContext,
+					token);
+			}
+		}
+
+		async Task<IEnumerable<NuGetProjectAction>> PreviewUpdateAllPackagesAsync (
+			SourceCacheContext sourceCacheContext,
+			CancellationToken token)
+		{
+			solutionManager = projects.FirstOrDefault ().GetSolutionManager ();
+			nugetProjects = projects
+				.Select (project => project.CreateNuGetProject (solutionManager))
+				.ToList ();
+
+			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
+
+			packageManager = new NuGetPackageManager (
+				repositoryProvider,
+				solutionManager.Settings,
+				solutionManager,
+				new DeleteOnRestartManager ());
+
+			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
+
+			projectContext = new NuGetProjectContext (solutionManager.Settings);
+
+			var resolutionContext = new ResolutionContext (
+				message.DependencyBehavior.ToDependencyBehaviorEnum (),
+				message.AllowPrerelease,
+				false,
+				message.VersionConstraints.ToVersionContrainsEnum (),
+				new GatherCache (),
+				sourceCacheContext
+			);
+
+			return await packageManager.PreviewUpdatePackagesAsync (
+				nugetProjects,
+				resolutionContext,
+				projectContext,
+				repositories,
+				repositories, // Update-Package does not use all enabled package sources.
+				token
+			).ConfigureAwait (false);
 		}
 	}
 }
