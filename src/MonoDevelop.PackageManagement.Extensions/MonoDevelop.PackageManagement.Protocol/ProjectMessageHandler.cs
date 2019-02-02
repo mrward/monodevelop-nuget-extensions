@@ -93,6 +93,25 @@ namespace MonoDevelop.PackageManagement.Protocol
 			return matchedProject.DotNetProject;
 		}
 
+		IEnumerable<DotNetProject> FindProjects (IEnumerable<string> fileNames)
+		{
+			var allProjects = PackageManagementServices
+				.ProjectService
+				.GetOpenProjects ();
+
+			var matchedProjects = new List<DotNetProject> ();
+
+			foreach (string fileName in fileNames) {
+				var matchedProject = allProjects.FirstOrDefault (project => project.FileName == fileName);
+				if (matchedProject == null) {
+					throw new ArgumentException ("Could not find project '{0}'", fileName);
+				}
+				matchedProjects.Add (matchedProject.DotNetProject);
+			}
+
+			return matchedProjects;
+		}
+
 		[JsonRpcMethod (Methods.ProjectPreviewUninstallPackage)]
 		public PackageActionList OnPreviewUninstallPackage (JToken arg)
 		{
@@ -174,8 +193,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			try {
 				var message = arg.ToObject<UpdatePackageParams> ();
-				var project = FindProject (message.ProjectFileName);
-				var handler = new UpdatePackageMessageHandler (project, message);
+				var projects = FindProjects (message.ProjectFileNames);
+				var handler = new UpdatePackageMessageHandler (projects, message);
 				var actions = handler.PreviewUpdatePackageAsync (CancellationToken.None).WaitAndGetResult ();
 				return new UpdatePackageActionList {
 					IsPackageInstalled = handler.IsPackageInstalled,
@@ -192,8 +211,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			try {
 				var message = arg.ToObject<UpdatePackageParams> ();
-				var project = FindProject (message.ProjectFileName);
-				var handler = new UpdatePackageMessageHandler (project, message);
+				var projects = FindProjects (message.ProjectFileNames);
+				var handler = new UpdatePackageMessageHandler (projects, message);
 				handler.UpdatePackageAsync (CancellationToken.None).WaitAndGetResult ();
 				return new UpdatePackageResult {
 					IsPackageInstalled = handler.IsPackageInstalled

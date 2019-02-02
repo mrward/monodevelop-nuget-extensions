@@ -181,7 +181,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 		}
 
 		public static async Task<UpdatePackageActionList> PreviewUpdatePackageAsync (
-			this Project project,
+			this IEnumerable<Project> projects,
 			string packageId,
 			string packageVersion,
 			DependencyBehavior dependencyBehaviour,
@@ -191,7 +191,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			CancellationToken token)
 		{
 			var message = new UpdatePackageParams {
-				ProjectFileName = project.FileName,
+				ProjectFileNames = projects.Select (project => project.FileName).ToArray (),
 				PackageId = packageId,
 				PackageVersion = packageVersion,
 				DependencyBehavior = dependencyBehaviour.ToString (),
@@ -206,7 +206,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 		}
 
 		public static async Task<bool> UpdatePackageAsync (
-			this Project project,
+			this IEnumerable<Project> projects,
 			string packageId,
 			string packageVersion,
 			DependencyBehavior dependencyBehaviour,
@@ -216,7 +216,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			CancellationToken token)
 		{
 			var message = new UpdatePackageParams {
-				ProjectFileName = project.FileName,
+				ProjectFileNames = projects.Select (project => project.FileName).ToArray (),
 				PackageId = packageId,
 				PackageVersion = packageVersion,
 				DependencyBehavior = dependencyBehaviour.ToString (),

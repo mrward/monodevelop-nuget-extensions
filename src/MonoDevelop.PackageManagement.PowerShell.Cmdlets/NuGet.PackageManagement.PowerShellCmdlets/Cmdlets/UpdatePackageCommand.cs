@@ -179,7 +179,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task PreviewAndExecuteUpdateActionsForSinglePackage ()
 		{
 			if (WhatIf.IsPresent) {
-				var actionsList = await DTEProject.PreviewUpdatePackageAsync (
+				var actionsList = await DTEProjects.PreviewUpdatePackageAsync (
 					Id,
 					nugetVersion?.ToNormalizedString (),
 					GetDependencyBehavior (),
@@ -193,7 +193,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
 				}
 			} else {
-				bool updated = await DTEProject.UpdatePackageAsync (
+				bool updated = await DTEProjects.UpdatePackageAsync (
 					Id,
 					nugetVersion?.ToNormalizedString (),
 					GetDependencyBehavior (),

@@ -36,23 +36,22 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
-using NuGet.Resolver;
 using NuGet.Versioning;
 
 namespace MonoDevelop.PackageManagement.Protocol
 {
 	class UpdatePackageMessageHandler
 	{
-		DotNetProject project;
+		List<DotNetProject> projects;
 		UpdatePackageParams message;
 		IMonoDevelopSolutionManager solutionManager;
-		NuGetProject nugetProject;
+		List<NuGetProject> nugetProjects;
 		NuGetPackageManager packageManager;
 		NuGetProjectContext projectContext;
 
-		public UpdatePackageMessageHandler (DotNetProject project, UpdatePackageParams message)
+		public UpdatePackageMessageHandler (IEnumerable<DotNetProject> projects, UpdatePackageParams message)
 		{
-			this.project = project;
+			this.projects = projects.ToList ();
 			this.message = message;
 		}
 
@@ -70,8 +69,10 @@ namespace MonoDevelop.PackageManagement.Protocol
 			CancellationToken token,
 			SourceCacheContext sourceCacheContext)
 		{
-			solutionManager = project.GetSolutionManager ();
-			nugetProject = project.CreateNuGetProject (solutionManager);
+			solutionManager = projects.FirstOrDefault ().GetSolutionManager ();
+			nugetProjects = projects
+				.Select (project => project.CreateNuGetProject (solutionManager))
+				.ToList ();
 
 			IsPackageInstalled = await CheckPackageInstalled (token);
 			if (!IsPackageInstalled) {
@@ -106,7 +107,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 				return await packageManager.PreviewUpdatePackagesAsync (
 					new PackageIdentity (message.PackageId, packageVersion),
-					new[] { nugetProject },
+					nugetProjects,
 					resolutionContext,
 					projectContext,
 					repositories,
@@ -116,7 +117,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 			} else {
 				return await packageManager.PreviewUpdatePackagesAsync (
 					message.PackageId,
-					new [] { nugetProject },
+					nugetProjects,
 					resolutionContext,
 					projectContext,
 					repositories,
@@ -128,8 +129,13 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 		async Task<bool> CheckPackageInstalled (CancellationToken token)
 		{
-			var installedPackages = await nugetProject.GetInstalledPackagesAsync (token);
-			return installedPackages.Any (package => IsMatch (message.PackageId, package));
+			foreach (NuGetProject nugetProject in nugetProjects) {
+				var installedPackages = await nugetProject.GetInstalledPackagesAsync (token);
+				if (installedPackages.Any (package => IsMatch (message.PackageId, package))) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		bool IsMatch (string packageId, PackageReference package)
@@ -141,35 +147,14 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			using (var sourceCacheContext = new SourceCacheContext ()) {
 				var actions = await PreviewUpdatePackage (token, sourceCacheContext);
-				if (!actions.Any ()) {
-					return;
-				}
-
-				SetDirectInstall (actions);
 
 				await packageManager.ExecuteNuGetProjectActionsAsync (
-					nugetProject,
+					nugetProjects,
 					actions,
 					projectContext,
 					sourceCacheContext,
 					token);
-
-				NuGetPackageManager.ClearDirectInstall (projectContext);
 			}
-		}
-
-		void SetDirectInstall (IEnumerable<NuGetProjectAction> actions)
-		{
-			var matchedAction = actions.FirstOrDefault (action => IsInstallActionForPackageBeingUpdated (action));
-			if (matchedAction != null) {
-				NuGetPackageManager.SetDirectInstall (matchedAction.PackageIdentity, projectContext);
-			}
-		}
-
-		bool IsInstallActionForPackageBeingUpdated (NuGetProjectAction action)
-		{
-			return StringComparer.OrdinalIgnoreCase.Equals (action.PackageIdentity.Id, message.PackageId) &&
-				action.NuGetProjectActionType == NuGetProjectActionType.Install;
 		}
 	}
 }

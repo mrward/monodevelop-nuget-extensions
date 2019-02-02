@@ -31,8 +31,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 	[DataContract]
 	public class UpdatePackageParams
 	{
-		[DataMember (Name = "projectFileName")]
-		public string ProjectFileName { get; set; }
+		[DataMember (Name = "projectFileNames")]
+		public string[] ProjectFileNames { get; set; }
 
 		[DataMember (Name = "packageId")]
 		public string PackageId { get; set; }
