@@ -79,7 +79,10 @@ namespace MonoDevelop.PackageManagement.Protocol
 			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
 			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
-			projectContext = new ConsoleHostNuGetProjectContext (solutionManager.Settings);
+			projectContext = new ConsoleHostNuGetProjectContext (
+				solutionManager.Settings,
+				 message.FileConflictAction.ToFileConflictActionEnum ());
+
 			var dependencyBehavior = message.DependencyBehavior.ToDependencyBehaviorEnum ();
 
 			NuGetVersion version = null;

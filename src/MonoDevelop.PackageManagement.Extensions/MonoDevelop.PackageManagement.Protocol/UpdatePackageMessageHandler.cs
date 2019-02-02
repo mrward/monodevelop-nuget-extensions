@@ -91,7 +91,9 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
-			projectContext = new ConsoleHostNuGetProjectContext (solutionManager.Settings);
+			projectContext = new ConsoleHostNuGetProjectContext (
+				solutionManager.Settings,
+				message.FileConflictAction.ToFileConflictActionEnum ());
 
 			var resolutionContext = new ResolutionContext (
 				message.DependencyBehavior.ToDependencyBehaviorEnum (),
@@ -195,7 +197,9 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
-			projectContext = new ConsoleHostNuGetProjectContext (solutionManager.Settings);
+			projectContext = new ConsoleHostNuGetProjectContext (
+				solutionManager.Settings,
+				message.FileConflictAction.ToFileConflictActionEnum ());
 
 			var resolutionContext = new ResolutionContext (
 				message.DependencyBehavior.ToDependencyBehaviorEnum (),

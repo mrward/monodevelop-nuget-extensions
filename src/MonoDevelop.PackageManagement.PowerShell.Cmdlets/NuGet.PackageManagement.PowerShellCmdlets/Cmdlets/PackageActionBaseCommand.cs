@@ -109,6 +109,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					identity.Version.ToNormalizedString (),
 					dependencyBehavior,
 					allowPrerelease,
+					ConflictAction,
 					PrimarySourceRepositories,
 					Token);
 				if (result.IsPackageAlreadyInstalled) {
@@ -161,6 +162,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					null,
 					dependencyBehavior,
 					allowPrerelease,
+					ConflictAction,
 					PrimarySourceRepositories,
 					Token);
 				if (result.IsPackageAlreadyInstalled) {
@@ -281,9 +283,9 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		void DetermineFileConflictAction ()
 		{
-			//if (FileConflictAction != null) {
-			//	ConflictAction = FileConflictAction;
-			//}
+			if (FileConflictAction != null) {
+				ConflictAction = FileConflictAction;
+			}
 		}
 
 		/// <summary>

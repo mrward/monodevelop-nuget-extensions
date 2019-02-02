@@ -24,7 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -35,6 +34,7 @@ using NuGet.Frameworks;
 using NuGet.PackageManagement;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
+using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
@@ -162,6 +162,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			string packageVersion,
 			DependencyBehavior dependencyBehaviour,
 			bool allowPrerelease,
+			FileConflictAction? conflictAction,
 			IEnumerable<SourceRepository> sources,
 			CancellationToken token)
 		{
@@ -169,6 +170,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				ProjectFileName = project.FileName,
 				PackageId = packageId,
 				PackageVersion = packageVersion,
+				FileConflictAction = conflictAction?.ToString (),
 				DependencyBehavior = dependencyBehaviour.ToString (),
 				AllowPrerelease = allowPrerelease,
 				PackageSources = GetPackageSourceInfo (sources).ToArray ()
@@ -211,6 +213,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			DependencyBehavior dependencyBehaviour,
 			bool allowPrerelease,
 			VersionConstraints versionConstraints,
+			FileConflictAction? conflictAction,
 			IEnumerable<SourceRepository> sources,
 			CancellationToken token)
 		{
@@ -219,6 +222,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 				PackageId = packageId,
 				PackageVersion = packageVersion,
 				DependencyBehavior = dependencyBehaviour.ToString (),
+				FileConflictAction = conflictAction?.ToString (),
 				VersionConstraints = versionConstraints.ToString (),
 				AllowPrerelease = allowPrerelease,
 				PackageSources = GetPackageSourceInfo (sources).ToArray ()
@@ -234,12 +238,14 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 			DependencyBehavior dependencyBehaviour,
 			bool allowPrerelease,
 			VersionConstraints versionConstraints,
+			FileConflictAction? conflictAction,
 			IEnumerable<SourceRepository> sources,
 			CancellationToken token)
 		{
 			var message = new UpdatePackageParams {
 				ProjectFileNames = projects.Select (project => project.FileName).ToArray (),
 				DependencyBehavior = dependencyBehaviour.ToString (),
+				FileConflictAction =  conflictAction?.ToString (),
 				VersionConstraints = versionConstraints.ToString (),
 				AllowPrerelease = allowPrerelease,
 				PackageSources = GetPackageSourceInfo (sources).ToArray ()

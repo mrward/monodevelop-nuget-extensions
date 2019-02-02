@@ -124,6 +124,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					GetDependencyBehavior (),
 					allowPrerelease,
 					DetermineVersionConstraints (),
+					ConflictAction,
 					PrimarySourceRepositories,
 					Token);
 			} catch (Exception ex) {
@@ -174,6 +175,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					GetDependencyBehavior (),
 					allowPrerelease,
 					DetermineVersionConstraints (),
+					ConflictAction,
 					PrimarySourceRepositories,
 					Token);
 				if (!result.IsPackageInstalled) {

@@ -73,6 +73,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 		protected Project DTEProject { get; set; }
 
+		protected FileConflictAction? ConflictAction { get; set; }
+
 		protected CancellationToken Token {
 			get {
 				if (Host == null

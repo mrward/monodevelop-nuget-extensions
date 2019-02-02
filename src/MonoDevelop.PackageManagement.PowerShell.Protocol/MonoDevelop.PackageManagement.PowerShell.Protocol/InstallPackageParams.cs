@@ -43,6 +43,9 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		[DataMember (Name = "dependencyBehavior")]
 		public string DependencyBehavior { get; set; }
 
+		[DataMember (Name = "conflictAction")]
+		public string FileConflictAction { get; set; }
+
 		[DataMember (Name = "allowPrerelease")]
 		public bool AllowPrerelease { get; set; }
 

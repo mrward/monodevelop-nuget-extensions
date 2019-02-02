@@ -26,6 +26,7 @@
 
 using System;
 using NuGet.PackageManagement;
+using NuGet.ProjectManagement;
 using NuGet.Resolver;
 
 namespace MonoDevelop.PackageManagement.Protocol
@@ -40,6 +41,15 @@ namespace MonoDevelop.PackageManagement.Protocol
 		public static VersionConstraints ToVersionContrainsEnum (this string item)
 		{
 			return (VersionConstraints)Enum.Parse (typeof (VersionConstraints), item);
+		}
+
+		public static FileConflictAction? ToFileConflictActionEnum (this string item)
+		{
+			if (string.IsNullOrEmpty (item)) {
+				return null;
+			}
+
+			return (FileConflictAction)Enum.Parse (typeof (FileConflictAction), item);
 		}
 	}
 }

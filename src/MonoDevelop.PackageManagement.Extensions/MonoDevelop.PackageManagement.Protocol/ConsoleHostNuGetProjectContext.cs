@@ -27,6 +27,7 @@
 using System;
 using System.Xml.Linq;
 using ICSharpCode.Scripting;
+using MonoDevelop.Core;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
@@ -38,15 +39,19 @@ namespace MonoDevelop.PackageManagement.Protocol
 		NuGetProjectContext context;
 		IScriptingConsole scriptingConsole;
 
-		public ConsoleHostNuGetProjectContext (ISettings settings)
-			: this (settings, PackageManagementExtendedServices.ConsoleHost.ScriptingConsole)
+		public ConsoleHostNuGetProjectContext (ISettings settings, FileConflictAction? conflictAction = null)
+			: this (settings, conflictAction, PackageManagementExtendedServices.ConsoleHost.ScriptingConsole)
 		{
 		}
 
-		public ConsoleHostNuGetProjectContext (ISettings settings, IScriptingConsole scriptingConsole)
+		ConsoleHostNuGetProjectContext (
+			ISettings settings,
+			FileConflictAction? conflictAction,
+			IScriptingConsole scriptingConsole)
 		{
 			this.scriptingConsole = scriptingConsole;
 			context = new NuGetProjectContext (settings);
+			context.FileConflictResolution = conflictAction;
 		}
 
 		public PackageExtractionContext PackageExtractionContext {
@@ -106,7 +111,21 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 		public FileConflictAction ResolveFileConflict (string message)
 		{
-			return context.ResolveFileConflict (message);
+			if (context.FileConflictResolution.HasValue) {
+				return context.FileConflictResolution.Value;
+			}
+
+			// This should be using the PowerShell console host instead of a separate GUI.
+			FileConflictAction conflictAction = Runtime.RunInMainThread (() => {
+				var conflictResolver = new FileConflictResolver ();
+				return conflictResolver.ResolveFileConflict (message);
+			}).WaitAndGetResult ();
+
+			if (conflictAction == FileConflictAction.IgnoreAll || conflictAction == FileConflictAction.OverwriteAll) {
+				context.FileConflictResolution = conflictAction;
+			}
+
+			return conflictAction;
 		}
 	}
 }
