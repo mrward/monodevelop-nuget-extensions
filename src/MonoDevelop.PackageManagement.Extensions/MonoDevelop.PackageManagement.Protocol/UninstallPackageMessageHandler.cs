@@ -59,7 +59,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 			packageManager = new MonoDevelopNuGetPackageManager (solutionManager);
 			uninstallationContext = new UninstallationContext (message.RemoveDependencies, message.Force);
-			projectContext = new NuGetProjectContext (solutionManager.Settings);
+			projectContext = new ConsoleHostNuGetProjectContext (solutionManager.Settings);
 
 			return await packageManager.PreviewUninstallPackageAsync (
 				nugetProject,

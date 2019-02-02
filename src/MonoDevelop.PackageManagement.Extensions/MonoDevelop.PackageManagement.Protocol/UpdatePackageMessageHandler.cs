@@ -47,7 +47,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 		IMonoDevelopSolutionManager solutionManager;
 		List<NuGetProject> nugetProjects;
 		NuGetPackageManager packageManager;
-		NuGetProjectContext projectContext;
+		ConsoleHostNuGetProjectContext projectContext;
 
 		public UpdatePackageMessageHandler (IEnumerable<DotNetProject> projects, UpdatePackageParams message)
 		{
@@ -91,7 +91,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
-			projectContext = new NuGetProjectContext (solutionManager.Settings);
+			projectContext = new ConsoleHostNuGetProjectContext (solutionManager.Settings);
 
 			var resolutionContext = new ResolutionContext (
 				message.DependencyBehavior.ToDependencyBehaviorEnum (),
@@ -195,7 +195,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
-			projectContext = new NuGetProjectContext (solutionManager.Settings);
+			projectContext = new ConsoleHostNuGetProjectContext (solutionManager.Settings);
 
 			var resolutionContext = new ResolutionContext (
 				message.DependencyBehavior.ToDependencyBehaviorEnum (),

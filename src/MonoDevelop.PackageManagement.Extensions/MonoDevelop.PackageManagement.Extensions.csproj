@@ -100,6 +100,7 @@
       <HintPath>..\..\lib\System.Collections.Immutable.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="MonoDevelop.PackageManagement.Protocol\UpdatePackageMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\SourceRepositoryProviderExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\StringExtensions.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\ConsoleHostNuGetProjectContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

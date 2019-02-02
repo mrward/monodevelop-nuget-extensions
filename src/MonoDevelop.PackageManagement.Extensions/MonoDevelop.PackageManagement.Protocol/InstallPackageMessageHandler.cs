@@ -48,7 +48,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 		IMonoDevelopSolutionManager solutionManager;
 		NuGetProject nugetProject;
 		MonoDevelopNuGetPackageManager packageManager;
-		NuGetProjectContext projectContext;
+		ConsoleHostNuGetProjectContext projectContext;
 		PackageIdentity identity;
 
 		public bool IsPackageAlreadyInstalled { get; private set; }
@@ -79,7 +79,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
 			var repositories = repositoryProvider.GetRepositories (message.PackageSources);
 
-			projectContext = new NuGetProjectContext (solutionManager.Settings);
+			projectContext = new ConsoleHostNuGetProjectContext (solutionManager.Settings);
 			var dependencyBehavior = message.DependencyBehavior.ToDependencyBehaviorEnum ();
 
 			NuGetVersion version = null;
