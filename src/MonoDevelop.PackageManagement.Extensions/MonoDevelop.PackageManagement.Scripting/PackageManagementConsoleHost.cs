@@ -56,6 +56,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		IPackageManagementAddInPath addinPath;
 		IPackageManagementEvents packageEvents;
 		ConsoleHostScriptRunner scriptRunner;
+		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 		Project defaultProject;
 		string prompt = "PM> ";
 
@@ -96,6 +97,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 
 		public bool IsRunning { get; private set; }
+
+		public event EventHandler CommandCompleted;
+
 		public Project DefaultProject {
 			get { return defaultProject; }
 			set {
@@ -125,7 +129,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		}
 
 		public CancellationToken Token {
-			get { return CancellationToken.None; }
+			get { return cancellationTokenSource.Token; }
 		}
 
 		public IMonoDevelopSolutionManager SolutionManager {
@@ -325,8 +329,14 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void ProcessUserInput (string line)
 		{
+			if (cancellationTokenSource.IsCancellationRequested) {
+				cancellationTokenSource.Dispose ();
+				cancellationTokenSource = new CancellationTokenSource ();
+			}
+
 			PackageManagementBackgroundDispatcher.Dispatch (() => {
 				ProcessLine (line);
+				OnCommandCompleted ();
 				WritePrompt ();
 			});
 		}
@@ -474,6 +484,16 @@ namespace ICSharpCode.PackageManagement.Scripting
 				int columns = ScriptingConsole.GetMaximumVisibleColumns ();
 				remotePowerShellHost.OnMaxVisibleColumnsChanged (columns);
 			}
+		}
+
+		void OnCommandCompleted ()
+		{
+			CommandCompleted?.Invoke (this, EventArgs.Empty);
+		}
+
+		public void StopCommand ()
+		{
+			cancellationTokenSource.Cancel ();
 		}
 	}
 }

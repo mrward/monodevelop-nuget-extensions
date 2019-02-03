@@ -58,12 +58,15 @@ namespace ICSharpCode.PackageManagement.Scripting
 		CancellationToken Token { get; }
 		ConsoleHostNuGetPackageManager CreatePackageManager ();
 
+		event EventHandler CommandCompleted;
+
 		void Clear ();
 		void WritePrompt ();
 		void Run ();
 		void ShutdownConsole ();
 		void ExecuteCommand (string command);
 		void ProcessUserInput (string line);
+		void StopCommand ();
 
 		void SetDefaultRunspace ();
 

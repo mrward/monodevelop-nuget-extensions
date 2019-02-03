@@ -94,6 +94,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			consoleHost.ScriptingConsole = packageManagementConsole;
 			consoleHost.Run ();
+			consoleHost.CommandCompleted += OnCommandCompleted;
 		}
 
 		void CreateCommands ()
@@ -193,6 +194,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 			}
 		}
 
+		public event EventHandler RunningCommand;
+		public event EventHandler CommandCompleted;
+
 //		public TextEditor TextEditor {
 //			get { return packageManagementConsole.TextEditor; }
 //		}
@@ -206,6 +210,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void ProcessUserInput (string line)
 		{
+			OnRunningCommand ();
 			consoleHost.ProcessUserInput (line);
 		}
 
@@ -218,6 +223,21 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void OnMaxVisibleColumnsChanged ()
 		{
 			consoleHost.OnMaxVisibleColumnsChanged ();
+		}
+
+		public void StopCommand ()
+		{
+			consoleHost.StopCommand ();
+		}
+
+		void OnRunningCommand ()
+		{
+			RunningCommand?.Invoke (this, EventArgs.Empty);
+		}
+
+		void OnCommandCompleted (object sender, EventArgs e)
+		{
+			CommandCompleted?.Invoke (this, e);
 		}
 	}
 }

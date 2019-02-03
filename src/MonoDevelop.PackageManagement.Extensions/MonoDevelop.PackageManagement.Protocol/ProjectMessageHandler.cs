@@ -41,6 +41,10 @@ namespace MonoDevelop.PackageManagement.Protocol
 {
 	class ProjectMessageHandler
 	{
+		CancellationToken Token {
+			get { return PackageManagementExtendedServices.ConsoleHost.Token; }
+		}
+
 		[JsonRpcMethod (Methods.ProjectInstalledPackagesName)]
 		public ProjectPackagesList OnGetInstalledPackages (JToken arg)
 		{
@@ -62,7 +66,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 			var solutionManager = project.GetSolutionManager ();
 			var nugetProject =  project.CreateNuGetProject (solutionManager);
 
-			return await Task.Run (() => nugetProject.GetInstalledPackagesAsync (CancellationToken.None)).ConfigureAwait (false);
+			return await Task.Run (() => nugetProject.GetInstalledPackagesAsync (Token)).ConfigureAwait (false);
 		}
 
 		IEnumerable<PackageReferenceInfo> CreatePackageInformation (IEnumerable<PackageReference> packages)
@@ -119,7 +123,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UninstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new UninstallPackageMessageHandler (project, message);
-				var actions = handler.PreviewUninstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
+				var actions = handler.PreviewUninstallPackageAsync (Token).WaitAndGetResult ();
 				return new PackageActionList {
 					Actions = CreatePackageActionInformation (actions).ToArray ()
 				};
@@ -150,7 +154,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UninstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new UninstallPackageMessageHandler (project, message);
-				handler.UninstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
+				handler.UninstallPackageAsync (Token).WaitAndGetResult ();
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnUninstallPackage error", ex);
 				throw;
@@ -164,7 +168,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<InstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new InstallPackageMessageHandler (project, message);
-				var actions = handler.PreviewInstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
+				var actions = handler.PreviewInstallPackageAsync (Token).WaitAndGetResult ();
 				return new InstallPackageActionList {
 					IsPackageAlreadyInstalled = handler.IsPackageAlreadyInstalled,
 					Actions = CreatePackageActionInformation (actions).ToArray ()
@@ -182,7 +186,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<InstallPackageParams> ();
 				var project = FindProject (message.ProjectFileName);
 				var handler = new InstallPackageMessageHandler (project, message);
-				handler.InstallPackageAsync (CancellationToken.None).WaitAndGetResult ();
+				handler.InstallPackageAsync (Token).WaitAndGetResult ();
 				return new InstallPackageResult {
 					IsPackageAlreadyInstalled = handler.IsPackageAlreadyInstalled
 				};
@@ -199,7 +203,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UpdatePackageParams> ();
 				var projects = FindProjects (message.ProjectFileNames);
 				var handler = new UpdatePackageMessageHandler (projects, message);
-				var actions = handler.PreviewUpdatePackageAsync (CancellationToken.None).WaitAndGetResult ();
+				var actions = handler.PreviewUpdatePackageAsync (Token).WaitAndGetResult ();
 				return new UpdatePackageActionList {
 					IsPackageInstalled = handler.IsPackageInstalled,
 					Actions = CreatePackageActionInformation (actions).ToArray ()
@@ -217,7 +221,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UpdatePackageParams> ();
 				var projects = FindProjects (message.ProjectFileNames);
 				var handler = new UpdatePackageMessageHandler (projects, message);
-				handler.UpdatePackageAsync (CancellationToken.None).WaitAndGetResult ();
+				handler.UpdatePackageAsync (Token).WaitAndGetResult ();
 				return new UpdatePackageResult {
 					IsPackageInstalled = handler.IsPackageInstalled
 				};
@@ -234,7 +238,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<UpdatePackageParams> ();
 				var projects = FindProjects (message.ProjectFileNames);
 				var handler = new UpdatePackageMessageHandler (projects, message);
-				handler.UpdateAllPackagesAsync (CancellationToken.None).WaitAndGetResult ();
+				handler.UpdateAllPackagesAsync (Token).WaitAndGetResult ();
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnUpdateAllPackages error", ex);
 				throw;

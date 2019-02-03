@@ -73,15 +73,9 @@ namespace MonoDevelop.PackageManagement
 		void CreateToolbar (IPadWindow window)
 		{
 			toolbarWidget = new PackageConsoleToolbarWidget ();
-			toolbarWidget.ClearButtonClicked += ClearButtonClicked;
 			DockItemToolbar toolbar = window.GetToolbar (DockPositionType.Top);
 			toolbar.Add (toolbarWidget, false);
 			toolbar.ShowAll ();
-		}
-
-		void ClearButtonClicked(object sender, EventArgs e)
-		{
-			viewModel.ClearConsole ();
 		}
 
 		void CreatePackageConsoleView ()

@@ -66,7 +66,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				message.PackageId,
 				uninstallationContext,
 				projectContext,
-				CancellationToken.None
+				token
 			).ConfigureAwait (false);
 		}
 
@@ -79,7 +79,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				actions,
 				projectContext,
 				NullSourceCacheContext.Instance,
-				CancellationToken.None
+				token
 			).ConfigureAwait (false);
 		}
 	}

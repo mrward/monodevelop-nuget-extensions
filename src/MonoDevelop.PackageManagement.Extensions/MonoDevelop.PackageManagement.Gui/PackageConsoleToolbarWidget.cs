@@ -38,6 +38,7 @@ namespace MonoDevelop.PackageManagement
 	internal partial class PackageConsoleToolbarWidget : Gtk.Bin
 	{
 		Button clearButton;
+		Button stopButton;
 		PackageManagementConsoleViewModel viewModel;
 		bool reloadingPackageSources;
 		bool reloadingProjects;
@@ -47,21 +48,30 @@ namespace MonoDevelop.PackageManagement
 		{
 			this.Build ();
 
-			clearButton = new Button (new ImageView (Ide.Gui.Stock.Broom, IconSize.Menu));
+			var clearImage = new ImageView (Ide.Gui.Stock.Broom, IconSize.Menu);
+			clearButton = new Button (clearImage);
 			clearButton.TooltipText = GettextCatalog.GetString ("Clear Console");
 			clearButton.Clicked += OnClearButtonClicked;
-			mainHBox.PackEnd (clearButton);
+			mainHBox.PackStart (clearButton);
+
+			var stopImage = new ImageView (Ide.Gui.Stock.Stop, IconSize.Menu);
+			stopButton = new Button (stopImage);
+			stopButton.TooltipText = GettextCatalog.GetString ("Stop command");
+			stopButton.Sensitive = false;
+			stopButton.Clicked += OnStopButtonClicked;
+			mainHBox.PackStart (stopButton);
 		}
 
-		void OnClearButtonClicked(object sender, EventArgs e)
+		void OnClearButtonClicked (object sender, EventArgs e)
 		{
-			if (ClearButtonClicked != null) {
-				ClearButtonClicked (this, e);
-			}
+			viewModel.ClearConsole ();
 		}
-		
-		public event EventHandler ClearButtonClicked;
-		
+
+		void OnStopButtonClicked (object sender, EventArgs e)
+		{
+			viewModel.StopCommand ();
+		}
+
 		public void LoadViewModel (PackageManagementConsoleViewModel viewModel)
 		{
 			this.viewModel = viewModel;
@@ -81,8 +91,11 @@ namespace MonoDevelop.PackageManagement
 			
 			viewModel.Projects.CollectionChanged += ViewModelProjectsChanged;
 			projectsComboBox.Changed += ProjectsComboBoxChanged;
+
+			viewModel.RunningCommand += RunningCommand;
+			viewModel.CommandCompleted += CommandCompleted;
 		}
-		
+
 		void LoadPackageSources ()
 		{
 			ClearPackageSources ();
@@ -197,6 +210,18 @@ namespace MonoDevelop.PackageManagement
 			projectListStore.IterNthChild (out iter, selectedIndex);
 			var project = (Project)projectListStore.GetValue (iter, 1);
 			viewModel.DefaultProject = project;
+		}
+
+		void RunningCommand (object sender, EventArgs e)
+		{
+			stopButton.Sensitive = true;
+		}
+
+		void CommandCompleted (object sender, EventArgs e)
+		{
+			Runtime.RunInMainThread (() => {
+				stopButton.Sensitive = false;
+			}).Ignore ();
 		}
 	}
 }
