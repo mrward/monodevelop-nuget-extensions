@@ -29,6 +29,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Threading;
 using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
@@ -45,6 +46,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		Runspace runspace;
 		PowerShellHost host;
 		DTE dte;
+		Pipeline currentPipeline;
+		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 
 		public static PowerShellConsoleHost Instance => instance;
 
@@ -104,13 +107,28 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		{
 			Logger.Log ("PowerShellConsoleHost.Invoke: {0}", line);
 			try {
+				RefreshHostCancellationToken ();
 				using (var pipeline = CreatePipeline (runspace, line)) {
+					currentPipeline = pipeline;
 					pipeline.Invoke ();
+					CheckPipelineState (pipeline);
 				}
 			} catch (Exception ex) {
 				string errorMessage = NuGet.Common.ExceptionUtilities.DisplayMessage (ex);
 				Log (LogLevel.Error, errorMessage);
+			} finally {
+				currentPipeline = null;
 			}
+		}
+
+		void RefreshHostCancellationToken ()
+		{
+			if (cancellationTokenSource.IsCancellationRequested) {
+				cancellationTokenSource.Dispose ();
+				cancellationTokenSource = new CancellationTokenSource ();
+			}
+
+			host.SetPropertyValueOnHost ("CancellationTokenKey", cancellationTokenSource.Token);
 		}
 
 		static Pipeline CreatePipeline (Runspace runspace, string command)
@@ -121,6 +139,25 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			pipeline.Commands.Add ("out-host"); // Ensures native command output goes through the HostUI.
 			pipeline.Commands[0].MergeMyResults (PipelineResultTypes.Error, PipelineResultTypes.Output);
 			return pipeline;
+		}
+
+		void CheckPipelineState (Pipeline pipeline)
+		{
+			switch (pipeline.PipelineStateInfo?.State) {
+				case PipelineState.Completed:
+				case PipelineState.Stopped:
+				case PipelineState.Failed:
+					if (pipeline.PipelineStateInfo.Reason != null) {
+						ReportError (pipeline.PipelineStateInfo.Reason);
+					}
+					break;
+			}
+		}
+
+		void ReportError (Exception exception)
+		{
+			exception = NuGet.Common.ExceptionUtilities.Unwrap (exception);
+			Log (LogLevel.Error, exception.Message);
 		}
 
 		internal void Log (LogLevel level, string message)
@@ -225,6 +262,19 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 				ConsoleHostServices.SolutionManager.DefaultProjectFileName = message.FileName;
 			} catch (Exception ex) {
 				Logger.Log (string.Format ("Error changing active source. {0}", ex));
+			}
+		}
+
+		[JsonRpcMethod (Methods.StopCommandName)]
+		public void OnStopCommand ()
+		{
+			Logger.Log ("PowerShellConsoleHost.OnStopCommand");
+			try {
+				cancellationTokenSource.Cancel ();
+				Pipeline pipeline = currentPipeline;
+				pipeline?.StopAsync ();
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error stopping command {0}", ex));
 			}
 		}
 	}

@@ -36,6 +36,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string SolutionLoadedName = "pshost/SolutionLoaded";
 		public const string SolutionUnloadedName = "pshost/SolutionUnloaded";
 		public const string DefaultProjectChangedName = "pshost/DefaultProjectChanged";
+		public const string StopCommandName = "pshost/StopCommand";
 
 		public const string LogName = "ps/Log";
 		public const string ClearHostName = "ps/ClearHost";

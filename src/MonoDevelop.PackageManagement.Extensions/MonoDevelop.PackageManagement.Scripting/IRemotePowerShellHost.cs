@@ -40,5 +40,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 		void SolutionLoaded (Solution solution);
 		void SolutionUnloaded ();
 		void OnDefaultProjectChanged (Project project);
+		void StopCommand ();
 	}
 }

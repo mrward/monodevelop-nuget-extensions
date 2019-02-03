@@ -235,5 +235,14 @@ namespace MonoDevelop.PackageManagement.Scripting
 				LoggingService.LogError ("OnDefaultProjectChanged error", ex);
 			}
 		}
+
+		public void StopCommand ()
+		{
+			try {
+				rpc.NotifyAsync (Methods.StopCommandName).Ignore ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("StopCommand error", ex);
+			}
+		}
 	}
 }

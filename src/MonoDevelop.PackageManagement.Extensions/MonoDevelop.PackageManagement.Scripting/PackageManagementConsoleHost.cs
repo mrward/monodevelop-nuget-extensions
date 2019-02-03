@@ -32,11 +32,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ICSharpCode.Scripting;
+using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
-using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
@@ -493,7 +493,12 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void StopCommand ()
 		{
-			cancellationTokenSource.Cancel ();
+			try {
+				cancellationTokenSource.Cancel ();
+				remotePowerShellHost?.StopCommand ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("StopCommand error.", ex);
+			}
 		}
 	}
 }

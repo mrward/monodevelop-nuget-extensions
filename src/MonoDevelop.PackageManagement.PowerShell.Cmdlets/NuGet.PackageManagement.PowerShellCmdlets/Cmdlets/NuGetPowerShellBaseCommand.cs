@@ -33,6 +33,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		ISourceRepositoryProvider sourceRepositoryProvider;
 
 		internal const string ActivePackageSourceKey = "activePackageSource";
+		const string CancellationTokenKey = "CancellationTokenKey";
 
 		public NuGetPowerShellBaseCommand ()
 		{
@@ -82,12 +83,12 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					return CancellationToken.None;
 				}
 
-				//var tokenProp = GetPropertyValueFromHost (CancellationTokenKey);
-				//if (tokenProp == null) {
+				var tokenProp = GetPropertyValueFromHost (CancellationTokenKey);
+				if (tokenProp == null) {
 					return CancellationToken.None;
-				//}
+				}
 
-				//return (CancellationToken)tokenProp;
+				return (CancellationToken)tokenProp;
 			}
 		}
 
