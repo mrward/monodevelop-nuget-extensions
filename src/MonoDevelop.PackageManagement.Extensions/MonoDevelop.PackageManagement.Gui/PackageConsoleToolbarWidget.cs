@@ -30,6 +30,7 @@ using Gtk;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
@@ -48,6 +49,7 @@ namespace MonoDevelop.PackageManagement
 		{
 			this.Build ();
 
+			configurePackageSourceButton.Clicked += ConfigurePackageSourceButtonClicked;
 			var clearImage = new ImageView (Ide.Gui.Stock.Broom, IconSize.Menu);
 			clearButton = new Button (clearImage);
 			clearButton.TooltipText = GettextCatalog.GetString ("Clear Console");
@@ -60,6 +62,11 @@ namespace MonoDevelop.PackageManagement
 			stopButton.Sensitive = false;
 			stopButton.Clicked += OnStopButtonClicked;
 			mainHBox.PackStart (stopButton);
+		}
+
+		void ConfigurePackageSourceButtonClicked (object sender, EventArgs e)
+		{
+			IdeApp.Workbench.ShowGlobalPreferencesDialog (null, "PackageSources");
 		}
 
 		void OnClearButtonClicked (object sender, EventArgs e)
