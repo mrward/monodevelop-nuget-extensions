@@ -1,5 +1,5 @@
 ﻿//
-// DotNetProjectExtensions.cs
+// ConsoleHostProjectScriptService.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,31 +24,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
+using System.Threading;
+using System.Threading.Tasks;
+using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
+using MonoDevelop.Projects;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	static class DotNetProjectExtensions
+	class ConsoleHostProjectScriptService : IProjectScriptHostService
 	{
-		public static IMonoDevelopSolutionManager GetSolutionManager (this DotNetProject project)
+		DotNetProject project;
+
+		public ConsoleHostProjectScriptService (DotNetProject project)
 		{
-			return Runtime.RunInMainThread (() => {
-				return PackageManagementServices.Workspace.GetSolutionManager (project.ParentSolution);
-			}).WaitAndGetResult ();
+			this.project = project;
 		}
 
-		public static NuGetProject CreateNuGetProject (this DotNetProject project, IMonoDevelopSolutionManager solutionManager)
+		public Task<bool> ExecutePackageInitScriptAsync (
+			PackageIdentity packageIdentity,
+			string packageInstallPath,
+			INuGetProjectContext projectContext,
+			bool throwOnFailure,
+			CancellationToken token)
 		{
-			if (solutionManager != null) {
-				var nugetProject = solutionManager.GetNuGetProject (new DotNetProjectProxy (project))
-					.WithConsoleHostProjectServices (project);
-			}
+			return Task.FromResult (true);
+		}
 
-			return new MonoDevelopNuGetProjectFactory ()
-				.CreateNuGetProject (project)
-				.WithConsoleHostProjectServices (project);
+		public Task ExecutePackageScriptAsync (
+			PackageIdentity packageIdentity,
+			string packageInstallPath,
+			string scriptRelativePath,
+			INuGetProjectContext projectContext,
+			bool throwOnFailure,
+			CancellationToken token)
+		{
+			return Task.CompletedTask;
 		}
 	}
 }

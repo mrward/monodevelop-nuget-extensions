@@ -1,5 +1,5 @@
 ﻿//
-// DotNetProjectExtensions.cs
+// NuGetProjectExtensions.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,31 +24,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
+using System.Reflection;
+using MonoDevelop.PackageManagement.Scripting;
 using NuGet.ProjectManagement;
+using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement.Protocol
 {
-	static class DotNetProjectExtensions
+	static class NuGetProjectExtensions
 	{
-		public static IMonoDevelopSolutionManager GetSolutionManager (this DotNetProject project)
+		public static NuGetProject WithConsoleHostProjectServices (this NuGetProject project, DotNetProject dotNetProject)
 		{
-			return Runtime.RunInMainThread (() => {
-				return PackageManagementServices.Workspace.GetSolutionManager (project.ParentSolution);
-			}).WaitAndGetResult ();
+			var projectServices = new ConsoleHostNuGetProjectServices (dotNetProject, project);
+			return project.WithConsoleHostProjectServices (projectServices);
 		}
 
-		public static NuGetProject CreateNuGetProject (this DotNetProject project, IMonoDevelopSolutionManager solutionManager)
+		public static NuGetProject WithConsoleHostProjectServices (
+			this NuGetProject project,
+			ConsoleHostNuGetProjectServices projectServices)
 		{
-			if (solutionManager != null) {
-				var nugetProject = solutionManager.GetNuGetProject (new DotNetProjectProxy (project))
-					.WithConsoleHostProjectServices (project);
-			}
+			var flags = BindingFlags.Public | BindingFlags.Instance;
+			PropertyInfo property = typeof (NuGetProject).GetProperty ("ProjectServices", flags);
+			property.SetValue (project, projectServices);
 
-			return new MonoDevelopNuGetProjectFactory ()
-				.CreateNuGetProject (project)
-				.WithConsoleHostProjectServices (project);
+			return project;
 		}
 	}
 }

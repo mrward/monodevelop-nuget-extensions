@@ -258,6 +258,9 @@
     <Compile Include="MonoDevelop.PackageManagement.Protocol\SourceRepositoryProviderExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\StringExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ConsoleHostNuGetProjectContext.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\NuGetProjectExtensions.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostNuGetProjectServices.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostProjectScriptService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

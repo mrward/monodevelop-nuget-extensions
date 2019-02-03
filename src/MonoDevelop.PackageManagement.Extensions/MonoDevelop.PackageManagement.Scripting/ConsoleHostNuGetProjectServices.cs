@@ -1,5 +1,5 @@
 ﻿//
-// DotNetProjectExtensions.cs
+// ConsoleHostNuGetProjectServices.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,31 +24,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
 using NuGet.ProjectManagement;
+using MonoDevelop.Projects;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	static class DotNetProjectExtensions
+	class ConsoleHostNuGetProjectServices : INuGetProjectServices
 	{
-		public static IMonoDevelopSolutionManager GetSolutionManager (this DotNetProject project)
+		readonly INuGetProjectServices projectServices;
+
+		public ConsoleHostNuGetProjectServices (
+			DotNetProject project,
+			NuGetProject nugetProject)
 		{
-			return Runtime.RunInMainThread (() => {
-				return PackageManagementServices.Workspace.GetSolutionManager (project.ParentSolution);
-			}).WaitAndGetResult ();
+			this.projectServices = nugetProject.ProjectServices;
+			ScriptService = new ConsoleHostProjectScriptService (project);
 		}
 
-		public static NuGetProject CreateNuGetProject (this DotNetProject project, IMonoDevelopSolutionManager solutionManager)
-		{
-			if (solutionManager != null) {
-				var nugetProject = solutionManager.GetNuGetProject (new DotNetProjectProxy (project))
-					.WithConsoleHostProjectServices (project);
-			}
+		public IProjectBuildProperties BuildProperties {
+			get { return projectServices.BuildProperties; }
+		}
 
-			return new MonoDevelopNuGetProjectFactory ()
-				.CreateNuGetProject (project)
-				.WithConsoleHostProjectServices (project);
+		public IProjectSystemCapabilities Capabilities {
+			get { return projectServices.Capabilities; }
+		}
+
+		public IProjectSystemReferencesReader ReferencesReader {
+			get { return projectServices.ReferencesReader; }
+		}
+
+		public IProjectSystemReferencesService References {
+			get { return projectServices.References; }
+		}
+
+		public IProjectSystemService ProjectSystem {
+			get { return projectServices.ProjectSystem; }
+		}
+
+		public IProjectScriptHostService ScriptService { get; private set; }
+
+		public T GetGlobalService<T> () where T : class
+		{
+			return projectServices.GetGlobalService<T>();
 		}
 	}
 }
