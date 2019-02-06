@@ -47,7 +47,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return GetProjectKind (project.DotNetProject);
 		}
 
-		static string GetProjectKind (MD.DotNetProject project)
+		internal static string GetProjectKind (MD.DotNetProject project)
 		{
 			string type = ProjectType.GetProjectType (project);
 			if (type == ProjectType.CSharp) {

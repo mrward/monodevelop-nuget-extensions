@@ -24,8 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using NuGet.ProjectManagement;
 using MonoDevelop.Projects;
+using NuGet.PackageManagement.VisualStudio;
+using NuGet.ProjectManagement;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
@@ -38,7 +39,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			NuGetProject nugetProject)
 		{
 			this.projectServices = nugetProject.ProjectServices;
-			ScriptService = new ConsoleHostProjectScriptService (project);
+			ScriptService = new MonoDevelopProjectScriptHostService (project, this);
 		}
 
 		public IProjectBuildProperties BuildProperties {

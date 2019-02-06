@@ -1,5 +1,5 @@
 ﻿//
-// SolutionMessageHandler.cs
+// ScriptExecutionParams.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,44 +24,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ICSharpCode.PackageManagement.EnvDTE;
-using MonoDevelop.Core;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
-using Newtonsoft.Json.Linq;
-using StreamJsonRpc;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	class SolutionMessageHandler
+	[DataContract]
+	public class RunScriptParams
 	{
-		[JsonRpcMethod (Methods.SolutionProjects)]
-		public ProjectInformationList OnGetSolutionProjects (JToken arg)
-		{
-			try {
-				var message = arg.ToObject<ProjectInformationParams> ();
-				var list = new ProjectInformationList {
-					Projects = GetProjectsInSolution ().ToArray ()
-				};
-				return list;
-			} catch (Exception ex) {
-				LoggingService.LogError ("OnGetSolutionProjects error", ex);
-				throw;
-			}
-		}
+		[DataMember (Name = "scriptPath")]
+		public string ScriptPath { get; set; }
 
-		IEnumerable<ProjectInformation> GetProjectsInSolution ()
-		{
-			foreach (IDotNetProject project in GetOpenMSBuildProjects ()) {
-				yield return project.CreateProjectInformation ();
-			}
-		}
+		[DataMember (Name = "installPath")]
+		public string InstallPath { get; set; }
 
-		IEnumerable<IDotNetProject> GetOpenMSBuildProjects ()
-		{
-			return PackageManagementServices.ProjectService.GetOpenProjects ();
-		}
+		[DataMember (Name = "packageId")]
+		public string PackageId { get; set; }
+
+		[DataMember (Name = "packageVersion")]
+		public string PackageVersion { get; set; }
+
+		[DataMember (Name = "project")]
+		public ProjectInformation Project { get; set; }
+
+		[DataMember (Name = "throwOnFailure")]
+		public bool ThrowOnFailure { get; set; }
 	}
 }

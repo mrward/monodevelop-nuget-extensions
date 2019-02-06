@@ -127,5 +127,12 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 			return conflictAction;
 		}
+
+		/// <summary>
+		/// Currently always true. This should be set to false if a command, such as Install-Package is not
+		/// being run. This may be used to handle the case PowerShell init.ps1 scripts are run on solution
+		/// open - or possibly this may just be handled in the PowerShell remote host itself.
+		/// </summary>
+		public bool IsExecutingPowerShellCommand { get; set; } = true;
 	}
 }

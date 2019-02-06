@@ -57,6 +57,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		CancellationToken Token { get; }
 		ConsoleHostNuGetPackageManager CreatePackageManager ();
+		IScriptExecutor ScriptExecutor { get; }
 
 		event EventHandler CommandCompleted;
 

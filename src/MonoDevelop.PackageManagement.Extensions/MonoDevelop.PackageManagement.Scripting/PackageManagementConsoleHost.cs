@@ -58,6 +58,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		ConsoleHostScriptRunner scriptRunner;
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 		Project defaultProject;
+		Lazy<IScriptExecutor> scriptExecutor;
 		string prompt = "PM> ";
 
 		public PackageManagementConsoleHost (
@@ -73,6 +74,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			this.packageEvents = packageEvents;
 
 			scriptRunner = new ConsoleHostScriptRunner ();
+			scriptExecutor = new Lazy<IScriptExecutor> (() => CreateScriptExecutor ());
 		}
 
 		public PackageManagementConsoleHost (
@@ -464,6 +466,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			UpdateWorkingDirectory ();
 			remotePowerShellHost?.SolutionUnloaded ();
 			scriptRunner.Reset ();
+			ScriptExecutor.Reset ();
 		}
 
 		void SolutionLoaded (object sender, SolutionEventArgs e)
@@ -499,6 +502,15 @@ namespace ICSharpCode.PackageManagement.Scripting
 			} catch (Exception ex) {
 				LoggingService.LogError ("StopCommand error.", ex);
 			}
+		}
+
+		public IScriptExecutor ScriptExecutor {
+			get { return scriptExecutor.Value; }
+		}
+
+		IScriptExecutor CreateScriptExecutor ()
+		{
+			return remotePowerShellHost.CreateScriptExecutor ();
 		}
 	}
 }

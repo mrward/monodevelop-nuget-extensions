@@ -38,6 +38,8 @@ using MonoDevelop.PackageManagement.Protocol;
 using MonoDevelop.Projects;
 using Newtonsoft.Json;
 using NuGet.Common;
+using NuGet.PackageManagement.VisualStudio;
+using NuGetConsole;
 using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.Scripting
@@ -243,6 +245,12 @@ namespace MonoDevelop.PackageManagement.Scripting
 			} catch (Exception ex) {
 				LoggingService.LogError ("StopCommand error", ex);
 			}
+		}
+
+		public IScriptExecutor CreateScriptExecutor ()
+		{
+			EnsureHostInitialized ();
+			return new ScriptExecutor (rpc);
 		}
 	}
 }

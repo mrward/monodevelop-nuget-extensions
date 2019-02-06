@@ -34,6 +34,8 @@ using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using Newtonsoft.Json.Linq;
+using NuGet.PackageManagement.PowerShellCmdlets;
+using NuGet.Packaging.Core;
 using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
@@ -276,6 +278,55 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			} catch (Exception ex) {
 				Logger.Log (string.Format ("Error stopping command {0}", ex));
 			}
+		}
+
+		[JsonRpcMethod (Methods.RunScript)]
+		public RunScriptResult RunScript (JToken arg)
+		{
+			Logger.Log ("PowerShellConsoleHost.RunScript");
+			try {
+				var message = arg.ToObject<RunScriptParams> ();
+
+				RunScriptInternal (message);
+
+				return new RunScriptResult {
+					Success = true
+				};
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error running script {0}", ex));
+				return new RunScriptResult {
+					ErrorMessage = ex.Message
+				};
+			}
+		}
+
+		void RunScriptInternal (RunScriptParams message)
+		{
+			var blockingCollection = ConsoleHostServices.ActiveBlockingCollection;
+
+			var version = NuGet.Versioning.NuGetVersion.Parse (message.PackageVersion);
+			var identity = new PackageIdentity (message.PackageId, version);
+			var project = new Project (message.Project);
+
+			var scriptMessage = new ScriptMessage (
+				message.ScriptPath,
+				message.InstallPath,
+				identity,
+				project);
+
+			blockingCollection.Add (scriptMessage);
+
+			WaitHandle.WaitAny (new WaitHandle[] { scriptMessage.EndSemaphore, cancellationTokenSource.Token.WaitHandle });
+
+			if (scriptMessage.Exception == null) {
+				return;
+			}
+
+			if (message.ThrowOnFailure) {
+				throw scriptMessage.Exception;
+			}
+
+			Log (LogLevel.Warning, scriptMessage.Exception.Message);
 		}
 	}
 }

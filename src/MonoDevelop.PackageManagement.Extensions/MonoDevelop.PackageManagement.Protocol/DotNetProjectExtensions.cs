@@ -24,7 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using ICSharpCode.PackageManagement.EnvDTE;
 using MonoDevelop.Core;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.Projects;
 using NuGet.ProjectManagement;
 
@@ -49,6 +51,29 @@ namespace MonoDevelop.PackageManagement.Protocol
 			return new MonoDevelopNuGetProjectFactory ()
 				.CreateNuGetProject (project)
 				.WithConsoleHostProjectServices (project);
+		}
+
+		public static ProjectInformation CreateProjectInformation (this IDotNetProject project)
+		{
+			return CreateProjectInformation (project.DotNetProject);
+		}
+
+		public static ProjectInformation CreateProjectInformation (this DotNetProject project)
+		{
+			return new ProjectInformation {
+				Name = project.Name,
+				FileName = project.FileName,
+				UniqueName = GetUniqueName (project),
+				Kind = ProjectKind.GetProjectKind (project),
+				Type = ProjectType.GetProjectType (project)
+			};
+		}
+
+		static string GetUniqueName (DotNetProject project)
+		{
+			return FileService.AbsoluteToRelativePath (
+				project.ParentSolution.BaseDirectory,
+				project.FileName);
 		}
 	}
 }

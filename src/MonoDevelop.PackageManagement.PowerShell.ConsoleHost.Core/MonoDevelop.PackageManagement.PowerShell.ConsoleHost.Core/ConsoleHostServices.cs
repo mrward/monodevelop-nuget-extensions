@@ -24,7 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Concurrent;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using NuGet.PackageManagement.PowerShellCmdlets;
 using NuGet.Protocol.Core.Types;
 using NuGet.VisualStudio;
 
@@ -51,5 +53,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 		public static DTE DTE { get; private set; }
 
 		public static ConsoleHostSolutionManager SolutionManager { get; private set; }
+
+		public static BlockingCollection<Message> ActiveBlockingCollection { get; set; }
 	}
 }

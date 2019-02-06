@@ -1,7 +1,11 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Concurrent;
+using System.Threading;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
@@ -29,12 +33,27 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 	public class ScriptMessage : Message
 	{
-		public ScriptMessage (string scriptPath)
+		public ScriptMessage (
+			string scriptPath,
+			string installPath,
+			PackageIdentity identity,
+			Project project)
 		{
 			ScriptPath = scriptPath;
+			InstallPath = installPath;
+			Identity = identity;
+			Project = project;
+
+			EndSemaphore = new Semaphore (0, int.MaxValue);
 		}
 
 		public string ScriptPath { get; set; }
+		public string InstallPath { get; }
+		public PackageIdentity Identity { get; }
+		public Project Project { get; }
+
+		public Semaphore EndSemaphore { get; private set; }
+		public Exception Exception { get; set; }
 	}
 
 	/// <summary>

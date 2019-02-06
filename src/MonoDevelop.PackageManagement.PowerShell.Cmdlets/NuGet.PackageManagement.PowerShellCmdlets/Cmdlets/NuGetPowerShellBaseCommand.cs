@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
+using System.Management.Automation.Runspaces;
 using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
@@ -97,11 +98,13 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			var stopWatch = new Stopwatch ();
 			stopWatch.Start ();
 			try {
+				RegisterBlockingCollectionWithHost ();
 				ProcessRecordCore ();
 			} catch (Exception ex) {
 				// unhandled exceptions should be terminating
 				ErrorHandler.HandleException (ex, terminating: true);
 			} finally {
+				UnregisterBlockingCollectionWithHost ();
 				UnsubscribeEvents ();
 			}
 
@@ -111,6 +114,16 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			if (!IsLoggingTimeDisabled) {
 				LogCore (MessageLevel.Info, string.Format (CultureInfo.CurrentCulture, "Time Elapsed: {0}", stopWatch.Elapsed));
 			}
+		}
+
+		void RegisterBlockingCollectionWithHost ()
+		{
+			ConsoleHostServices.ActiveBlockingCollection = BlockingCollection;
+		}
+
+		void UnregisterBlockingCollectionWithHost ()
+		{
+			ConsoleHostServices.ActiveBlockingCollection = null;
 		}
 
 		/// <summary>
@@ -613,11 +626,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 						break;
 					}
 
-					//var scriptMessage = message as ScriptMessage;
-					//if (scriptMessage != null) {
-					//	ExecutePSScriptInternal (scriptMessage.ScriptPath);
-					//	continue;
-					//}
+					var scriptMessage = message as ScriptMessage;
+					if (scriptMessage != null) {
+						ExecutePSScriptInternal (scriptMessage);
+						continue;
+					}
 
 					var logMessage = message as LogMessage;
 					if (logMessage != null) {
@@ -632,6 +645,42 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				}
 			} catch (InvalidOperationException ex) {
 				LogCore (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
+			}
+		}
+
+		void ExecutePSScriptInternal (ScriptMessage message)
+		{
+			try {
+				var request = new ScriptExecutionRequest (
+					message.ScriptPath,
+					message.InstallPath,
+					message.Identity,
+					message.Project);
+
+				var psVariable = SessionState.PSVariable;
+
+				// set temp variables to pass to the script
+				psVariable.Set ("__rootPath", request.InstallPath);
+				psVariable.Set ("__toolsPath", request.ToolsPath);
+				psVariable.Set ("__package", request.ScriptPackage);
+				psVariable.Set ("__project", request.Project);
+
+				if (request.ScriptPath != null) {
+					string command = "& " + PathUtility.EscapePSPath (request.ScriptPath) + " $__rootPath $__toolsPath $__package $__project";
+					LogCore (MessageLevel.Info, String.Format (CultureInfo.CurrentCulture, "Executing script file '{0}'", request.ScriptPath));
+
+					InvokeCommand.InvokeScript (command, false, PipelineResultTypes.Error, null, null);
+				}
+
+				// clear temp variables
+				SessionState.PSVariable.Remove ("__rootPath");
+				SessionState.PSVariable.Remove ("__toolsPath");
+				SessionState.PSVariable.Remove ("__package");
+				SessionState.PSVariable.Remove ("__project");
+			} catch (Exception ex) {
+				message.Exception = ex;
+			} finally {
+				message.EndSemaphore.Release ();
 			}
 		}
 

@@ -1,5 +1,5 @@
 ﻿//
-// ConsoleHostProjectScriptService.cs
+// RunScriptResult.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,42 +24,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Threading;
-using System.Threading.Tasks;
-using NuGet.Packaging.Core;
-using NuGet.ProjectManagement;
-using MonoDevelop.Projects;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	class ConsoleHostProjectScriptService : IProjectScriptHostService
+	[DataContract]
+	public class RunScriptResult
 	{
-		DotNetProject project;
+		[DataMember (Name = "success")]
+		public bool Success { get; set; }
 
-		public ConsoleHostProjectScriptService (DotNetProject project)
-		{
-			this.project = project;
-		}
-
-		public Task<bool> ExecutePackageInitScriptAsync (
-			PackageIdentity packageIdentity,
-			string packageInstallPath,
-			INuGetProjectContext projectContext,
-			bool throwOnFailure,
-			CancellationToken token)
-		{
-			return Task.FromResult (true);
-		}
-
-		public Task ExecutePackageScriptAsync (
-			PackageIdentity packageIdentity,
-			string packageInstallPath,
-			string scriptRelativePath,
-			INuGetProjectContext projectContext,
-			bool throwOnFailure,
-			CancellationToken token)
-		{
-			return Task.CompletedTask;
-		}
+		[DataMember (Name = "errorMessage")]
+		public string ErrorMessage { get; set; }
 	}
 }

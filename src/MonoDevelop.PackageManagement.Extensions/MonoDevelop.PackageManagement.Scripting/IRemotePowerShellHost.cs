@@ -27,6 +27,7 @@
 using System.Collections.Generic;
 using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Projects;
+using NuGet.PackageManagement.VisualStudio;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
@@ -41,5 +42,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		void SolutionUnloaded ();
 		void OnDefaultProjectChanged (Project project);
 		void StopCommand ();
+
+		IScriptExecutor CreateScriptExecutor ();
 	}
 }

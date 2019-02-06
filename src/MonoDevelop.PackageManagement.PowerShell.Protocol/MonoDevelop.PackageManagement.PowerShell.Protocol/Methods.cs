@@ -38,6 +38,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string DefaultProjectChangedName = "pshost/DefaultProjectChanged";
 		public const string StopCommandName = "pshost/StopCommand";
 
+		public const string RunScript = "pshost/RunScript";
+
 		public const string LogName = "ps/Log";
 		public const string ClearHostName = "ps/ClearHost";
 
