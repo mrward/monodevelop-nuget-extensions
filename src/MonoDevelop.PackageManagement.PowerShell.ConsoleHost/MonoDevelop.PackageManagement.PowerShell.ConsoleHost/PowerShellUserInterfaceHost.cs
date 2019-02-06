@@ -30,12 +30,15 @@ using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Security;
+using System.Text;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 {
 	public class PowerShellUserInterfaceHost : PSHostUserInterface
 	{
+		StringBuilder messageBuilder = new StringBuilder ();
+
 		PowerShellRawUserInterface rawUI = new PowerShellRawUserInterface ();
 
 		public override PSHostRawUserInterface RawUI => rawUI;
@@ -88,7 +91,28 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 		public override void Write (string value)
 		{
-			PowerShellConsoleHost.Instance.Log (LogLevel.Info, value);
+			if (value.EndsWith ('\n')) {
+				if (messageBuilder.Length > 0) {
+					messageBuilder.Append (value.TrimEnd ());
+					LogSavedMessageText ();
+				} else {
+					PowerShellConsoleHost.Instance.Log (LogLevel.Info, value.TrimEnd ());
+				}
+			} else {
+				messageBuilder.Append (value.TrimEnd ());
+			}
+		}
+
+		void LogSavedMessageText ()
+		{
+			if (messageBuilder.Length == 0) {
+				return;
+			}
+
+			string message = messageBuilder.ToString ();
+			messageBuilder.Clear ();
+
+			PowerShellConsoleHost.Instance.Log (LogLevel.Info, message);
 		}
 
 		public override void WriteDebugLine (string message)
