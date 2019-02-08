@@ -35,6 +35,7 @@ using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using Newtonsoft.Json.Linq;
 using NuGet.PackageManagement.PowerShellCmdlets;
+using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
 using StreamJsonRpc;
 
@@ -108,11 +109,16 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		public void InvokePowerShell (string line)
 		{
 			Logger.Log ("PowerShellConsoleHost.Invoke: {0}", line);
+			InvokePowerShellInternal (line);
+		}
+
+		void InvokePowerShellInternal (string line, params object[] input)
+		{
 			try {
 				RefreshHostCancellationToken ();
 				using (var pipeline = CreatePipeline (runspace, line)) {
 					currentPipeline = pipeline;
-					pipeline.Invoke ();
+					pipeline.Invoke (input);
 					CheckPipelineState (pipeline);
 				}
 			} catch (Exception ex) {
@@ -327,6 +333,51 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			}
 
 			Log (LogLevel.Warning, scriptMessage.Exception.Message);
+		}
+
+		[JsonRpcMethod (Methods.RunInitScript)]
+		public RunScriptResult RunInitScript (JToken arg)
+		{
+			Logger.Log ("PowerShellConsoleHost.RunInitScript");
+			try {
+				var message = arg.ToObject<RunInitScriptParams> ();
+
+				RunScriptInternal (message);
+
+				return new RunScriptResult {
+					Success = true
+				};
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error running script {0}", ex));
+				return new RunScriptResult {
+					ErrorMessage = ex.Message
+				};
+			}
+		}
+
+		void RunScriptInternal (RunInitScriptParams message)
+		{
+			var version = NuGet.Versioning.NuGetVersion.Parse (message.PackageVersion);
+			var identity = new PackageIdentity (message.PackageId, version);
+
+			var request = new ScriptExecutionRequest (
+				message.ScriptPath,
+				message.InstallPath,
+				identity,
+				null);
+
+			try {
+				InvokePowerShellInternal (
+					request.BuildCommand (),
+					request.BuildInput ()
+				);
+			} catch (Exception ex) {
+				if (message.ThrowOnFailure) {
+					throw;
+				}
+
+				Log (LogLevel.Warning, ex.Message);
+			}
 		}
 	}
 }

@@ -42,6 +42,7 @@ using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
+using NuGetConsole.Host.PowerShell;
 
 namespace ICSharpCode.PackageManagement.Scripting
 {
@@ -293,16 +294,15 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void InitializePackageScriptsForOpenSolution ()
 		{
-			//if (IsSolutionOpen) {
-			//	string command = "Invoke-InitializePackages";
-			//	powerShellHost.ExecuteCommand (command);
-			//}
-
 			var solution = PackageManagementServices.ProjectService.OpenSolution?.Solution;
 			if (solution != null) {
 				UpdateWorkingDirectory (solution);
 				remotePowerShellHost?.SolutionLoaded (solution);
 				remotePowerShellHost?.OnDefaultProjectChanged (DefaultProject);
+
+				InitializeToken ();
+				var runner = new InitializationScriptRunner (solution, ScriptExecutor);
+				runner.ExecuteInitScriptsAsync (Token).Ignore ();
 			} else {
 				UpdateWorkingDirectory ();
 			}
@@ -331,16 +331,21 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void ProcessUserInput (string line)
 		{
-			if (cancellationTokenSource.IsCancellationRequested) {
-				cancellationTokenSource.Dispose ();
-				cancellationTokenSource = new CancellationTokenSource ();
-			}
+			InitializeToken ();
 
 			PackageManagementBackgroundDispatcher.Dispatch (() => {
 				ProcessLine (line);
 				OnCommandCompleted ();
 				WritePrompt ();
 			});
+		}
+
+		void InitializeToken ()
+		{
+			if (cancellationTokenSource.IsCancellationRequested) {
+				cancellationTokenSource.Dispose ();
+				cancellationTokenSource = new CancellationTokenSource ();
+			}
 		}
 
 		void ProcessLine (string line)
@@ -473,7 +478,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			UpdateWorkingDirectory (e.Solution);
 			remotePowerShellHost?.SolutionLoaded (e.Solution);
-			//ExecuteCommand ("Invoke-InitializePackages");
+
+			InitializeToken ();
+			var runner = new InitializationScriptRunner (e.Solution, ScriptExecutor);
+			runner.ExecuteInitScriptsAsync (Token).Ignore ();
 		}
 
 		public bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State initPS1State)

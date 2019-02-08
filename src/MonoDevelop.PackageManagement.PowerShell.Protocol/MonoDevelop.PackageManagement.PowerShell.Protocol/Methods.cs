@@ -39,6 +39,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string StopCommandName = "pshost/StopCommand";
 
 		public const string RunScript = "pshost/RunScript";
+		public const string RunInitScript = "pshost/RunInitScript";
 
 		public const string LogName = "ps/Log";
 		public const string ClearHostName = "ps/ClearHost";

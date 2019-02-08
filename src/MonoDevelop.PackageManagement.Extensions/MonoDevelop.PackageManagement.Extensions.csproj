@@ -80,6 +80,9 @@
     <Reference Include="NuGet.Packaging.Core">
       <HintPath>..\..\lib\NuGet.Packaging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="NuGet.ProjectModel">
+      <HintPath>..\..\lib\NuGet.ProjectModel.dll</HintPath>
+    </Reference>
     <Reference Include="NuGet.Frameworks">
       <HintPath>..\..\lib\NuGet.Frameworks.dll</HintPath>
     </Reference>
@@ -263,6 +266,8 @@
     <Compile Include="NuGet.PackageManagement.VisualStudio\MonoDevelopProjectScriptHostService.cs" />
     <Compile Include="NuGet.PackageManagement.VisualStudio\IScriptExecutor.cs" />
     <Compile Include="NuGetConsole\ScriptExecutor.cs" />
+    <Compile Include="NuGetConsole.Host.PowerShell\InitializationScriptRunner.cs" />
+    <Compile Include="NuGetConsole.Host.PowerShell\InstalledPackageEnumerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

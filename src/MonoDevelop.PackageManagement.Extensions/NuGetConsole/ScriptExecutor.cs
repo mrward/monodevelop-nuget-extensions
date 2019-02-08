@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
+using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Protocol;
@@ -25,26 +26,12 @@ namespace NuGetConsole
 		ConcurrentDictionary<PackageIdentity, PackageInitPS1State> InitScriptExecutions
 			= new ConcurrentDictionary<PackageIdentity, PackageInitPS1State> (PackageIdentityComparer.Default);
 
-		//AsyncLazy<IHost> Host { get; }
-
-		//[Import]
 		Lazy<ISettings> Settings { get; set; }
-
-		//[Import]
-		//ISolutionManager SolutionManager { get; set; }
-
-		//[Import]
-		//public IPowerConsoleWindow PowerConsoleWindow { get; set; }
-
-		//[Import]
-		//public IOutputConsoleProvider OutputConsoleProvider { get; set; }
-
 		JsonRpc rpc;
 
 		public ScriptExecutor (JsonRpc rpc)
 		{
 			this.rpc = rpc;
-			//Host = new AsyncLazy<IHost> (GetHostAsync, ThreadHelper.JoinableTaskFactory);
 			Settings = new Lazy<ISettings> (() => SettingsLoader.LoadDefaultSettings ());
 			Reset ();
 		}
@@ -71,8 +58,6 @@ namespace NuGetConsole
 					return true;
 				}
 
-				//var request = new ScriptExecutionRequest (scriptPath, installPath, identity, project);
-
 				var consoleNuGetProjectContext = nuGetProjectContext as ConsoleHostNuGetProjectContext;
 				if (consoleNuGetProjectContext != null &&
 					consoleNuGetProjectContext.IsExecutingPowerShellCommand) {
@@ -85,19 +70,18 @@ namespace NuGetConsole
 						ThrowOnFailure = throwOnFailure
 					};
 					await RunScriptWithRemotePowerShellConsoleHost (message, nuGetProjectContext, throwOnFailure, token);
-				//} else {
-				//	var logMessage = string.Format (CultureInfo.CurrentCulture, Resources.ExecutingScript, scriptPath);
-				//	// logging to both the Output window and progress window.
-				//	nuGetProjectContext.Log (MessageLevel.Info, logMessage);
-				//	try {
-				//		await ExecuteScriptCoreAsync (request);
-				//	} catch (Exception ex) {
-				//		// throwFailure is set by Package Manager.
-				//		if (throwOnFailure) {
-				//			throw;
-				//		}
-				//		nuGetProjectContext.Log (MessageLevel.Warning, ex.Message);
-				//	}
+				} else {
+					var logMessage = GettextCatalog.GetString ("Executing script file '{0}'...", scriptPath);
+					nuGetProjectContext.Log (MessageLevel.Info, logMessage);
+
+					var message = new RunInitScriptParams {
+						ScriptPath = scriptPath,
+						InstallPath = installPath,
+						PackageId = identity.Id,
+						PackageVersion = identity.Version.ToNormalizedString (),
+						ThrowOnFailure = throwOnFailure
+					};
+					await RunInitScriptWithRemotePowerShellConsoleHost (message, nuGetProjectContext, throwOnFailure, token);
 				}
 
 				return true;
@@ -115,8 +99,27 @@ namespace NuGetConsole
 			bool throwOnFailure,
 			CancellationToken token)
 		{
+			await RunScriptWithRemotePowerShellConsoleHost (Methods.RunScript, message, nuGetProjectContext, throwOnFailure, token);
+		}
+
+		async Task RunInitScriptWithRemotePowerShellConsoleHost (
+			RunInitScriptParams message,
+			INuGetProjectContext nuGetProjectContext,
+			bool throwOnFailure,
+			CancellationToken token)
+		{
+			await RunScriptWithRemotePowerShellConsoleHost (Methods.RunInitScript, message, nuGetProjectContext, throwOnFailure, token);
+		}
+
+		async Task RunScriptWithRemotePowerShellConsoleHost (
+			string method,
+			object message,
+			INuGetProjectContext nuGetProjectContext,
+			bool throwOnFailure,
+			CancellationToken token)
+		{
 			try {
-				var result = await rpc.InvokeWithCancellationAsync<RunScriptResult> (Methods.RunScript, new [] { message }, token);
+				var result = await rpc.InvokeWithCancellationAsync<RunScriptResult> (method, new[] { message }, token);
 				if (!result.Success) {
 					throw new ApplicationException (result.ErrorMessage);
 				}
@@ -134,81 +137,12 @@ namespace NuGetConsole
 			return InitScriptExecutions.TryAdd (packageIdentity, initPS1State);
 		}
 
-		public async Task<bool> ExecuteInitScriptAsync (PackageIdentity identity, CancellationToken token)
+		/// <summary>
+		/// This is not used.
+		/// </summary>
+		public Task<bool> ExecuteInitScriptAsync (PackageIdentity identity, CancellationToken token)
 		{
-			var result = false;
-			// Reserve the key. We can remove if the package has not been restored.
-			if (TryMarkVisited (identity, PackageInitPS1State.NotFound)) {
-				var nugetPaths = NuGetPathContext.Create (Settings.Value);
-				var fallbackResolver = new FallbackPackagePathResolver (nugetPaths);
-				var installPath = fallbackResolver.GetPackageDirectory (identity.Id, identity.Version);
-
-				if (!string.IsNullOrEmpty (installPath)) {
-					var scriptPath = Path.Combine (installPath, "tools", PowerShellScripts.Init);
-
-					if (File.Exists (scriptPath)) {
-						// Init.ps1 is present and will be executed.
-						InitScriptExecutions.TryUpdate (
-							identity,
-							PackageInitPS1State.FoundAndExecuted,
-							PackageInitPS1State.NotFound);
-
-						//var request = new ScriptExecutionRequest (scriptPath, installPath, identity, project: null);
-
-						//await ExecuteScriptCoreAsync (request);
-
-						result = true;
-					}
-				} else {
-					// Package is not restored. Do not cache the results.
-					PackageInitPS1State dummy;
-					InitScriptExecutions.TryRemove (identity, out dummy);
-					result = false;
-				}
-			} else {
-				// Key is already present. Simply access its value
-				result = (InitScriptExecutions[identity] == PackageInitPS1State.FoundAndExecuted);
-			}
-
-			return result;
+			throw new NotImplementedException ("ScriptExecutor.ExecuteInitScriptAsync is not implemented");
 		}
-
-		//async Task ExecuteScriptCoreAsync (ScriptExecutionRequest request)
-		//{
-		//	var console = OutputConsoleProvider.CreatePowerShellConsole ();
-		//	var host = await Host.GetValueAsync ();
-
-		//	// Host.Execute calls powershell's pipeline.Invoke and blocks the calling thread
-		//	// to switch to powershell pipeline execution thread. In order not to block the UI thread,
-		//	// go off the UI thread. This is important, since, switches to UI thread,
-		//	// using SwitchToMainThreadAsync will deadlock otherwise
-		//	await Task.Run (() => host.Execute (console, request.BuildCommand (), request.BuildInput ()));
-		//}
-
-		//async Task<IHost> GetHostAsync ()
-		//{
-		//	// Since we are creating the output console and the output window pane, switch to the main thread
-		//	await NuGetUIThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync ();
-
-		//	// create the console and instantiate the PS host on demand
-		//	var console = OutputConsoleProvider.CreatePowerShellConsole ();
-		//	var host = console.Host;
-
-		//	// start the console
-		//	console.Dispatcher.Start ();
-
-		//	// gives the host a chance to do initialization works before dispatching commands to it
-		//	// Host.Initialize calls powershell's pipeline.Invoke and blocks the calling thread
-		//	// to switch to powershell pipeline execution thread. In order not to block the UI thread, go off the UI thread.
-		//	// This is important, since, switches to UI thread, using SwitchToMainThreadAsync will deadlock otherwise
-		//	await Task.Run (() => host.Initialize (console));
-
-		//	// after the host initializes, it may set IsCommandEnabled = false
-		//	if (host.IsCommandEnabled) {
-		//		return host;
-		//	}
-		//	// the PowerShell host fails to initialize if group policy restricts to AllSigned
-		//	throw new InvalidOperationException (Resources.Console_InitializeHostFails);
-		//}
 	}
 }
