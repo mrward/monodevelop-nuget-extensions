@@ -22,6 +22,7 @@ namespace NuGetConsole.Host.PowerShell
 	{
 		readonly Solution solution;
 		readonly IScriptExecutor scriptExecutor;
+		bool scriptHasRun;
 
 		public InitializationScriptRunner (
 			Solution solution,
@@ -31,7 +32,7 @@ namespace NuGetConsole.Host.PowerShell
 			this.scriptExecutor = scriptExecutor;
 		}
 
-		public async Task ExecuteInitScriptsAsync (CancellationToken token)
+		public async Task<bool> ExecuteInitScriptsAsync (CancellationToken token)
 		{
 			var solutionManager = GetSolutionManager (solution);
 			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();
@@ -51,6 +52,8 @@ namespace NuGetConsole.Host.PowerShell
 			foreach (var installedPackage in installedPackages) {
 				await ExecuteInitPs1Async (installedPackage.InstallPath, installedPackage.Identity, context, token);
 			}
+
+			return scriptHasRun;
 		}
 
 		async Task ExecuteInitPs1Async (
@@ -65,6 +68,12 @@ namespace NuGetConsole.Host.PowerShell
 					//AddPathToEnvironment (toolsPath);
 
 					var relativePath = Path.Combine ("tools", PowerShellScripts.Init);
+
+					if (!scriptHasRun) {
+						// Make sure first messages from running script are not on PowerShell prompt line.
+						scriptHasRun = true;
+						context.Log (MessageLevel.Info, "\n");
+					}
 
 					await scriptExecutor.ExecuteAsync (
 						identity,

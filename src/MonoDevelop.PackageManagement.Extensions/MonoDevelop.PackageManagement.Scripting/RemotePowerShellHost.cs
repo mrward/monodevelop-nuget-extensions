@@ -63,9 +63,8 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void ExecuteCommand (string command)
 		{
-			EnsureHostInitialized ();
-
 			try {
+				EnsureHostInitialized ();
 				rpc.InvokeAsync (Methods.InvokeName, command).Wait ();
 			} catch (Exception ex) {
 				string errorMessage = ExceptionUtilities.DisplayMessage (ex);

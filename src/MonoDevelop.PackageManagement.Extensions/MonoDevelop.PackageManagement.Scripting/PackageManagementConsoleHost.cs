@@ -455,14 +455,26 @@ namespace MonoDevelop.PackageManagement.Scripting
 			InitializeToken ();
 
 			PackageManagementBackgroundDispatcher.Dispatch (() => {
-				ScriptingConsole.WriteLine ();
-
-				var runner = new InitializationScriptRunner (solution, ScriptExecutor);
-				runner.ExecuteInitScriptsAsync (Token).WaitAndGetResult ();
+				bool showPrompt = SafeRunPowerShellInitializationScripts (solution);
 
 				OnCommandCompleted ();
-				WritePrompt ();
+
+				if (showPrompt) {
+					WritePrompt ();
+				}
 			});
+		}
+
+		bool SafeRunPowerShellInitializationScripts (Solution solution)
+		{
+			try {
+				var runner = new InitializationScriptRunner (solution, ScriptExecutor);
+				return runner.ExecuteInitScriptsAsync (Token).WaitAndGetResult ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("SafeRunPowerShellInitializationScripts error", ex);
+				ScriptingConsole.WriteLine ("\n" + ex.Message, ScriptingStyle.Error);
+				return true;
+			}
 		}
 
 		public bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State initPS1State)
