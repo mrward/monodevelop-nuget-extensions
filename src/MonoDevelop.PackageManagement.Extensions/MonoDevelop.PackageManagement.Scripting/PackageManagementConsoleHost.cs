@@ -102,6 +102,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public bool IsRunning { get; private set; }
 
 		public event EventHandler CommandCompleted;
+		public event EventHandler RunningCommand;
 
 		public Project DefaultProject {
 			get { return defaultProject; }
@@ -299,10 +300,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 				UpdateWorkingDirectory (solution);
 				remotePowerShellHost?.SolutionLoaded (solution);
 				remotePowerShellHost?.OnDefaultProjectChanged (DefaultProject);
-
-				InitializeToken ();
-				var runner = new InitializationScriptRunner (solution, ScriptExecutor);
-				runner.ExecuteInitScriptsAsync (Token).Ignore ();
+				RunPowerShellInitializationScripts (solution);
 			} else {
 				UpdateWorkingDirectory ();
 			}
@@ -331,6 +329,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void ProcessUserInput (string line)
 		{
+			OnRunningCommand ();
 			InitializeToken ();
 
 			PackageManagementBackgroundDispatcher.Dispatch (() => {
@@ -478,10 +477,23 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			UpdateWorkingDirectory (e.Solution);
 			remotePowerShellHost?.SolutionLoaded (e.Solution);
+			RunPowerShellInitializationScripts (e.Solution);
+		}
 
+		void RunPowerShellInitializationScripts (Solution solution)
+		{
+			OnRunningCommand ();
 			InitializeToken ();
-			var runner = new InitializationScriptRunner (e.Solution, ScriptExecutor);
-			runner.ExecuteInitScriptsAsync (Token).Ignore ();
+
+			PackageManagementBackgroundDispatcher.Dispatch (() => {
+				ScriptingConsole.WriteLine ();
+
+				var runner = new InitializationScriptRunner (solution, ScriptExecutor);
+				runner.ExecuteInitScriptsAsync (Token).WaitAndGetResult ();
+
+				OnCommandCompleted ();
+				WritePrompt ();
+			});
 		}
 
 		public bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State initPS1State)
@@ -500,6 +512,11 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void OnCommandCompleted ()
 		{
 			CommandCompleted?.Invoke (this, EventArgs.Empty);
+		}
+
+		void OnRunningCommand ()
+		{
+			RunningCommand?.Invoke (this, EventArgs.Empty);
 		}
 
 		public void StopCommand ()

@@ -31,12 +31,7 @@ namespace NuGetConsole.Host.PowerShell
 			this.scriptExecutor = scriptExecutor;
 		}
 
-		public Task ExecuteInitScriptsAsync (CancellationToken token)
-		{
-			return Task.Run (() => ExecuteInitScriptsInternalAsync (token));
-		}
-
-		async Task ExecuteInitScriptsInternalAsync (CancellationToken token)
+		public async Task ExecuteInitScriptsAsync (CancellationToken token)
 		{
 			var solutionManager = GetSolutionManager (solution);
 			var repositoryProvider = solutionManager.CreateSourceRepositoryProvider ();

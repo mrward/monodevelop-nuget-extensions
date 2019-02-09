@@ -94,6 +94,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			consoleHost.ScriptingConsole = packageManagementConsole;
 			consoleHost.Run ();
+			consoleHost.RunningCommand += OnRunningCommand;
 			consoleHost.CommandCompleted += OnCommandCompleted;
 		}
 
@@ -210,7 +211,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void ProcessUserInput (string line)
 		{
-			OnRunningCommand ();
 			consoleHost.ProcessUserInput (line);
 		}
 
@@ -230,7 +230,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			consoleHost.StopCommand ();
 		}
 
-		void OnRunningCommand ()
+		void OnRunningCommand (object sender, EventArgs e)
 		{
 			RunningCommand?.Invoke (this, EventArgs.Empty);
 		}

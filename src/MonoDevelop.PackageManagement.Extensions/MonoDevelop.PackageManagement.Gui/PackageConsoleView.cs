@@ -94,7 +94,7 @@ namespace MonoDevelop.PackageManagement
 		public void WriteLine ()
 		{
 			Runtime.RunInMainThread (() => {
-				WriteOutput (String.Empty);
+				WriteOutput ("\n");
 			}).Wait ();
 		}
 		

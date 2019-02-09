@@ -59,6 +59,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		ConsoleHostNuGetPackageManager CreatePackageManager ();
 		IScriptExecutor ScriptExecutor { get; }
 
+		event EventHandler RunningCommand;
 		event EventHandler CommandCompleted;
 
 		void Clear ();
