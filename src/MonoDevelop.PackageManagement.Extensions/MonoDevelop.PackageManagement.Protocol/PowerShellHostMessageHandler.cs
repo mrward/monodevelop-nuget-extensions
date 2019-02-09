@@ -27,10 +27,11 @@
 using System;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using MonoDevelop.PackageManagement.Scripting;
 using Newtonsoft.Json.Linq;
 using StreamJsonRpc;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Protocol
 {
 	class PowerShellHostMessageHandler
 	{

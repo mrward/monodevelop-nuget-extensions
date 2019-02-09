@@ -235,7 +235,6 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostMSBuildNuGetProject.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHostFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHost.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\PowerShellHostMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IRemotePowerShellHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ItemOperationsMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectMessageHandler.cs" />
@@ -259,6 +258,7 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPowerShellHostFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IScriptingConsole.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptingStyle.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\PowerShellHostMessageHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
