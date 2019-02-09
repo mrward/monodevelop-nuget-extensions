@@ -265,7 +265,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged");
 			try {
 				var message = arg.ToObject<DefaultProjectChangedParams> ();
-				Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged {0}", message.FileName);
+				Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged '{0}'", message.FileName);
 
 				ConsoleHostServices.SolutionManager.DefaultProjectFileName = message.FileName;
 			} catch (Exception ex) {

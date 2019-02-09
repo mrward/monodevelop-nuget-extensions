@@ -228,7 +228,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			try {
 				var message = new DefaultProjectChangedParams {
-					FileName = project.FileName
+					FileName = project?.FileName
 				};
 				rpc.InvokeAsync (Methods.DefaultProjectChangedName, message).Ignore ();
 			} catch (Exception ex) {
