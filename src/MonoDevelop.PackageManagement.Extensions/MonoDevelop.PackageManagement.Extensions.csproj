@@ -235,7 +235,6 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostMSBuildNuGetProject.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHostFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHost.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\IRemotePowerShellHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ItemOperationsMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\SolutionMessageHandler.cs" />

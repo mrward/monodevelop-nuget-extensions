@@ -28,17 +28,27 @@
 
 using System;
 using System.Collections.Generic;
+using MonoDevelop.Projects;
+using NuGet.PackageManagement.VisualStudio;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	public interface IPowerShellHost
+	interface IPowerShellHost
 	{
 		IList<string> ModulesToImport { get; }
 		Version Version { get; }
-		
-		void SetRemoteSignedExecutionPolicy ();
-		void UpdateFormatting (IEnumerable<string> formattingFiles);
 		void ExecuteCommand (string command);
-		void SetDefaultRunspace ();
+
+		void OnActiveSourceChanged (SourceRepositoryViewModel source);
+		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
+
+		void OnMaxVisibleColumnsChanged (int columns);
+
+		void SolutionLoaded (Solution solution);
+		void SolutionUnloaded ();
+		void OnDefaultProjectChanged (Project project);
+		void StopCommand ();
+
+		IScriptExecutor CreateScriptExecutor ();
 	}
 }

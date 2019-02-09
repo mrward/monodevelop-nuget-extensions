@@ -30,7 +30,7 @@ using System;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	public interface IPowerShellHostFactory
+	interface IPowerShellHostFactory
 	{
 		IPowerShellHost CreatePowerShellHost (
 			IScriptingConsole scriptingConsole,

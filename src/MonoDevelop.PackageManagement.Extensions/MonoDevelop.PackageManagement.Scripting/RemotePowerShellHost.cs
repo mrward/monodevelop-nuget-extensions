@@ -42,7 +42,7 @@ using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	class RemotePowerShellHost : IRemotePowerShellHost
+	class RemotePowerShellHost : IPowerShellHost
 	{
 		Process process;
 		JsonRpc rpc;
@@ -70,18 +70,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 				string errorMessage = ExceptionUtilities.DisplayMessage (ex);
 				scriptingConsole.WriteLine (errorMessage, ScriptingStyle.Error);
 			}
-		}
-
-		public void SetDefaultRunspace ()
-		{
-		}
-
-		public void SetRemoteSignedExecutionPolicy ()
-		{
-		}
-
-		public void UpdateFormatting (IEnumerable<string> formattingFiles)
-		{
 		}
 
 		void EnsureHostInitialized ()

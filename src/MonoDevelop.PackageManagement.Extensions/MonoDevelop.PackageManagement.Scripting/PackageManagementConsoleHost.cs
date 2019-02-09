@@ -45,7 +45,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 	{
 		RegisteredPackageSources registeredPackageSources;
 		IPowerShellHostFactory powerShellHostFactory;
-		IRemotePowerShellHost powerShellHost;
+		IPowerShellHost powerShellHost;
 		IMonoDevelopSolutionManager solutionManager;
 		ISourceRepositoryProvider sourceRepositoryProvider;
 		IPackageManagementAddInPath addinPath;
@@ -192,7 +192,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 					this.ScriptingConsole,
 					GetNuGetVersion (),
 					clearConsoleHostCommand,
-					new ICSharpCode.PackageManagement.EnvDTE.DTE ()) as IRemotePowerShellHost;
+					new ICSharpCode.PackageManagement.EnvDTE.DTE ());
 		}
 
 		protected virtual Version GetNuGetVersion ()
@@ -206,12 +206,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			powerShellHost.ModulesToImport.Add (module);
 		}
 
-		//		void UpdateFormatting()
-		//		{
-		//			IEnumerable<string> fileNames = addinPath.GetPowerShellFormattingFileNames();
-		//			powerShellHost.UpdateFormatting(fileNames);
-		//		}
-		//		
 		void RedefineClearHostFunction ()
 		{
 			string command = "function Clear-Host { (Get-Host).PrivateData.ClearHost() }";
