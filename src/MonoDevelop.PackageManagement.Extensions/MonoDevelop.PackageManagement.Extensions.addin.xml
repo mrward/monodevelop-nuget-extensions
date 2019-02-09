@@ -90,7 +90,7 @@
 			defaultStatus="AutoHide"
 			icon="md-console"
 			class="MonoDevelop.PackageManagement.PackageConsolePad"
-			_label="Package Console Extension" />
+			_label="NuGet Package Manager Console" />
 	</Extension>
 	<!--
 	<Extension path="/MonoDevelop/ProjectModel/ProjectModelExtensions">
