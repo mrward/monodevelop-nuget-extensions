@@ -85,15 +85,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void OnSolutionUnloaded ();
 
-		Task ExecuteScriptAsync (
-			PackageIdentity identity,
-			string packageInstallPath,
-			string scriptRelativePath,
-			IDotNetProject project,
-			INuGetProjectContext nuGetProjectContext,
-			bool throwOnFailure);
-
-		bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State foundAndExecuted);
 		void OnMaxVisibleColumnsChanged ();
 	}
 }

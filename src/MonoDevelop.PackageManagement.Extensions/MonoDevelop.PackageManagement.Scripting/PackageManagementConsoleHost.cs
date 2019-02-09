@@ -52,7 +52,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 		ISourceRepositoryProvider sourceRepositoryProvider;
 		IPackageManagementAddInPath addinPath;
 		IPackageManagementEvents packageEvents;
-		ConsoleHostScriptRunner scriptRunner;
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 		Project defaultProject;
 		Lazy<IScriptExecutor> scriptExecutor;
@@ -70,7 +69,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			this.addinPath = addinPath;
 			this.packageEvents = packageEvents;
 
-			scriptRunner = new ConsoleHostScriptRunner ();
 			scriptExecutor = new Lazy<IScriptExecutor> (() => CreateScriptExecutor ());
 		}
 
@@ -417,28 +415,10 @@ namespace MonoDevelop.PackageManagement.Scripting
 			return new ConsoleHostNuGetPackageManager (consoleHostSolutionManager.GetMonoDevelopSolutionManager ());
 		}
 
-		public Task ExecuteScriptAsync (
-			PackageIdentity identity,
-			string packageInstallPath,
-			string scriptRelativePath,
-			IDotNetProject project,
-			INuGetProjectContext nuGetProjectContext,
-			bool throwOnFailure)
-		{
-			return scriptRunner.ExecuteScriptAsync (
-				identity,
-				packageInstallPath,
-				scriptRelativePath,
-				project,
-				nuGetProjectContext,
-				throwOnFailure);
-		}
-
 		public void OnSolutionUnloaded ()
 		{
 			UpdateWorkingDirectory ();
 			powerShellHost?.SolutionUnloaded ();
-			scriptRunner.Reset ();
 			ScriptExecutor.Reset ();
 		}
 
@@ -475,11 +455,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 				ScriptingConsole.WriteLine ("\n" + ex.Message, ScriptingStyle.Error);
 				return true;
 			}
-		}
-
-		public bool TryMarkInitScriptVisited (PackageIdentity package, PackageInitPS1State initPS1State)
-		{
-			return scriptRunner.TryMarkVisited (package, initPS1State);
 		}
 
 		public void OnMaxVisibleColumnsChanged ()
