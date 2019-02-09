@@ -15,10 +15,10 @@
     <PackageReference Include="NuGet.Protocol" Version="4.8.0" />
     <PackageReference Include="NuGet.Resolver" Version="4.8.0" />
     <PackageReference Include="NuGet.Versioning" Version="4.8.0" />
+    <PackageReference Include="StreamJsonRpc" Version="1.4.134" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
-    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.EnvDTE\MonoDevelop.PackageManagement.PowerShell.EnvDTE.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDevelop.EnvDTE">

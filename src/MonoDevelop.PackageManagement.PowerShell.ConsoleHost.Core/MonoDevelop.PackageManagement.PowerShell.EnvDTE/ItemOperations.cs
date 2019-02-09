@@ -26,6 +26,7 @@
 
 using System;
 using EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE

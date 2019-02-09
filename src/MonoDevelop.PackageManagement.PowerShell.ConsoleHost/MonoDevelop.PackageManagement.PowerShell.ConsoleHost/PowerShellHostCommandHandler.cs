@@ -24,8 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost

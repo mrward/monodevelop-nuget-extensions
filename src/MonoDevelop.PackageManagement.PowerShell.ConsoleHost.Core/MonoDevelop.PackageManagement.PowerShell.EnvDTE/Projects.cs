@@ -28,6 +28,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
