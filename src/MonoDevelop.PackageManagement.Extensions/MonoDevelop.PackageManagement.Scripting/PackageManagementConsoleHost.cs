@@ -480,12 +480,16 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void OnCommandCompleted ()
 		{
-			CommandCompleted?.Invoke (this, EventArgs.Empty);
+			Runtime.RunInMainThread (() => {
+				CommandCompleted?.Invoke (this, EventArgs.Empty);
+			}).WaitAndGetResult ();
 		}
 
 		void OnRunningCommand ()
 		{
-			RunningCommand?.Invoke (this, EventArgs.Empty);
+			Runtime.RunInMainThread (() => {
+				RunningCommand?.Invoke (this, EventArgs.Empty);
+			}).WaitAndGetResult ();
 		}
 
 		public void StopCommand ()
