@@ -3,20 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.Extensions", "MonoDevelop.PackageManagement.Extensions\MonoDevelop.PackageManagement.Extensions.csproj", "{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pash", "Pash", "{9CFB788D-6152-4172-A09E-6FDC001403BF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "010.Irony.2010", "external\pash\Libraries\Irony\Irony\010.Irony.2010.csproj", "{D81F5C91-D7DB-46E5-BC99-49488FB6814C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Commands.Management", "external\pash\Source\Microsoft.PowerShell.Commands.Management\Microsoft.Commands.Management.csproj", "{91225A72-A021-4B7D-BA56-5E1B7AC02F03}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Management", "external\pash\Source\System.Management\System.Management.csproj", "{C5E303EC-5684-4C95-B0EC-2593E6662403}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.PowerShell.Commands.Utility", "external\pash\Source\Microsoft.PowerShell.Commands.Utility\Microsoft.PowerShell.Commands.Utility.csproj", "{0E1D573C-C57D-4A83-A739-3A38E719D87E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell", "MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj", "{A406803B-C584-43A3-BCEE-A0BB3132CB5F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.Cmdlets", "MonoDevelop.PackageManagement.Cmdlets\MonoDevelop.PackageManagement.Cmdlets.csproj", "{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell.Protocol", "MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj", "{56ADE615-648E-4F93-9F7C-636AA0737A7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell.ConsoleHost", "MonoDevelop.PackageManagement.PowerShell.ConsoleHost\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.csproj", "{03E63744-94E9-4920-BFD5-D0920D4AA544}"
@@ -35,14 +21,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Debug|x86.ActiveCfg = Debug|x86
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Debug|x86.Build.0 = Debug|x86
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Release|x86.ActiveCfg = Release|x86
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E}.Release|x86.Build.0 = Release|x86
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -51,46 +29,6 @@ Global
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|x86.ActiveCfg = Release|Any CPU
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|x86.Build.0 = Release|Any CPU
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Debug|x86.ActiveCfg = Debug|x86
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Debug|x86.Build.0 = Debug|x86
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Release|x86.ActiveCfg = Release|x86
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03}.Release|x86.Build.0 = Release|x86
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Debug|x86.ActiveCfg = Debug|x86
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Debug|x86.Build.0 = Debug|x86
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Release|x86.ActiveCfg = Release|x86
-		{A406803B-C584-43A3-BCEE-A0BB3132CB5F}.Release|x86.Build.0 = Release|x86
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Debug|x86.ActiveCfg = Debug|x86
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Debug|x86.Build.0 = Debug|x86
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Release|x86.ActiveCfg = Release|x86
-		{C5E303EC-5684-4C95-B0EC-2593E6662403}.Release|x86.Build.0 = Release|x86
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Debug|x86.ActiveCfg = Debug|x86
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Debug|x86.Build.0 = Debug|x86
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Release|x86.ActiveCfg = Release|x86
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C}.Release|x86.Build.0 = Release|x86
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Debug|x86.ActiveCfg = Debug|x86
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Debug|x86.Build.0 = Debug|x86
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Release|x86.ActiveCfg = Release|x86
-		{E0A5E80A-003B-4335-A9DC-A76E2E46D38D}.Release|x86.Build.0 = Release|x86
 		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -133,10 +71,6 @@ Global
 		{076322B5-355C-434D-8BBF-78C85D752375}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D81F5C91-D7DB-46E5-BC99-49488FB6814C} = {9CFB788D-6152-4172-A09E-6FDC001403BF}
-		{91225A72-A021-4B7D-BA56-5E1B7AC02F03} = {9CFB788D-6152-4172-A09E-6FDC001403BF}
-		{C5E303EC-5684-4C95-B0EC-2593E6662403} = {9CFB788D-6152-4172-A09E-6FDC001403BF}
-		{0E1D573C-C57D-4A83-A739-3A38E719D87E} = {9CFB788D-6152-4172-A09E-6FDC001403BF}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = MonoDevelop.PackageManagement.Extensions\MonoDevelop.PackageManagement.Extensions.csproj

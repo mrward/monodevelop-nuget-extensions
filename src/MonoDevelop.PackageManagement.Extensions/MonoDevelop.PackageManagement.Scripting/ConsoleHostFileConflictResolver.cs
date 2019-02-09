@@ -26,11 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using MonoDevelop.PackageManagement;
-using NuGet.ProjectManagement;
 using MonoDevelop.Core;
+using NuGet.ProjectManagement;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class ConsoleHostFileConflictResolver : IConsoleHostFileConflictResolver
 	{

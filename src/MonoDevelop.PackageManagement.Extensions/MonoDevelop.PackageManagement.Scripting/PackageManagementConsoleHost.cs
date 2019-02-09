@@ -31,11 +31,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ICSharpCode.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
-using MonoDevelop.PackageManagement;
-using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
@@ -44,14 +41,13 @@ using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGetConsole.Host.PowerShell;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHost : IPackageManagementConsoleHost
 	{
 		RegisteredPackageSources registeredPackageSources;
 		IPowerShellHostFactory powerShellHostFactory;
-		IPowerShellHost powerShellHost;
-		IRemotePowerShellHost remotePowerShellHost;
+		IRemotePowerShellHost powerShellHost;
 		IMonoDevelopSolutionManager solutionManager;
 		ISourceRepositoryProvider sourceRepositoryProvider;
 		IPackageManagementAddInPath addinPath;
@@ -83,18 +79,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			: this (
 				packageEvents,
 				new ConsoleHostSolutionManager (),
-				new PowerShellHostFactory (),
-				new PackageManagementAddInPath ())
-		{
-		}
-
-		public PackageManagementConsoleHost (
-			IPackageManagementEvents packageEvents,
-			IPowerShellHostFactory powerShellHostFactory)
-			: this (
-				packageEvents,
-				new ConsoleHostSolutionManager (),
-				powerShellHostFactory,
+				new RemotePowerShellHostFactory (),
 				new PackageManagementAddInPath ())
 		{
 		}
@@ -109,7 +94,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			set {
 				if (defaultProject != value) {
 					defaultProject = value;
-					remotePowerShellHost?.OnDefaultProjectChanged (defaultProject);
+					powerShellHost?.OnDefaultProjectChanged (defaultProject);
 				}
 			}
 		}
@@ -118,7 +103,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			get { return registeredPackageSources.SelectedPackageSource; }
 			set {
 				registeredPackageSources.SelectedPackageSource = value;
-				remotePowerShellHost?.OnActiveSourceChanged (value);
+				powerShellHost?.OnActiveSourceChanged (value);
 			}
 		}
 
@@ -172,15 +157,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 				RunSynchronous ();
 				IsRunning = true;
 			});
-			//			thread = CreateThread(RunSynchronous);
-			//			thread.Start();
 		}
 
-		//		protected virtual IThread CreateThread(ThreadStart threadStart)
-		//		{
-		//			return new PackageManagementThread(threadStart);
-		//		}
-		//		
 		void RunSynchronous ()
 		{
 			InitPowerShell ();
@@ -207,7 +185,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void ConfigurePackageSources ()
 		{
-			remotePowerShellHost?.OnActiveSourceChanged (ActivePackageSource);
+			powerShellHost?.OnActiveSourceChanged (ActivePackageSource);
 		}
 
 		void CreatePowerShellHost ()
@@ -218,9 +196,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 					this.ScriptingConsole,
 					GetNuGetVersion (),
 					clearConsoleHostCommand,
-					new EnvDTE.DTE ());
-
-			remotePowerShellHost = powerShellHost as IRemotePowerShellHost;
+					new ICSharpCode.PackageManagement.EnvDTE.DTE ()) as IRemotePowerShellHost;
 		}
 
 		protected virtual Version GetNuGetVersion ()
@@ -242,7 +218,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 		//		
 		void RedefineClearHostFunction ()
 		{
-			//			string command = "function Clear-Host { $host.PrivateData.ClearHost() }";
 			string command = "function Clear-Host { (Get-Host).PrivateData.ClearHost() }";
 			powerShellHost.ExecuteCommand(command);
 		}
@@ -298,8 +273,8 @@ namespace ICSharpCode.PackageManagement.Scripting
 			var solution = PackageManagementServices.ProjectService.OpenSolution?.Solution;
 			if (solution != null) {
 				UpdateWorkingDirectory (solution);
-				remotePowerShellHost?.SolutionLoaded (solution);
-				remotePowerShellHost?.OnDefaultProjectChanged (DefaultProject);
+				powerShellHost?.SolutionLoaded (solution);
+				powerShellHost?.OnDefaultProjectChanged (DefaultProject);
 				RunPowerShellInitializationScripts (solution);
 			} else {
 				UpdateWorkingDirectory ();
@@ -333,7 +308,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 			InitializeToken ();
 
 			PackageManagementBackgroundDispatcher.Dispatch (() => {
-				ProcessLine (line);
+				powerShellHost.ExecuteCommand (line);
 				OnCommandCompleted ();
 				WritePrompt ();
 			});
@@ -345,12 +320,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 				cancellationTokenSource.Dispose ();
 				cancellationTokenSource = new CancellationTokenSource ();
 			}
-		}
-
-		void ProcessLine (string line)
-		{
-			string preprocessedLine = PashCommandLinePreprocessor.Process (line);
-			powerShellHost.ExecuteCommand (preprocessedLine);
 		}
 
 		public string GetActivePackageSource (string source)
@@ -436,9 +405,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void ReloadPackageSources ()
 		{
 			registeredPackageSources.ReloadSettings ();
-			if (remotePowerShellHost != null) {
+			if (powerShellHost != null) {
 				var sources = registeredPackageSources.PackageSources.ToList ();
-				remotePowerShellHost.OnPackageSourcesChanged (sources, registeredPackageSources.SelectedPackageSource);
+				powerShellHost.OnPackageSourcesChanged (sources, registeredPackageSources.SelectedPackageSource);
 			}
 		}
 
@@ -468,7 +437,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		public void OnSolutionUnloaded ()
 		{
 			UpdateWorkingDirectory ();
-			remotePowerShellHost?.SolutionUnloaded ();
+			powerShellHost?.SolutionUnloaded ();
 			scriptRunner.Reset ();
 			ScriptExecutor.Reset ();
 		}
@@ -476,7 +445,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		void SolutionLoaded (object sender, SolutionEventArgs e)
 		{
 			UpdateWorkingDirectory (e.Solution);
-			remotePowerShellHost?.SolutionLoaded (e.Solution);
+			powerShellHost?.SolutionLoaded (e.Solution);
 			RunPowerShellInitializationScripts (e.Solution);
 		}
 
@@ -503,9 +472,9 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public void OnMaxVisibleColumnsChanged ()
 		{
-			if (remotePowerShellHost != null) {
+			if (powerShellHost != null) {
 				int columns = ScriptingConsole.GetMaximumVisibleColumns ();
-				remotePowerShellHost.OnMaxVisibleColumnsChanged (columns);
+				powerShellHost.OnMaxVisibleColumnsChanged (columns);
 			}
 		}
 
@@ -523,7 +492,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 		{
 			try {
 				cancellationTokenSource.Cancel ();
-				remotePowerShellHost?.StopCommand ();
+				powerShellHost?.StopCommand ();
 			} catch (Exception ex) {
 				LoggingService.LogError ("StopCommand error.", ex);
 			}
@@ -535,7 +504,7 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		IScriptExecutor CreateScriptExecutor ()
 		{
-			return remotePowerShellHost.CreateScriptExecutor ();
+			return powerShellHost.CreateScriptExecutor ();
 		}
 	}
 }

@@ -26,8 +26,8 @@
 
 using System;
 using System.Xml.Linq;
-using ICSharpCode.Scripting;
 using MonoDevelop.Core;
+using MonoDevelop.PackageManagement.Scripting;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;

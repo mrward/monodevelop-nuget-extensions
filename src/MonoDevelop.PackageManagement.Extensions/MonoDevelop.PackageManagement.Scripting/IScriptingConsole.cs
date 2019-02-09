@@ -1,5 +1,5 @@
 ﻿// 
-// GetVSComponentModelCmdlet.cs
+// IScriptingConsole.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -25,28 +25,23 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//
-//using System;
-//using System.Management.Automation;
-//using ICSharpCode.PackageManagement.Scripting;
-//using Microsoft.VisualStudio.ComponentModelHost;
-//using Microsoft.VisualStudio.Shell;
-//
-//namespace ICSharpCode.PackageManagement.Cmdlets
-//{
-//	[Cmdlet(VerbsCommon.Get, "VSComponentModel")]
-//	//TODO: PowerShell OutputTypeAttribute
-//	//[OutputType(typeof(IComponentModel))]
-//	public class GetVSComponentModelCmdlet : PSCmdlet
-//	{
-//		public GetVSComponentModelCmdlet()
-//		{
-//		}
-//		
-//		protected override void ProcessRecord()
-//		{
-//			object service = Package.GetGlobalService(typeof(SComponentModel));
-//			WriteObject(service);
-//		}
-//	}
-//}
+
+using System;
+
+namespace MonoDevelop.PackageManagement.Scripting
+{
+	public interface IScriptingConsole : IDisposable
+	{
+		bool ScrollToEndWhenTextWritten { get; set; }
+
+		void Clear ();
+		void SendLine (string line);
+		void SendText (string text);
+		void WriteLine ();
+		void WriteLine (string text, ScriptingStyle style);
+		void Write (string text, ScriptingStyle style);
+		string ReadLine (int autoIndentSize);
+		string ReadFirstUnreadLine ();
+		int GetMaximumVisibleColumns ();
+	}
+}

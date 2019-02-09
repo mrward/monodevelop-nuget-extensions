@@ -29,8 +29,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using ICSharpCode.PackageManagement.Scripting;
-using ICSharpCode.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.Core.Execution;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;

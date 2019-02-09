@@ -96,7 +96,6 @@
     </Reference>
     <Reference Include="NuGet.Resolver">
       <HintPath>..\..\lib\NuGet.Resolver.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Collections.Immutable">
@@ -141,7 +140,6 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IPackageScriptSession.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageManagementAddInPath.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PackageScript.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Scripting\PashCommandLinePreprocessor.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\PowerShellWorkingDirectory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RunPackageScriptsAction.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\DTE.cs" />
@@ -268,6 +266,10 @@
     <Compile Include="NuGetConsole\ScriptExecutor.cs" />
     <Compile Include="NuGetConsole.Host.PowerShell\InitializationScriptRunner.cs" />
     <Compile Include="NuGetConsole.Host.PowerShell\InstalledPackageEnumerator.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPowerShellHost.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IPowerShellHostFactory.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\IScriptingConsole.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptingStyle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -278,10 +280,6 @@
   </ItemGroup>
   <Import Project="PostBuildEvent.proj" />
   <ItemGroup>
-    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj">
-      <Project>{A406803B-C584-43A3-BCEE-A0BB3132CB5F}</Project>
-      <Name>MonoDevelop.PackageManagement.PowerShell</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj">
       <Project>{56ADE615-648E-4F93-9F7C-636AA0737A7B}</Project>
       <Name>MonoDevelop.PackageManagement.PowerShell.Protocol</Name>

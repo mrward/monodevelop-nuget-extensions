@@ -30,9 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ICSharpCode.Scripting;
-using MonoDevelop.PackageManagement;
-using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
@@ -42,7 +39,7 @@ using NuGet.Protocol.Core.Types;
 
 using FileConflictAction = NuGet.ProjectManagement.FileConflictAction;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal interface IPackageManagementConsoleHost : IDisposable
 	{

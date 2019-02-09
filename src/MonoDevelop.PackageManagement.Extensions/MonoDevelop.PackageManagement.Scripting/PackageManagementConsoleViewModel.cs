@@ -32,12 +32,10 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
-using ICSharpCode.Scripting;
 using MonoDevelop.Ide;
-using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
 	{
@@ -159,13 +157,13 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		void UpdateDefaultProject ()
 		{
-			DefaultProject = this.Projects.FirstOrDefault ();
+			DefaultProject = Projects.FirstOrDefault ();
 		}
 
-		void ProjectsChanged (IEnumerable<Project> projects)
+		void ProjectsChanged (IEnumerable<Project> newProjects)
 		{
 			Projects.Clear ();
-			NuGet.CollectionExtensions.AddRange (Projects, projects);
+			NuGet.CollectionExtensions.AddRange (Projects, newProjects);
 			UpdateDefaultProject ();
 		}
 
@@ -197,17 +195,6 @@ namespace ICSharpCode.PackageManagement.Scripting
 
 		public event EventHandler RunningCommand;
 		public event EventHandler CommandCompleted;
-
-//		public TextEditor TextEditor {
-//			get { return packageManagementConsole.TextEditor; }
-//		}
-//
-//		public bool ShutdownConsole()
-//		{
-//			consoleHost.ShutdownConsole();
-//			consoleHost.Dispose();
-//			return !consoleHost.IsRunning;
-//		}
 
 		public void ProcessUserInput (string line)
 		{

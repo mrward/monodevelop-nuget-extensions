@@ -31,7 +31,7 @@ using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	public class PowerShellWorkingDirectory
 	{

@@ -1,5 +1,5 @@
 ﻿// 
-// ICmdletTerminatingError.cs
+// IPowerShellHostFactory.cs
 // 
 // Author:
 //   Matt Ward <ward.matt@gmail.com>
@@ -28,11 +28,14 @@
 
 using System;
 
-namespace ICSharpCode.PackageManagement.Cmdlets
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	public interface ICmdletTerminatingError
+	public interface IPowerShellHostFactory
 	{
-		void ThrowNoProjectOpenError ();
-		void ThrowNoSolutionOpenError ();
+		IPowerShellHost CreatePowerShellHost (
+			IScriptingConsole scriptingConsole,
+			Version version,
+			object privateData,
+			object dte);
 	}
 }

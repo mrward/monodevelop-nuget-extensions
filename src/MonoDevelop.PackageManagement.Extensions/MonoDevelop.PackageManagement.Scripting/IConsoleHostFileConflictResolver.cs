@@ -28,7 +28,7 @@
 
 using System;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	public interface IConsoleHostFileConflictResolver : IDisposable
 	{

@@ -27,7 +27,7 @@
 using System;
 using System.Collections.Specialized;
 using Gtk;
-using ICSharpCode.PackageManagement.Scripting;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;

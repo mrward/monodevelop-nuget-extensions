@@ -28,7 +28,7 @@
 
 using System;
 using Gdk;
-using ICSharpCode.Scripting;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Core;
 using MonoDevelop.Ide.Fonts;

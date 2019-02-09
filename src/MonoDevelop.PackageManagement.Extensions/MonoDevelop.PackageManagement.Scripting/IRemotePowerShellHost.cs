@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
-using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.PackageManagement.VisualStudio;
 

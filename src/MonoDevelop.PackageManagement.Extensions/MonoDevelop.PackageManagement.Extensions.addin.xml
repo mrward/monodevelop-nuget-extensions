@@ -12,14 +12,7 @@
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
 		<Import file="MonoPcl.exe" />
-		<Import assembly="System.Management.Automation.dll" />
-		<Import assembly="Irony.dll" />
-		<Import assembly="Microsoft.PowerShell.Commands.Management.dll" />
-		<Import assembly="Microsoft.PowerShell.Commands.Utility.dll" />
-		<Import assembly="MonoDevelop.PackageManagement.Cmdlets.dll" />
-		<Import assembly="MonoDevelop.PackageManagement.PowerShell.dll" />
 		<Import file="NuGet.Core.dll" />
-		<Import file="NuGet.Packaging.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
 		<Import assembly="SharpDevelop.EnvDTE.dll" />

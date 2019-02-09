@@ -30,7 +30,7 @@ using System;
 using System.Reflection;
 using NuGet.Configuration;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	public static class NuGetVersion
 	{

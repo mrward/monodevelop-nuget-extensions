@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using ICSharpCode.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using Newtonsoft.Json.Linq;

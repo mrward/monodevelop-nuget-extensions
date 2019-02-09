@@ -26,30 +26,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using MonoDevelop.PackageManagement;
-using MonoDevelop.PackageManagement.Scripting;
-
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHostProvider
 	{
-//		IPowerShellDetection powerShellDetection;
 		IPackageManagementConsoleHost consoleHost;
 		IPackageManagementEvents packageEvents;
 		
 		public PackageManagementConsoleHostProvider ()
 			: this (
-//				new PowerShellDetection(),
 				PackageManagementServices.PackageManagementEvents)
 		{
 		}
-		
+
 		public PackageManagementConsoleHostProvider (
-//			IPowerShellDetection powerShellDetection,
 			IPackageManagementEvents packageEvents)
 		{
-//			this.solution = solution;
-//			this.powerShellDetection = powerShellDetection;
 			this.packageEvents = packageEvents;
 		}
 		
@@ -61,15 +53,10 @@ namespace ICSharpCode.PackageManagement.Scripting
 				return consoleHost;
 			}
 		}
-		
+
 		void CreateConsoleHost ()
 		{
-//			if (powerShellDetection.IsPowerShell2Installed()) {
-			var factory = new RemotePowerShellHostFactory ();
-			consoleHost = new PackageManagementConsoleHost (packageEvents, factory);
-//			} else {
-//				consoleHost = new PowerShellMissingConsoleHost();
-//			}
+			consoleHost = new PackageManagementConsoleHost (packageEvents);
 		}
 	}
 }

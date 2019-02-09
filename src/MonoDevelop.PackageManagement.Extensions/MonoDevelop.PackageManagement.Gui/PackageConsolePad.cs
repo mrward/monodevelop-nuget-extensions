@@ -27,11 +27,10 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement.Scripting;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Docking;
 using MonoDevelop.Ide.Gui;
-using MonoDevelop.Ide;
+using MonoDevelop.PackageManagement.Scripting;
 
 namespace MonoDevelop.PackageManagement
 {

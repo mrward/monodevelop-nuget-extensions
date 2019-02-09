@@ -25,8 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using ICSharpCode.PackageManagement.Scripting;
-using ICSharpCode.Scripting;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
