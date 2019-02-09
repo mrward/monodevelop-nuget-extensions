@@ -30,13 +30,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
-using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGetConsole.Host.PowerShell;
@@ -349,11 +347,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 				powerShellHost.ExecuteCommand (command);
 				WritePrompt ();
 			});
-		}
-
-		public void SetDefaultRunspace ()
-		{
-			//			powerShellHost.SetDefaultRunspace();
 		}
 
 		public IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction? fileConflictAction)

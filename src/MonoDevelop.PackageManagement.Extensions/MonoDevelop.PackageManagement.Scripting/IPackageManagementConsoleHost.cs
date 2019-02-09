@@ -67,8 +67,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 		void ProcessUserInput (string line);
 		void StopCommand ();
 
-		void SetDefaultRunspace ();
-
 		IConsoleHostFileConflictResolver CreateFileConflictResolver (FileConflictAction? fileConflictAction);
 		IDisposable CreateEventsMonitor (INuGetProjectContext context);
 
