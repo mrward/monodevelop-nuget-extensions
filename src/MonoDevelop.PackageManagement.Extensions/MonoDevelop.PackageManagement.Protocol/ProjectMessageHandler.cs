@@ -314,7 +314,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 				return new PropertyValueInfo ();
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnGetProjectPropertyValue error", ex);
+				LoggingService.LogError ("OnGetProjectConfigurationPropertyValue error", ex);
 				throw;
 			}
 		}
