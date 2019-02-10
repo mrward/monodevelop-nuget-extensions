@@ -1,5 +1,5 @@
 ﻿//
-// Solution.cs
+// SolutionBuild.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -23,35 +23,36 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
+using EnvDTE;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Solution : MarshalByRefObject, global::EnvDTE.Solution
+	public class SolutionBuild : MarshalByRefObject, global::EnvDTE.SolutionBuild
 	{
-		public Solution ()
+		readonly Solution solution;
+
+		public SolutionBuild (Solution solution)
 		{
-			Projects = new Projects (this);
-			SolutionBuild = new SolutionBuild (this);
+			this.solution = solution;
 		}
 
-		public string FullName { get; private set; }
+		public SolutionConfiguration ActiveConfiguration { get; private set; }
 
-		public string FileName { get; private set; }
+		public object StartupProjects { get; private set; }
 
-		public bool IsOpen { get; private set; }
+		public int LastBuildInfo { get; private set; }
 
-		public global::EnvDTE.Projects Projects { get; private set; }
-
-		public global::EnvDTE.Globals Globals { get; private set; }
-
-		public global::EnvDTE.SolutionBuild SolutionBuild { get; private set; }
-
-		public global::EnvDTE.Properties Properties { get; private set; }
-
-		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)
+		public void BuildProject (
+			string solutionConfiguration,
+			string projectUniqueName,
+			bool waitForBuildToFinish = false)
 		{
-			return null;
+		}
+
+		public void Build (bool WaitForBuildToFinish = false)
+		{
 		}
 	}
 }
