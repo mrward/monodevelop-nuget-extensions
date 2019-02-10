@@ -1,5 +1,5 @@
 ﻿//
-// Project.cs
+// ConfigurationProperty.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,68 +24,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Project : MarshalByRefObject, global::EnvDTE.Project
+	class ConfigurationProperty : Property
 	{
-		DTE dte;
+		Configuration configuration;
+		string value = null;
 
-		public Project (ProjectInformation info)
+		public ConfigurationProperty (Configuration configuration, string name)
+			: base (name)
 		{
-			Name = info.Name;
-			FileName = info.FileName;
-			FullName = FileName;
-
-			Kind = info.Kind;
-			Type = info.Type;
-			UniqueName = info.UniqueName;
-
-			CreateProperties ();
-			ConfigurationManager = new ConfigurationManager (this);
+			this.configuration = configuration;
 		}
 
-		public string Name { get; private set; }
-
-		public string UniqueName { get; private set; }
-
-		public string FileName { get; private set; }
-
-		public string FullName { get; private set; }
-
-		public object Object { get; private set; }
-
-		public global::EnvDTE.Properties Properties { get; private set; }
-
-		public global::EnvDTE.ProjectItems ProjectItems { get; set; }
-
-		public global::EnvDTE.DTE DTE {
-			get {
-				if (dte == null) {
-					dte = new DTE ();
-				}
-				return dte;
+		protected override object GetValue ()
+		{
+			if (value != null) {
+				return value;
 			}
+
+			value = GetActiveConfigurationPropertyValue ();
+			return value;
 		}
 
-		public string Type { get; private set; }
-
-		public string Kind { get; private set; }
-
-		public global::EnvDTE.CodeModel CodeModel { get; private set; }
-
-		public global::EnvDTE.ConfigurationManager ConfigurationManager { get; private set; }
-
-		public void Save ()
+		string GetActiveConfigurationPropertyValue ()
 		{
-		}
-
-		void CreateProperties ()
-		{
-			var propertyFactory = new ProjectPropertyFactory (this);
-			Properties = new Properties (propertyFactory);
+			var message = new ProjectConfigurationPropertyParams {
+				ProjectFileName = configuration.Project.FileName,
+				PropertyName = Name
+			};
+			var result = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PropertyValueInfo> (Methods.ProjectConfigurationPropertyValueName, message)
+				.WaitAndGetResult ();
+			return result.PropertyValue;
 		}
 	}
 }

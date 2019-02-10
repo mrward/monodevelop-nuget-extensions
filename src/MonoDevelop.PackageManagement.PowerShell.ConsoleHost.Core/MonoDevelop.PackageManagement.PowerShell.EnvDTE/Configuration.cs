@@ -1,5 +1,5 @@
 ﻿//
-// Project.cs
+// Configuration.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,67 +25,21 @@
 // THE SOFTWARE.
 
 using System;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Project : MarshalByRefObject, global::EnvDTE.Project
+	public class Configuration : MarshalByRefObject, global::EnvDTE.Configuration
 	{
-		DTE dte;
-
-		public Project (ProjectInformation info)
+		public Configuration (Project project)
 		{
-			Name = info.Name;
-			FileName = info.FileName;
-			FullName = FileName;
+			Project = project;
 
-			Kind = info.Kind;
-			Type = info.Type;
-			UniqueName = info.UniqueName;
-
-			CreateProperties ();
-			ConfigurationManager = new ConfigurationManager (this);
-		}
-
-		public string Name { get; private set; }
-
-		public string UniqueName { get; private set; }
-
-		public string FileName { get; private set; }
-
-		public string FullName { get; private set; }
-
-		public object Object { get; private set; }
-
-		public global::EnvDTE.Properties Properties { get; private set; }
-
-		public global::EnvDTE.ProjectItems ProjectItems { get; set; }
-
-		public global::EnvDTE.DTE DTE {
-			get {
-				if (dte == null) {
-					dte = new DTE ();
-				}
-				return dte;
-			}
-		}
-
-		public string Type { get; private set; }
-
-		public string Kind { get; private set; }
-
-		public global::EnvDTE.CodeModel CodeModel { get; private set; }
-
-		public global::EnvDTE.ConfigurationManager ConfigurationManager { get; private set; }
-
-		public void Save ()
-		{
-		}
-
-		void CreateProperties ()
-		{
-			var propertyFactory = new ProjectPropertyFactory (this);
+			var propertyFactory = new ConfigurationPropertyFactory (this);
 			Properties = new Properties (propertyFactory);
 		}
+
+		internal Project Project { get; }
+
+		public global::EnvDTE.Properties Properties { get; private set; }
 	}
 }

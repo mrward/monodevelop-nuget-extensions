@@ -26,10 +26,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.Projects;
 using MonoDevelop.Projects.MSBuild;
@@ -275,6 +277,62 @@ namespace MonoDevelop.PackageManagement.Protocol
 				LoggingService.LogError ("OnGetProjectPropertyValue error", ex);
 				throw;
 			}
+		}
+
+		[JsonRpcMethod (Methods.ProjectConfigurationPropertyValueName)]
+		public PropertyValueInfo OnGetProjectConfigurationPropertyValue (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectConfigurationPropertyParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var configuration = project.GetConfiguration (IdeApp.Workspace.ActiveConfiguration) as ProjectConfiguration;
+				if (configuration == null) {
+					return new PropertyValueInfo ();
+				}
+
+				IMetadataProperty property = configuration.Properties.GetProperty (message.PropertyName);
+				if (property != null) {
+					return new PropertyValueInfo {
+						PropertyValue = GetPropertyValue (property)
+					};
+				}
+
+				return new PropertyValueInfo ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnGetProjectPropertyValue error", ex);
+				throw;
+			}
+		}
+
+		static string GetPropertyValue (IMetadataProperty property)
+		{
+			if (IsPathProperty (property.Name)) {
+				return GetPathValue (property.Value);
+			}
+
+			return property.Value;
+		}
+
+		static string GetPathValue (string value)
+		{
+			if (value == null) {
+				return value;
+			}
+
+			if (Path.DirectorySeparatorChar == '\\') {
+				return value;
+			}
+
+			return value.Replace ('\\', '/');
+		}
+
+		static bool IsPathProperty (string name)
+		{
+			if (StringComparer.OrdinalIgnoreCase.Equals ("OutputPath", name)) {
+				return true;
+			}
+			return false;
 		}
 	}
 }
