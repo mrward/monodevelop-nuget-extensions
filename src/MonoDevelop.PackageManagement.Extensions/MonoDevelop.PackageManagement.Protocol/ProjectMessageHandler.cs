@@ -255,7 +255,9 @@ namespace MonoDevelop.PackageManagement.Protocol
 				var message = arg.ToObject<ProjectPropertyParams> ();
 				var project = FindProject (message.ProjectFileName);
 
-				IMetadataProperty property = project.ProjectProperties.GetProperty (message.PropertyName);
+				string propertyName = MapPropertyName (message.PropertyName);
+
+				IMetadataProperty property = project.ProjectProperties.GetProperty (propertyName);
 				if (property != null) {
 					return new PropertyValueInfo {
 						PropertyValue = property.Value
@@ -265,7 +267,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				IMSBuildPropertyEvaluated evaluatedProperty = project
 					.MSBuildProject?
 					.EvaluatedProperties?
-					.GetProperty (message.PropertyName);
+					.GetProperty (propertyName);
 				if (evaluatedProperty != null) {
 					return new PropertyValueInfo {
 						PropertyValue = evaluatedProperty.Value
@@ -277,6 +279,18 @@ namespace MonoDevelop.PackageManagement.Protocol
 				LoggingService.LogError ("OnGetProjectPropertyValue error", ex);
 				throw;
 			}
+		}
+
+		/// <summary>
+		/// EnvDTE.Project.Properties supports OutputFileName which maps to TargetFileName.
+		/// This is the assembly filename without any path information.
+		/// </summary>
+		static string MapPropertyName (string propertyName)
+		{
+			if (StringComparer.OrdinalIgnoreCase.Equals ("OutputFileName", propertyName)) {
+				return "TargetFileName";
+			}
+			return propertyName;
 		}
 
 		[JsonRpcMethod (Methods.ProjectConfigurationPropertyValueName)]
