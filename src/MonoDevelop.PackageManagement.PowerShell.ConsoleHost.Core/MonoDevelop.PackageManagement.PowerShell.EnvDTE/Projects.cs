@@ -55,7 +55,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		IEnumerable<Project> GetProjectsInSolution ()
 		{
 			foreach (var projectInfo in GetProjectInformation ()) {
-				yield return new Project (projectInfo);
+				yield return ProjectFactory.CreateProject (projectInfo);
 			}
 		}
 

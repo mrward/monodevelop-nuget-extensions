@@ -48,7 +48,9 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 				return value;
 			}
 
-			if (IsFullPath ()) {
+			if (IsTargetFrameworkMoniker ()) {
+				return project.TargetFrameworkMoniker;
+			} else if (IsFullPath ()) {
 				return GetFullPath ();
 			//} else if (IsOutputFileName ()) {
 			//	return GetOutputFileName ();

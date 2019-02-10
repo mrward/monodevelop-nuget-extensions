@@ -1,5 +1,5 @@
 ﻿//
-// ProjectInformation.cs
+// CpsProject.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,29 +24,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Runtime.Serialization;
+using Microsoft.VisualStudio.Project;
+using Microsoft.VisualStudio.ProjectSystem.Properties;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	[DataContract]
-	public class ProjectInformation
+	class CpsProject : Project, IVsBrowseObjectContext
 	{
-		[DataMember (Name = "name")]
-		public string Name { get; set; }
+		UnconfiguredProject unconfiguredProject;
 
-		[DataMember (Name = "fileName")]
-		public string FileName { get; set; }
+		public CpsProject (ProjectInformation info)
+			: base (info)
+		{
+		}
 
-		[DataMember (Name = "uniqueName")]
-		public string UniqueName { get; set; }
-
-		[DataMember (Name = "type")]
-		public string Type { get; set; }
-
-		[DataMember (Name = "kind")]
-		public string Kind { get; set; }
-
-		[DataMember (Name = "targetFrameworkMoniker")]
-		public string TargetFrameworkMoniker { get; set; }
+		public UnconfiguredProject UnconfiguredProject {
+			get {
+				if (unconfiguredProject == null) {
+					unconfiguredProject = new UnconfiguredProject (this);
+				}
+				return unconfiguredProject;
+			}
+		}
 	}
 }

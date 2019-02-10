@@ -33,7 +33,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 	{
 		DTE dte;
 
-		public Project (ProjectInformation info)
+		internal Project (ProjectInformation info)
 		{
 			Name = info.Name;
 			FileName = info.FileName;
@@ -43,6 +43,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 			Type = info.Type;
 			UniqueName = info.UniqueName;
 
+			TargetFrameworkMoniker = info.TargetFrameworkMoniker;
+
 			CreateProperties ();
 			ConfigurationManager = new ConfigurationManager (this);
 		}
@@ -50,10 +52,11 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		public string Name { get; private set; }
 
 		public string UniqueName { get; private set; }
-
 		public string FileName { get; private set; }
 
 		public string FullName { get; private set; }
+
+		internal string TargetFrameworkMoniker { get; private set; }
 
 		public object Object { get; private set; }
 

@@ -1,5 +1,5 @@
 ﻿//
-// ProjectInformation.cs
+// ConfiguredProjectCommonProperties.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,29 +24,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Runtime.Serialization;
+using System.Threading.Tasks;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+namespace Microsoft.VisualStudio.Project
 {
-	[DataContract]
-	public class ProjectInformation
+	public class ConfiguredProjectCommonProperties
 	{
-		[DataMember (Name = "name")]
-		public string Name { get; set; }
+		readonly CpsProject project;
 
-		[DataMember (Name = "fileName")]
-		public string FileName { get; set; }
+		internal ConfiguredProjectCommonProperties (CpsProject project)
+		{
+			this.project = project;
+		}
 
-		[DataMember (Name = "uniqueName")]
-		public string UniqueName { get; set; }
-
-		[DataMember (Name = "type")]
-		public string Type { get; set; }
-
-		[DataMember (Name = "kind")]
-		public string Kind { get; set; }
-
-		[DataMember (Name = "targetFrameworkMoniker")]
-		public string TargetFrameworkMoniker { get; set; }
+		public Task<string> GetEvaluatedPropertyValueAsync (string propertyName)
+		{
+			var property = project.Properties.Item (propertyName);
+			if (property?.Value != null) {
+				return Task.FromResult (property.Value.ToString ());
+			}
+			return Task.FromResult (string.Empty);
+		}
 	}
 }

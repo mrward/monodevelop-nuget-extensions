@@ -1,5 +1,5 @@
 ﻿//
-// ProjectInformation.cs
+// UnconfiguredProject.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,29 +24,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Runtime.Serialization;
+using System.Threading.Tasks;
+using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+namespace Microsoft.VisualStudio.Project
 {
-	[DataContract]
-	public class ProjectInformation
+	public class UnconfiguredProject
 	{
-		[DataMember (Name = "name")]
-		public string Name { get; set; }
+		readonly CpsProject project;
 
-		[DataMember (Name = "fileName")]
-		public string FileName { get; set; }
+		internal UnconfiguredProject (CpsProject project)
+		{
+			this.project = project;
+		}
 
-		[DataMember (Name = "uniqueName")]
-		public string UniqueName { get; set; }
-
-		[DataMember (Name = "type")]
-		public string Type { get; set; }
-
-		[DataMember (Name = "kind")]
-		public string Kind { get; set; }
-
-		[DataMember (Name = "targetFrameworkMoniker")]
-		public string TargetFrameworkMoniker { get; set; }
+		public Task<ConfiguredProject> GetSuggestedConfiguredProjectAsync ()
+		{
+			return Task.FromResult (new ConfiguredProject (project));
+		}
 	}
 }

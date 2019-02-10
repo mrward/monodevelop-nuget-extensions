@@ -1,5 +1,5 @@
 ﻿//
-// ProjectInformation.cs
+// ProjectFactory.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,29 +24,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Runtime.Serialization;
+using System;
+using System.Runtime.Versioning;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
-namespace MonoDevelop.PackageManagement.PowerShell.Protocol
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	[DataContract]
-	public class ProjectInformation
+	public static class ProjectFactory
 	{
-		[DataMember (Name = "name")]
-		public string Name { get; set; }
+		public static Project CreateProject (ProjectInformation info)
+		{
+			if (IsNetCoreAppOrNetStandard (info.TargetFrameworkMoniker)) {
+				return new CpsProject (info);
+			}
 
-		[DataMember (Name = "fileName")]
-		public string FileName { get; set; }
+			return new Project (info);
+		}
 
-		[DataMember (Name = "uniqueName")]
-		public string UniqueName { get; set; }
+		static bool IsNetCoreAppOrNetStandard (string targetFrameworkMoniker)
+		{
+			if (string.IsNullOrEmpty (targetFrameworkMoniker)) {
+				return false;
+			}
 
-		[DataMember (Name = "type")]
-		public string Type { get; set; }
+			var frameworkName = new FrameworkName (targetFrameworkMoniker);
+			string identifier = frameworkName.Identifier;
 
-		[DataMember (Name = "kind")]
-		public string Kind { get; set; }
-
-		[DataMember (Name = "targetFrameworkMoniker")]
-		public string TargetFrameworkMoniker { get; set; }
+			return StringComparer.OrdinalIgnoreCase.Equals (".NETCoreApp", identifier) ||
+				StringComparer.OrdinalIgnoreCase.Equals (".NETStandard", identifier);
+		}
 	}
 }

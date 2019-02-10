@@ -312,7 +312,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 			var version = NuGet.Versioning.NuGetVersion.Parse (message.PackageVersion);
 			var identity = new PackageIdentity (message.PackageId, version);
-			var project = new Project (message.Project);
+			var project = ProjectFactory.CreateProject (message.Project);
 
 			var scriptMessage = new ScriptMessage (
 				message.ScriptPath,

@@ -65,6 +65,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 				FileName = project.FileName,
 				UniqueName = GetUniqueName (project),
 				Kind = ProjectKind.GetProjectKind (project),
+				TargetFrameworkMoniker = project.TargetFramework.Id.ToString (),
 				Type = ProjectType.GetProjectType (project)
 			};
 		}
