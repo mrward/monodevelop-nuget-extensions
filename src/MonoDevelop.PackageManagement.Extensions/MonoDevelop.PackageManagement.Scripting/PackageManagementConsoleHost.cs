@@ -171,8 +171,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			CreatePowerShellHost ();
 			AddModulesToImport ();
 			//			powerShellHost.SetRemoteSignedExecutionPolicy();
-			//			UpdateFormatting();
-			RedefineClearHostFunction ();
 			//			DefineTabExpansionFunction();
 			UpdateWorkingDirectory ();
 			ConfigurePackageSources ();
@@ -204,12 +202,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			string module = addinPath.CmdletsAssemblyFileName;
 			powerShellHost.ModulesToImport.Add (module);
-		}
-
-		void RedefineClearHostFunction ()
-		{
-			string command = "function Clear-Host { (Get-Host).PrivateData.ClearHost() }";
-			powerShellHost.ExecuteCommand(command);
 		}
 
 		//		void DefineTabExpansionFunction()
