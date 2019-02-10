@@ -28,10 +28,12 @@
 
 using System;
 using Gdk;
-using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Components;
+using MonoDevelop.Components.Commands;
 using MonoDevelop.Core;
+using MonoDevelop.Ide.Commands;
 using MonoDevelop.Ide.Fonts;
+using MonoDevelop.PackageManagement.Scripting;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -183,6 +185,20 @@ namespace MonoDevelop.PackageManagement
 			if (originalMaxVisibleColumns != maxVisibleColumns) {
 				MaxVisibleColumnsChanged?.Invoke (this, EventArgs.Empty);
 			}
+		}
+
+		/// <summary>
+		/// Not sure why Copy command does not work with the keyboard shortcut. If the currently focused
+		/// window is a TextView then it should work. The Immediate Pad does not have this problem and
+		/// it does not have its own Copy command handler. It seems that the IdeApp.Workebench.RootWindow
+		/// is the TextArea for the text editor not the pad.
+		/// </summary>
+		[CommandHandler (EditCommands.Copy)]
+		void CopyText ()
+		{
+			// This is based on what the DefaultCopyCommandHandler does.
+			var clipboard = Gtk.Clipboard.Get (Gdk.Atom.Intern ("CLIPBOARD", false));
+			TextView.Buffer.CopyClipboard (clipboard);
 		}
 	}
 }
