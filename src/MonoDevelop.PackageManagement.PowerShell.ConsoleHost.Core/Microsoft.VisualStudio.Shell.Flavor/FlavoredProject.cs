@@ -38,6 +38,10 @@ namespace Microsoft.VisualStudio.Shell.Flavor
 			this.project = project;
 		}
 
+		internal EnvDTE.Project Project {
+			get { return project; }
+		}
+
 		public int GetAggregateProjectTypeGuids (out string projTypeGuids)
 		{
 			projTypeGuids = GetProjectTypeGuidsFromProject ();
