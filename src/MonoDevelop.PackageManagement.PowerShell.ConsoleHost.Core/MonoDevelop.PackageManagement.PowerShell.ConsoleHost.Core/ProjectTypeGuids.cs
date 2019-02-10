@@ -1,5 +1,5 @@
 ﻿//
-// VsSolution.cs
+// ProjectTypeGuids.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,39 +24,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
-using System;
-using System.Linq;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Flavor;
-using Microsoft.VisualStudio.Shell.Interop;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-
-namespace MonoDevelop.PackageManagement.VisualStudio
+namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
-	public class VsSolution : MarshalByRefObject, IVsSolution, SVsSolution
+	static class ProjectTypeGuids
 	{
-		public int GetProjectOfUniqueName (string uniqueName, out IVsHierarchy hierarchy)
-		{
-			hierarchy = null;
-			EnvDTE.Project project = FindProject (uniqueName);
-			if (project != null) {
-				hierarchy = new FlavoredProject (project);
-				return VsConstants.S_OK;
-			}
-			return VsConstants.E_FAIL;
-		}
-
-		EnvDTE.Project FindProject (string uniqueName)
-		{
-			var projects = ConsoleHostServices.SolutionManager.GetAllProjectsAsync ().WaitAndGetResult ();
-			return projects
-				.SingleOrDefault (project => ProjectUniqueNameMatches (project, uniqueName));
-		}
-
-		bool ProjectUniqueNameMatches (EnvDTE.Project project, string uniqueName)
-		{
-			return StringComparer.OrdinalIgnoreCase.Equals (project.UniqueName, uniqueName);
-		}
+		public static readonly string CSharp = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
+		public static readonly string VBNet = "{F184B08F-C81C-45F6-A57F-5ABD9991F28F}";
 	}
 }

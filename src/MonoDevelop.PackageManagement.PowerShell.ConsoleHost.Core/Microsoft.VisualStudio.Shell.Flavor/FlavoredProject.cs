@@ -1,5 +1,5 @@
 ﻿//
-// VsSolution.cs
+// FlavoredProject.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,39 +24,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 using System;
-using System.Linq;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 
-namespace MonoDevelop.PackageManagement.VisualStudio
+namespace Microsoft.VisualStudio.Shell.Flavor
 {
-	public class VsSolution : MarshalByRefObject, IVsSolution, SVsSolution
+	public class FlavoredProject : MarshalByRefObject, IVsAggregatableProject, IVsHierarchy
 	{
-		public int GetProjectOfUniqueName (string uniqueName, out IVsHierarchy hierarchy)
+		EnvDTE.Project project;
+
+		public FlavoredProject (EnvDTE.Project project)
 		{
-			hierarchy = null;
-			EnvDTE.Project project = FindProject (uniqueName);
-			if (project != null) {
-				hierarchy = new FlavoredProject (project);
-				return VsConstants.S_OK;
+			this.project = project;
+		}
+
+		public int GetAggregateProjectTypeGuids (out string projTypeGuids)
+		{
+			projTypeGuids = GetProjectTypeGuidsFromProject ();
+			if (projTypeGuids == null) {
+				projTypeGuids = project.Kind;
 			}
-			return VsConstants.E_FAIL;
+			return VsConstants.S_OK;
 		}
 
-		EnvDTE.Project FindProject (string uniqueName)
+		string GetProjectTypeGuidsFromProject ()
 		{
-			var projects = ConsoleHostServices.SolutionManager.GetAllProjectsAsync ().WaitAndGetResult ();
-			return projects
-				.SingleOrDefault (project => ProjectUniqueNameMatches (project, uniqueName));
-		}
-
-		bool ProjectUniqueNameMatches (EnvDTE.Project project, string uniqueName)
-		{
-			return StringComparer.OrdinalIgnoreCase.Equals (project.UniqueName, uniqueName);
+			// TODO: Implement
+			return null;
+			//return project.GetUnevalatedProperty ("ProjectTypeGuids");
 		}
 	}
 }
