@@ -28,23 +28,41 @@
 
 using System;
 using Gdk;
+using Gtk;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Commands;
 using MonoDevelop.Core;
 using MonoDevelop.Ide.Commands;
 using MonoDevelop.Ide.Fonts;
 using MonoDevelop.PackageManagement.Scripting;
+using System.Reflection;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class PackageConsoleView : ConsoleView2, IScriptingConsole
+	public enum LogLevel
+	{
+		Default,
+		Error,
+		Critical,
+		Warning,
+		Message,
+		Info,
+		Debug
+	}
+
+	public class PackageConsoleView : ConsoleView, IScriptingConsole
 	{
 		const int DefaultMaxVisibleColumns = 160;
 		int maxVisibleColumns = 0;
 		int originalWidth = -1;
 
+		TextTag debugTag;
+		TextTag errorTag;
+		TextTag warningTag;
+
 		public PackageConsoleView ()
 		{
+			AddTags ();
 			// HACK - to allow text to appear before first prompt.
 			PromptString = String.Empty;
 			base.Clear ();
@@ -54,6 +72,24 @@ namespace MonoDevelop.PackageManagement
 			TextView.FocusInEvent += (o, args) => {
 				TextViewFocused?.Invoke (this, args);
 			};
+		}
+
+		void AddTags ()
+		{
+			errorTag = new TextTag ("error");
+			errorTag.Background = "#dc3122";
+			errorTag.Foreground = "white";
+			errorTag.Weight = Pango.Weight.Bold;
+			Buffer.TagTable.Add (errorTag);
+
+			warningTag = new TextTag ("warning");
+			warningTag.Foreground = "black";
+			warningTag.Background = "yellow";
+			Buffer.TagTable.Add (warningTag);
+
+			debugTag = new TextTag ("debug");
+			debugTag.Foreground = "darkgrey";
+			Buffer.TagTable.Add (debugTag);
 		}
 
 		public event EventHandler TextViewFocused;
@@ -129,7 +165,36 @@ namespace MonoDevelop.PackageManagement
 				}
 			}).Wait ();
 		}
-		
+
+		public void WriteOutput (string line, LogLevel logLevel)
+		{
+			TextTag tag = GetTag (logLevel);
+			TextIter start = Buffer.EndIter;
+
+			if (tag == null) {
+				Buffer.Insert (ref start, line);
+			} else {
+				Buffer.InsertWithTags (ref start, line, tag);
+			}
+			Buffer.PlaceCursor (Buffer.EndIter);
+			TextView.ScrollMarkOnscreen (Buffer.InsertMark);
+		}
+
+		TextTag GetTag (LogLevel logLevel)
+		{
+			switch (logLevel) {
+				case LogLevel.Critical:
+				case LogLevel.Error:
+					return errorTag;
+				case LogLevel.Warning:
+					return warningTag;
+				case LogLevel.Debug:
+					return debugTag;
+				default:
+					return null;
+			}
+		}
+
 		public string ReadLine (int autoIndentSize)
 		{
 			throw new NotImplementedException();
@@ -151,8 +216,22 @@ namespace MonoDevelop.PackageManagement
 		void IScriptingConsole.Clear ()
 		{
 			Runtime.RunInMainThread (() => {
-				base.ClearWithoutPrompt ();
+				ClearWithoutPrompt ();
 			});
+		}
+
+		public void ClearWithoutPrompt ()
+		{
+			Buffer.Text = "";
+
+			// HACK: Clear scriptLines string. This is done in ConsoleView's Clear method but we do
+			// not want a prompt to be displayed. Should investigate to see if Clear can be called
+			// instead and fix whatever the problem was with the prompt.
+			var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+			FieldInfo field = typeof (ConsoleView).GetField ("scriptLines", flags);
+			if (field != null) {
+				field.SetValue (this, string.Empty);
+			}
 		}
 
 		protected override void OnSizeAllocated (Rectangle allocation)

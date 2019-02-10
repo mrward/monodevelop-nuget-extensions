@@ -178,7 +178,6 @@
     <Compile Include="MonoDevelop.PackageManagement\ExtendedProjectService.cs" />
     <Compile Include="MonoDevelop.PackageManagement\OpenDotNetProjects2.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Document.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\ConsoleView2.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\GlobalMSBuildProjectCollection.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IGlobalMSBuildProjectCollection.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\MSBuildProjectPropertiesMerger.cs" />

@@ -30,6 +30,7 @@ using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Scripting;
 using Newtonsoft.Json.Linq;
 using StreamJsonRpc;
+using ProtocolLogLevel = MonoDevelop.PackageManagement.PowerShell.Protocol.LogLevel;
 
 namespace MonoDevelop.PackageManagement.Protocol
 {
@@ -48,16 +49,16 @@ namespace MonoDevelop.PackageManagement.Protocol
 			try {
 				var logMessage = arg.ToObject<LogMessageParams> ();
 				switch (logMessage.Level) {
-					case LogLevel.Error:
+					case ProtocolLogLevel.Error:
 						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Error);
 						break;
-					case LogLevel.Warning:
+					case ProtocolLogLevel.Warning:
 						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Warning);
 						break;
-					case LogLevel.Verbose:
+					case ProtocolLogLevel.Verbose:
 						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Out);
 						break;
-					case LogLevel.Debug:
+					case ProtocolLogLevel.Debug:
 						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Debug);
 						break;
 					default:
