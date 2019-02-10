@@ -1,5 +1,5 @@
 ﻿//
-// Project.cs
+// Property.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,67 +25,44 @@
 // THE SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Project : MarshalByRefObject, global::EnvDTE.Project
+	class Property : MarshalByRefObject, global::EnvDTE.Property
 	{
-		DTE dte;
-
-		public Project (ProjectInformation info)
+		public Property (string name)
 		{
-			Name = info.Name;
-			FileName = info.FileName;
-			FullName = FileName;
-
-			Kind = info.Kind;
-			Type = info.Type;
-			UniqueName = info.UniqueName;
-
-			CreateProperties ();
+			Name = name;
 		}
 
-		public string Name { get; set; }
-
-		public string UniqueName { get; set; }
-
-		public string FileName { get; set; }
-
-		public string FullName { get; set; }
-
-		public object Object { get; set; }
-
-		public global::EnvDTE.Properties Properties { get; set; }
-
-		public global::EnvDTE.ProjectItems ProjectItems { get; set; }
-
-		public global::EnvDTE.DTE DTE {
-			get {
-				if (dte == null) {
-					dte = new DTE ();
-				}
-				return dte;
-			}
-		}
-
-		public string Type { get; set; }
-
-		public string Kind { get; set; }
-
-		public global::EnvDTE.CodeModel CodeModel { get; set; }
-
-		public global::EnvDTE.ConfigurationManager ConfigurationManager { get; set; }
-
-		public void Save ()
+		public Property ()
 		{
 		}
 
-		void CreateProperties ()
+		public virtual string Name { get; private set; }
+
+		public virtual object Value {
+			get { return GetValue (); }
+			set { SetValue (value); }
+		}
+
+		protected virtual object GetValue ()
 		{
-			var propertyFactory = new ProjectPropertyFactory (this);
-			Properties = new Properties (propertyFactory);
+			return null;
+		}
+
+		protected virtual void SetValue (object value)
+		{
+		}
+
+		public virtual object Object {
+			get { return GetObject (); }
+			set { }
+		}
+
+		protected virtual object GetObject ()
+		{
+			return null;
 		}
 	}
 }

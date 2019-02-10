@@ -1,5 +1,5 @@
 ﻿//
-// Project.cs
+// Properties.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,67 +25,27 @@
 // THE SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using System.Collections;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Project : MarshalByRefObject, global::EnvDTE.Project
+	public class Properties : MarshalByRefObject, global::EnvDTE.Properties
 	{
-		DTE dte;
+		IPropertyFactory propertyFactory;
 
-		public Project (ProjectInformation info)
+		internal Properties (IPropertyFactory propertyFactory)
 		{
-			Name = info.Name;
-			FileName = info.FileName;
-			FullName = FileName;
-
-			Kind = info.Kind;
-			Type = info.Type;
-			UniqueName = info.UniqueName;
-
-			CreateProperties ();
+			this.propertyFactory = propertyFactory;
 		}
 
-		public string Name { get; set; }
-
-		public string UniqueName { get; set; }
-
-		public string FileName { get; set; }
-
-		public string FullName { get; set; }
-
-		public object Object { get; set; }
-
-		public global::EnvDTE.Properties Properties { get; set; }
-
-		public global::EnvDTE.ProjectItems ProjectItems { get; set; }
-
-		public global::EnvDTE.DTE DTE {
-			get {
-				if (dte == null) {
-					dte = new DTE ();
-				}
-				return dte;
-			}
+		public virtual global::EnvDTE.Property Item (string propertyName)
+		{
+			return propertyFactory.CreateProperty (propertyName);
 		}
 
-		public string Type { get; set; }
-
-		public string Kind { get; set; }
-
-		public global::EnvDTE.CodeModel CodeModel { get; set; }
-
-		public global::EnvDTE.ConfigurationManager ConfigurationManager { get; set; }
-
-		public void Save ()
+		public virtual IEnumerator GetEnumerator ()
 		{
-		}
-
-		void CreateProperties ()
-		{
-			var propertyFactory = new ProjectPropertyFactory (this);
-			Properties = new Properties (propertyFactory);
+			return propertyFactory.GetEnumerator ();
 		}
 	}
 }

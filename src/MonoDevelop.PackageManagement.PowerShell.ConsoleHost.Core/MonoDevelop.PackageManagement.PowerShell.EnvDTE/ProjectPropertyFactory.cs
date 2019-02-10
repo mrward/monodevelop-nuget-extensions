@@ -1,5 +1,5 @@
 ﻿//
-// Project.cs
+// ProjectPropertyFactory.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,67 +25,37 @@
 // THE SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Project : MarshalByRefObject, global::EnvDTE.Project
+	class ProjectPropertyFactory : IPropertyFactory
 	{
-		DTE dte;
+		readonly Project project;
 
-		public Project (ProjectInformation info)
+		public ProjectPropertyFactory (Project project)
 		{
-			Name = info.Name;
-			FileName = info.FileName;
-			FullName = FileName;
-
-			Kind = info.Kind;
-			Type = info.Type;
-			UniqueName = info.UniqueName;
-
-			CreateProperties ();
+			this.project = project;
 		}
 
-		public string Name { get; set; }
-
-		public string UniqueName { get; set; }
-
-		public string FileName { get; set; }
-
-		public string FullName { get; set; }
-
-		public object Object { get; set; }
-
-		public global::EnvDTE.Properties Properties { get; set; }
-
-		public global::EnvDTE.ProjectItems ProjectItems { get; set; }
-
-		public global::EnvDTE.DTE DTE {
-			get {
-				if (dte == null) {
-					dte = new DTE ();
-				}
-				return dte;
-			}
+		public Property CreateProperty (string name)
+		{
+			return new ProjectProperty (project, name);
 		}
 
-		public string Type { get; set; }
-
-		public string Kind { get; set; }
-
-		public global::EnvDTE.CodeModel CodeModel { get; set; }
-
-		public global::EnvDTE.ConfigurationManager ConfigurationManager { get; set; }
-
-		public void Save ()
+		public IEnumerator<Property> GetEnumerator ()
 		{
+			List<Property> properties = GetProperties ().ToList ();
+			return properties.GetEnumerator ();
 		}
 
-		void CreateProperties ()
+		IEnumerable<Property> GetProperties ()
 		{
-			var propertyFactory = new ProjectPropertyFactory (this);
-			Properties = new Properties (propertyFactory);
+			throw new NotImplementedException ();
+			//foreach (string propertyName in project.GetAllPropertyNames ()) {
+			//	yield return CreateProperty (propertyName);
+			//}
 		}
 	}
 }
