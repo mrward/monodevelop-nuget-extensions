@@ -49,6 +49,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 
 		public const string SolutionProjects = "solution/Projects";
 
+		public const string ProjectPropertyValueName = "project/PropertyValue";
+
 		public const string ProjectInstalledPackagesName = "project/InstalledPackages";
 
 		public const string ProjectPreviewUninstallPackage = "project/PreviewUninstallPackage";

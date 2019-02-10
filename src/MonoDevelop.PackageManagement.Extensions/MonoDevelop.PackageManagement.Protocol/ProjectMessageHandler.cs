@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.Projects;
+using MonoDevelop.Projects.MSBuild;
 using Newtonsoft.Json.Linq;
 using NuGet.PackageManagement;
 using NuGet.Packaging;
@@ -241,6 +242,37 @@ namespace MonoDevelop.PackageManagement.Protocol
 				handler.UpdateAllPackagesAsync (Token).WaitAndGetResult ();
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnUpdateAllPackages error", ex);
+				throw;
+			}
+		}
+
+		[JsonRpcMethod (Methods.ProjectPropertyValueName)]
+		public PropertyValueInfo OnGetProjectPropertyValue (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectPropertyParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				IMetadataProperty property = project.ProjectProperties.GetProperty (message.PropertyName);
+				if (property != null) {
+					return new PropertyValueInfo {
+						PropertyValue = property.Value
+					};
+				}
+
+				IMSBuildPropertyEvaluated evaluatedProperty = project
+					.MSBuildProject?
+					.EvaluatedProperties?
+					.GetProperty (message.PropertyName);
+				if (evaluatedProperty != null) {
+					return new PropertyValueInfo {
+						PropertyValue = evaluatedProperty.Value
+					};
+				}
+
+				return new PropertyValueInfo ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnGetProjectPropertyValue error", ex);
 				throw;
 			}
 		}

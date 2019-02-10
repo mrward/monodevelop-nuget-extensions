@@ -23,14 +23,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.IO;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
 	class ProjectProperty : Property
 	{
 		Project project;
+		string value = null;
 
 		public ProjectProperty (Project project, string name)
 			: base (name)
@@ -40,28 +44,34 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		protected override object GetValue ()
 		{
-			string value = null;
-			//string value = GetMSBuildProjectProperty (Name);
-			//if (value != null) {
-			//	return value;
-			//}
+			if (value != null) {
+				return value;
+			}
 
-			if (IsTargetFrameworkMoniker ()) {
-			//	return GetTargetFrameworkMoniker ();
-			} else if (IsFullPath ()) {
+			if (IsFullPath ()) {
 				return GetFullPath ();
 			//} else if (IsOutputFileName ()) {
 			//	return GetOutputFileName ();
 			//} else if (IsDefaultNamespace ()) {
 			//	return GetDefaultNamespace ();
+			} else {
+				value = GetMSBuildProjectProperty (Name);
+
 			}
-			return EmptyStringIfNull (value);
+			value = EmptyStringIfNull (value);
+			return value;
 		}
 
-		//string GetMSBuildProjectProperty (string name)
-		//{
-		//	return MSBuildProject.GetUnevalatedProperty (name);
-		//}
+		string GetMSBuildProjectProperty (string name)
+		{
+			var message = new ProjectPropertyParams {
+				ProjectFileName = project.FileName,
+				PropertyName = name
+			};
+			var result = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PropertyValueInfo> (Methods.ProjectPropertyValueName, message)
+				.WaitAndGetResult ();
+			return result.PropertyValue;
+		}
 
 		bool IsTargetFrameworkMoniker ()
 		{
@@ -82,12 +92,6 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		{
 			return StringComparer.OrdinalIgnoreCase.Equals (a, b);
 		}
-
-		//string GetTargetFrameworkMoniker ()
-		//{
-		//	var targetFramework = new ProjectTargetFramework (MSBuildProject);
-		//	return targetFramework.TargetFrameworkName.ToString ();
-		//}
 
 		bool IsDefaultNamespace ()
 		{
