@@ -47,6 +47,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 			CreateProperties ();
 			ConfigurationManager = new ConfigurationManager (this);
+
+			ProjectItems = new ProjectItems (this, this);
 		}
 
 		public string Name { get; private set; }
@@ -62,7 +64,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		public global::EnvDTE.Properties Properties { get; private set; }
 
-		public global::EnvDTE.ProjectItems ProjectItems { get; set; }
+		public global::EnvDTE.ProjectItems ProjectItems { get; private set; }
 
 		public global::EnvDTE.DTE DTE {
 			get {
