@@ -26,6 +26,7 @@
 
 using System;
 using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Scripting;
 using Newtonsoft.Json.Linq;
@@ -74,6 +75,15 @@ namespace MonoDevelop.PackageManagement.Protocol
 		public void OnClearHost ()
 		{
 			scriptingConsole.Clear ();
+		}
+
+		[JsonRpcMethod (Methods.ShowConsoleName)]
+		public void OnShowConsole ()
+		{
+			Runtime.RunInMainThread (() => {
+				var pad = IdeApp.Workbench.GetPad <PackageConsolePad> ();
+				pad.BringToFront ();
+			}).Ignore ();
 		}
 	}
 }

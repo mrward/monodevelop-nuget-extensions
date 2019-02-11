@@ -1,5 +1,5 @@
 ﻿//
-// Package.cs
+// ComponentModel.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -26,26 +26,28 @@
 
 using System;
 using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell.Interop;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using MonoDevelop.PackageManagement.VisualStudio;
+using NuGetConsole;
 
-namespace Microsoft.VisualStudio.Shell
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public abstract class Package
+	public class ComponentModel : SComponentModel, IComponentModel
 	{
-		public static object GetGlobalService (Type serviceType)
+		public T GetService<T> ()
+			where T : class
 		{
-			if (serviceType == typeof (global::EnvDTE.DTE)) {
-				return new DTE ();
-			//} else if (serviceType == typeof (SVsExtensionManager)) {
-			//	return new SVsExtensionManager ();
-			} else if (serviceType == typeof (IVsSolution) ||
-				serviceType == typeof (SVsSolution)) {
-				return new VsSolution ();
-			} else if (serviceType == typeof (SComponentModel)) {
-				return new ComponentModel ();
+			return GetService (typeof (T)) as T;
+		}
+
+		public object GetService (Type type)
+		{
+			if (type == typeof (IPowerConsoleWindow)) {
+				return new PowerConsoleToolWindow ();
 			}
+			//if (type.FullName == typeof (IConsoleInitializer).FullName) {
+			//	return new ConsoleInitializer (GetConsoleHost ());
+			//} else if (type.FullName == typeof (IVsPackageInstallerServices).FullName) {
+			//	return new VsPackageInstallerServices (GetSolution ());
+			//}
 			return null;
 		}
 	}

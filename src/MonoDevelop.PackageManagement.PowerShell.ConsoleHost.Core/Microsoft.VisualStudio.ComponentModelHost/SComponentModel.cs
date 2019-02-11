@@ -1,5 +1,5 @@
 ﻿//
-// Package.cs
+// SComponentModel.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,29 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell.Interop;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using MonoDevelop.PackageManagement.VisualStudio;
-
-namespace Microsoft.VisualStudio.Shell
+namespace Microsoft.VisualStudio.ComponentModelHost
 {
-	public abstract class Package
+	public interface SComponentModel
 	{
-		public static object GetGlobalService (Type serviceType)
-		{
-			if (serviceType == typeof (global::EnvDTE.DTE)) {
-				return new DTE ();
-			//} else if (serviceType == typeof (SVsExtensionManager)) {
-			//	return new SVsExtensionManager ();
-			} else if (serviceType == typeof (IVsSolution) ||
-				serviceType == typeof (SVsSolution)) {
-				return new VsSolution ();
-			} else if (serviceType == typeof (SComponentModel)) {
-				return new ComponentModel ();
-			}
-			return null;
-		}
 	}
 }

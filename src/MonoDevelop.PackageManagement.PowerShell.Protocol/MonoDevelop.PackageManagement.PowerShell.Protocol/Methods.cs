@@ -43,6 +43,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 
 		public const string LogName = "ps/Log";
 		public const string ClearHostName = "ps/ClearHost";
+		public const string ShowConsoleName = "ps/ShowConsole";
 
 		public const string ItemOperationsNavigateName = "itemOperations/Navigate";
 		public const string ItemOperationsOpenFileName = "itemOperations/OpenFile";

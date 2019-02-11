@@ -1,5 +1,5 @@
 ﻿//
-// Package.cs
+// PowerConsoleToolWindow.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,29 +24,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell.Interop;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using MonoDevelop.PackageManagement.VisualStudio;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
-namespace Microsoft.VisualStudio.Shell
+namespace NuGetConsole
 {
-	public abstract class Package
+	class PowerConsoleToolWindow : IPowerConsoleWindow
 	{
-		public static object GetGlobalService (Type serviceType)
+		public void Show ()
 		{
-			if (serviceType == typeof (global::EnvDTE.DTE)) {
-				return new DTE ();
-			//} else if (serviceType == typeof (SVsExtensionManager)) {
-			//	return new SVsExtensionManager ();
-			} else if (serviceType == typeof (IVsSolution) ||
-				serviceType == typeof (SVsSolution)) {
-				return new VsSolution ();
-			} else if (serviceType == typeof (SComponentModel)) {
-				return new ComponentModel ();
-			}
-			return null;
+			JsonRpcProvider.Rpc.NotifyAsync (Methods.ShowConsoleName).WaitAndGetResult ();
 		}
 	}
 }
