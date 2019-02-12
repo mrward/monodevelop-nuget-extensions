@@ -56,6 +56,9 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 			}
 		}
 
+		/// <summary>
+		/// Returns the number of projects that failed to build.
+		/// </summary>
 		public int LastBuildInfo { get; private set; }
 
 		public void BuildProject (
@@ -65,8 +68,20 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		{
 		}
 
-		public void Build (bool WaitForBuildToFinish = false)
+		public void Build (bool waitForBuildToFinish = false)
 		{
+			var message = new ProjectInformationParams {
+				SolutionFileName = solution.FileName
+			};
+
+			if (waitForBuildToFinish) {
+				var result = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<BuildResultInformation> (
+					Methods.BuildSolutionName,
+					message).WaitAndGetResult ();
+				LastBuildInfo = result.ProjectBuildFailureCount;
+			} else {
+				throw new NotImplementedException ();
+			}
 		}
 
 		IEnumerable<string> GetStartupProjectUniqueNames ()

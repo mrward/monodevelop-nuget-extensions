@@ -50,6 +50,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 
 		public const string SolutionProjects = "solution/Projects";
 		public const string StartupProjectsName = "solution/StartupProjects";
+		public const string BuildSolutionName = "solution/Build";
 
 		public const string ProjectPropertyValueName = "project/PropertyValue";
 		public const string ProjectConfigurationPropertyValueName = "project/ConfigurationPropertyValue";

@@ -27,7 +27,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.Projects;
 using Newtonsoft.Json.Linq;
@@ -83,7 +85,28 @@ namespace MonoDevelop.PackageManagement.Protocol
 				}
 				return list;
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnGetSolutionProjects error", ex);
+				LoggingService.LogError ("OnGetStartupProjects error", ex);
+				throw;
+			}
+		}
+
+		[JsonRpcMethod (Methods.BuildSolutionName)]
+		public BuildResultInformation OnBuildSolution (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectInformationParams> ();
+				var solution = PackageManagementServices.ProjectService.OpenSolution;
+
+				Task<BuildResult> task = Runtime.RunInMainThread (() => {
+					return IdeApp.ProjectOperations.Build (solution.Solution).Task;
+				});
+				BuildResult result = task.WaitAndGetResult ();
+
+				return new BuildResultInformation {
+					ProjectBuildFailureCount = result.FailedBuildCount
+				};
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnBuildSolution error", ex);
 				throw;
 			}
 		}
