@@ -25,13 +25,18 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using EnvDTE;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
 	public class SolutionBuild : MarshalByRefObject, global::EnvDTE.SolutionBuild
 	{
 		readonly Solution solution;
+		string[] startupProjects;
 
 		public SolutionBuild (Solution solution)
 		{
@@ -40,7 +45,16 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		public SolutionConfiguration ActiveConfiguration { get; private set; }
 
-		public object StartupProjects { get; private set; }
+		public object StartupProjects {
+			get {
+				if (startupProjects != null) {
+					return startupProjects;
+				}
+
+				startupProjects = GetStartupProjectUniqueNames ().ToArray ();
+				return startupProjects;
+			}
+		}
 
 		public int LastBuildInfo { get; private set; }
 
@@ -53,6 +67,17 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		public void Build (bool WaitForBuildToFinish = false)
 		{
+		}
+
+		IEnumerable<string> GetStartupProjectUniqueNames ()
+		{
+			var message = new ProjectInformationParams {
+				SolutionFileName = solution.FileName
+			};
+			var list = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<ProjectInformationList> (
+				Methods.StartupProjectsName,
+				message).WaitAndGetResult ();
+			return list.Projects.Select (project => project.UniqueName);
 		}
 	}
 }

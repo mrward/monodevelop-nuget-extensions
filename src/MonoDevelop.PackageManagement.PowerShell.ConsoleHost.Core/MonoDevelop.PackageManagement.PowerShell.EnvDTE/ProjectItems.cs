@@ -120,7 +120,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		protected virtual IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
 		{
-			throw new NotImplementedException ();
+			return Enumerable.Empty<global::EnvDTE.ProjectItem> ();
 			//return new ProjectItemsInsideProject (Project, fileService);
 		}
 

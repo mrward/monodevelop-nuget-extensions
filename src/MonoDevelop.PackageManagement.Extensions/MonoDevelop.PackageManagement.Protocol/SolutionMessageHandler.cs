@@ -27,9 +27,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ICSharpCode.PackageManagement.EnvDTE;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using MonoDevelop.Projects;
 using Newtonsoft.Json.Linq;
 using StreamJsonRpc;
 
@@ -62,6 +62,30 @@ namespace MonoDevelop.PackageManagement.Protocol
 		IEnumerable<IDotNetProject> GetOpenMSBuildProjects ()
 		{
 			return PackageManagementServices.ProjectService.GetOpenProjects ();
+		}
+
+		[JsonRpcMethod (Methods.StartupProjectsName)]
+		public ProjectInformationList OnGetStartupProjects (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectInformationParams> ();
+				var startupProject = PackageManagementServices
+					.ProjectService
+					.OpenSolution
+					.Solution
+					.StartupItem as DotNetProject;
+
+				var list = new ProjectInformationList ();
+				if (startupProject != null) {
+					list.Projects = new [] { startupProject.CreateProjectInformation () };
+				} else {
+					list.Projects = Array.Empty<ProjectInformation> ();
+				}
+				return list;
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnGetSolutionProjects error", ex);
+				throw;
+			}
 		}
 	}
 }
