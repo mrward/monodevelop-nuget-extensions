@@ -1,5 +1,5 @@
 ﻿//
-// Solution.cs
+// SolutionProperty.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,38 +25,36 @@
 // THE SOFTWARE.
 
 using System;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Solution : MarshalByRefObject, global::EnvDTE.Solution
+	class SolutionProperty : Property
 	{
-		public Solution ()
+		Solution solution;
+
+		public SolutionProperty (Solution solution, string name)
+			: base (name)
 		{
-			FileName = ConsoleHostServices.SolutionManager.SolutionFileName;
-			Projects = new Projects (this);
-			SolutionBuild = new SolutionBuild (this);
-			var factory = new SolutionPropertyFactory (this);
-			Properties = new Properties (factory);
+			this.solution = solution;
 		}
 
-		public string FullName { get; private set; }
-
-		public string FileName { get; private set; }
-
-		public bool IsOpen { get; private set; }
-
-		public global::EnvDTE.Projects Projects { get; private set; }
-
-		public global::EnvDTE.Globals Globals { get; private set; }
-
-		public global::EnvDTE.SolutionBuild SolutionBuild { get; private set; }
-
-		public global::EnvDTE.Properties Properties { get; private set; }
-
-		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)
+		protected override object GetValue ()
 		{
-			return null;
+			if (StringComparer.OrdinalIgnoreCase.Equals (Name, "StartupProject")) {
+				return GetStartupProjectName ();
+			} else if (StringComparer.OrdinalIgnoreCase.Equals (Name, "Path")) {
+				return solution.FileName;
+			}
+			return string.Empty;
+		}
+
+		string GetStartupProjectName ()
+		{
+			//Project project = solution.GetStartupProject ();
+			//if (project != null) {
+			//	return solution.GetStartupProject ().Name;
+			//}
+			return string.Empty;
 		}
 	}
 }

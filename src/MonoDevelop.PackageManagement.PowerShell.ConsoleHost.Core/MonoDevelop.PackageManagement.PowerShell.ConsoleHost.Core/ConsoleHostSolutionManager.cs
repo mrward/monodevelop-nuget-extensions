@@ -34,22 +34,21 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 {
 	public class ConsoleHostSolutionManager : IConsoleHostSolutionManager
 	{
-		string solutionFileName;
-
 		public bool IsSolutionOpen {
-			get { return solutionFileName != null; }
+			get { return SolutionFileName != null; }
 		}
 
+		public string SolutionFileName { get; private set; }
 		public string DefaultProjectFileName { get; set; }
 
 		public void OnSolutionLoaded (string fileName)
 		{
-			solutionFileName = fileName;
+			SolutionFileName = fileName;
 		}
 
 		public void OnSolutionUnloaded ()
 		{
-			solutionFileName = null;
+			SolutionFileName = null;
 		}
 
 		public async Task<global::EnvDTE.Project> GetDefaultProjectAsync ()

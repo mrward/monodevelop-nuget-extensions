@@ -1,5 +1,5 @@
 ﻿//
-// Solution.cs
+// SolutionPropertyFactory.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,39 +24,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	public class Solution : MarshalByRefObject, global::EnvDTE.Solution
+	class SolutionPropertyFactory : IPropertyFactory
 	{
-		public Solution ()
+		readonly Solution solution;
+
+		public SolutionPropertyFactory (Solution solution)
 		{
-			FileName = ConsoleHostServices.SolutionManager.SolutionFileName;
-			Projects = new Projects (this);
-			SolutionBuild = new SolutionBuild (this);
-			var factory = new SolutionPropertyFactory (this);
-			Properties = new Properties (factory);
+			this.solution = solution;
 		}
 
-		public string FullName { get; private set; }
-
-		public string FileName { get; private set; }
-
-		public bool IsOpen { get; private set; }
-
-		public global::EnvDTE.Projects Projects { get; private set; }
-
-		public global::EnvDTE.Globals Globals { get; private set; }
-
-		public global::EnvDTE.SolutionBuild SolutionBuild { get; private set; }
-
-		public global::EnvDTE.Properties Properties { get; private set; }
-
-		public global::EnvDTE.ProjectItem FindProjectItem (string fileName)
+		public Property CreateProperty (string name)
 		{
-			return null;
+			return new SolutionProperty (solution, name);
+		}
+
+		public IEnumerator<Property> GetEnumerator ()
+		{
+			List<Property> properties = GetProperties ().ToList ();
+			return properties.GetEnumerator ();
+		}
+
+		IEnumerable<Property> GetProperties ()
+		{
+			return new Property[0];
+			//foreach (string propertyName in project.GetAllPropertyNames ()) {
+			//	yield return CreateProperty (propertyName);
+			//}
 		}
 	}
 }
