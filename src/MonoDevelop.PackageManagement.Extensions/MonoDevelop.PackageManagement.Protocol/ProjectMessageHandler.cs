@@ -345,6 +345,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			if (StringComparer.OrdinalIgnoreCase.Equals ("OutputPath", name)) {
 				return true;
+			} else if (StringComparer.OrdinalIgnoreCase.Equals ("IntermediateOutputPath", name)) {
+				return true;
 			}
 			return false;
 		}

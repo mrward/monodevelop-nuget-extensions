@@ -24,7 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Threading.Tasks;
+using EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 
 namespace Microsoft.VisualStudio.Project
@@ -40,11 +42,36 @@ namespace Microsoft.VisualStudio.Project
 
 		public Task<string> GetEvaluatedPropertyValueAsync (string propertyName)
 		{
-			var property = project.Properties.Item (propertyName);
-			if (property?.Value != null) {
-				return Task.FromResult (property.Value.ToString ());
+			if (IsIntermediateOutputPath (propertyName)) {
+				return GetIntermediatePath ();
 			}
-			return Task.FromResult (string.Empty);
+
+			var property = project.Properties.Item (propertyName);
+			return Task.FromResult (GetPropertyValue (property));
+		}
+
+		bool IsIntermediateOutputPath (string propertyName)
+		{
+			return StringComparer.OrdinalIgnoreCase.Equals ("IntermediateOutputPath", propertyName);
+		}
+
+		/// <summary>
+		/// Special case 'IntermediateOutputPath'. For .NET Core projects this returns a path inside
+		/// obj which uses guids and does not exist. Instead we ask the current configuration for the
+		/// IntermediateOutputPath.
+		/// </summary>
+		Task<string> GetIntermediatePath ()
+		{
+			var property = project.ConfigurationManager.ActiveConfiguration.Properties.Item ("IntermediateOutputPath");
+			return Task.FromResult (GetPropertyValue (property));
+		}
+
+		static string GetPropertyValue (EnvDTE.Property property)
+		{
+			if (property?.Value != null) {
+				return property.Value.ToString ();
+			}
+			return string.Empty;
 		}
 	}
 }
