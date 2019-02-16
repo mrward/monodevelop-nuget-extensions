@@ -58,18 +58,18 @@ FormatsToProcess = @('NuGet.Format.ps1xml')
 NestedModules = @('MonoDevelop.PackageManagement.PowerShell.Cmdlets.dll')
 
 # Functions to export from this module
-#FunctionsToExport = @('Register-TabExpansion')
+FunctionsToExport = @('Register-TabExpansion')
 
 # Cmdlets to export from this module
-#CmdletsToExport = @(
-#    'Install-Package', 
-#    'Uninstall-Package',
-#    'Update-Package',
-#    'Get-Package', 
-#    'Get-Project',
-#    'Open-PackagePage', 
-#    'Sync-Package', 
-#    'Find-Package'
+CmdletsToExport = @(
+    'Install-Package',
+    'Uninstall-Package',
+    'Update-Package',
+    'Get-Package',
+    'Get-Project',
+    'Open-PackagePage',
+    'Sync-Package',
+    'Find-Package')
 #    'Add-BindingRedirect')
 
 # Variables to export from this module
