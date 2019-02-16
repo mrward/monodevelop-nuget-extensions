@@ -257,6 +257,13 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IScriptingConsole.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ScriptingStyle.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\PowerShellHostMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsoleCompletionWidget.cs" />
+    <Compile Include="NuGetConsole\SimpleExpansion.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Gui\CompletionListWindowExtensions.cs" />
+    <Compile Include="NuGetConsole.Host\CommandExpansion.cs" />
+    <Compile Include="NuGetConsole\ICommandExpansion.cs" />
+    <Compile Include="NuGetConsole\ITabExpansion.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\TabExpansion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

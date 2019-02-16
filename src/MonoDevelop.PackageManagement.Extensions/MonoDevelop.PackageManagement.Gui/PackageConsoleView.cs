@@ -27,15 +27,21 @@
 //
 
 using System;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Gdk;
 using Gtk;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Commands;
 using MonoDevelop.Core;
+using MonoDevelop.Ide.CodeCompletion;
 using MonoDevelop.Ide.Commands;
+using MonoDevelop.Ide.Editor.Extension;
 using MonoDevelop.Ide.Fonts;
 using MonoDevelop.PackageManagement.Scripting;
-using System.Reflection;
+using NuGetConsole;
+using NuGetConsole.Host;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -60,6 +66,11 @@ namespace MonoDevelop.PackageManagement
 		TextTag errorTag;
 		TextTag warningTag;
 
+		const int TabExpansionTimeout = 3; // seconds.
+		readonly PackageConsoleCompletionWidget completionWidget;
+		readonly CompletionListWindow completionWindow;
+		CommandExpansion commandExpansion;
+
 		public PackageConsoleView ()
 		{
 			AddTags ();
@@ -69,9 +80,14 @@ namespace MonoDevelop.PackageManagement
 			
 			SetFont (FontService.MonospaceFont);
 
+			completionWidget = new PackageConsoleCompletionWidget (this);
+			completionWindow = new CompletionListWindow ();
+			commandExpansion = new CommandExpansion (new TabExpansion ());
+
 			TextView.FocusInEvent += (o, args) => {
 				TextViewFocused?.Invoke (this, args);
 			};
+			TextView.FocusOutEvent += TextViewFocusOutEvent;
 		}
 
 		void AddTags ()
@@ -98,11 +114,6 @@ namespace MonoDevelop.PackageManagement
 		void WriteOutputLine (string message, ScriptingStyle style)
 		{
 			WriteOutput (message + Environment.NewLine, GetLogLevel (style));
-		}
-		
-		void WriteOutputLine (string format, params object[] args)
-		{
-			WriteOutput (String.Format (format, args) + Environment.NewLine);
 		}
 
 		LogLevel GetLogLevel (ScriptingStyle style)
@@ -278,6 +289,132 @@ namespace MonoDevelop.PackageManagement
 			// This is based on what the DefaultCopyCommandHandler does.
 			var clipboard = Gtk.Clipboard.Get (Gdk.Atom.Intern ("CLIPBOARD", false));
 			TextView.Buffer.CopyClipboard (clipboard);
+		}
+
+		/// <summary>
+		/// Tab key pressed
+		///	  If caret in read - only region ignore
+		///	  If completion list window active select item and close window
+		///	  Else trigger completion async
+		///
+		/// Trigger completion
+		///	  If completion list window shown end completion session
+		///
+		///	  Get caret position and current line text
+		///	  GetExpansionsAsync passing caret position and line text with cancellation token that times out
+		///	  If one item returned use it
+		///	  Else start completion session and show window
+		/// 
+		/// https://github.com/NuGet/NuGet.Client/blob/3803820961f4d61c06d07b179dab1d0439ec0d91/src/NuGet.Clients/NuGet.Console/WpfConsole/WpfConsoleKeyProcessor.cs
+		/// </summary>
+		protected override bool ProcessKeyPressEvent (KeyPressEventArgs args)
+		{
+			var keyChar = (char)args.Event.Key;
+			ModifierType modifier = args.Event.State;
+			Gdk.Key key = args.Event.Key;
+
+			if ((key == Gdk.Key.Down || key == Gdk.Key.Up)) {
+				keyChar = '\0';
+			}
+
+			if (completionWindow.Visible) {
+				if (key == Gdk.Key.Return) {
+					// AutoSelect is off and the completion window will only
+					// complete if tab is pressed. So cheat by converting return
+					// into Tab. Otherwise the command will be run.
+					key = Gdk.Key.Tab;
+					keyChar = '\t';
+				}
+				var descriptor = KeyDescriptor.FromGtk (key, keyChar, modifier);
+				bool keyHandled = completionWindow.PreProcessKeyEvent (descriptor);
+				if (keyHandled) {
+					return true;
+				} else {
+					HideWindow ();
+				}
+			}
+
+			if (key != Gdk.Key.Tab) {
+				return base.ProcessKeyPressEvent (args);
+			}
+
+			int caretIndex = completionWidget.Position;
+			TriggerCompletionAsync (InputLine, caretIndex).Ignore ();
+
+			return true;
+		}
+
+		async Task TriggerCompletionAsync (string line, int caretIndex)
+		{
+			var cancellationTokenSource = new CancellationTokenSource (TabExpansionTimeout * 1000);
+
+			SimpleExpansion simpleExpansion = await TryGetExpansionsAsync (
+				line,
+				caretIndex,
+				cancellationTokenSource.Token);
+
+			if (simpleExpansion?.Expansions == null) {
+				return;
+			}
+
+			if (simpleExpansion.Expansions.Count == 1) {
+				ReplaceTabExpansion (simpleExpansion);
+				return;
+			}
+
+			var list = new CompletionDataList {
+				AutoSelect = false
+			};
+			foreach (string expansion in simpleExpansion.Expansions) {
+				list.Add (new CompletionData (expansion));
+			}
+
+			var context = completionWidget.CreateCodeCompletionContext (simpleExpansion.Start);
+
+			completionWindow.ShowListWindow ('\0', list, completionWidget, context);
+		}
+
+		async Task<SimpleExpansion> TryGetExpansionsAsync (
+			string line, int caretIndex, CancellationToken token)
+		{
+			try {
+				return await commandExpansion.GetExpansionsAsync (line, caretIndex, token);
+			} catch (OperationCanceledException) {
+				return null;
+			} catch (Exception ex) {
+				LoggingService.LogError ("GetExpansionsAsync error.", ex);
+				return null;
+			}
+		}
+
+		void ReplaceTabExpansion (SimpleExpansion expansion)
+		{
+			TextIter start = Buffer.GetIterAtOffset (InputLineBegin.Offset + expansion.Start);
+			TextIter end = Buffer.GetIterAtOffset (start.Offset + expansion.Length);
+
+			Buffer.Delete (ref start, ref end);
+			Buffer.Insert (ref start, expansion.Expansions [0]);
+		}
+
+		void TextViewFocusOutEvent (object sender, FocusOutEventArgs args)
+		{
+			HideWindow ();
+		}
+
+		void HideWindow ()
+		{
+			completionWindow.HideWindow ();
+		}
+
+		internal TextView GetTextView ()
+		{
+			return TextView;
+		}
+
+		protected override void UpdateInputLineBegin ()
+		{
+			completionWidget?.OnUpdateInputLineBegin ();
+			base.UpdateInputLineBegin ();
 		}
 	}
 }
