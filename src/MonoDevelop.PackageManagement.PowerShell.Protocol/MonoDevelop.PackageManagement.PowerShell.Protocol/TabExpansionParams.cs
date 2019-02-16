@@ -1,5 +1,5 @@
 ﻿//
-// TabExpansion.cs
+// TabExpansionParams.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,39 +24,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
-using NuGetConsole;
-using StreamJsonRpc;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	class TabExpansion : ITabExpansion
+	[DataContract]
+	public class TabExpansionParams
 	{
-		readonly JsonRpc rpc;
+		[DataMember (Name = "line")]
+		public string Line { get; set; }
 
-		public TabExpansion (JsonRpc rpc)
-		{
-			this.rpc = rpc;
-		}
-
-		public async Task<string[]> GetExpansionsAsync (
-			string line,
-			string lastWord,
-			CancellationToken token)
-		{
-			var message = new TabExpansionParams {
-				Line = line,
-				LastWord = lastWord
-			};
-			TabExpansionResult result = await rpc.InvokeWithParameterObjectAsync<TabExpansionResult> (
-				Methods.TabExpansionName,
-				message,
-				token);
-			return result.Expansions;
-		}
+		[DataMember (Name = "lastWord")]
+		public string LastWord { get; set; }
 	}
 }

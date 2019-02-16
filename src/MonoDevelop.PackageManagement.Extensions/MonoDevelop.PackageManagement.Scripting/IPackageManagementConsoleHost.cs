@@ -29,14 +29,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
-using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
-
+using NuGetConsole;
 using FileConflictAction = NuGet.ProjectManagement.FileConflictAction;
 
 namespace MonoDevelop.PackageManagement.Scripting
@@ -55,6 +53,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		CancellationToken Token { get; }
 		ConsoleHostNuGetPackageManager CreatePackageManager ();
 		IScriptExecutor ScriptExecutor { get; }
+		ICommandExpansion CommandExpansion { get; }
 
 		event EventHandler RunningCommand;
 		event EventHandler CommandCompleted;

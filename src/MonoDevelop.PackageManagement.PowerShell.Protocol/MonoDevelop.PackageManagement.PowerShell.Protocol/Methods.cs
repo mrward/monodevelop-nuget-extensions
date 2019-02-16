@@ -41,6 +41,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string RunScript = "pshost/RunScript";
 		public const string RunInitScript = "pshost/RunInitScript";
 
+		public const string TabExpansionName = "pshost/TabExpansion";
+
 		public const string LogName = "ps/Log";
 		public const string ClearHostName = "ps/ClearHost";
 		public const string ShowConsoleName = "ps/ShowConsole";

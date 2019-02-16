@@ -37,7 +37,9 @@ using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
+using NuGetConsole;
 using NuGetConsole.Host.PowerShell;
+using NuGetConsole.Host;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
@@ -53,6 +55,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 		Project defaultProject;
 		Lazy<IScriptExecutor> scriptExecutor;
+		LazyCommandExpansion commandExpansion;
 		string prompt = "PM> ";
 
 		public PackageManagementConsoleHost (
@@ -68,6 +71,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			this.packageEvents = packageEvents;
 
 			scriptExecutor = new Lazy<IScriptExecutor> (() => CreateScriptExecutor ());
+			commandExpansion = new LazyCommandExpansion (CreateCommandExpansion);
 		}
 
 		public PackageManagementConsoleHost (
@@ -171,7 +175,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			CreatePowerShellHost ();
 			AddModulesToImport ();
 			//			powerShellHost.SetRemoteSignedExecutionPolicy();
-			//			DefineTabExpansionFunction();
 			UpdateWorkingDirectory ();
 			ConfigurePackageSources ();
 			OnMaxVisibleColumnsChanged ();
@@ -203,15 +206,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			string module = addinPath.CmdletsAssemblyFileName;
 			powerShellHost.ModulesToImport.Add (module);
 		}
-
-		//		void DefineTabExpansionFunction()
-		//		{
-		//			string command =
-		//				"function TabExpansion($line, $lastWord) {" +
-		//				"    return New-Object PSObject -Property @{ NoResult = $true }" +
-		//				"}";
-		//			powerShellHost.ExecuteCommand(command);
-		//		}
 
 		void WriteInfoBeforeFirstPrompt ()
 		{
@@ -475,6 +469,16 @@ namespace MonoDevelop.PackageManagement.Scripting
 		IScriptExecutor CreateScriptExecutor ()
 		{
 			return powerShellHost.CreateScriptExecutor ();
+		}
+
+		public ICommandExpansion CommandExpansion {
+			get { return commandExpansion; }
+		}
+
+		ICommandExpansion CreateCommandExpansion ()
+		{
+			ITabExpansion tabExpansion = powerShellHost.CreateTabExpansion ();
+			return new CommandExpansion (tabExpansion);
 		}
 	}
 }

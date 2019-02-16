@@ -237,5 +237,10 @@ namespace MonoDevelop.PackageManagement.Scripting
 			EnsureHostInitialized ();
 			return new ScriptExecutor (rpc);
 		}
+
+		public ITabExpansion CreateTabExpansion ()
+		{
+			return new TabExpansion (rpc);
+		}
 	}
 }

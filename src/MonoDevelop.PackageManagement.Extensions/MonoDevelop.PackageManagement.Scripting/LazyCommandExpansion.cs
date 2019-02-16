@@ -1,5 +1,5 @@
 ﻿//
-// TabExpansion.cs
+// LazyCommandExpansion.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -25,38 +25,33 @@
 // THE SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using NuGetConsole;
-using StreamJsonRpc;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	class TabExpansion : ITabExpansion
+	/// <summary>
+	/// Creates the ICommandExpansion lazily just before it is needed. It requires the
+	/// JsonRpc instance to be created which is not available until the PowerShell
+	/// host is initialized.
+	/// </summary>
+	class LazyCommandExpansion : ICommandExpansion
 	{
-		readonly JsonRpc rpc;
+		readonly IPackageManagementConsoleHost consoleHost;
+		Lazy<ICommandExpansion> commandExpansion;
 
-		public TabExpansion (JsonRpc rpc)
+		public LazyCommandExpansion (Func<ICommandExpansion> createCommandExpansion)
 		{
-			this.rpc = rpc;
+			commandExpansion = new Lazy<ICommandExpansion> (createCommandExpansion);
 		}
 
-		public async Task<string[]> GetExpansionsAsync (
+		public Task<SimpleExpansion> GetExpansionsAsync (
 			string line,
-			string lastWord,
+			int caretIndex,
 			CancellationToken token)
 		{
-			var message = new TabExpansionParams {
-				Line = line,
-				LastWord = lastWord
-			};
-			TabExpansionResult result = await rpc.InvokeWithParameterObjectAsync<TabExpansionResult> (
-				Methods.TabExpansionName,
-				message,
-				token);
-			return result.Expansions;
+			return commandExpansion.Value.GetExpansionsAsync (line, caretIndex, token);
 		}
 	}
 }

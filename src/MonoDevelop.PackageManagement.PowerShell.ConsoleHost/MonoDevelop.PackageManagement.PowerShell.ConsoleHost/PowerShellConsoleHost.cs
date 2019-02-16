@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -378,6 +379,59 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 
 				Log (LogLevel.Warning, ex.Message);
 			}
+		}
+
+		[JsonRpcMethod (Methods.TabExpansionName)]
+		public TabExpansionResult RunTabExpansion (JToken arg)
+		{
+			Logger.Log ("PowerShellConsoleHost.RunTabExpansion");
+			try {
+				var message = arg.ToObject<TabExpansionParams> ();
+
+				string[] expansions = RunTabExpansionInternal (message);
+
+				return new TabExpansionResult {
+					Expansions = expansions
+				};
+			} catch (Exception ex) {
+				Logger.Log (string.Format ("Error getting tab expansions {0}", ex));
+				return new TabExpansionResult {
+					Expansions = Array.Empty<string> ()
+				};
+			}
+		}
+
+		string[] RunTabExpansionInternal (TabExpansionParams message)
+		{
+			string script = @"$__pc_args=@();$input|%{$__pc_args+=$_};if(Test-Path Function:\TabExpansion2){(TabExpansion2 $__pc_args[0] $__pc_args[0].length).CompletionMatches|%{$_.CompletionText}}else{TabExpansion $__pc_args[0] $__pc_args[1]};Remove-Variable __pc_args -Scope 0;";
+			var input = new object[] { message.Line, message.LastWord };
+
+			Collection<PSObject> results = InvokePowerShellNoOutput (script, input);
+
+			if (results != null) {
+				return results.Select (item => item?.ToString ())
+					.ToArray ();
+			}
+
+			return Array.Empty<string> ();
+		}
+
+		Collection<PSObject> InvokePowerShellNoOutput (string line, params object[] input)
+		{
+			try {
+				RefreshHostCancellationToken ();
+				using (Pipeline pipeline = runspace.CreatePipeline ()) {
+					pipeline.Commands.AddScript (line, false);
+					currentPipeline = pipeline;
+					return pipeline.Invoke (input);
+				}
+			} catch (Exception ex) {
+				string errorMessage = NuGet.Common.ExceptionUtilities.DisplayMessage (ex);
+				Logger.Log (errorMessage);
+			} finally {
+				currentPipeline = null;
+			}
+			return null;
 		}
 	}
 }

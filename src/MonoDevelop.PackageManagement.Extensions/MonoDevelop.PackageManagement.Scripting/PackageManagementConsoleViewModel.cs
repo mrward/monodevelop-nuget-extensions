@@ -46,7 +46,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		ObservableCollection<SourceRepositoryViewModel> packageSources = new ObservableCollection<SourceRepositoryViewModel> ();
 
-		IScriptingConsole packageManagementConsole;
+		PackageConsoleView packageManagementConsole;
 
 		public PackageManagementConsoleViewModel (
 			IPackageManagementProjectService projectService,
@@ -56,7 +56,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			this.consoleHost = consoleHost;
 		}
 
-		public void RegisterConsole (IScriptingConsole console)
+		public void RegisterConsole (PackageConsoleView console)
 		{
 			packageManagementConsole = console;
 
@@ -90,6 +90,8 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void InitConsoleHost ()
 		{
+			packageManagementConsole.CommandExpansion = consoleHost.CommandExpansion;
+
 			consoleHost.ScriptingConsole = packageManagementConsole;
 			consoleHost.Run ();
 			consoleHost.RunningCommand += OnRunningCommand;

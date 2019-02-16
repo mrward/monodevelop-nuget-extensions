@@ -45,7 +45,7 @@ using NuGetConsole.Host;
 
 namespace MonoDevelop.PackageManagement
 {
-	public enum LogLevel
+	enum LogLevel
 	{
 		Default,
 		Error,
@@ -56,9 +56,10 @@ namespace MonoDevelop.PackageManagement
 		Debug
 	}
 
-	public class PackageConsoleView : ConsoleView, IScriptingConsole
+	class PackageConsoleView : ConsoleView, IScriptingConsole
 	{
 		const int DefaultMaxVisibleColumns = 160;
+
 		int maxVisibleColumns = 0;
 		int originalWidth = -1;
 
@@ -69,7 +70,6 @@ namespace MonoDevelop.PackageManagement
 		const int TabExpansionTimeout = 3; // seconds.
 		readonly PackageConsoleCompletionWidget completionWidget;
 		readonly CompletionListWindow completionWindow;
-		CommandExpansion commandExpansion;
 
 		public PackageConsoleView ()
 		{
@@ -82,7 +82,6 @@ namespace MonoDevelop.PackageManagement
 
 			completionWidget = new PackageConsoleCompletionWidget (this);
 			completionWindow = new CompletionListWindow ();
-			commandExpansion = new CommandExpansion (new TabExpansion ());
 
 			TextView.FocusInEvent += (o, args) => {
 				TextViewFocused?.Invoke (this, args);
@@ -375,10 +374,12 @@ namespace MonoDevelop.PackageManagement
 		}
 
 		async Task<SimpleExpansion> TryGetExpansionsAsync (
-			string line, int caretIndex, CancellationToken token)
+			string line,
+			int caretIndex,
+			CancellationToken token)
 		{
 			try {
-				return await commandExpansion.GetExpansionsAsync (line, caretIndex, token);
+				return await CommandExpansion.GetExpansionsAsync (line, caretIndex, token);
 			} catch (OperationCanceledException) {
 				return null;
 			} catch (Exception ex) {
@@ -416,5 +417,7 @@ namespace MonoDevelop.PackageManagement
 			completionWidget?.OnUpdateInputLineBegin ();
 			base.UpdateInputLineBegin ();
 		}
+
+		public ICommandExpansion CommandExpansion { get; set; }
 	}
 }

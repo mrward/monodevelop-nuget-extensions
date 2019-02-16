@@ -264,6 +264,7 @@
     <Compile Include="NuGetConsole\ICommandExpansion.cs" />
     <Compile Include="NuGetConsole\ITabExpansion.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\TabExpansion.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\LazyCommandExpansion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

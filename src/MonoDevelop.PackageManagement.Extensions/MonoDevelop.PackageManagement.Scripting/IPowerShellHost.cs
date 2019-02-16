@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using MonoDevelop.Projects;
 using NuGet.PackageManagement.VisualStudio;
+using NuGetConsole;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
@@ -50,5 +51,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 		void StopCommand ();
 
 		IScriptExecutor CreateScriptExecutor ();
+		ITabExpansion CreateTabExpansion ();
 	}
 }
