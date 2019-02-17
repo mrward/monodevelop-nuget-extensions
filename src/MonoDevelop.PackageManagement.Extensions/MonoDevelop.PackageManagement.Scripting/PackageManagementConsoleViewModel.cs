@@ -216,6 +216,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void StopCommand ()
 		{
+			packageManagementConsole.StopWaitingForPromptInput ();
 			consoleHost.StopCommand ();
 		}
 

@@ -41,7 +41,6 @@ using MonoDevelop.Ide.Editor.Extension;
 using MonoDevelop.Ide.Fonts;
 using MonoDevelop.PackageManagement.Scripting;
 using NuGetConsole;
-using NuGetConsole.Host;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -464,6 +463,15 @@ namespace MonoDevelop.PackageManagement
 				userInputTask = null;
 			} else {
 				base.ProcessInput (line);
+			}
+		}
+
+		public void StopWaitingForPromptInput ()
+		{
+			if (userInputTask != null) {
+				userInputTask.TrySetCanceled ();
+				userInputTask = null;
+				WriteOutput ("\n");
 			}
 		}
 	}

@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Threading;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
@@ -91,7 +92,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			var message = arg.ToObject<PromptForInputParams> ();
 
-			string input = scriptingConsole.PromptForInput (message.Message).WaitAndGetResult ();
+			CancellationToken token = PackageManagementExtendedServices.ConsoleHost.Token;
+			string input = scriptingConsole.PromptForInput (message.Message).WaitAndGetResult (token);
 			return new PromptForInputResponse {
 				Line = input
 			};
