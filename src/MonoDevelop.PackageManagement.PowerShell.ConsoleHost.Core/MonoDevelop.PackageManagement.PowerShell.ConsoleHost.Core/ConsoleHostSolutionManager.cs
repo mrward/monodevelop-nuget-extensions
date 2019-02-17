@@ -86,7 +86,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
 
 		static bool IsMatch (global::EnvDTE.Project project, string projectName)
 		{
-			return StringComparer.OrdinalIgnoreCase.Equals (project.Name, projectName);
+			return StringComparer.OrdinalIgnoreCase.Equals (project.Name, projectName) ||
+				StringComparer.OrdinalIgnoreCase.Equals (project.UniqueName, projectName);
 		}
 	}
 }
