@@ -70,6 +70,7 @@ namespace MonoDevelop.PackageManagement
 		const int TabExpansionTimeout = 3; // seconds.
 		readonly PackageConsoleCompletionWidget completionWidget;
 		readonly CompletionListWindow completionWindow;
+		CancellationTokenSource cancellationTokenSource;
 
 		public PackageConsoleView ()
 		{
@@ -333,6 +334,10 @@ namespace MonoDevelop.PackageManagement
 				}
 			}
 
+			if (cancellationTokenSource != null) {
+				CancelCurrentCompletion ();
+			}
+
 			if (key != Gdk.Key.Tab) {
 				return base.ProcessKeyPressEvent (args);
 			}
@@ -343,14 +348,25 @@ namespace MonoDevelop.PackageManagement
 			return true;
 		}
 
+		void CancelCurrentCompletion ()
+		{
+			cancellationTokenSource.Cancel ();
+			cancellationTokenSource.Dispose ();
+			cancellationTokenSource = null;
+		}
+
 		async Task TriggerCompletionAsync (string line, int caretIndex)
 		{
-			var cancellationTokenSource = new CancellationTokenSource (TabExpansionTimeout * 1000);
+			cancellationTokenSource = new CancellationTokenSource (TabExpansionTimeout * 1000);
 
 			SimpleExpansion simpleExpansion = await TryGetExpansionsAsync (
 				line,
 				caretIndex,
 				cancellationTokenSource.Token);
+
+			if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested) {
+				return;
+			}
 
 			if (simpleExpansion?.Expansions == null) {
 				return;
