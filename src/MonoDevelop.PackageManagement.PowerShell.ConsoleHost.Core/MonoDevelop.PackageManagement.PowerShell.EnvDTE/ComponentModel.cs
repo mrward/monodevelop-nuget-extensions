@@ -26,6 +26,8 @@
 
 using System;
 using Microsoft.VisualStudio.ComponentModelHost;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
+using NuGet.Protocol.Core.Types;
 using NuGetConsole;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
@@ -42,6 +44,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		{
 			if (type == typeof (IPowerConsoleWindow)) {
 				return new PowerConsoleToolWindow ();
+			} else if (type == typeof (ISourceRepositoryProvider)) {
+				return ConsoleHostServices.SourceRepositoryProvider;
 			}
 			//if (type.FullName == typeof (IConsoleInitializer).FullName) {
 			//	return new ConsoleInitializer (GetConsoleHost ());
