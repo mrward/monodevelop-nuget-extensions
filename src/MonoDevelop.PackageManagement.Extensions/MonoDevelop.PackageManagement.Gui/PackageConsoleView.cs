@@ -435,5 +435,36 @@ namespace MonoDevelop.PackageManagement
 		}
 
 		public ICommandExpansion CommandExpansion { get; set; }
+
+		TaskCompletionSource<string> userInputTask;
+
+		public Task<string> PromptForInput (string message)
+		{
+			return Runtime.RunInMainThread (() => {
+				string originalPromptString = PromptString;
+				try {
+					PromptString = message;
+					Prompt (false);
+
+					userInputTask = new TaskCompletionSource<string> ();
+					return userInputTask.Task;
+				} finally {
+					PromptString = originalPromptString;
+				}
+			});
+		}
+
+		protected override void ProcessInput (string line)
+		{
+			if (userInputTask != null) {
+				// Waiting for user input. Bypass the usual processing.
+				WriteOutput ("\n");
+
+				userInputTask.TrySetResult (line);
+				userInputTask = null;
+			} else {
+				base.ProcessInput (line);
+			}
+		}
 	}
 }

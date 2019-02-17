@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Threading.Tasks;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
@@ -43,5 +44,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		string ReadLine (int autoIndentSize);
 		string ReadFirstUnreadLine ();
 		int GetMaximumVisibleColumns ();
+
+		Task<string> PromptForInput (string message);
 	}
 }

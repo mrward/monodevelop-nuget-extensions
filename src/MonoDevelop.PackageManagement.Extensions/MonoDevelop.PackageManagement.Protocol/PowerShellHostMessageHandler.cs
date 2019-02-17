@@ -85,5 +85,16 @@ namespace MonoDevelop.PackageManagement.Protocol
 				pad.BringToFront ();
 			}).Ignore ();
 		}
+
+		[JsonRpcMethod (Methods.PromptForInputName)]
+		public PromptForInputResponse OnPromptForInput (JToken arg)
+		{
+			var message = arg.ToObject<PromptForInputParams> ();
+
+			string input = scriptingConsole.PromptForInput (message.Message).WaitAndGetResult ();
+			return new PromptForInputResponse {
+				Line = input
+			};
+		}
 	}
 }

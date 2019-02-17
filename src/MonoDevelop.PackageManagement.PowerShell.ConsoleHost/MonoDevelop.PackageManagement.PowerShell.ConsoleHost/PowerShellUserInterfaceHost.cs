@@ -32,14 +32,15 @@ using System.Management.Automation.Host;
 using System.Security;
 using System.Text;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using NuGetConsole.Host.PowerShell.Implementation;
 
 namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 {
 	public class PowerShellUserInterfaceHost : PSHostUserInterface
 	{
 		StringBuilder messageBuilder = new StringBuilder ();
-
 		PowerShellRawUserInterface rawUI = new PowerShellRawUserInterface ();
+		PowerShellUserInterfaceHostPrompt hostPrompt = new PowerShellUserInterfaceHostPrompt ();
 
 		public override PSHostRawUserInterface RawUI => rawUI;
 
@@ -58,8 +59,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		{
 			Logger.Log ("PromptForChoice. caption: '{0}' message: '{1}'", caption, message);
 
-			// No choice.
-			return -1;
+			return hostPrompt.PromptForChoice (caption, message, choices, defaultChoice);
 		}
 
 		public override PSCredential PromptForCredential (string caption, string message, string userName, string targetName)

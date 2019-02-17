@@ -1,5 +1,5 @@
 ﻿//
-// LazyCommandExpansion.cs
+// PromptForInputResponse.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,33 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using NuGetConsole;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	/// <summary>
-	/// Creates the ICommandExpansion lazily just before it is needed. It requires the
-	/// JsonRpc instance to be created which is not available until the PowerShell
-	/// host is initialized.
-	/// </summary>
-	class LazyCommandExpansion : ICommandExpansion
+	[DataContract]
+	public class PromptForInputResponse
 	{
-		Lazy<ICommandExpansion> commandExpansion;
-
-		public LazyCommandExpansion (Func<ICommandExpansion> createCommandExpansion)
-		{
-			commandExpansion = new Lazy<ICommandExpansion> (createCommandExpansion);
-		}
-
-		public Task<SimpleExpansion> GetExpansionsAsync (
-			string line,
-			int caretIndex,
-			CancellationToken token)
-		{
-			return commandExpansion.Value.GetExpansionsAsync (line, caretIndex, token);
-		}
+		[DataMember (Name = "line")]
+		public string Line { get; set; }
 	}
 }
