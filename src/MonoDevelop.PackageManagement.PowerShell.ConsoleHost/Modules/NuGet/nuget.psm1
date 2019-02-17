@@ -36,6 +36,246 @@ function Register-TabExpansion {
     $TabExpansionCommands[$Name] = $normalizedDefinition
 }
 
+Register-TabExpansion 'Get-Package' @{
+    'Source' = {
+        GetPackageSources
+    }
+    'ProjectName' = {
+        GetProjectNames
+    }
+}
+
+Register-TabExpansion 'Install-Package' @{
+    'Id' = {
+        param($context)
+        GetRemotePackageIds $context
+    }
+    'ProjectName' = {
+        GetProjectNames
+    }
+    'Version' = {
+        param($context)
+        GetRemotePackageVersions $context
+    }
+    'Source' = {
+        GetPackageSources
+    }
+    'DependencyVersion' = {
+        GetEnumNames 'NuGet.Resolver.DependencyBehavior'
+    }
+    'FileConflictAction' = {
+        GetEnumNames 'NuGet.ProjectManagement.FileConflictAction'
+    }
+}
+
+Register-TabExpansion 'Uninstall-Package' @{
+    'Id' = {
+        param($context)
+        GetInstalledPackageIds $context
+    }
+    'ProjectName' = {
+        GetProjectNames
+    }
+    'Version' = {
+        GetInstalledPackageVersions $context
+    }
+}
+
+Register-TabExpansion 'Update-Package' @{
+    'Id' = {
+        param($context)
+        GetInstalledPackageIds $context
+    }
+    'ProjectName' = {
+        GetProjectNames
+    }
+    'Version' = {
+        param($context)
+
+        # Only show available versions if an id was specified
+        if ($context.id) {
+            # Find the installed package (this might be nothing since we could have a partial id)
+            $versions = @()
+            $packages = @(Get-Package $context.id | ? { $_.Id -eq $context.id })
+
+            if($packages.Count) {
+                $package = @($packages | Sort-Object Version)[0]
+
+                $versions = GetRemotePackageUpdateVersions $context
+            }
+
+            $versions
+        }
+    }
+    'Source' = {
+        GetPackageSources
+    }
+    'FileConflictAction' = {
+        GetEnumNames 'NuGet.ProjectManagement.FileConflictAction'
+    }
+}
+
+Register-TabExpansion 'Open-PackagePage' @{
+    'Id' = {
+        param($context)
+        GetRemotePackageIds $context
+    }
+    'Version' = {
+        param($context)
+        GetRemotePackageVersions $context
+    }
+    'Source' = {
+        GetPackageSources
+    }
+}
+
+#Register-TabExpansion 'Add-BindingRedirect' @{ 'ProjectName' = { GetProjectNames } }
+Register-TabExpansion 'Get-Project' @{ 'Name' = { GetProjectNames } }
+
+function HasProperty($context, $name) {
+    return $context.psobject.properties | ? { $_.Name -eq $name }
+}
+
+function IsPrereleaseSet($context) {
+    # Need to figure out a better way to do this.
+    return (HasProperty $context 'IncludePreRelease') -or (HasProperty $context 'PreRelease') -or (HasProperty $context 'Pre')
+}
+
+function GetPackages($context) {
+    $parameters = @{}
+
+    if ($context.Id) { $parameters.Id = $context.Id }
+    if ($context.Source) { $parameters.source = $context.Source }
+    if (IsPrereleaseSet $context) {
+        $parameters.IncludePreRelease = $true
+    }
+
+    # StartWith switch is implicity set for TabExpansion command
+    return TabExpansion-Package @parameters -ExcludeVersionInfo
+}
+
+function GetProjectNames {
+    $uniqueNames = @(Get-Project -All | Select-Object -ExpandProperty ProjectName)
+
+    $simpleNames = Get-Project -All | Select-Object -ExpandProperty Name
+    $safeNames = @($simpleNames | Group-Object | Where-Object { $_.Count -eq 1 } | Select-Object -ExpandProperty Name)
+
+    ($uniqueNames + $safeNames) | Select-Object -Unique | Sort-Object
+}
+
+function GetInstalledPackageIds($context) {
+    $parameters = @{}
+
+    if ($context.Id) { $parameters.filter = $context.id }
+
+    Get-Package @parameters -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id -Unique
+}
+
+function GetRemotePackageIds($context) {
+    $parameters = @{}
+
+    if ($context.Id) { $parameters.filter = $context.Id }
+    if ($context.Source) { $parameters.source = $context.Source }
+    if (IsPrereleaseSet $context) {
+        $parameters.IncludePrerelease = $true
+    }
+
+    try {
+        return Get-RemotePackageId @parameters
+    }
+    catch {
+        # If the server doesn't have the JSON API endpoints, get the remote package IDs the old way.
+        return GetPackages $context | Select-Object -ExpandProperty Id -Unique
+    }
+}
+
+function GetPackageSources() {
+    $componentModel = Get-VSComponentModel
+    $repositoryProvider = $componentModel.GetService([NuGet.Protocol.Core.Types.ISourceRepositoryProvider])
+    $allSources = $repositoryProvider.PackageSourceProvider.LoadPackageSources()
+    $allSources | Select-Object -ExpandProperty Name
+}
+
+function GetEnumNames($typeName) {
+    # Sort the enumerations in alphabetical order to make it consistent with TabExpansion2
+    return [System.Enum]::GetNames($typeName) | Sort-Object
+}
+
+function GetInstalledPackageVersions($context) {
+    $parameters = @{}
+    if ($context.id) { $parameters.Filter = $context.id }
+    GetAndSortVersions (Get-Package @parameters -ErrorAction SilentlyContinue)
+}
+
+function GetRemotePackageVersions($context) {
+    $parameters = @{}
+
+    if ($context.Id -eq $null) {
+        return @()
+    }
+
+    if ($context.Id) { $parameters.id = $context.Id }
+    if ($context.Source) { $parameters.source = $context.Source }
+    if (IsPrereleaseSet $context) {
+        $parameters.IncludePreRelease = $true
+    }
+
+    try {
+        return Get-RemotePackageVersion @parameters | %{ [NuGet.SemanticVersion]::Parse($_) } | Sort-Object -Descending
+    }
+    catch {
+        # If the server doesn't have the JSON API endpoints, get the remote package versions the old way.
+        $parameters = @{}
+        if ($context.Id) { $parameters.Id = $context.Id }
+        if ($context.Source) { $parameters.source = $context.Source }
+        if (IsPrereleaseSet $context) {
+            $parameters.IncludePreRelease = $true
+        }
+        $parameters.AllVersions = $true
+        # StartWith switch is implicity set for TabExpansion command
+        GetAndSortVersions(TabExpansion-Package @parameters -ExactMatch -ErrorAction SilentlyContinue)
+    }
+}
+
+function GetRemotePackageUpdateVersions($context) {
+    $parameters = @{}
+
+    if ($context.Id -eq $null) {
+        return @()
+    }
+
+    if ($context.Id) { $parameters.id = $context.Id }
+    if ($context.Source) { $parameters.source = $context.Source }
+    if (IsPrereleaseSet $context) {
+        $parameters.IncludePreRelease = $true
+    }
+
+    try {
+        return Get-RemotePackageVersion @parameters | %{ [NuGet.SemanticVersion]::Parse($_) } | Sort-Object -Descending
+    }
+    catch {
+        # If the server doesn't have the JSON API endpoints, get the remote package versions the old way.
+        $parameters = @{}
+        if ($context.Id) { $parameters.Filter = $context.Id }
+        if ($context.Source) { $parameters.source = $context.Source }
+        if (IsPrereleaseSet $context) {
+            $parameters.IncludePreRelease = $true
+        }
+        $parameters.Updates = $true
+        GetAndSortVersions(Get-Package @parameters -AllVersions -ErrorAction SilentlyContinue)
+    }
+}
+
+function GetAndSortVersions($packages) {
+    $packages | Select -Unique -ExpandProperty Versions | %{
+        if($_ -is [string]) {
+            [NuGet.SemanticVersion]::Parse($_)
+        } else {
+            $_
+        }
+    } | Sort-Object -Descending
+}
+
 function NugetTabExpansion($line, $lastWord) {
     # Parse the command
     $parsedCommand = [NuGetConsole.Host.PowerShell.CommandParser]::Parse($line)
