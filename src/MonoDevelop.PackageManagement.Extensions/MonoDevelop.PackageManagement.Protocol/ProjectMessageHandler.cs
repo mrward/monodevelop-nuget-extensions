@@ -350,5 +350,23 @@ namespace MonoDevelop.PackageManagement.Protocol
 			}
 			return false;
 		}
+
+		[JsonRpcMethod (Methods.ProjectItemsName)]
+		public ProjectItemInformationList OnGetProjectItems (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectItemInformationParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var items = new ProjectItemsInsideProject (project);
+
+				return new ProjectItemInformationList {
+					Items = items.GetProjectItems ().ToArray ()
+				};
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnGetProjectItems error", ex);
+				throw;
+			}
+		}
 	}
 }

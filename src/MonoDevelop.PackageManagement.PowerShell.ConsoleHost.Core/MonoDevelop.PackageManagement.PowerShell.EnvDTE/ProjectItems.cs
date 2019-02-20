@@ -29,6 +29,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
+using MonoDevelop.PackageManagement.PowerShell.Protocol;
 
 namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
@@ -38,7 +40,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		public ProjectItems (Project project, object parent)
 		{
-			this.Project = project;
+			Project = project;
 			this.parent = parent;
 		}
 
@@ -120,26 +122,34 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		protected virtual IEnumerable<global::EnvDTE.ProjectItem> GetProjectItems ()
 		{
-			return Enumerable.Empty<global::EnvDTE.ProjectItem> ();
-			//return new ProjectItemsInsideProject (Project, fileService);
+			var message = new ProjectItemInformationParams {
+				ProjectFileName = Project.FileName
+			};
+			var list = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<ProjectItemInformationList> (
+				Methods.ProjectItemsName,
+				message).WaitAndGetResult ();
+
+			foreach (ProjectItemInformation info in list.Items) {
+				yield return new ProjectItem (Project, info);
+			}
 		}
 
-		//internal virtual ProjectItem Item (string name)
-		//{
-		//	foreach (ProjectItem item in this) {
-		//		if (item.IsMatchByName (name)) {
-		//			return item;
-		//		}
-		//	}
-		//	throw new ArgumentException ("Unable to find item: " + name, "name");
-		//}
+		internal virtual global::EnvDTE.ProjectItem Item (string name)
+		{
+			foreach (ProjectItem item in this) {
+				if (item.IsMatchByName (name)) {
+					return item;
+				}
+			}
+			throw new ArgumentException ("Unable to find item: " + name, "name");
+		}
 
-		//internal virtual ProjectItem Item (int index)
-		//{
-		//	return GetProjectItems ()
-		//		.Skip (index - 1)
-		//		.First () as ProjectItem;
-		//}
+		internal virtual global::EnvDTE.ProjectItem Item (int index)
+		{
+			return GetProjectItems ()
+				.Skip (index - 1)
+				.First () as ProjectItem;
+		}
 
 		public virtual global::EnvDTE.ProjectItem Item (object index)
 		{
