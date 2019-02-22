@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MonoDevelop.Core;
+using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
@@ -69,6 +70,10 @@ namespace MonoDevelop.PackageManagement
 				throw new NotImplementedException ();
 			}
 		}
+
+		public Solution Solution => throw new NotImplementedException ();
+
+		public ConfigurationSelector Configuration => throw new NotImplementedException ();
 
 		#pragma warning disable 67
 		public event EventHandler<ActionsExecutedEventArgs> ActionsExecuted;

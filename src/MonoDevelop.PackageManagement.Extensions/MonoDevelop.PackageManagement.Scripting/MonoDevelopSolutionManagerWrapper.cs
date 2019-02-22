@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
@@ -69,6 +70,14 @@ namespace MonoDevelop.PackageManagement
 
 		public string SolutionDirectory {
 			get { return solutionManager.SolutionDirectory; }
+		}
+
+		public Solution Solution {
+			get { return solutionManager.Solution; }
+		}
+
+		public ConfigurationSelector Configuration {
+			get { return solutionManager.Configuration; }
 		}
 
 		#pragma warning disable 67

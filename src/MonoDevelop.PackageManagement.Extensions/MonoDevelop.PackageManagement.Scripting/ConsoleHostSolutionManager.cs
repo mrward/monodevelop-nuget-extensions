@@ -104,6 +104,20 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 
+		public Solution Solution {
+			get {
+				GetSolutionManager ();
+				return solutionManager?.Solution;
+			}
+		}
+
+		public ConfigurationSelector Configuration {
+			get {
+				GetSolutionManager ();
+				return solutionManager?.Configuration;
+			}
+		}
+
 		#pragma warning disable 67
 		public event EventHandler<ActionsExecutedEventArgs> ActionsExecuted;
 		public event EventHandler<NuGetProjectEventArgs> NuGetProjectAdded;
