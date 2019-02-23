@@ -401,6 +401,9 @@ namespace MonoDevelop.PackageManagement.Protocol
 				Runtime.RunInMainThread (async () => {
 					project.Items.Add (analyzerItem);
 					await project.SaveAsync (new ProgressMonitor ());
+
+					// Need to re-evaluate so the analyzer information is refreshed.
+					await project.ReevaluateProject (new ProgressMonitor ());
 				})
 				.WaitAndGetResult ();
 			} catch (Exception ex) {
