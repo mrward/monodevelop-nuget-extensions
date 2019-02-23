@@ -141,7 +141,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 					return item;
 				}
 			}
-			throw new ArgumentException ("Unable to find item: " + name, "name");
+			return null;
 		}
 
 		internal virtual global::EnvDTE.ProjectItem Item (int index)
