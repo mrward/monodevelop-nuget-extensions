@@ -49,6 +49,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 			ConfigurationManager = new ConfigurationManager (this);
 
 			ProjectItems = new ProjectItems (this, this);
+
+			Object = new ProjectObject (this);
 		}
 
 		public string Name { get; private set; }

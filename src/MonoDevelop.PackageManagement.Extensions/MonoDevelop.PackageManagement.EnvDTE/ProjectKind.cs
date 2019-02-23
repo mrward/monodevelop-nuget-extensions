@@ -26,7 +26,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.PackageManagement;
 
@@ -39,9 +38,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public ProjectKind(Project project)
 		{
-			this.Kind = GetProjectKind(project);
+			Kind = GetProjectKind(project);
 		}
-		
+
 		string GetProjectKind(Project project)
 		{
 			return GetProjectKind (project.DotNetProject);
@@ -51,9 +50,9 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			string type = ProjectType.GetProjectType (project);
 			if (type == ProjectType.CSharp) {
-				return GetProjectKind (CSharp);
+				return CSharp;
 			} else if (type == ProjectType.VB) {
-				return GetProjectKind (VBNet);
+				return VBNet;
 			}
 			return string.Empty;
 		}
@@ -63,11 +62,6 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return GetProjectKind (project.DotNetProject);
 		}
 
-		static string GetProjectKind(string projectTypeGuid)
-		{
-			return "{" + projectTypeGuid.ToUpperInvariant() + "}";
-		}
-		
 		public string Kind { get; private set; }
 	}
 }

@@ -368,5 +368,68 @@ namespace MonoDevelop.PackageManagement.Protocol
 				throw;
 			}
 		}
+
+		[JsonRpcMethod (Methods.ProjectAnalyzerItemsName)]
+		public AnalyzerInformationList OnGetProjectAnalyzerItems (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectItemInformationParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var fileNames = project.GetAnalyzerFilesAsync (IdeApp.Workspace.ActiveConfiguration)
+					.WaitAndGetResult ();
+
+				return new AnalyzerInformationList {
+					FileNames = fileNames
+						.Select (fileName => fileName.ToString ())
+						.ToArray ()
+				};
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnGetProjectAnalyzerItems error", ex);
+				throw;
+			}
+		}
+
+		[JsonRpcMethod (Methods.ProjectAddAnalyzerName)]
+		public void OnAddAnalyzer (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<AnalzyerInformationParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var analyzerItem = new ProjectFile (message.AnalyzerFileName, "Analyzer");
+				Runtime.RunInMainThread (async () => {
+					project.Items.Add (analyzerItem);
+					await project.SaveAsync (new ProgressMonitor ());
+				})
+				.WaitAndGetResult ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnAddAnalyzer error", ex);
+				throw;
+			}
+		}
+
+		[JsonRpcMethod (Methods.ProjectRemoveAnalyzerName)]
+		public void OnRemoveAnalyzer (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<AnalzyerInformationParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var analyzerItem = project.GetProjectFile (message.AnalyzerFileName);
+				if (analyzerItem == null) {
+					return;
+				}
+
+				Runtime.RunInMainThread (async () => {
+					project.Items.Remove (analyzerItem);
+					await project.SaveAsync (new ProgressMonitor ());
+				})
+				.WaitAndGetResult ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnRemoveAnalyzer error", ex);
+				throw;
+			}
+		}
 	}
 }

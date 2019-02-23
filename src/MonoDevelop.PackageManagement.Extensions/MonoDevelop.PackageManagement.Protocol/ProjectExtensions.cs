@@ -35,5 +35,18 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			return FileService.AbsoluteToRelativePath (project.BaseDirectory, path);
 		}
+
+		public static ProjectItem GetAnalyzerProjectItem (this Project project, string path)
+		{
+			foreach (ProjectItem item in project.Items) {
+				if (item.ItemName == "Analyzer") {
+					var itemPath = project.BaseDirectory.Combine (item.Include);
+					if (itemPath.Equals (path)) {
+						return item;
+					}
+				}
+			}
+			return null;
+		}
 	}
 }
