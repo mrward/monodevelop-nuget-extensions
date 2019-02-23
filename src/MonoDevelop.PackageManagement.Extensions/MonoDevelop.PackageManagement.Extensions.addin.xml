@@ -15,7 +15,7 @@
 		<Import file="NuGet.Core.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
-		<Import assembly="SharpDevelop.EnvDTE.dll" />
+		<Import assembly="MonoDevelop.EnvDTE.dll" />
 	</Runtime>
 
 	<Dependencies>

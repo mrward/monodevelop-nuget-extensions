@@ -57,9 +57,6 @@
     <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="SharpDevelop.EnvDTE">
-      <HintPath>..\..\lib\SharpDevelop.EnvDTE.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="System.Xml" />
     <Reference Include="NuGet.Configuration">
@@ -281,6 +278,10 @@
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj">
       <Project>{56ADE615-648E-4F93-9F7C-636AA0737A7B}</Project>
       <Name>MonoDevelop.PackageManagement.PowerShell.Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj">
+      <Project>{4D821BC0-FE27-4D82-862D-DE6147DBEB7F}</Project>
+      <Name>MonoDevelop.EnvDTE</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
