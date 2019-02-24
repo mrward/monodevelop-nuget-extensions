@@ -58,7 +58,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Warning);
 						break;
 					case ProtocolLogLevel.Verbose:
-						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Out);
+						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Debug);
 						break;
 					case ProtocolLogLevel.Debug:
 						scriptingConsole.WriteLine (logMessage.Message, ScriptingStyle.Debug);
