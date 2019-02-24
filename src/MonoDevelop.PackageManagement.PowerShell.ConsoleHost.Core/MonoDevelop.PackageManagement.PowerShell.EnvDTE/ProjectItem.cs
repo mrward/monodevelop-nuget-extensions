@@ -35,11 +35,6 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		Project containingProject;
 		ProjectItemInformation projectItemInfo;
 
-		public const string CopyToOutputDirectoryPropertyName = "CopyToOutputDirectory";
-		public const string CustomToolPropertyName = "CustomTool";
-		public const string FullPathPropertyName = "FullPath";
-		public const string LocalPathPropertyName = "LocalPath";
-
 		internal ProjectItem (Project project, ProjectItemInformation projectItemInfo)
 		{
 			this.projectItemInfo = projectItemInfo;
@@ -92,8 +87,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 
 		void CreateProperties ()
 		{
-		//	var propertyFactory = new ProjectItemPropertyFactory (this);
-		//	Properties = new Properties (propertyFactory);
+			var propertyFactory = new ProjectItemPropertyFactory (this);
+			Properties = new Properties (propertyFactory);
 		}
 
 		public virtual string Name {
@@ -113,44 +108,6 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		}
 
 		public virtual global::EnvDTE.ProjectItems ProjectItems { get; private set; }
-
-		internal virtual object GetProperty (string name)
-		{
-			if (name == CopyToOutputDirectoryPropertyName) {
-//				return GetCopyToOutputDirectory ();
-			} else if (name == CustomToolPropertyName) {
-//				return projectItem.CustomTool;
-			} else if ((name == FullPathPropertyName) || (name == LocalPathPropertyName)) {
-				return projectItemInfo.FileName;
-			}
-			return string.Empty;
-		}
-
-		//UInt32 GetCopyToOutputDirectory ()
-		//{
-		//	return (UInt32)projectItem.CopyToOutputDirectory;
-		//}
-
-		internal virtual void SetProperty (string name, object value)
-		{
-			if (name == CopyToOutputDirectoryPropertyName) {
-				SetCopyToOutputDirectory (value);
-			} else if (name == CustomToolPropertyName) {
-//				projectItem.CustomTool = value as string;
-			}
-		}
-
-		void SetCopyToOutputDirectory (object value)
-		{
-		//	MD.FileCopyMode copyToOutputDirectory = ConvertToCopyToOutputDirectory (value);
-		//	projectItem.CopyToOutputDirectory = copyToOutputDirectory;
-		}
-
-		//MD.FileCopyMode ConvertToCopyToOutputDirectory (object value)
-		//{
-		//	string valueAsString = value.ToString ();
-		//	return (MD.FileCopyMode)Enum.Parse (typeof(MD.FileCopyMode), valueAsString);
-		//}
 
 		internal virtual bool IsMatchByName (string name)
 		{
@@ -228,7 +185,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 			return FileName;
 		}
 
-		string FileName {
+		internal string FileName {
 			get { return projectItemInfo.FileName; }
 		}
 

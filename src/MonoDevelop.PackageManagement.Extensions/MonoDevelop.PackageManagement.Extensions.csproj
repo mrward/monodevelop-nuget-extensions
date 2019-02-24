@@ -266,6 +266,7 @@
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectFileExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectAddFileMessageHandler.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectItemExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

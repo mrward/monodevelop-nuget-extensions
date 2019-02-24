@@ -63,6 +63,8 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 		public const string ProjectAddAnalyzerName = "project/AddAnalyzer";
 		public const string ProjectRemoveAnalyzerName = "project/RemoveAnalyzer";
 		public const string ProjectAddFileName = "project/AddFile";
+		public const string ProjectItemPropertyValueName = "project/ItemPropertyValue";
+		public const string ProjectItemSetPropertyValueName = "project/SetItemPropertyValue";
 
 		public const string ProjectInstalledPackagesName = "project/InstalledPackages";
 

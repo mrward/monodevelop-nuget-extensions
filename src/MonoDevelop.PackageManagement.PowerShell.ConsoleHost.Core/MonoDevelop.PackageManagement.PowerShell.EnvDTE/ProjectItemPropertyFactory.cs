@@ -1,5 +1,5 @@
 ﻿//
-// ProjectExtensions.cs
+// ProjectItemPropertyFactory.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,40 +24,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 {
-	static class ProjectExtensions
+	class ProjectItemPropertyFactory: IPropertyFactory
 	{
-		public static string GetRelativePath (this Project project, string path)
+		readonly ProjectItem projectItem;
+
+		public ProjectItemPropertyFactory (ProjectItem projectItem)
 		{
-			return FileService.AbsoluteToRelativePath (project.BaseDirectory, path);
+			this.projectItem = projectItem;
 		}
 
-		public static ProjectItem GetAnalyzerProjectItem (this Project project, string path)
+		public Property CreateProperty (string name)
 		{
-			foreach (ProjectItem item in project.Items) {
-				if (item.ItemName == "Analyzer") {
-					var itemPath = project.BaseDirectory.Combine (item.Include);
-					if (itemPath.Equals (path)) {
-						return item;
-					}
-				}
-			}
-			return null;
+			return new ProjectItemProperty (projectItem, name);
 		}
 
-		public static ProjectItem GetProjectItem (this Project project, string fileName)
+		public IEnumerator<Property> GetEnumerator ()
 		{
-			foreach (ProjectItem item in project.Items) {
-				var itemPath = project.BaseDirectory.Combine (item.Include);
-				if (itemPath.Equals (fileName)) {
-					return item;
-				}
-			}
-			return null;
+			List<Property> properties = GetProperties ().ToList ();
+			return properties.GetEnumerator ();
+		}
+
+		IEnumerable<Property> GetProperties ()
+		{
+			yield break;
+			//yield return new ProjectItemProperty (projectItem, ProjectItem.CopyToOutputDirectoryPropertyName);
+			//yield return new ProjectItemProperty (projectItem, ProjectItem.CustomToolPropertyName);
+			//yield return new ProjectItemProperty (projectItem, ProjectItem.FullPathPropertyName);
+			//yield return new ProjectItemProperty (projectItem, ProjectItem.LocalPathPropertyName);
 		}
 	}
 }

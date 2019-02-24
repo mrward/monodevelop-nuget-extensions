@@ -32,6 +32,11 @@ namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 	public class PropertyValueInfo
 	{
 		[DataMember]
-		public string PropertyValue { get; set; }
+		public object PropertyValue { get; set; }
+
+		public string PropertyValueAsString ()
+		{
+			return PropertyValue?.ToString ();
+		}
 	}
 }

@@ -58,7 +58,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 			};
 			var result = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PropertyValueInfo> (Methods.ProjectConfigurationPropertyValueName, message)
 				.WaitAndGetResult ();
-			return result.PropertyValue;
+			return result.PropertyValueAsString ();
 		}
 	}
 }

@@ -449,5 +449,48 @@ namespace MonoDevelop.PackageManagement.Protocol
 				throw;
 			}
 		}
+
+		[JsonRpcMethod (Methods.ProjectItemPropertyValueName)]
+		public PropertyValueInfo OnGetProjectItemPropertyValue (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectItemPropertyParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var projectItem = project.GetProjectItem (message.FileName);
+				if (projectItem == null) {
+					return new PropertyValueInfo ();
+				}
+
+				return new PropertyValueInfo {
+					PropertyValue = projectItem.GetPropertyValue (message.PropertyName)
+				};
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnGetProjectItemPropertyValue error", ex);
+				throw;
+			}
+		}
+
+		[JsonRpcMethod (Methods.ProjectItemSetPropertyValueName)]
+		public void OnSetProjectItemPropertyValue (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectItemPropertyValueParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var projectItem = project.GetProjectItem (message.FileName);
+				if (projectItem == null) {
+					return;
+				}
+
+				Runtime.RunInMainThread (async () => {
+					projectItem.SetPropertyValue (message.PropertyName, message.PropertyValue);
+					await project.SaveAsync (new ProgressMonitor ());
+				}).WaitAndGetResult ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnSetProjectItemPropertyValue error", ex);
+				throw;
+			}
+		}
 	}
 }

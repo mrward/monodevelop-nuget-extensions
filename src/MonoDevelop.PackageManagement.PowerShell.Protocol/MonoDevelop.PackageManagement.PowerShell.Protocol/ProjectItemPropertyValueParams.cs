@@ -1,5 +1,5 @@
 ﻿//
-// ProjectExtensions.cs
+// ProjectItemPropertyValueParams.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,40 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
+using System.Runtime.Serialization;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement.PowerShell.Protocol
 {
-	static class ProjectExtensions
+	[DataContract]
+	public class ProjectItemPropertyValueParams : ProjectItemPropertyParams
 	{
-		public static string GetRelativePath (this Project project, string path)
-		{
-			return FileService.AbsoluteToRelativePath (project.BaseDirectory, path);
-		}
-
-		public static ProjectItem GetAnalyzerProjectItem (this Project project, string path)
-		{
-			foreach (ProjectItem item in project.Items) {
-				if (item.ItemName == "Analyzer") {
-					var itemPath = project.BaseDirectory.Combine (item.Include);
-					if (itemPath.Equals (path)) {
-						return item;
-					}
-				}
-			}
-			return null;
-		}
-
-		public static ProjectItem GetProjectItem (this Project project, string fileName)
-		{
-			foreach (ProjectItem item in project.Items) {
-				var itemPath = project.BaseDirectory.Combine (item.Include);
-				if (itemPath.Equals (fileName)) {
-					return item;
-				}
-			}
-			return null;
-		}
+		[DataMember (Name = "propertyValue")]
+		public object PropertyValue { get; set; }
 	}
 }
