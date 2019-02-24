@@ -434,5 +434,20 @@ namespace MonoDevelop.PackageManagement.Protocol
 				throw;
 			}
 		}
+
+		[JsonRpcMethod (Methods.ProjectAddFileName)]
+		public ProjectItemInformation OnAddFile (JToken arg)
+		{
+			try {
+				var message = arg.ToObject<ProjectAddFileParams> ();
+				var project = FindProject (message.ProjectFileName);
+
+				var handler = new ProjectAddFileMessageHandler (project, message);
+				return handler.AddFileAsync ().WaitAndGetResult ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnAddFile error", ex);
+				throw;
+			}
+		}
 	}
 }

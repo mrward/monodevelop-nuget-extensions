@@ -172,19 +172,17 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 			if (Project is CpsProject) {
 				return null;
 			}
-			throw new NotImplementedException ();
-			//ProjectItem projectItem = AddFileProjectItemToProject (fileName);
-			//Project.Save ();
-			//return projectItem;
-		}
 
-		/// <summary>
-		/// Adds a file to the project with this ProjectItems as its parent.
-		/// </summary>
-		//protected virtual ProjectItem AddFileProjectItemToProject (string fileName)
-		//{
-		//	return Project.AddFileProjectItemUsingFullPath (fileName);
-		//}
+			var message = new ProjectAddFileParams {
+				ProjectFileName = Project.FileName,
+				FileName = fileName
+			};
+			var info = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<ProjectItemInformation> (
+				Methods.ProjectAddFileName,
+				message).WaitAndGetResult ();
+
+			return new ProjectItem (Project, info);
+		}
 
 		public virtual int Count {
 			get { return GetProjectItems ().Count (); }

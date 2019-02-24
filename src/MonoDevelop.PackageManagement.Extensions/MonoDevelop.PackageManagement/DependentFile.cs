@@ -28,22 +28,20 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using MonoDevelop.Projects;
-using MD = MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement
 {
-	public class DependentFile
+	class DependentFile
 	{
-		DotNetProject project;
+		Project project;
 
-		public DependentFile (DotNetProject project)
+		public DependentFile (Project project)
 		{
 			this.project = project;
 		}
 
-		public MD.ProjectFile GetParentFileProjectItem (string fileName)
+		public ProjectFile GetParentFileProjectItem (string fileName)
 		{
 			string parentFileName = GetParentFileName (fileName);
 			if (parentFileName != null) {
