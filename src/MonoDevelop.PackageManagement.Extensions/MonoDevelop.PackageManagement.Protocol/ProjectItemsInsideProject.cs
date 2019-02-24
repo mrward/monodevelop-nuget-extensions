@@ -74,7 +74,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 		bool IsInProjectRootFolder (ProjectFile item)
 		{
-			if (item.IsLink) {
+			if (item.IsLink && !item.Link.IsNullOrEmpty) {
 				return !HasDirectoryInPath (item.Link);
 			}
 			return !HasDirectoryInPath (item.FilePath);
