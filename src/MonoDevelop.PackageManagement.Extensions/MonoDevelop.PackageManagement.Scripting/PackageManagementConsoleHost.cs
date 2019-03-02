@@ -70,8 +70,14 @@ namespace MonoDevelop.PackageManagement.Scripting
 			this.addinPath = addinPath;
 			this.packageEvents = packageEvents;
 
-			scriptExecutor = new Lazy<IScriptExecutor> (() => CreateScriptExecutor ());
+			InitializeLazyScriptExecutor ();
+
 			commandExpansion = new LazyCommandExpansion (CreateCommandExpansion);
+		}
+
+		private void InitializeLazyScriptExecutor ()
+		{
+			scriptExecutor = new Lazy<IScriptExecutor> (() => CreateScriptExecutor ());
 		}
 
 		public PackageManagementConsoleHost (
@@ -165,7 +171,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			WriteInfoBeforeFirstPrompt ();
 			InitializePackageScriptsForOpenSolution ();
 			WritePrompt ();
-			//			ProcessUserCommands();
 
 			IdeApp.Workspace.SolutionLoaded += SolutionLoaded;
 		}
@@ -174,7 +179,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			CreatePowerShellHost ();
 			AddModulesToImport ();
-			//			powerShellHost.SetRemoteSignedExecutionPolicy();
 			UpdateWorkingDirectory ();
 			ConfigurePackageSources ();
 			OnMaxVisibleColumnsChanged ();
@@ -194,6 +198,8 @@ namespace MonoDevelop.PackageManagement.Scripting
 					GetNuGetVersion (),
 					clearConsoleHostCommand,
 					new ICSharpCode.PackageManagement.EnvDTE.DTE ());
+
+			powerShellHost.Exited += PowerShellHostExited;
 		}
 
 		protected virtual Version GetNuGetVersion ()
@@ -479,6 +485,21 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			ITabExpansion tabExpansion = powerShellHost.CreateTabExpansion ();
 			return new CommandExpansion (tabExpansion);
+		}
+
+		void PowerShellHostExited (object sender, EventArgs e)
+		{
+			try {
+				ReloadPackageSources ();
+				OnMaxVisibleColumnsChanged ();
+				InitializeLazyScriptExecutor ();
+				commandExpansion.CommandExpansion = CreateCommandExpansion ();
+				InitializePackageScriptsForOpenSolution ();
+			} catch (Exception ex) {
+				string message = GettextCatalog.GetString ("Unable to initialize remote PowerShell host. {0}", ex.Message);
+				ScriptingConsole.WriteLine (message, ScriptingStyle.Error);
+				LoggingService.LogError ("PowerShellHostExited error", ex);
+			}
 		}
 	}
 }

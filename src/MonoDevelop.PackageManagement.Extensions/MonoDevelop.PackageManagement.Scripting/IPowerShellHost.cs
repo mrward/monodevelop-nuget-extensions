@@ -52,5 +52,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		IScriptExecutor CreateScriptExecutor ();
 		ITabExpansion CreateTabExpansion ();
+
+		event EventHandler Exited;
 	}
 }

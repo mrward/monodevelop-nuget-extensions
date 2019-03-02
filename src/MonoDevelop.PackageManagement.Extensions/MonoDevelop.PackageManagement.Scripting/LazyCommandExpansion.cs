@@ -38,11 +38,12 @@ namespace MonoDevelop.PackageManagement.Scripting
 	/// </summary>
 	class LazyCommandExpansion : ICommandExpansion
 	{
-		Lazy<ICommandExpansion> commandExpansion;
+		Lazy<ICommandExpansion> lazyCommandExpansion;
+		ICommandExpansion commandExpansion;
 
 		public LazyCommandExpansion (Func<ICommandExpansion> createCommandExpansion)
 		{
-			commandExpansion = new Lazy<ICommandExpansion> (createCommandExpansion);
+			lazyCommandExpansion = new Lazy<ICommandExpansion> (createCommandExpansion);
 		}
 
 		public Task<SimpleExpansion> GetExpansionsAsync (
@@ -50,7 +51,19 @@ namespace MonoDevelop.PackageManagement.Scripting
 			int caretIndex,
 			CancellationToken token)
 		{
-			return commandExpansion.Value.GetExpansionsAsync (line, caretIndex, token);
+			return CommandExpansion.GetExpansionsAsync (line, caretIndex, token);
+		}
+
+		public ICommandExpansion CommandExpansion {
+			get {
+				if (commandExpansion != null) {
+					return commandExpansion;
+				}
+				return lazyCommandExpansion.Value;
+			}
+			set {
+				commandExpansion = value;
+			}
 		}
 	}
 }

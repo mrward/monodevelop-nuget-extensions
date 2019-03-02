@@ -61,6 +61,8 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public IList<string> ModulesToImport => modulesToImport;
 		public Version Version => NuGetVersion.Version;
 
+		public event EventHandler Exited;
+
 		public void ExecuteCommand (string command)
 		{
 			try {
@@ -123,9 +125,19 @@ namespace MonoDevelop.PackageManagement.Scripting
 			return process;
 		}
 
-		static void JsonRpcDisconnected (object sender, JsonRpcDisconnectedEventArgs e)
+		void JsonRpcDisconnected (object sender, JsonRpcDisconnectedEventArgs e)
 		{
-			LoggingService.LogInfo ("Disconnected {0} {1}", e.Reason, e.Description);
+			string errorMessage = GettextCatalog.GetString (
+				"Disconnected from remote PowerShell host. Reason: {0}: {1}",
+				e.Reason,
+				e.Description);
+			scriptingConsole.WriteLine (errorMessage, ScriptingStyle.Error);
+
+			process.Exited -= Process_Exited;
+			rpc.Disconnected -= JsonRpcDisconnected;
+			messageHandler = null;
+
+			Exited?.Invoke (this, EventArgs.Empty);
 		}
 
 		static void Process_Exited (object sender, EventArgs e)
@@ -148,6 +160,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource)
 		{
 			try {
+				EnsureHostInitialized ();
 				var message = new PackageSourcesChangedParams {
 					ActiveSource = GetPackageSource (selectedPackageSource),
 					Sources = GetPackageSources (sources).ToArray ()
