@@ -19,9 +19,10 @@
 	</Runtime>
 
 	<Dependencies>
-		<Addin id="Core" version="7.8.3"/>
-		<Addin id="Ide" version="7.8.3"/>
-		<Addin id="PackageManagement" version="7.8.3"/>
+		<Addin id="Core" version="7.8.3" />
+		<Addin id="Ide" version="7.8.3" />
+		<Addin id="PackageManagement" version="7.8.3" />
+		<Addin id="DotNetCore" version="7.8.3" />
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
