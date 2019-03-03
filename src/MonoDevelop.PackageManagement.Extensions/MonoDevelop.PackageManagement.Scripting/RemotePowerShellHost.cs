@@ -31,6 +31,7 @@ using System.IO;
 using System.Linq;
 using MonoDevelop.Core;
 using MonoDevelop.Core.Execution;
+using MonoDevelop.DotNetCore;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Protocol;
 using MonoDevelop.Projects;
@@ -109,7 +110,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			argumentBuilder.AddQuoted (UserProfile.Current.LogDir);
 
 			var info = new ProcessStartInfo {
-				FileName = "dotnet",
+				FileName = DotNetCoreRuntime.FileName,
 				Arguments = argumentBuilder.ToString (),
 				WorkingDirectory = Path.GetDirectoryName (programPath),
 				UseShellExecute = false,
