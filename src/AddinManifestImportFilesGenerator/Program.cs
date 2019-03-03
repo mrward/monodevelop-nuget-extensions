@@ -104,7 +104,13 @@ namespace AddinManifestImportFilesGenerator
 			var files = new List<string> ();
 			AddFiles (files, publishDirectory, SearchOption.TopDirectoryOnly);
 
+			string modulesDirectory = Path.Combine (publishDirectory, "Modules");
+			AddFiles (files, modulesDirectory, SearchOption.AllDirectories);
+
 			string runtimeDirectory = Path.Combine (publishDirectory, "runtimes", "osx");
+			AddFiles (files, runtimeDirectory, SearchOption.AllDirectories);
+
+			runtimeDirectory = Path.Combine (publishDirectory, "runtimes", "unix");
 			AddFiles (files, runtimeDirectory, SearchOption.AllDirectories);
 
 			files.Sort ();

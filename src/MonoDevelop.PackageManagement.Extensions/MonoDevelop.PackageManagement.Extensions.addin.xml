@@ -26,6 +26,13 @@
 		<Import file="PowerShellConsoleHost/Microsoft.VisualStudio.Threading.dll" />
 		<Import file="PowerShellConsoleHost/Microsoft.VisualStudio.Validation.dll" />
 		<Import file="PowerShellConsoleHost/Microsoft.Win32.Registry.AccessControl.dll" />
+		<Import file="PowerShellConsoleHost/Modules/NuGet/about_NuGet.PackageManagement.PowerShellCmdlets.help.txt" />
+		<Import file="PowerShellConsoleHost/Modules/NuGet/NuGet.Format.ps1xml" />
+		<Import file="PowerShellConsoleHost/Modules/NuGet/NuGet.PackageManagement.PowerShellCmdlets.dll-Help.xml" />
+		<Import file="PowerShellConsoleHost/Modules/NuGet/NuGet.psd1" />
+		<Import file="PowerShellConsoleHost/Modules/NuGet/nuget.psm1" />
+		<Import file="PowerShellConsoleHost/Modules/NuGet/NuGet.Types.ps1xml" />
+		<Import file="PowerShellConsoleHost/Modules/NuGet/Profile.ps1" />
 		<Import file="PowerShellConsoleHost/MonoDevelop.EnvDTE.dll" />
 		<Import file="PowerShellConsoleHost/MonoDevelop.PackageManagement.PowerShell.Cmdlets.dll" />
 		<Import file="PowerShellConsoleHost/MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core.dll" />
@@ -57,6 +64,10 @@
 		<Import file="PowerShellConsoleHost/runtimes/osx/native/libmi.dylib" />
 		<Import file="PowerShellConsoleHost/runtimes/osx/native/libpsl-native.dylib" />
 		<Import file="PowerShellConsoleHost/runtimes/osx/native/libpsrpclient.dylib" />
+		<Import file="PowerShellConsoleHost/runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll" />
+		<Import file="PowerShellConsoleHost/runtimes/unix/lib/netstandard1.6/Microsoft.Management.Infrastructure.dll" />
+		<Import file="PowerShellConsoleHost/runtimes/unix/lib/netstandard1.6/Microsoft.Management.Infrastructure.Native.dll" />
+		<Import file="PowerShellConsoleHost/runtimes/unix/lib/netstandard2.0/System.Private.ServiceModel.dll" />
 		<Import file="PowerShellConsoleHost/StreamJsonRpc.dll" />
 		<Import file="PowerShellConsoleHost/System.Configuration.ConfigurationManager.dll" />
 		<Import file="PowerShellConsoleHost/System.Data.SqlClient.dll" />
