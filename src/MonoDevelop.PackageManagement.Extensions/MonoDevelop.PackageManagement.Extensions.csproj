@@ -73,15 +73,19 @@
     </Reference>
     <Reference Include="NuGet.Versioning">
       <HintPath>..\..\lib\NuGet.Versioning.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="NuGet.Packaging.Core">
       <HintPath>..\..\lib\NuGet.Packaging.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="NuGet.ProjectModel">
       <HintPath>..\..\lib\NuGet.ProjectModel.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="NuGet.Frameworks">
       <HintPath>..\..\lib\NuGet.Frameworks.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="NuGet.Common">
       <HintPath>..\..\lib\NuGet.Common.dll</HintPath>
