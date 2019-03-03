@@ -59,6 +59,7 @@ namespace AddinManifestImportFilesGenerator
 
 					WriteImportAssemblyElement (writer, "MonoDevelop.PackageManagement.Extensions.dll");
 					WriteImportFileElement (writer, "MonoDevelop.EnvDTE.dll");
+					WriteImportFileElement (writer, "MonoDevelop.PackageManagement.PowerShell.Protocol.dll");
 					WriteImportFileElement (writer, "MonoPcl.exe");
 					WriteImportFileElement (writer, "NuGet.Core.dll");
 					WriteImportFileElement (writer, "NuGet.Resolver.dll");
