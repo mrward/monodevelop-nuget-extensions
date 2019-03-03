@@ -15,7 +15,8 @@
 		<Import file="NuGet.Core.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
-		<Import assembly="MonoDevelop.EnvDTE.dll" />
+		<Import file="StreamJsonRpc.dll" />
+		<Import file="MonoDevelop.EnvDTE.dll" />
 		<Import file="PowerShellConsoleHost/ICSharpCode.SharpZipLib.dll" />
 		<Import file="PowerShellConsoleHost/Lucene.Net.dll" />
 		<Import file="PowerShellConsoleHost/Microsoft.ApplicationInsights.dll" />
