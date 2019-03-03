@@ -43,21 +43,11 @@ namespace AddinManifestImportFilesGenerator
 			}
 		}
 
-		/// <summary>
-		/// 	<Runtime>
-		///<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
-		///<Import file="MonoPcl.exe" />
-		///<Import file="NuGet.Core.dll" />
-		///<Import file="NuGet.Resolver.dll" />
-		///<Import file="NuGet-LICENSE.txt" />
-		///<Import assembly="MonoDevelop.EnvDTE.dll" />
-		///</Runtime>
-		/// </summary>
 		static void Run ()
 		{
 			var settings = new XmlWriterSettings {
 				Indent = true,
-				IndentChars = "\t",
+				IndentChars = "\t\t",
 				NewLineChars = "\r\n",
 				OmitXmlDeclaration = true
 			};
@@ -68,11 +58,12 @@ namespace AddinManifestImportFilesGenerator
 					writer.WriteStartElement ("Runtime");
 
 					WriteImportAssemblyElement (writer, "MonoDevelop.PackageManagement.Extensions.dll");
+					WriteImportFileElement (writer, "MonoDevelop.EnvDTE.dll");
 					WriteImportFileElement (writer, "MonoPcl.exe");
 					WriteImportFileElement (writer, "NuGet.Core.dll");
 					WriteImportFileElement (writer, "NuGet.Resolver.dll");
 					WriteImportFileElement (writer, "NuGet-LICENSE.txt");
-					WriteImportAssemblyElement (writer, "MonoDevelop.EnvDTE.dll");
+					WriteImportFileElement (writer, "StreamJsonRpc.dll");
 
 					WritePowerShellHostImports (writer);
 
