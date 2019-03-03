@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using MonoDevelop.DotNetCore;
+
 namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHostProvider
@@ -56,7 +58,11 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void CreateConsoleHost ()
 		{
-			consoleHost = new PackageManagementConsoleHost (packageEvents);
+			if (DotNetCoreRuntime.IsInstalled) {
+				consoleHost = new PackageManagementConsoleHost (packageEvents);
+			} else {
+				consoleHost = new DotNetCoreRuntimeMissingConsoleHost ();
+			}
 		}
 	}
 }

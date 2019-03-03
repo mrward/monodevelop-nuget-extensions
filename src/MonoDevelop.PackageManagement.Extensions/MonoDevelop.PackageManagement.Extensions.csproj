@@ -271,6 +271,7 @@
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectAddFileMessageHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectItemExtensions.cs" />
+    <Compile Include="MonoDevelop.PackageManagement.Scripting\DotNetCoreRuntimeMissingConsoleHost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
