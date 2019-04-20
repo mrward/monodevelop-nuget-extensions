@@ -176,7 +176,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 				};
 				rpc.InvokeAsync (Methods.PackageSourcesChangedName, message).Ignore ();
 			} catch (Exception ex) {
-				LoggingService.LogError ("OnActiveSourceChanged error", ex);
+				LoggingService.LogError ("OnPackageSourcesChanged error", ex);
 			}
 		}
 

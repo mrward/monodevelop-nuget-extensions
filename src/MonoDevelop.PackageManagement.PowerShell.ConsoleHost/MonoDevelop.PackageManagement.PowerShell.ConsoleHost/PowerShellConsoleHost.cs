@@ -184,7 +184,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 			Logger.Log ("PowerShellConsoleHost.ActiveSourceChanged");
 			try {
 				var message = arg.ToObject<ActivePackageSourceChangedParams> ();
-				Logger.Log ("PowerShellConsoleHost.ActiveSourceChanged {0}", message.ActiveSource);
+				Logger.Log ("PowerShellConsoleHost.ActiveSourceChanged {0}", message.ActiveSource?.Name);
 
 				host.SetPropertyValueOnHost ("activePackageSource", GetActivePackageSourceName (message.ActiveSource));
 			} catch (Exception ex) {

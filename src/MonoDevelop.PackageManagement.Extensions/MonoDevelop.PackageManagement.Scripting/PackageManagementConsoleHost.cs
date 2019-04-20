@@ -186,7 +186,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void ConfigurePackageSources ()
 		{
-			powerShellHost?.OnActiveSourceChanged (ActivePackageSource);
+			powerShellHost?.OnPackageSourcesChanged (PackageSources, ActivePackageSource);
 		}
 
 		void CreatePowerShellHost ()
