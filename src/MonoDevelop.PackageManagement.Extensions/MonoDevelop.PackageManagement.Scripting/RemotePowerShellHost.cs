@@ -53,6 +53,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		ProjectMessageHandler projectMessageHandler;
 		List<string> modulesToImport = new List<string> ();
 		IScriptingConsole scriptingConsole;
+		DateTime? restartProcessTime;
 
 		public RemotePowerShellHost (IScriptingConsole scriptingConsole)
 		{
@@ -79,6 +80,10 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			if (messageHandler != null)
 				return;
+
+			if (!ShouldRestartProcess ()) {
+				throw new ApplicationException (GettextCatalog.GetString ("Unable to restart PowerShell host"));
+			}
 
 			process = StartPowerShellHost ();
 			process.Exited += Process_Exited;
@@ -148,6 +153,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void OnActiveSourceChanged (SourceRepositoryViewModel source)
 		{
+			if (rpc == null)
+				return;
+
 			try {
 				var message = new ActivePackageSourceChangedParams {
 					ActiveSource = GetPackageSource (source)
@@ -206,6 +214,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void SolutionLoaded (Solution solution)
 		{
+			if (rpc == null)
+				return;
+
 			try {
 				var message = new SolutionParams {
 					FileName = solution.FileName
@@ -218,6 +229,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void SolutionUnloaded ()
 		{
+			if (rpc == null)
+				return;
+
 			try {
 				rpc.InvokeAsync (Methods.SolutionUnloadedName).Ignore ();
 			} catch (Exception ex) {
@@ -227,6 +241,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void OnDefaultProjectChanged (Project project)
 		{
+			if (rpc == null)
+				return;
+
 			try {
 				var message = new DefaultProjectChangedParams {
 					FileName = project?.FileName
@@ -239,6 +256,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void StopCommand ()
 		{
+			if (rpc == null)
+				return;
+
 			try {
 				rpc.NotifyAsync (Methods.StopCommandName).Ignore ();
 			} catch (Exception ex) {
@@ -255,6 +275,27 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public ITabExpansion CreateTabExpansion ()
 		{
 			return new TabExpansion (rpc);
+		}
+
+		bool ShouldRestartProcess ()
+		{
+			if (process == null) {
+				// First attempt.
+				return true;
+			}
+
+			if (restartProcessTime == null) {
+				restartProcessTime = DateTime.UtcNow;
+				return true;
+			}
+
+			var restartAllowedInterval = TimeSpan.FromSeconds (5);
+			var currentTime = DateTime.UtcNow;
+			if (currentTime < restartProcessTime + restartAllowedInterval) {
+				return false;
+			}
+
+			return true;
 		}
 	}
 }
