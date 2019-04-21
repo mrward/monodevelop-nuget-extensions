@@ -70,6 +70,7 @@ namespace MonoDevelop.PackageManagement
 		readonly PackageConsoleCompletionWidget completionWidget;
 		readonly CompletionListWindow completionWindow;
 		CancellationTokenSource cancellationTokenSource;
+		bool keyHandled;
 
 		public PackageConsoleView ()
 		{
@@ -87,6 +88,7 @@ namespace MonoDevelop.PackageManagement
 				TextViewFocused?.Invoke (this, args);
 			};
 			TextView.FocusOutEvent += TextViewFocusOutEvent;
+			TextView.KeyReleaseEvent += TextViewKeyReleaseEvent;
 		}
 
 		void AddTags ()
@@ -325,11 +327,9 @@ namespace MonoDevelop.PackageManagement
 					keyChar = '\t';
 				}
 				var descriptor = KeyDescriptor.FromGtk (key, keyChar, modifier);
-				bool keyHandled = completionWindow.PreProcessKeyEvent (descriptor);
+				keyHandled = completionWindow.PreProcessKeyEvent (descriptor);
 				if (keyHandled) {
 					return true;
-				} else {
-					HideWindow ();
 				}
 			}
 
@@ -415,6 +415,19 @@ namespace MonoDevelop.PackageManagement
 		void TextViewFocusOutEvent (object sender, FocusOutEventArgs args)
 		{
 			HideWindow ();
+		}
+
+		void TextViewKeyReleaseEvent (object sender, KeyReleaseEventArgs args)
+		{
+			if (keyHandled || !completionWindow.Visible)
+				return;
+
+			var keyChar = (char)args.Event.Key;
+			ModifierType modifier = args.Event.State;
+			Gdk.Key key = args.Event.Key;
+
+			var descriptor = KeyDescriptor.FromGtk (key, keyChar, modifier);
+			completionWindow.PostProcessKeyEvent (descriptor);
 		}
 
 		void HideWindow ()
