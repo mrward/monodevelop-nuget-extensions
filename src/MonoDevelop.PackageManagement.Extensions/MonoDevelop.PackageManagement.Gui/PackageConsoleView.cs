@@ -376,16 +376,26 @@ namespace MonoDevelop.PackageManagement
 				return;
 			}
 
-			var list = new CompletionDataList {
-				AutoSelect = false
-			};
-			foreach (string expansion in simpleExpansion.Expansions) {
-				list.Add (new CompletionData (expansion));
-			}
+			CompletionDataList list = CreateCompletionList (simpleExpansion);
 
 			var context = completionWidget.CreateCodeCompletionContext (simpleExpansion.Start);
 
 			completionWindow.ShowListWindow ('\0', list, completionWidget, context);
+		}
+
+		static CompletionDataList CreateCompletionList (SimpleExpansion simpleExpansion)
+		{
+			var list = new CompletionDataList {
+				AutoSelect = false
+			};
+
+			foreach (string expansion in simpleExpansion.Expansions) {
+				list.Add (new CompletionData (expansion));
+			}
+
+			list.AddKeyHandler (new PackageConsoleCompletionKeyHandler ());
+
+			return list;
 		}
 
 		async Task<SimpleExpansion> TryGetExpansionsAsync (
