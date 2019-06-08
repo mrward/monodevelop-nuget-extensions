@@ -28,6 +28,7 @@ using System;
 using System.Xml.Linq;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.Scripting;
+using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
@@ -88,6 +89,11 @@ namespace MonoDevelop.PackageManagement.Protocol
 			scriptingConsole.WriteLine (fullMessage, ToScriptStyle (level));
 		}
 
+		public void Log (ILogMessage message)
+		{
+			scriptingConsole.WriteLine (message.Message, ToScriptStyle (message.Level));
+		}
+
 		static ScriptingStyle ToScriptStyle (MessageLevel level)
 		{
 			switch (level) {
@@ -104,9 +110,32 @@ namespace MonoDevelop.PackageManagement.Protocol
 			}
 		}
 
+		static ScriptingStyle ToScriptStyle (NuGet.Common.LogLevel level)
+		{
+			switch (level) {
+				case NuGet.Common.LogLevel.Debug:
+				case NuGet.Common.LogLevel.Minimal:
+				case NuGet.Common.LogLevel.Verbose:
+					return ScriptingStyle.Debug;
+				case NuGet.Common.LogLevel.Error:
+					return ScriptingStyle.Error;
+				case NuGet.Common.LogLevel.Information:
+					return ScriptingStyle.Out;
+				case NuGet.Common.LogLevel.Warning:
+					return ScriptingStyle.Warning;
+				default:
+					return ScriptingStyle.Out;
+			}
+		}
+
 		public void ReportError (string message)
 		{
 			scriptingConsole.WriteLine (message, ScriptingStyle.Error);
+		}
+
+		public void ReportError (ILogMessage message)
+		{
+			ReportError (message.Message);
 		}
 
 		public FileConflictAction ResolveFileConflict (string message)

@@ -40,7 +40,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 		{
 			try {
 				var navigateMessage = arg.ToObject<ItemOperationsNavigateParams> ();
-				DesktopService.ShowUrl (navigateMessage.Url);
+				IdeServices.DesktopService.ShowUrl (navigateMessage.Url);
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnNavigate error", ex);
 				throw;

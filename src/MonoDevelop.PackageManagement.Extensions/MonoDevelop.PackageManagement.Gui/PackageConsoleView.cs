@@ -35,10 +35,10 @@ using Gtk;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Commands;
 using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using MonoDevelop.Ide.CodeCompletion;
 using MonoDevelop.Ide.Commands;
 using MonoDevelop.Ide.Editor.Extension;
-using MonoDevelop.Ide.Fonts;
 using MonoDevelop.PackageManagement.Scripting;
 using NuGetConsole;
 
@@ -79,7 +79,7 @@ namespace MonoDevelop.PackageManagement
 			PromptString = String.Empty;
 			base.Clear ();
 			
-			SetFont (FontService.MonospaceFont);
+			SetFont (IdeServices.FontService.MonospaceFont);
 
 			completionWidget = new PackageConsoleCompletionWidget (this);
 			completionWindow = new CompletionListWindow ();
@@ -258,7 +258,7 @@ namespace MonoDevelop.PackageManagement
 			int originalMaxVisibleColumns = maxVisibleColumns;
 			if (windowWidth > 0) {
 				using (var layout = new Pango.Layout (PangoContext)) {
-					layout.FontDescription = FontService.MonospaceFont;
+					layout.FontDescription = IdeServices.FontService.MonospaceFont;
 					layout.SetText ("W");
 					layout.GetSize (out int characterWidth, out int _);
 					if (characterWidth > 0) {

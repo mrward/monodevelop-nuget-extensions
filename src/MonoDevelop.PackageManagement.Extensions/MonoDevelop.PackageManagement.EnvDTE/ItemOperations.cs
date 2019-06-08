@@ -53,7 +53,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public void Navigate (string url)
 		{
-			DesktopService.OpenFile (url);
+			IdeServices.DesktopService.OpenFile (url);
 		}
 		
 		public global::EnvDTE.Window NewFile (string fileName)
