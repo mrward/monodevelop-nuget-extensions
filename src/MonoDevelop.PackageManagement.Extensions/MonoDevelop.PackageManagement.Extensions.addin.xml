@@ -91,68 +91,16 @@
 	</Runtime>
 
 	<Dependencies>
-		<Addin id="Core" version="8.1"/>
-		<Addin id="Ide" version="8.1"/>
-		<Addin id="PackageManagement" version="8.1"/>
-		<Addin id="DotNetCore" version="8.1" />
+		<Addin id="Core" version="8.3"/>
+		<Addin id="Ide" version="8.3"/>
+		<Addin id="PackageManagement" version="8.3"/>
+		<Addin id="DotNetCore" version="8.3" />
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
 		<Class class="MonoDevelop.PackageManagement.InstallPackageSearchCategory" />
 		<Class class="MonoDevelop.PackageManagement.NuGetPackageSearchCategory" />
 		<Class class="MonoDevelop.PackageManagement.PortableClassLibrarySearchCategory" />
-	</Extension>
-
-	<Extension path="/MonoDevelop/Ide/Commands">
-		<Category _name="NuGet" id="NuGet">
-		<Command
-			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
-			_description="Manage packages for the solution"
-			_label="_Manage NuGet Packages..."
-			_displayName="Manage Packages (Solution)"
-			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesHandler" />
-		<Command
-			id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
-			_description="Manage packages for the project"
-			_label="_Manage NuGet Packages..."
-			_displayName="Manage Packages"
-			defaultHandler="MonoDevelop.PackageManagement.ManagePackagesInProjectHandler" />
-		</Category>
-	</Extension>
-
-	<Extension path="/MonoDevelop/Ide/MainMenu/Project">
-		<CommandItem
-			id="MonoDevelop.PackageManagement.Commands.ManagePackages"
-			insertafter="MonoDevelop.Ide.Commands.ProjectCommands.AddReference"
-			insertbefore="ExportSeparator" />
-	</Extension>
-
-	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
-		<Condition id="ItemType" value="Solution">
-			<CommandItem
-				id="MonoDevelop.PackageManagement.Commands.ManagePackages"
-				insertafter="MonoDevelop.Ide.Commands.ProjectCommands.AddReference"
-				insertbefore="AddSectionEnd" />
-		</Condition>
-	</Extension>
-
-	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
-		<Condition id="ItemType" value="MonoDevelop.PackageManagement.NodeBuilders.ProjectPackagesFolderNode">
-			<CommandItem
-				id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
-				insertbefore="MonoDevelop.PackageManagement.Commands.PackagesFolderNodeCommands.ReinstallAllPackagesInProject"
-				insertafter="MonoDevelop.PackageManagement.Commands.AddPackages"
-				_label="Manage Packages..." />
-		</Condition>
-		<Condition
-			id="ItemType"
-			value="MonoDevelop.DotNetCore.NodeBuilders.DependenciesNode|MonoDevelop.DotNetCore.NodeBuilders.PackageDependenciesNode">
-			<CommandItem
-				id="MonoDevelop.PackageManagement.Commands.ManagePackagesInProject"
-				insertbefore="MonoDevelop.PackageManagement.Commands.UpdateAllPackagesInProject"
-				insertafter="MonoDevelop.PackageManagement.Commands.AddPackages"
-				_label="Manage Packages..." />
-		</Condition>
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/Pads">

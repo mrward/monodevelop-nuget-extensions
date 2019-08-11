@@ -177,7 +177,6 @@
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Reference.cs" />
     <Compile Include="MonoDevelop.PackageManagement\IExtendedPackageManagementProjectService.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ExtendedProjectService.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\OpenDotNetProjects2.cs" />
     <Compile Include="MonoDevelop.PackageManagement.EnvDTE\Document.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\GlobalMSBuildProjectCollection.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\IGlobalMSBuildProjectCollection.cs" />
@@ -188,11 +187,9 @@
     <Compile Include="MonoDevelop.PackageManagement.Scripting\GlobalMSBuildProjectCollectionMSBuildExtension.cs" />
     <Compile Include="MonoDevelop.PackageManagement\ProjectRootElementExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement\InstallPackageSearchResult.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\PackageActionRunner2.cs" />
     <Compile Include="MonoDevelop.PackageManagement\RegisteredPackageSources.cs" />
     <Compile Include="MonoDevelop.PackageManagement\NullMonoDevelopSolutionManager.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostSolutionManager.cs" />
-    <Compile Include="NuGet.PackageManagement.UI\PackageFeedEnumerator.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostNuGetPackageManager.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostNuGetProjectFactory.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostMSBuildNuGetProjectSystem.cs" />
@@ -203,34 +200,6 @@
     <Compile Include="NuGet.PackageManagement.VisualStudio\PackageAssemblyReference.cs" />
     <Compile Include="NuGet.PackageManagement.VisualStudio\IPackageAssemblyReference.cs" />
     <Compile Include="NuGet.PackageManagement.VisualStudio\PackageInitPS1State.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesDialog.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesDialog.UI.cs">
-      <DependentUpon>ManagePackagesDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesDialogRunner.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesHandler.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesViewModel.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagedPackagesSearchResultViewModelComparer.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesSearchResultViewModel.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\RecentManagedNuGetPackagesRepository.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesCellView.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\ManagePackagesCellViewEventArgs.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesLoadContext.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\SelectProjectsDialog.cs" />
-    <Compile Include="MonoDevelop.PackageManagement.Gui\SelectProjectsDialog.UI.cs">
-      <DependentUpon>SelectProjectsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MonoDevelop.PackageManagement\SelectProjectsViewModel.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\SelectedProjectViewModel.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesPage.cs" />
-    <Compile Include="NuGet.PackageManagement.UI\InstalledPackageFeed.cs" />
-    <Compile Include="NuGet.PackageManagement.UI\PlainPackageFeedBase.cs" />
-    <Compile Include="NuGet.PackageManagement.UI\PackageCollection.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesProjectInfo.cs" />
-    <Compile Include="NuGet.PackageManagement.UI\UpdatePackageFeed.cs" />
-    <Compile Include="NuGet.PackageManagement.UI\PackageSearchMetadataCache.cs" />
-    <Compile Include="NuGet.PackageManagement.UI\ConsolidatePackageFeed.cs" />
-    <Compile Include="MonoDevelop.PackageManagement\ManagePackagesInProjectHandler.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\MonoDevelopSolutionManagerWrapper.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\ConsoleHostMSBuildNuGetProject.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\RemotePowerShellHostFactory.cs" />
