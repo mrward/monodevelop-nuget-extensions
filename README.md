@@ -9,13 +9,13 @@ These features are experimental, subject to change, removal, and should be consi
  * Installing a NuGet package from the unified search
  * Listing Portable Class Libraries available on the local machine
  * Installing, updating, uninstalling NuGet packages for multiple projects in one step.
- * PowerShell console window - powered by [Pash](https://github.com/Pash-Project/Pash).
+ * PowerShell console window - powered by [PowerShell Core](https://github.com/powershell/powershell).
 
 # Requirements
 
- * MonoDevelop 5.0, 6.0, 7.0
+ * MonoDevelop 5.0, 6.0, 7.0, 8.0
  * Xamarin Studio 5.0, 6.0
- * Visual Studio for Mac 7.0
+ * Visual Studio for Mac 7.0, 8.0
 
 The NuGet Package Management Extensions addin published on the main addin server does not work for Visual Studio Mac 7.1 or 7.2. The main symptom that NuGet Package Management extensions addin does not support the version of Visual Studio for Mac being used is the Manage Packages dialog not opening when its menu is selected. Addins that work are available from a separate [Addin Server urls](https://github.com/mrward/monodevelop-addins) available for each version. Details on configuring the addin server is available from:
 
@@ -105,6 +105,9 @@ This runs the [Mono Portable Class Library command line utility](https://github.
 
 ## Managing Packages for the Solution
 
+Note that Visual Studio for Mac 8.3 now includes support for
+managing NuGet packages for the solution. The Manage Packages dialog has been removed from the NuGet extensions addin in version 0.20 and later.
+
 The NuGet addin that is available for Xamarin Studio 4 included the ability to manage packages for the solution. You could install, update or uninstall packages for multiple projects in one step. This feature was removed in later versions but has been made available by the extension addin.
 
 To open the Manage Packages dialog:
@@ -139,7 +142,7 @@ To uninstall a package from multiple projects:
 
 ## PowerShell Console Window
 
-Please make sure you have closed and re-opened IDE after the addin has been installed before trying to open the PowerShell Console window otherwise the IDE will crash.
+Please make sure you have closed and re-opened IDE after the addin has been installed before trying to open the PowerShell Console window otherwise the IDE may crash.
 
 To open the console window, from the **View** menu select **Pads**, then select **Package Console Extension**.
 
@@ -154,7 +157,30 @@ From the console itself you can run the standard NuGet commands:
  * Update-Package
  * Get-Package
  * Get-Project
+ * Find-Package
+ * Open-PackagePage
+ * Sync-Package
 
-The console uses [Pash](https://github.com/Pash-Project/Pash) which is an open source reimplementation of Windows PowerShell, for Mono.
+The console uses [PowerShell Core](https://github.com/powershell/powershell)
 
-When you install, uninstall or update a NuGet package the console will run the **init.ps1**, **install.ps1** and **uninstall.ps1** scripts that the NuGet package contains. However there are some areas of PowerShell that Pash has not fully implemented so most PowerShell scripts will fail. The failure will be logged in the console window but will not prevent the package from being installed or uninstalled.
+When you install, uninstall or update a NuGet package the console will run the **init.ps1**, **install.ps1** and **uninstall.ps1** scripts that the NuGet package contains. 
+
+Limitations:
+
+ * Visual Studio EnvDTE API implementation is incomplete
+
+The Visual Studio EnvDTE API is partially implemented. Whilst Entity Framework Core is supported other PowerShell scripts included with NuGet packages may not work.
+
+ * Password protected NuGet package sources are not supported in the following PowerShell commands:
+   * Find-Package
+   * Get-Package
+
+Note that the other NuGet PowerShell commands are supported.
+
+The NuGet extensions addin will not send usernames and passwords to the PowerShell Core host console application. .NET Core also does not support decrypting passwords stored in the NuGet.Config file.
+
+The Find-Package and Get-Package commands all run completely within PowerShell hosted in the .NET Core console application.
+
+The other commands work since they run partially within Visual for Mac where actions involving password protected NuGet package sources are supported.
+
+* Requires .NET Core 2.1 SDK to be installed
