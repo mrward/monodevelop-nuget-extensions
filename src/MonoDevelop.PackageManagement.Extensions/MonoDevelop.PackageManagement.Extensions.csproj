@@ -268,7 +268,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="StreamJsonRpc" Version="1.4.134" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="StreamJsonRpc" Version="2.3.81" />
   </ItemGroup>
 </Project>

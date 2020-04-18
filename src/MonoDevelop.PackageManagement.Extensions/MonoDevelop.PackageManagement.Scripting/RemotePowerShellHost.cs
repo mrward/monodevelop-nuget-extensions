@@ -35,7 +35,6 @@ using MonoDevelop.DotNetCore;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Protocol;
 using MonoDevelop.Projects;
-using Newtonsoft.Json;
 using NuGet.Common;
 using NuGet.PackageManagement.VisualStudio;
 using NuGetConsole;
@@ -103,7 +102,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			rpc.AddLocalRpcTarget (projectMessageHandler);
 
 			rpc.StartListening ();
-			rpc.JsonSerializer.NullValueHandling = NullValueHandling.Ignore;
 		}
 
 		static Process StartPowerShellHost ()
