@@ -20,7 +20,10 @@
 		<Import file="StreamJsonRpc.dll" />
 		<Import file="PowerShellConsoleHost/ICSharpCode.SharpZipLib.dll" />
 		<Import file="PowerShellConsoleHost/Lucene.Net.dll" />
+		<Import file="PowerShellConsoleHost/MessagePack.Annotations.dll" />
+		<Import file="PowerShellConsoleHost/MessagePack.dll" />
 		<Import file="PowerShellConsoleHost/Microsoft.ApplicationInsights.dll" />
+		<Import file="PowerShellConsoleHost/Microsoft.Bcl.AsyncInterfaces.dll" />
 		<Import file="PowerShellConsoleHost/Microsoft.CodeAnalysis.CSharp.dll" />
 		<Import file="PowerShellConsoleHost/Microsoft.CodeAnalysis.dll" />
 		<Import file="PowerShellConsoleHost/Microsoft.VisualStudio.Threading.dll" />
@@ -40,6 +43,7 @@
 		<Import file="PowerShellConsoleHost/MonoDevelop.PackageManagement.PowerShell.ConsoleHost.dll" />
 		<Import file="PowerShellConsoleHost/MonoDevelop.PackageManagement.PowerShell.ConsoleHost.runtimeconfig.json" />
 		<Import file="PowerShellConsoleHost/MonoDevelop.PackageManagement.PowerShell.Protocol.dll" />
+		<Import file="PowerShellConsoleHost/Nerdbank.Streams.dll" />
 		<Import file="PowerShellConsoleHost/Newtonsoft.Json.dll" />
 		<Import file="PowerShellConsoleHost/NuGet.Common.dll" />
 		<Import file="PowerShellConsoleHost/NuGet.Configuration.dll" />
@@ -73,6 +77,7 @@
 		<Import file="PowerShellConsoleHost/System.Data.SqlClient.dll" />
 		<Import file="PowerShellConsoleHost/System.Diagnostics.EventLog.dll" />
 		<Import file="PowerShellConsoleHost/System.IO.Packaging.dll" />
+		<Import file="PowerShellConsoleHost/System.IO.Pipelines.dll" />
 		<Import file="PowerShellConsoleHost/System.Net.Http.WinHttpHandler.dll" />
 		<Import file="PowerShellConsoleHost/System.Runtime.CompilerServices.Unsafe.dll" />
 		<Import file="PowerShellConsoleHost/System.Security.Cryptography.Pkcs.dll" />
