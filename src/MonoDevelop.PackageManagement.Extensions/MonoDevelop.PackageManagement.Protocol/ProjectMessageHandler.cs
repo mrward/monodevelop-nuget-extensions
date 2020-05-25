@@ -161,7 +161,14 @@ namespace MonoDevelop.PackageManagement.Protocol
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnUninstallPackage error", ex);
 				throw;
+			} finally {
+				OnPackageOperationsFinished ();
 			}
+		}
+
+		void OnPackageOperationsFinished ()
+		{
+			PackageManagementServices.PackageManagementEvents.OnPackageOperationsFinished ();
 		}
 
 		[JsonRpcMethod (Methods.ProjectPreviewInstallPackage)]
@@ -196,6 +203,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnInstallPackage error", ex);
 				throw;
+			} finally {
+				OnPackageOperationsFinished ();
 			}
 		}
 
@@ -231,6 +240,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 			} catch (Exception ex) {
 				LoggingService.LogError ("OnUpdatePackage error", ex);
 				throw;
+			} finally {
+				OnPackageOperationsFinished ();
 			}
 		}
 
