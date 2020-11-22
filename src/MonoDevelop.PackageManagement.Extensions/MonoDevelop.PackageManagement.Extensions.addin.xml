@@ -7,7 +7,7 @@
 	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
 	description = "Provides extensions to the NuGet addin."
 	category    = "IDE extensions"
-	version     = "0.24">
+	version     = "0.25">
 
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
