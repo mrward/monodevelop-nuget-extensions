@@ -95,10 +95,6 @@
       <HintPath>..\..\lib\NuGet.Resolver.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>..\..\lib\System.Collections.Immutable.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="MonoDevelop.DotNetCore">
       <HintPath>..\..\lib\MonoDevelop.DotNetCore.dll</HintPath>
@@ -270,5 +266,6 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="StreamJsonRpc" Version="2.3.81" />
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
 </Project>
