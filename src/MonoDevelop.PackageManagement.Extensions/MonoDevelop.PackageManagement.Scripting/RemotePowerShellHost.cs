@@ -289,7 +289,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 			var restartAllowedInterval = TimeSpan.FromSeconds (5);
 			var currentTime = DateTime.UtcNow;
-			if (currentTime < restartProcessTime + restartAllowedInterval) {
+			if (currentTime > restartProcessTime + restartAllowedInterval) {
 				return false;
 			}
 
