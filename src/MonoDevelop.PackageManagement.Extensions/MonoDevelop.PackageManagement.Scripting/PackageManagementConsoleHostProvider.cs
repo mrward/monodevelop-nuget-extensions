@@ -32,7 +32,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHostProvider
 	{
-		public static DotNetCoreVersion RequiredDotNetCoreRuntimeVersion { get; } = new DotNetCoreVersion (2, 1, 0);
+		public static DotNetCoreVersion RequiredDotNetCoreRuntimeVersion { get; } = new DotNetCoreVersion (3, 1, 0);
 
 		IPackageManagementConsoleHost consoleHost;
 		IPackageManagementEvents packageEvents;
