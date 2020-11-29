@@ -79,7 +79,6 @@
 		<Import file="PowerShellConsoleHost/System.IO.Packaging.dll" />
 		<Import file="PowerShellConsoleHost/System.IO.Pipelines.dll" />
 		<Import file="PowerShellConsoleHost/System.Net.Http.WinHttpHandler.dll" />
-		<Import file="PowerShellConsoleHost/System.Runtime.CompilerServices.Unsafe.dll" />
 		<Import file="PowerShellConsoleHost/System.Security.Cryptography.Pkcs.dll" />
 		<Import file="PowerShellConsoleHost/System.Security.Cryptography.ProtectedData.dll" />
 		<Import file="PowerShellConsoleHost/System.Security.Permissions.dll" />
@@ -90,8 +89,6 @@
 		<Import file="PowerShellConsoleHost/System.ServiceModel.Primitives.dll" />
 		<Import file="PowerShellConsoleHost/System.ServiceModel.Security.dll" />
 		<Import file="PowerShellConsoleHost/System.ServiceProcess.ServiceController.dll" />
-		<Import file="PowerShellConsoleHost/System.Text.Encoding.CodePages.dll" />
-		<Import file="PowerShellConsoleHost/System.Text.Encodings.Web.dll" />
 		<Import file="PowerShellConsoleHost/System.Threading.AccessControl.dll" />
 	</Runtime>
 
