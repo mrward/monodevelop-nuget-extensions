@@ -246,8 +246,14 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void UpdateWorkingDirectory (string directory)
 		{
+			if (powerShellHost == null)
+				return;
+
 			string command = String.Format ("Set-Location {0}", directory);
-			powerShellHost.ExecuteCommand (command);
+
+			PackageManagementBackgroundDispatcher.Dispatch (() => {
+				powerShellHost.ExecuteCommand (command);
+			});
 		}
 
 		void InitializePackageScriptsForOpenSolution ()
