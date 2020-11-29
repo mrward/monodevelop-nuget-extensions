@@ -32,6 +32,8 @@ namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHostProvider
 	{
+		public static DotNetCoreVersion RequiredDotNetCoreRuntimeVersion { get; } = new DotNetCoreVersion (2, 1, 0);
+
 		IPackageManagementConsoleHost consoleHost;
 		IPackageManagementEvents packageEvents;
 		
@@ -58,11 +60,26 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void CreateConsoleHost ()
 		{
-			if (DotNetCoreRuntime.IsInstalled) {
+			if (IsSupportedDotNetCoreRuntimeInstalled ()) {
 				consoleHost = new PackageManagementConsoleHost (packageEvents);
 			} else {
-				consoleHost = new DotNetCoreRuntimeMissingConsoleHost ();
+				consoleHost = new DotNetCoreRuntimeMissingConsoleHost (RequiredDotNetCoreRuntimeVersion);
 			}
+		}
+
+		static bool IsSupportedDotNetCoreRuntimeInstalled ()
+		{
+			if (!DotNetCoreRuntime.IsInstalled)
+				return false;
+
+			foreach (DotNetCoreVersion version in DotNetCoreRuntimeVersions.GetInstalledVersions (DotNetCoreRuntime.FileName)) {
+				if (RequiredDotNetCoreRuntimeVersion.Major == version.Major &&
+					RequiredDotNetCoreRuntimeVersion.Minor == version.Minor) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }

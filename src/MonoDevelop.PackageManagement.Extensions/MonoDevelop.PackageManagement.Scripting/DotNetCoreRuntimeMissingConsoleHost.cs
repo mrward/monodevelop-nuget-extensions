@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using MonoDevelop.Core;
+using MonoDevelop.DotNetCore;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
@@ -43,9 +44,11 @@ namespace MonoDevelop.PackageManagement.Scripting
 	{
 		RegisteredPackageSources registeredPackageSources;
 		ConsoleHostSolutionManager solutionManager;
+		DotNetCoreVersion requiredDotNetCoreRuntimeVersion;
 
-		public DotNetCoreRuntimeMissingConsoleHost ()
+		public DotNetCoreRuntimeMissingConsoleHost (DotNetCoreVersion requiredVersion)
 		{
+			requiredDotNetCoreRuntimeVersion = requiredVersion;
 			solutionManager = new ConsoleHostSolutionManager ();
 			registeredPackageSources = new RegisteredPackageSources (solutionManager);
 		}
@@ -103,11 +106,14 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		string GetDotNetCoreRuntimeIsNotInstalledMessage ()
 		{
+			string version = string.Format("{0}.{1}", requiredDotNetCoreRuntimeVersion.Major, requiredDotNetCoreRuntimeVersion.Minor);
+
 			return
 				GettextCatalog.GetString (
-				"The .NET Core runtime is not installed.\r\n" +
-				"The NuGet Package Manager Console requires the .NET Core 2.1 runtime.\r\n" +
-				"The .NET Core 2.1 runtime can be downloaded from https://dotnet.microsoft.com/download/dotnet-core/2.1");
+				"The .NET Core {0} runtime is not installed.\r\n" +
+				"The NuGet Package Manager Console requires the .NET Core version {0} runtime.\r\n" +
+				"The .NET Core {0} runtime can be downloaded from https://dotnet.microsoft.com/download/dotnet-core/{0}",
+				version);
 		}
 
 		public void ShutdownConsole ()

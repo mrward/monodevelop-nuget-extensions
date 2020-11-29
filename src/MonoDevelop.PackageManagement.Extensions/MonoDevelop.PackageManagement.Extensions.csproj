@@ -238,6 +238,8 @@
     <Compile Include="MonoDevelop.PackageManagement.Protocol\ProjectItemExtensions.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Scripting\DotNetCoreRuntimeMissingConsoleHost.cs" />
     <Compile Include="MonoDevelop.PackageManagement.Gui\PackageConsoleCompletionKeyHandler.cs" />
+    <Compile Include="MonoDevelop.DotNetCore\DotNetCoreRuntimeVersions.cs" />
+    <Compile Include="MonoDevelop.DotNetCore\DotNetCoreVersion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
