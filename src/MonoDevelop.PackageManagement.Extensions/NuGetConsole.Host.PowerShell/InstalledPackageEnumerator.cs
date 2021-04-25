@@ -124,9 +124,6 @@ namespace NuGetConsole.Host.PowerShell
 
 			var projects = (await solutionManager.GetNuGetProjectsAsync ()).ToList ();
 
-			// Skip project K projects.
-			projects.RemoveAll (p => p is ProjectKNuGetProjectBase);
-
 			// Sort projects by type
 			var projectLookup = projects.ToLookup (p => p is BuildIntegratedNuGetProject);
 
