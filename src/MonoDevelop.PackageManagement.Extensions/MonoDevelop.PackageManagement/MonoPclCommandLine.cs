@@ -34,7 +34,6 @@ namespace MonoDevelop.PackageManagement
 	public class MonoPclCommandLine
 	{
 		MonoTargetRuntime monoRuntime;
-		bool isMonoRuntime;
 
 		public MonoPclCommandLine ()
 			: this (
