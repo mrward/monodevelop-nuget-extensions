@@ -37,7 +37,6 @@ using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	/*
 	internal class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
 	{
 		IPackageManagementProjectService projectService;
@@ -47,7 +46,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		ObservableCollection<SourceRepositoryViewModel> packageSources = new ObservableCollection<SourceRepositoryViewModel> ();
 
-		PackageConsoleView packageManagementConsole;
+		//PackageConsoleView packageManagementConsole;
 
 		public PackageManagementConsoleViewModel (
 			IPackageManagementProjectService projectService,
@@ -57,9 +56,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 			this.consoleHost = consoleHost;
 		}
 
-		public void RegisterConsole (PackageConsoleView console)
+		public void RegisterConsole (object console)
 		{
-			packageManagementConsole = console;
+			//packageManagementConsole = console;
 
 			IdeApp.Workspace.SolutionLoaded += SolutionLoaded;
 			IdeApp.Workspace.SolutionUnloaded += SolutionUnloaded;
@@ -91,9 +90,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void InitConsoleHost ()
 		{
-			packageManagementConsole.CommandExpansion = consoleHost.CommandExpansion;
+			//packageManagementConsole.CommandExpansion = consoleHost.CommandExpansion;
 
-			consoleHost.ScriptingConsole = packageManagementConsole;
+			//consoleHost.ScriptingConsole = packageManagementConsole;
 			consoleHost.Run ();
 			consoleHost.RunningCommand += OnRunningCommand;
 			consoleHost.CommandCompleted += OnCommandCompleted;
@@ -217,7 +216,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void StopCommand ()
 		{
-			packageManagementConsole.StopWaitingForPromptInput ();
+			//packageManagementConsole.StopWaitingForPromptInput ();
 			consoleHost.StopCommand ();
 		}
 
@@ -230,5 +229,5 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			CommandCompleted?.Invoke (this, e);
 		}
-	}*/
+	}
 }
