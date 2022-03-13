@@ -63,10 +63,5 @@ namespace MonoDevelop.PackageManagement.Scripting
 		}
 
 		public IProjectScriptHostService ScriptService { get; private set; }
-
-		public T GetGlobalService<T> () where T : class
-		{
-			return projectServices.GetGlobalService<T>();
-		}
 	}
 }

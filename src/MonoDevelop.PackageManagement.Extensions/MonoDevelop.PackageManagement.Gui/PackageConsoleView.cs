@@ -38,7 +38,7 @@ using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.Ide.CodeCompletion;
 using MonoDevelop.Ide.Commands;
-using MonoDevelop.Ide.Editor.Extension;
+//using MonoDevelop.Ide.Editor.Extension;
 using MonoDevelop.PackageManagement.Scripting;
 using NuGetConsole;
 
@@ -55,6 +55,7 @@ namespace MonoDevelop.PackageManagement
 		Debug
 	}
 
+	/*
 	class PackageConsoleView : ConsoleView, IScriptingConsole
 	{
 		const int DefaultMaxVisibleColumns = 160;
@@ -497,5 +498,5 @@ namespace MonoDevelop.PackageManagement
 				WriteOutput ("\n");
 			}
 		}
-	}
+	}*/
 }

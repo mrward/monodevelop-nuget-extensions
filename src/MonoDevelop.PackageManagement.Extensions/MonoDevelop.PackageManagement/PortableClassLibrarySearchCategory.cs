@@ -54,6 +54,10 @@ namespace MonoDevelop.PackageManagement
 
 		public override bool IsValidTag (string tag)
 		{
+			if (Runtime.SystemAssemblyService.DefaultMonoRuntime == null) {
+				return false;
+			}
+
 			return tag == "command";
 		}
 

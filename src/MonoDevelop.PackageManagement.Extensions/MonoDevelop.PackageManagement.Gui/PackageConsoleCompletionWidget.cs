@@ -27,7 +27,7 @@
 
 // Based on code from DebuggerConsoleView
 // https://github.com/mono/monodevelop/blob/master/main/src/addins/MonoDevelop.Debugger/MonoDevelop.Debugger/DebuggerConsoleView.cs
-
+/*
 using System;
 using Gtk;
 using MonoDevelop.Ide.CodeCompletion;
@@ -213,3 +213,4 @@ namespace MonoDevelop.PackageManagement
 		}
 	}
 }
+*/

@@ -1,0 +1,139 @@
+<Project>
+  <PropertyGroup>
+    <MDBinDir>\Applications\Visual Studio %28Preview%29.app\Contents\MonoBundle</MDBinDir>
+    <MonoInstallRootDirectory>$([MSBuild]::NormalizeDirectory('/Library/Frameworks/Mono.framework/Versions/Current'))</MonoInstallRootDirectory>
+    <GtkInstallRootDirectory>$(MonoInstallRootDirectory)\lib\mono\gtk-sharp-2.0</GtkInstallRootDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>$(GtkInstallRootDirectory)\gdk-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>$(GtkInstallRootDirectory)\glib-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>$(GtkInstallRootDirectory)\gtk-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.Build.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Threading">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Validation">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Validation.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Addins">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.Core">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\MonoDevelop.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.Ide">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\MonoDevelop.Ide.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StreamJsonRpc">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\StreamJsonRpc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.dll">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\System.ComponentModel.Composition.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CoreUtility">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Language.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.Data">
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Text.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.Logic">
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
+      <Private>False</Private>
+   </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.UI">
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Text.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Cocoa">
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Text.UI.Cocoa.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Xamarin.Mac">
+      <Private>False</Private>
+      <HintPath>/usr/local/share/dotnet/packs/Microsoft.macOS.Ref/12.0.101-preview.10.251/ref/net6.0/Xamarin.Mac.dll</HintPath>
+    </Reference>
+    <Reference Include="Xwt">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Xwt.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.PackageManagement">
+      <HintPath>$(MDBinDir)\Addins\MonoDevelop.PackageManagement\MonoDevelop.PackageManagement.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Core">
+      <HintPath>..\..\lib\NuGet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Configuration">
+      <HintPath>$(MDBinDir)\NuGet.Configuration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.PackageManagement">
+      <HintPath>$(MDBinDir)\NuGet.PackageManagement.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Protocol">
+      <HintPath>$(MDBinDir)\NuGet.Protocol.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Versioning">
+      <HintPath>$(MDBinDir)\NuGet.Versioning.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.ProjectModel">
+      <HintPath>$(MDBinDir)\NuGet.ProjectModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Frameworks">
+      <HintPath>$(MDBinDir)\NuGet.Frameworks.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Common">
+      <HintPath>$(MDBinDir)\NuGet.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Packaging">
+      <HintPath>$(MDBinDir)\NuGet.Packaging.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Resolver">
+      <HintPath>$(MDBinDir)\NuGet.Resolver.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.DotNetCore">
+      <HintPath>$(MDBinDir)\Addins\MonoDevelop.DotNetCore\MonoDevelop.DotNetCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

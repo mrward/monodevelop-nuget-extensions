@@ -1,11 +1,8 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<PropertyGroup>
-		<PrepareForRunDependsOn>$(PrepareForRunDependsOn);MyPostBuildTarget</PrepareForRunDependsOn>
-	</PropertyGroup>
+﻿<Project>
 	<ItemGroup>
 		<MyCopyItem Include="$(MSBuildProjectDirectory)\..\..\lib\MonoPcl.exe" />
 	</ItemGroup>
-	<Target Name="MyPostBuildTarget">
+	<Target Name="MyPostBuildTarget" AfterTargets="Build">
 		<!-- work around an MSBuild bug in CopyToOutputDirectory that causes this file to be copied -->
 		<!-- to projects referencing this project even if local copy on that reference is false -->
 		<Copy SourceFiles="@(MyCopyItem)" DestinationFolder="$(OutputPath)" />

@@ -28,8 +28,8 @@
 
 using System;
 using MonoDevelop.Ide;
-using Pango;
 using MonoDevelop.Core;
+using Xwt.Drawing;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -42,18 +42,21 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		protected override object GetValue ()
 		{
-			int fontSize = IdeServices.FontService.MonospaceFont.Size / 1024;
-			return Convert.ToInt16 (fontSize);
+			// TODO:
+			//int fontSize = IdeServices.FontService.MonospaceFont.Size / 1024;
+			//return Convert.ToInt16 (fontSize);
+			return 12;
 		}
 
 		protected override void SetValue (object value)
 		{
-			int fontSize = Convert.ToInt32 (value) * 1024;
-			FontDescription fontDescription = IdeServices.FontService.MonospaceFont.Copy ();
-			fontDescription.Size = fontSize;
-			Runtime.RunInMainThread (() => {
-				IdeServices.FontService.SetFont ("Editor", fontDescription.ToString ());
-			}).Wait ();
+			// TODO:
+			//int fontSize = Convert.ToInt32 (value) * 1024;
+			//Font font = IdeServices.FontService.MonospaceFont.Copy ();
+			//font.Size = fontSize;
+			//Runtime.RunInMainThread (() => {
+			//	IdeServices.FontService.SetFont ("Editor", font.ToString ());
+			//}).Wait ();
 		}
 	}
 }

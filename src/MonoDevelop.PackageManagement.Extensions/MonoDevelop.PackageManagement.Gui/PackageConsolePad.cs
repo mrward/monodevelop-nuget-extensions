@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+/*
 using System;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Docking;
@@ -118,4 +119,4 @@ namespace MonoDevelop.PackageManagement
 			viewModel.OnMaxVisibleColumnsChanged ();
 		}
 	}
-}
+}*/

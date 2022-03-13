@@ -37,6 +37,7 @@ using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
+	/*
 	internal class PackageManagementConsoleViewModel : ViewModelBase<PackageManagementConsoleViewModel>
 	{
 		IPackageManagementProjectService projectService;
@@ -229,5 +230,5 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			CommandCompleted?.Invoke (this, e);
 		}
-	}
+	}*/
 }

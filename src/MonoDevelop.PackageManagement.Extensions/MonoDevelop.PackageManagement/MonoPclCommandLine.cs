@@ -25,30 +25,26 @@
 // THE SOFTWARE.
 //
 using System;
+using MonoDevelop.Core;
 using MonoDevelop.Core.Assemblies;
-using NuGet;
 using System.IO;
 
 namespace MonoDevelop.PackageManagement
 {
 	public class MonoPclCommandLine
 	{
-		MonoRuntimeInfo monoRuntime;
+		MonoTargetRuntime monoRuntime;
 		bool isMonoRuntime;
 
 		public MonoPclCommandLine ()
 			: this (
-				MonoRuntimeInfo.FromCurrentRuntime (),
-				EnvironmentUtility.IsMonoRuntime)
+				Runtime.SystemAssemblyService.DefaultMonoRuntime as MonoTargetRuntime)
 		{
 		}
 
-		public MonoPclCommandLine (
-			MonoRuntimeInfo monoRuntime,
-			bool isMonoRuntime)
+		public MonoPclCommandLine (MonoTargetRuntime monoRuntime)
 		{
 			this.monoRuntime = monoRuntime;
-			this.isMonoRuntime = isMonoRuntime;
 
 			List = true;
 		}
@@ -60,11 +56,7 @@ namespace MonoDevelop.PackageManagement
 
 		public void BuildCommandLine ()
 		{
-			if (isMonoRuntime) {
-				GenerateMonoCommandLine ();
-			} else {
-				GenerateWindowsCommandLine ();
-			}
+			GenerateMonoCommandLine ();
 		}
 
 		void GenerateMonoCommandLine ()
@@ -75,12 +67,6 @@ namespace MonoDevelop.PackageManagement
 				GetOptions ());
 
 			Command = Path.Combine (monoRuntime.Prefix, "bin", "mono");
-		}
-
-		void GenerateWindowsCommandLine ()
-		{
-			Arguments = GetOptions ();
-			Command = MonoPclExe.GetPath ();
 		}
 
 		string GetOptions ()

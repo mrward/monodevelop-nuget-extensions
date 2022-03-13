@@ -82,8 +82,9 @@ namespace MonoDevelop.PackageManagement.Protocol
 		public void OnShowConsole ()
 		{
 			Runtime.RunInMainThread (() => {
-				var pad = IdeApp.Workbench.GetPad <PackageConsolePad> ();
-				pad.BringToFront ();
+				// TODO:
+				//var pad = IdeApp.Workbench.GetPad <PackageConsolePad> ();
+				//pad.BringToFront ();
 			}).Ignore ();
 		}
 

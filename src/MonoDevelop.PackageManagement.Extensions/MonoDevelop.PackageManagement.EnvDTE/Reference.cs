@@ -124,6 +124,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 					return new AssemblyName (referenceProjectItem.Reference);
 				}
 
+				// TODO: Fix me. ReflectionOnlyLoadFrom not supported.
 				Assembly assembly = Assembly.ReflectionOnlyLoadFrom (referenceProjectItem.HintPath);
 				if (assembly != null) {
 					return assembly.GetName ();

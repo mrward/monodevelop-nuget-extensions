@@ -15,7 +15,7 @@
     <PackageReference Include="NuGet.Protocol" Version="4.8.2" />
     <PackageReference Include="NuGet.Resolver" Version="4.8.2" />
     <PackageReference Include="NuGet.Versioning" Version="4.8.2" />
-    <PackageReference Include="StreamJsonRpc" Version="2.3.81" />
+    <PackageReference Include="StreamJsonRpc" Version="2.3.99" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />

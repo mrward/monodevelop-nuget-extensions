@@ -17,7 +17,6 @@
 		<Import file="NuGet.Core.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
-		<Import file="StreamJsonRpc.dll" />
 		<Import file="PowerShellConsoleHost/ICSharpCode.SharpZipLib.dll" />
 		<Import file="PowerShellConsoleHost/Lucene.Net.dll" />
 		<Import file="PowerShellConsoleHost/MessagePack.Annotations.dll" />
