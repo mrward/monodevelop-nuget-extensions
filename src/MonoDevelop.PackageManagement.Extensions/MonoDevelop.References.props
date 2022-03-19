@@ -83,7 +83,7 @@
     </Reference>
     <Reference Include="Xamarin.Mac">
       <Private>False</Private>
-      <HintPath>/usr/local/share/dotnet/packs/Microsoft.macOS.Ref/12.0.101-preview.10.251/ref/net6.0/Xamarin.Mac.dll</HintPath>
+      <HintPath>/usr/local/share/dotnet/packs/Microsoft.macOS.Ref/12.1.301-preview.13.7/ref/net6.0/Xamarin.Mac.dll</HintPath>
     </Reference>
     <Reference Include="Xwt">
       <Private>False</Private>
