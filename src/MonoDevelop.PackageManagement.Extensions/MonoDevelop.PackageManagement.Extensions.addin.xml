@@ -98,6 +98,10 @@
 		<Addin id="DotNetCore" version="17.0" />
 	</Dependencies>
 
+	<Extension path="/MonoDevelop/Ide/Composition">
+		<Assembly file="MonoDevelop.PackageManagement.Extensions.dll"/>
+	</Extension>
+
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
 		<Class class="MonoDevelop.PackageManagement.InstallPackageSearchCategory" />
 		<Class class="MonoDevelop.PackageManagement.NuGetPackageSearchCategory" />

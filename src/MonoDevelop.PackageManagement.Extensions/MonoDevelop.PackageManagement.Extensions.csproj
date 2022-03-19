@@ -24,4 +24,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\external\vsmac-console\src\Microsoft.VisualStudio.Components\ConsoleViewCommandHandler.cs">
+      <Link>Microsoft.VisualStudio.Components\ConsoleViewCommandHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\vsmac-console\src\Microsoft.VisualStudio.Components\ConsoleViewController.cs">
+      <Link>Microsoft.VisualStudio.Components\ConsoleViewController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\vsmac-console\src\Microsoft.VisualStudio.Components\ConsoleViewReadonlyRegionCommandHandler.cs">
+      <Link>Microsoft.VisualStudio.Components\ConsoleViewReadonlyRegionCommandHandler.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

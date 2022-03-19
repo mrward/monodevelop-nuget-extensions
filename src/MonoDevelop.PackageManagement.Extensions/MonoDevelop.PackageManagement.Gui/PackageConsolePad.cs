@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Specialized;
-//using Microsoft.VisualStudio.UI;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Declarative;
 using MonoDevelop.Components.Docking;
@@ -42,8 +41,7 @@ namespace MonoDevelop.PackageManagement
 {
 	class PackageConsolePad : PadContent
 	{
-		AppKit.NSView view = new AppKit.NSView ();
-		//PackageConsoleView view;
+		PackageConsoleViewController packageConsoleViewController;
 		PackageManagementConsoleViewModel viewModel;
 		ToolbarPopUpButtonItem packageSourcesComboBox;
 		ToolbarButtonItem configurePackageSourceButton;
@@ -58,13 +56,13 @@ namespace MonoDevelop.PackageManagement
 		}
 
 		public override Control Control {
-			get { return view; }
+			get { return packageConsoleViewController.View; }
 		}
 
 		protected override void Initialize (IPadWindow window)
 		{
 			CreateToolbar (window);
-			//CreatePackageConsoleView ();
+			CreatePackageConsoleView ();
 			CreatePackageConsoleViewModel ();
 			BindingViewModelToView ();
 		}
@@ -79,7 +77,7 @@ namespace MonoDevelop.PackageManagement
 				PackageManagementServices.ProjectService,
 				consoleHostProvider.ConsoleHost
 			);
-			viewModel.RegisterConsole (view);
+			viewModel.RegisterConsole (packageConsoleViewController);
 		}
 
 		void CreateToolbar (IPadWindow window)
@@ -157,20 +155,17 @@ namespace MonoDevelop.PackageManagement
 			viewModel.RunningCommand -= RunningCommand;
 			viewModel.CommandCompleted -= CommandCompleted;
 
-			//view.ConsoleInput -= OnConsoleInput;
+			packageConsoleViewController.ConsoleInput -= OnConsoleInput;
 			//view.TextViewFocused -= TextViewFocused;
 			//view.MaxVisibleColumnsChanged -= MaxVisibleColumnsChanged;
 		}
 
-		/*
 		void CreatePackageConsoleView ()
 		{
-			view = new PackageConsoleView ();
-			view.ConsoleInput += OnConsoleInput;
-			view.TextViewFocused += TextViewFocused;
-			view.MaxVisibleColumnsChanged += MaxVisibleColumnsChanged;
-			view.ShadowType = Gtk.ShadowType.None;
-			view.ShowAll ();
+			packageConsoleViewController = new PackageConsoleViewController ();
+			packageConsoleViewController.ConsoleInput += OnConsoleInput;
+			//view.TextViewFocused += TextViewFocused;
+			//view.MaxVisibleColumnsChanged += MaxVisibleColumnsChanged;
 		}
 
 		void OnConsoleInput (object sender, ConsoleInputEventArgs e)
@@ -178,6 +173,12 @@ namespace MonoDevelop.PackageManagement
 			viewModel.ProcessUserInput (e.Text);
 		}
 
+		public override void FocusPad ()
+		{
+			packageConsoleViewController?.GrabFocus ();
+		}
+
+		/*
 		void TextViewFocused (object sender, EventArgs e)
 		{
 			viewModel.UpdatePackageSources ();
