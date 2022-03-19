@@ -1,0 +1,3 @@
+[submodule "external/vsmac-console"]
+	path = external/vsmac-console
+	url = git@github.com:mrward/vsmac-console.git
