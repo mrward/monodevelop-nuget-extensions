@@ -38,9 +38,9 @@ namespace MonoDevelop.PackageManagement
 	class PackageConsoleViewController : IScriptingConsole
 	{
 		const int DefaultMaxVisibleColumns = 160;
-		const int TabExpansionTimeout = 3; // seconds.
 
 		readonly ConsoleViewController controller;
+		ICommandExpansion commandExpansion;
 
 		int maxVisibleColumns = 0;
 
@@ -195,7 +195,13 @@ namespace MonoDevelop.PackageManagement
 			});
 		}
 
-		public ICommandExpansion CommandExpansion { get; set; }
+		public ICommandExpansion CommandExpansion {
+			get { return commandExpansion; }
+			set {
+				commandExpansion = value;
+				controller.TextView.Properties[typeof (ICommandExpansion)] = value;
+			}
+		}
 
 		TaskCompletionSource<string> userInputTask;
 
