@@ -35,6 +35,17 @@ using NuGetConsole;
 
 namespace MonoDevelop.PackageManagement
 {
+	enum LogLevel
+	{
+		Default,
+		Error,
+		Critical,
+		Warning,
+		Message,
+		Info,
+		Debug
+	}
+
 	class PackageConsoleViewController : IScriptingConsole
 	{
 		const int DefaultMaxVisibleColumns = 160;
