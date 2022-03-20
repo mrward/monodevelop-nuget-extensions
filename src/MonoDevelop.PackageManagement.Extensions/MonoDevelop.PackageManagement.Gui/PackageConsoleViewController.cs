@@ -51,6 +51,7 @@ namespace MonoDevelop.PackageManagement
 			controller.Editable = true;
 
 			controller.ConsoleInput += OnConsoleInput;
+			controller.TextView.IsKeyboardFocusedChanged += TextViewIsKeyboardFocusedChanged;
 		}
 
 		public NSView View {
@@ -70,9 +71,19 @@ namespace MonoDevelop.PackageManagement
 			ConsoleInput?.Invoke (sender, e);
 		}
 
+		public event EventHandler TextViewFocused;
+
+		void TextViewIsKeyboardFocusedChanged (object sender, EventArgs e)
+		{
+			if (controller.TextView.IsKeyboardFocused) {
+				TextViewFocused?.Invoke (sender, e);
+			}
+		}
+
 		public void Dispose ()
 		{
 			controller.ConsoleInput -= OnConsoleInput;
+			controller.TextView.IsKeyboardFocusedChanged -= TextViewIsKeyboardFocusedChanged;
 		}
 
 		void WriteOutputLine (string message, ScriptingStyle style)

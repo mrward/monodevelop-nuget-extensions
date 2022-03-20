@@ -156,16 +156,13 @@ namespace MonoDevelop.PackageManagement
 			viewModel.CommandCompleted -= CommandCompleted;
 
 			packageConsoleViewController.ConsoleInput -= OnConsoleInput;
-			//view.TextViewFocused -= TextViewFocused;
+			packageConsoleViewController.TextViewFocused -= TextViewFocused;
 			//view.MaxVisibleColumnsChanged -= MaxVisibleColumnsChanged;
 		}
 
 		void CreatePackageConsoleView ()
 		{
 			packageConsoleViewController = new PackageConsoleViewController ();
-			packageConsoleViewController.ConsoleInput += OnConsoleInput;
-			//view.TextViewFocused += TextViewFocused;
-			//view.MaxVisibleColumnsChanged += MaxVisibleColumnsChanged;
 		}
 
 		void OnConsoleInput (object sender, ConsoleInputEventArgs e)
@@ -178,16 +175,15 @@ namespace MonoDevelop.PackageManagement
 			packageConsoleViewController?.GrabFocus ();
 		}
 
-		/*
 		void TextViewFocused (object sender, EventArgs e)
 		{
 			viewModel.UpdatePackageSources ();
 		}
 
-		void MaxVisibleColumnsChanged (object sender, EventArgs e)
-		{
-			viewModel.OnMaxVisibleColumnsChanged ();
-		}*/
+		//void MaxVisibleColumnsChanged (object sender, EventArgs e)
+		//{
+		//	viewModel.OnMaxVisibleColumnsChanged ();
+		//}
 
 		void ConfigurePackageSourceButtonClicked (object sender, EventArgs e)
 		{
@@ -221,6 +217,10 @@ namespace MonoDevelop.PackageManagement
 
 			viewModel.RunningCommand += RunningCommand;
 			viewModel.CommandCompleted += CommandCompleted;
+
+			packageConsoleViewController.ConsoleInput += OnConsoleInput;
+			packageConsoleViewController.TextViewFocused += TextViewFocused;
+			//view.MaxVisibleColumnsChanged += MaxVisibleColumnsChanged;
 		}
 
 		void LoadPackageSources ()
