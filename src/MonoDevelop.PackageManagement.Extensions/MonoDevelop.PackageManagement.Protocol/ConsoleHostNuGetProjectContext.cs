@@ -85,13 +85,27 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 		public void Log (MessageLevel level, string message, params object[] args)
 		{
+			OnBeforeScriptingConsoleWriteLine ();
+
 			string fullMessage = string.Format (message, args);
 			scriptingConsole.WriteLine (fullMessage, ToScriptStyle (level));
 		}
 
 		public void Log (ILogMessage message)
 		{
+			OnBeforeScriptingConsoleWriteLine ();
+
 			scriptingConsole.WriteLine (message.Message, ToScriptStyle (message.Level));
+		}
+
+		void OnBeforeScriptingConsoleWriteLine ()
+		{
+			if (LogNewLineBeforeFirstMessage && !AnyMessagesLogged) {
+				AnyMessagesLogged = true;
+				scriptingConsole.WriteLine (string.Empty, ScriptingStyle.Out);
+			}
+
+			AnyMessagesLogged = true;
 		}
 
 		static ScriptingStyle ToScriptStyle (MessageLevel level)
@@ -130,6 +144,8 @@ namespace MonoDevelop.PackageManagement.Protocol
 
 		public void ReportError (string message)
 		{
+			OnBeforeScriptingConsoleWriteLine ();
+
 			scriptingConsole.WriteLine (message, ScriptingStyle.Error);
 		}
 
@@ -163,5 +179,13 @@ namespace MonoDevelop.PackageManagement.Protocol
 		/// open - or possibly this may just be handled in the PowerShell remote host itself.
 		/// </summary>
 		public bool IsExecutingPowerShellCommand { get; set; } = true;
+
+		/// <summary>
+		/// Ensures the output from any init.ps1 is not logged on the PM prompt line.
+		/// Should this be handled on the console view controller side?
+		/// </summary>
+		public bool LogNewLineBeforeFirstMessage { get; set; }
+
+		public bool AnyMessagesLogged { get; internal set; }
 	}
 }
