@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppKit;
 using Microsoft.VisualStudio.Components;
@@ -58,7 +57,7 @@ namespace MonoDevelop.PackageManagement
 
 		int maxVisibleColumns = 0;
 
-		List<PackageConsoleClassificationTypeSpanInfo> coloredSpans = new List<PackageConsoleClassificationTypeSpanInfo>();
+		readonly PackageConsoleOrderedSpans coloredSpans = new PackageConsoleOrderedSpans ();
 
 		public PackageConsoleViewController ()
 		{
@@ -108,7 +107,7 @@ namespace MonoDevelop.PackageManagement
 			controller.TextView.IsKeyboardFocusedChanged -= TextViewIsKeyboardFocusedChanged;
 		}
 
-		internal IList<PackageConsoleClassificationTypeSpanInfo> ColoredSpans {
+		internal PackageConsoleOrderedSpans ColoredSpans {
 			get { return coloredSpans; }
 		}
 

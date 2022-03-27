@@ -80,7 +80,7 @@ namespace MonoDevelop.PackageManagement
 
 			var classifications = new List<ClassificationSpan>();
 
-			foreach (PackageConsoleClassificationTypeSpanInfo spanInfo in controller.ColoredSpans) {
+			foreach (PackageConsoleClassificationTypeSpanInfo spanInfo in controller.ColoredSpans.Overlap (span)) {
 				if (spanInfo.Span.OverlapsWith (span)) {
 					IClassificationType classificationType = provider.
 						ClassificationTypeRegistryService.
