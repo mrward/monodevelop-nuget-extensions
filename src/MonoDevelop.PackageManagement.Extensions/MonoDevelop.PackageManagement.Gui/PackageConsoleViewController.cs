@@ -25,9 +25,12 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppKit;
 using Microsoft.VisualStudio.Components;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
 using MonoDevelop.Components;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement.Scripting;
@@ -55,9 +58,12 @@ namespace MonoDevelop.PackageManagement
 
 		int maxVisibleColumns = 0;
 
+		List<PackageConsoleClassificationTypeSpanInfo> coloredSpans = new List<PackageConsoleClassificationTypeSpanInfo>();
+
 		public PackageConsoleViewController ()
 		{
 			controller = new ConsoleViewController (nameof (PackageConsoleViewController));
+			controller.TextView.TextBuffer.Properties[typeof (PackageConsoleViewController)] = this;
 
 			controller.Editable = true;
 
@@ -67,6 +73,11 @@ namespace MonoDevelop.PackageManagement
 
 		public NSView View {
 			get { return controller.View; }
+		}
+
+		internal ICocoaTextView TextView
+		{
+			get { return controller.TextView; }
 		}
 
 		public void GrabFocus ()
@@ -96,6 +107,13 @@ namespace MonoDevelop.PackageManagement
 			controller.ConsoleInput -= OnConsoleInput;
 			controller.TextView.IsKeyboardFocusedChanged -= TextViewIsKeyboardFocusedChanged;
 		}
+
+		internal IList<PackageConsoleClassificationTypeSpanInfo> ColoredSpans {
+			get { return coloredSpans; }
+		}
+
+		internal event EventHandler<PackageConsoleClassificationTypeSpanInfoEventArgs> ColoredSpanAdded;
+		internal event EventHandler ConsoleCleared;
 
 		void WriteOutputLine (string message, ScriptingStyle style)
 		{
@@ -157,18 +175,27 @@ namespace MonoDevelop.PackageManagement
 		{
 			Runtime.AssertMainThread ();
 
-			//TextTag tag = GetTag (logLevel);
-			//TextIter start = Buffer.EndIter;
+			string classification = PackageConsoleClassificationTypes.GetClassificationTypeName (logLevel);
+			if (classification == null) {
+				controller.WriteOutput (line);
+			} else {
+				WriteOutputWithClassification (line, classification);
+			}
+		}
 
-			//if (tag == null) {
-			//	Buffer.Insert (ref start, line);
-			//} else {
-			//	Buffer.InsertWithTags (ref start, line, tag);
-			//}
-			//Buffer.PlaceCursor (Buffer.EndIter);
-			//TextView.ScrollMarkOnscreen (Buffer.InsertMark);
+		void WriteOutputWithClassification (string line, string classification)
+		{
+			int begin = controller.TextView.TextSnapshot.Length;
 
 			controller.WriteOutput (line);
+
+			int end = controller.TextView.TextSnapshot.Length;
+
+			var span = new SnapshotSpan (controller.TextView.TextSnapshot, begin, end - begin);
+			var spanInfo = new PackageConsoleClassificationTypeSpanInfo (span, classification);
+
+			coloredSpans.Add (spanInfo);
+			ColoredSpanAdded?.Invoke (this, new PackageConsoleClassificationTypeSpanInfoEventArgs(spanInfo));
 		}
 
 		public bool ScrollToEndWhenTextWritten { get; set; }
@@ -203,6 +230,9 @@ namespace MonoDevelop.PackageManagement
 		{
 			Runtime.RunInMainThread (() => {
 				controller.Clear ();
+
+				coloredSpans.Clear ();
+				ConsoleCleared?.Invoke (this, EventArgs.Empty);
 			});
 		}
 

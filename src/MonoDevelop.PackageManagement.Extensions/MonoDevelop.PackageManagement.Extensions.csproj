@@ -19,6 +19,11 @@
     <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore">
+      <HintPath>$(MDBinDir)\PresentationCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\NuGet-LICENSE.txt">
       <Link>NuGet-LICENSE.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
