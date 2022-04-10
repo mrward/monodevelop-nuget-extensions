@@ -89,7 +89,15 @@ namespace MonoDevelop.PackageManagement
 
 		void OnConsoleInput (object sender, ConsoleInputEventArgs e)
 		{
-			ConsoleInput?.Invoke (sender, e);
+			if (userInputTask != null) {
+				// Waiting for user input. Bypass the usual processing.
+				WriteOutputLine (string.Empty, ScriptingStyle.Out);
+
+				userInputTask.TrySetResult (e.Text);
+				userInputTask = null;
+			} else {
+				ConsoleInput?.Invoke (sender, e);
+			}
 		}
 
 		public event EventHandler TextViewFocused;
