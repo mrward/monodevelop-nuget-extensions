@@ -19,5 +19,6 @@
 Namespace EnvDTE
 	Public Interface Configuration
 		ReadOnly Property Properties As Properties
+		ReadOnly Property ConfigurationName() As String
 	End Interface
 End Namespace

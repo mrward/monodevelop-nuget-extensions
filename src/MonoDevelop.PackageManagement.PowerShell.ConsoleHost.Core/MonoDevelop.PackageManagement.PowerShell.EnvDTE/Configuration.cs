@@ -41,5 +41,12 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 		internal Project Project { get; }
 
 		public global::EnvDTE.Properties Properties { get; private set; }
+
+		public string ConfigurationName {
+			get {
+				string name = Properties.Item ("ConfigurationName").Value as string;
+				return name ?? string.Empty;
+			}
+		}
 	}
 }
