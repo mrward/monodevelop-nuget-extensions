@@ -121,12 +121,35 @@ namespace MonoDevelop.PackageManagement.Scripting
 				RedirectStandardOutput = true
 			};
 
+			ConfigurePathEnvironmentVariable (info);
+
 			var process = new Process {
 				StartInfo = info
 			};
 			process.Start ();
 
 			return process;
+		}
+
+		/// <summary>
+		/// Ensure dotnet is on the PATH.
+		/// </summary>
+		static void ConfigurePathEnvironmentVariable (ProcessStartInfo info)
+		{
+			if (DotNetCoreRuntime.IsMissing) {
+				return;
+			}
+
+			string dotNetDirectory = Path.GetDirectoryName (DotNetCoreRuntime.FileName);
+			if (string.IsNullOrEmpty (dotNetDirectory)) {
+				return;
+			}
+
+			string path = Environment.GetEnvironmentVariable ("PATH");
+			if (!string.IsNullOrEmpty (path)) {
+				path += Path.PathSeparator + dotNetDirectory;
+				info.EnvironmentVariables ["PATH"] = path;
+			}
 		}
 
 		void JsonRpcDisconnected (object sender, JsonRpcDisconnectedEventArgs e)
