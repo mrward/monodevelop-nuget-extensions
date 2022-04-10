@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.4" />
-    <PackageReference Include="StreamJsonRpc" Version="2.3.99" />
+    <PackageReference Include="StreamJsonRpc" Version="2.8.28" />
     <PackageReference Include="Lucene.Net" Version="3.0.3" />
     <PackageReference Include="NuGet.Common" Version="4.8.2" />
     <PackageReference Include="NuGet.Indexing" Version="4.8.2" />
