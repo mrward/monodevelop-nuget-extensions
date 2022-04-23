@@ -1,10 +1,10 @@
 ﻿//
-// RemotePowerShellHostFactory.cs
+// PowerShellConsoleHostFactory.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2019 Microsoft
+// Copyright (c) 2022 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ using System;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	class RemotePowerShellHostFactory : IPowerShellHostFactory
+	class PowerShellConsoleHostFactory : IPowerShellHostFactory
 	{
 		public IPowerShellHost CreatePowerShellHost (
 			IScriptingConsole scriptingConsole,
@@ -36,7 +36,8 @@ namespace MonoDevelop.PackageManagement.Scripting
 			object privateData,
 			object dte)
 		{
-			return new RemotePowerShellHost (scriptingConsole);
+			return new PowerShellConsoleHost (scriptingConsole, version, privateData, dte);
 		}
 	}
 }
+

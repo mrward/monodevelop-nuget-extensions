@@ -85,7 +85,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			: this (
 				packageEvents,
 				new ConsoleHostSolutionManager (),
-				new RemotePowerShellHostFactory (),
+				new PowerShellConsoleHostFactory (),
 				new PackageManagementAddInPath ())
 		{
 		}
@@ -198,8 +198,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 					GetNuGetVersion (),
 					clearConsoleHostCommand,
 					new ICSharpCode.PackageManagement.EnvDTE.DTE ());
-
-			powerShellHost.Exited += PowerShellHostExited;
 		}
 
 		protected virtual Version GetNuGetVersion ()
@@ -491,21 +489,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			ITabExpansion tabExpansion = powerShellHost.CreateTabExpansion ();
 			return new CommandExpansion (tabExpansion);
-		}
-
-		void PowerShellHostExited (object sender, EventArgs e)
-		{
-			try {
-				ReloadPackageSources ();
-				OnMaxVisibleColumnsChanged ();
-				InitializeLazyScriptExecutor ();
-				commandExpansion.CommandExpansion = CreateCommandExpansion ();
-				InitializePackageScriptsForOpenSolution ();
-			} catch (Exception ex) {
-				string message = GettextCatalog.GetString ("Unable to initialize remote PowerShell host. {0}", ex.Message);
-				ScriptingConsole.WriteLine (message, ScriptingStyle.Error);
-				LoggingService.LogError ("PowerShellHostExited error", ex);
-			}
 		}
 	}
 }

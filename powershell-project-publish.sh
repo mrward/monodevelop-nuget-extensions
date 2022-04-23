@@ -1,0 +1,1 @@
+dotnet publish src/MonoDevelop.PackageManagement.PowerShell/MonoDevelop.PackageManagement.PowerShell.csproj --no-self-contained --runtime osx -o bin/

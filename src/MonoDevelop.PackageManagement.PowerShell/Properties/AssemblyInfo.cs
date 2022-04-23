@@ -1,5 +1,5 @@
 ﻿//
-// TabExpansion.cs
+// AssemblyInfo.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,39 +24,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
-using NuGetConsole;
-using StreamJsonRpc;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace MonoDevelop.PackageManagement.Scripting
-{
-	class TabExpansion : ITabExpansion
-	{
-		readonly JsonRpc rpc;
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle ("MonoDevelop.PackageManagement.PowerShell")]
+[assembly: AssemblyDescription ("Package Management PowerShell")]
+[assembly: AssemblyProduct ("MonoDevelop.PackageManagement")]
+[assembly: AssemblyCopyright ("Copyright (C) 2022 Matthew Ward")]
+[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
 
-		public TabExpansion ()
-		{
-			//this.rpc = rpc;
-		}
+// This sets the default COM visibility of types in the assembly to invisible.
+// If you need to expose a type to COM, use [ComVisible(true)] on that type.
+[assembly: ComVisible (false)]
 
-		public async Task<string[]> GetExpansionsAsync (
-			string line,
-			string lastWord,
-			CancellationToken token)
-		{
-			var message = new TabExpansionParams {
-				Line = line,
-				LastWord = lastWord
-			};
-			TabExpansionResult result = await rpc.InvokeWithParameterObjectAsync<TabExpansionResult> (
-				Methods.TabExpansionName,
-				message,
-				token);
-			return result.Expansions;
-		}
-	}
-}
+// The assembly version has following format :
+//
+// Major.Minor.Build.Revision
+//
+// You can specify all the values or you can use the default the Revision and 
+// Build Numbers by using the '*' as shown below:
+[assembly: AssemblyVersion ("0.28")]

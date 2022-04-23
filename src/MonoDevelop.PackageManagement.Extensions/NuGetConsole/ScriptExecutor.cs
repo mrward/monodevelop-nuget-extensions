@@ -29,9 +29,9 @@ namespace NuGetConsole
 		Lazy<ISettings> Settings { get; set; }
 		JsonRpc rpc;
 
-		public ScriptExecutor (JsonRpc rpc)
+		public ScriptExecutor ()
 		{
-			this.rpc = rpc;
+			//this.rpc = rpc;
 			Settings = new Lazy<ISettings> (() => SettingsLoader.LoadDefaultSettings ());
 			Reset ();
 		}
