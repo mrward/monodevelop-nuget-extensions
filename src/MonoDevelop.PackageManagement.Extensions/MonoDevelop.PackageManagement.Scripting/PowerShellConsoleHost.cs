@@ -246,14 +246,13 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void StopCommand ()
 		{
-			//if (rpc == null)
-			//	return;
-
-			//try {
-			//	rpc.NotifyAsync (Methods.StopCommandName).Ignore ();
-			//} catch (Exception ex) {
-			//	LoggingService.LogError ("StopCommand error", ex);
-			//}
+			try {
+				cancellationTokenSource.Cancel ();
+				Pipeline pipeline = currentPipeline;
+				pipeline?.StopAsync ();
+			} catch (Exception ex) {
+				LoggingService.LogError ("StopCommand error", ex);
+			}
 		}
 
 		public IScriptExecutor CreateScriptExecutor ()
