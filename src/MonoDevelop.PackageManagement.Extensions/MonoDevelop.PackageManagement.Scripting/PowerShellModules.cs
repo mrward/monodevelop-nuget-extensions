@@ -1,5 +1,5 @@
 ﻿//
-// TabExpansion.cs
+// PowerShellModules.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,39 +24,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
-using NuGetConsole;
-using StreamJsonRpc;
+using System.Collections.Generic;
+using System.IO;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	class TabExpansion : ITabExpansion
+	static class PowerShellModules
 	{
-		readonly JsonRpc rpc;
-
-		public TabExpansion ()
+		public static IEnumerable<string> GetModules ()
 		{
-			//this.rpc = rpc;
-		}
-
-		public async Task<string[]> GetExpansionsAsync (
-			string line,
-			string lastWord,
-			CancellationToken token)
-		{
-			var message = new TabExpansionParams {
-				Line = line,
-				LastWord = lastWord
-			};
-			TabExpansionResult result = await rpc.InvokeWithParameterObjectAsync<TabExpansionResult> (
-				Methods.TabExpansionName,
-				message,
-				token);
-			return result.Expansions;
+			string directory = Path.GetDirectoryName (typeof (PowerShellModules).Assembly.Location);
+			string module = Path.Combine (directory, "Modules", "NuGet", "NuGet.psd1");
+			yield return module;
 		}
 	}
 }

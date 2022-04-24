@@ -26,12 +26,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Threading;
+using System.Threading.Tasks;
+using MonoDevelop.Core;
 using MonoDevelop.DotNetCore;
 using MonoDevelop.PackageManagement.PowerShell;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
@@ -42,7 +44,7 @@ using NuGetConsole;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	class PowerShellConsoleHost : IPowerShellHost
+	class PowerShellConsoleHost : IPowerShellHost, ITabExpansion
 	{
 		readonly IScriptingConsole scriptingConsole;
 		readonly object dte;
@@ -262,7 +264,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public ITabExpansion CreateTabExpansion ()
 		{
-			return new TabExpansion ();
+			return this;
 		}
 
 		void InvokePowerShellInternal (string line, params object[] input)
@@ -285,6 +287,14 @@ namespace MonoDevelop.PackageManagement.Scripting
 				cancellationTokenSource.Dispose ();
 				cancellationTokenSource = new CancellationTokenSource ();
 			}
+
+			host.SetPropertyValueOnHost ("CancellationTokenKey", cancellationTokenSource.Token);
+		}
+
+		void RefreshHostCancellationToken (CancellationToken token)
+		{
+			cancellationTokenSource.Dispose ();
+			cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource (token);
 
 			host.SetPropertyValueOnHost ("CancellationTokenKey", cancellationTokenSource.Token);
 		}
@@ -316,6 +326,55 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			exception = ExceptionUtilities.Unwrap (exception);
 			scriptingConsole.WriteLine (exception.Message, ScriptingStyle.Error);
+		}
+
+		public async Task<string[]> GetExpansionsAsync (
+			string line,
+			string lastWord,
+			CancellationToken token)
+		{
+			try {
+				string[] expansions = await Task.Run (() => {
+					return RunTabExpansionInternal (line, lastWord, token);
+				}, token);
+				return expansions;
+			} catch (OperationCanceledException) {
+				// Ignore
+			} catch (Exception ex) {
+				LoggingService.LogError (string.Format ("Error getting tab expansions {0}", ex));
+			}
+
+			return Array.Empty<string> ();
+		}
+
+		string[] RunTabExpansionInternal (string line, string lastWord, CancellationToken token)
+		{
+			string script = @"$__pc_args=@();$input|%{$__pc_args+=$_};if(Test-Path Function:\TabExpansion2){(TabExpansion2 $__pc_args[0] $__pc_args[0].length).CompletionMatches|%{$_.CompletionText}}else{TabExpansion $__pc_args[0] $__pc_args[1]};Remove-Variable __pc_args -Scope 0;";
+			var input = new object[] { line, lastWord };
+
+			Collection<PSObject> results = InvokePowerShellNoOutput (script, input, token);
+
+			if (results != null) {
+				return results.Select (item => item?.ToString ())
+					.ToArray ();
+			}
+
+			return Array.Empty<string> ();
+		}
+
+		Collection<PSObject> InvokePowerShellNoOutput (string line, object[] input, CancellationToken token)
+		{
+			try {
+				RefreshHostCancellationToken (token);
+				using (Pipeline pipeline = runspace.CreatePipeline ()) {
+					pipeline.Commands.AddScript (line, false);
+					currentPipeline = pipeline;
+					return pipeline.Invoke (input);
+				}
+			} finally {
+				currentPipeline = null;
+			}
+			return null;
 		}
 	}
 }
