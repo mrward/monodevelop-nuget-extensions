@@ -290,6 +290,11 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void ProcessUserInput (string line)
 		{
+			if (string.IsNullOrEmpty (line)) {
+				WritePrompt ();
+				return;
+			}
+
 			OnRunningCommand ();
 			InitializeToken ();
 

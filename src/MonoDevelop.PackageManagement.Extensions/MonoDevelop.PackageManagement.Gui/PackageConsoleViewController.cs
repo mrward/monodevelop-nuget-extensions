@@ -65,6 +65,7 @@ namespace MonoDevelop.PackageManagement
 			controller.TextView.TextBuffer.Properties[typeof (PackageConsoleViewController)] = this;
 
 			controller.Editable = true;
+			controller.AllowEmptyConsoleInput = true;
 
 			controller.ConsoleInput += OnConsoleInput;
 			controller.TextView.IsKeyboardFocusedChanged += TextViewIsKeyboardFocusedChanged;
@@ -90,9 +91,6 @@ namespace MonoDevelop.PackageManagement
 		void OnConsoleInput (object sender, ConsoleInputEventArgs e)
 		{
 			if (userInputTask != null) {
-				// Waiting for user input. Bypass the usual processing.
-				WriteOutputLine (string.Empty, ScriptingStyle.Out);
-
 				userInputTask.TrySetResult (e.Text);
 				userInputTask = null;
 			} else {
