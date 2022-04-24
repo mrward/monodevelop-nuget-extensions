@@ -26,14 +26,14 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// Get the view of installed packages. Use for Get-Package command.
 		/// </summary>
 		internal static List<PowerShellInstalledPackage> GetPowerShellPackageView (
-			Dictionary<Project, IEnumerable<PackageReference>> dictionary,
+			Dictionary<NuGetProject, IEnumerable<PackageReference>> dictionary,
 			Configuration.ISettings settings)
 		{
 			var views = new List<PowerShellInstalledPackage> ();
 
 			foreach (var entry in dictionary) {
 				var nugetProject = entry.Key;
-				var projectName = entry.Key.Name;
+				var projectName = entry.Key.GetMetadata<string> (NuGetProjectMetadataKeys.Name);
 
 				//FolderNuGetProject packageFolderProject = null;
 				//FallbackPackagePathResolver fallbackResolver = null;

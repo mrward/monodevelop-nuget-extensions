@@ -36,9 +36,9 @@ using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 
-namespace MonoDevelop.PackageManagement
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	class ConsoleHostSolutionManager : IMonoDevelopSolutionManager
+	class ConsoleHostSolutionManager : IConsoleHostSolutionManager, IMonoDevelopSolutionManager
 	{
 		MonoDevelopSolutionManager solutionManager;
 
@@ -180,9 +180,21 @@ namespace MonoDevelop.PackageManagement
 			}
 		}
 
-		public Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject)
+		public async Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject)
 		{
-			throw new NotImplementedException ();
+			if (nuGetProject == null) {
+				throw new ArgumentNullException (nameof (nuGetProject));
+			}
+
+			GetSolutionManager ();
+
+			// Try searching for simple names first
+			string name = nuGetProject.GetMetadata<string> (NuGetProjectMetadataKeys.Name);
+			if ((await GetNuGetProjectAsync (name)) == nuGetProject) {
+				return name;
+			}
+
+			return nuGetProject.GetUniqueName ();
 		}
 
 		public void OnActionsExecuted (IEnumerable<ResolvedAction> actions)
@@ -235,6 +247,52 @@ namespace MonoDevelop.PackageManagement
 		public Task<bool> DoesNuGetSupportsAnyProjectAsync ()
 		{
 			throw new NotImplementedException ();
+		}
+
+		public string DefaultProjectFileName {
+			get {
+				Project project = PackageManagementExtendedServices.ConsoleHost.DefaultProject;
+				return project?.FileName;
+			}
+		}
+
+		public Task<IEnumerable<NuGetProject>> GetAllProjectsAsync ()
+		{
+			return GetNuGetProjectsAsync ();
+		}
+
+		public Task<NuGetProject> GetDefaultProjectAsync ()
+		{
+			var project = PackageManagementExtendedServices.ConsoleHost.DefaultProject as DotNetProject;
+			if (project != null) {
+				var factory = new MonoDevelopNuGetProjectFactory ();
+				NuGetProject nuGetProject = factory.CreateNuGetProject (project);
+				return Task.FromResult (nuGetProject);
+			}
+			return null;
+		}
+
+		public async Task<NuGetProject> GetProjectAsync (string projectName)
+		{
+			if (string.IsNullOrEmpty (projectName)) {
+				return null;
+			}
+
+			var projects = await GetAllProjectsAsync ();
+			return projects.FirstOrDefault (project => IsMatch (project, projectName));
+		}
+
+		static bool IsMatch (NuGetProject project, string projectName)
+		{
+			DotNetProject dotNetProject = project.GetDotNetProject ()?.DotNetProject;
+			if (dotNetProject == null) {
+				return false;
+			}
+
+			return StringComparer.OrdinalIgnoreCase.Equals (dotNetProject.Name, projectName) ||
+				StringComparer.OrdinalIgnoreCase.Equals (
+					dotNetProject.GetUniqueName (),
+					projectName);
 		}
 	}
 }

@@ -195,20 +195,20 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		[JsonRpcMethod (Methods.PackageSourcesChangedName)]
 		public void OnPackageSourcesChanged (JToken arg)
 		{
-			Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged");
-			try {
-				var message = arg.ToObject<PackageSourcesChangedParams> ();
+			//Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged");
+			//try {
+			//	var message = arg.ToObject<PackageSourcesChangedParams> ();
 
-				Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged ActiveSource: {0}", message.ActiveSource?.Name);
-				foreach (var source in message.Sources) {
-					Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged Source: {0}", source.Name);
-				}
+			//	Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged ActiveSource: {0}", message.ActiveSource?.Name);
+			//	foreach (var source in message.Sources) {
+			//		Logger.Log ("PowerShellConsoleHost.OnPackageSourcesChanged Source: {0}", source.Name);
+			//	}
 
-				ConsoleHostServices.SourceRepositoryProvider.UpdatePackageSources (message.Sources);
-				host.SetPropertyValueOnHost ("activePackageSource", GetActivePackageSourceName (message.ActiveSource));
-			} catch (Exception ex) {
-				Logger.Log (string.Format ("Error updating package sources. {0}", ex));
-			}
+			//	ConsoleHostServices.SourceRepositoryProvider.UpdatePackageSources (message.Sources);
+			//	host.SetPropertyValueOnHost ("activePackageSource", GetActivePackageSourceName (message.ActiveSource));
+			//} catch (Exception ex) {
+			//	Logger.Log (string.Format ("Error updating package sources. {0}", ex));
+			//}
 		}
 
 		static string GetActivePackageSourceName (PackageSource source)
@@ -238,40 +238,40 @@ namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost
 		[JsonRpcMethod (Methods.SolutionLoadedName)]
 		public void OnSolutionLoaded (JToken arg)
 		{
-			Logger.Log ("PowerShellConsoleHost.OnSolutionLoaded");
-			try {
-				var message = arg.ToObject<SolutionParams> ();
-				Logger.Log ("PowerShellConsoleHost.OnSolutionLoaded: {0}", message.FileName);
+			//Logger.Log ("PowerShellConsoleHost.OnSolutionLoaded");
+			//try {
+			//	var message = arg.ToObject<SolutionParams> ();
+			//	Logger.Log ("PowerShellConsoleHost.OnSolutionLoaded: {0}", message.FileName);
 
-				ConsoleHostServices.SolutionManager.OnSolutionLoaded (message.FileName);
-			} catch (Exception ex) {
-				Logger.Log (string.Format ("Error on solution loaded. {0}", ex));
-			}
+			//	ConsoleHostServices.SolutionManager.OnSolutionLoaded (message.FileName);
+			//} catch (Exception ex) {
+			//	Logger.Log (string.Format ("Error on solution loaded. {0}", ex));
+			//}
 		}
 
 		[JsonRpcMethod (Methods.SolutionUnloadedName)]
 		public void OnSolutionUnloaded ()
 		{
-			Logger.Log ("PowerShellConsoleHost.OnSolutionUnloaded");
-			try {
-				ConsoleHostServices.SolutionManager.OnSolutionUnloaded ();
-			} catch (Exception ex) {
-				Logger.Log (string.Format ("Error on solution loaded. {0}", ex));
-			}
+			//Logger.Log ("PowerShellConsoleHost.OnSolutionUnloaded");
+			//try {
+			//	ConsoleHostServices.SolutionManager.OnSolutionUnloaded ();
+			//} catch (Exception ex) {
+			//	Logger.Log (string.Format ("Error on solution loaded. {0}", ex));
+			//}
 		}
 
 		[JsonRpcMethod (Methods.DefaultProjectChangedName)]
 		public void OnDefaultProjectChanged (JToken arg)
 		{
-			Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged");
-			try {
-				var message = arg.ToObject<DefaultProjectChangedParams> ();
-				Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged '{0}'", message.FileName);
+			//Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged");
+			//try {
+			//	var message = arg.ToObject<DefaultProjectChangedParams> ();
+			//	Logger.Log ("PowerShellConsoleHost.OnDefaultProjectChanged '{0}'", message.FileName);
 
-				ConsoleHostServices.SolutionManager.DefaultProjectFileName = message.FileName;
-			} catch (Exception ex) {
-				Logger.Log (string.Format ("Error changing active source. {0}", ex));
-			}
+			//	ConsoleHostServices.SolutionManager.DefaultProjectFileName = message.FileName;
+			//} catch (Exception ex) {
+			//	Logger.Log (string.Format ("Error changing active source. {0}", ex));
+			//}
 		}
 
 		[JsonRpcMethod (Methods.StopCommandName)]

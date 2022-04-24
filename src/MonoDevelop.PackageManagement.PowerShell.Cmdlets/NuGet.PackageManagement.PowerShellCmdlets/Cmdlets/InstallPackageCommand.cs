@@ -67,7 +67,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 			try {
 				foreach (var identity in identities) {
-					await InstallPackageByIdentityAsync (DTEProject, identity,GetDependencyBehavior (), allowPrerelease, WhatIf.IsPresent);
+					await InstallPackageByIdentityAsync (Project, identity,GetDependencyBehavior (), allowPrerelease, WhatIf.IsPresent);
 				}
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
@@ -82,7 +82,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task InstallPackageByIdAsync ()
 		{
 			try {
-				await InstallPackageByIdAsync (DTEProject, Id, GetDependencyBehavior (), allowPrerelease, WhatIf.IsPresent);
+				await InstallPackageByIdAsync (Project, Id, GetDependencyBehavior (), allowPrerelease, WhatIf.IsPresent);
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
 			} finally {
@@ -108,8 +108,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 						var fullPath = Path.GetFullPath (Id);
 						Source = Path.GetDirectoryName (fullPath);
 					}
-				} else {
-					NormalizePackageId (Project);
 				}
 			}
 		}

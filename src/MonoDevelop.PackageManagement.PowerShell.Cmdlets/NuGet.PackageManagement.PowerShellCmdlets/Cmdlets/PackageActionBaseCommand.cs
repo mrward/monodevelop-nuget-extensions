@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using MonoDevelop.PackageManagement;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.ProjectManagement.Projects;
@@ -70,7 +69,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			DetermineFileConflictAction ();
 
 			Task.Run (async delegate {
-				await GetDTEProjectAsync (ProjectName);
+				await GetProjectAsync (ProjectName);
 				//await CheckMissingPackagesAsync ();
 				//await CheckPackageManagementFormat ();
 			}).Wait ();
@@ -84,48 +83,47 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// Install package by Identity
 		/// </summary>
 		protected async Task InstallPackageByIdentityAsync (
-			Project project,
+			NuGetProject project,
 			PackageIdentity identity,
 			DependencyBehavior dependencyBehavior,
 			bool allowPrerelease,
 			bool isPreview)
 		{
 			if (isPreview) {
-				var actionsList = await project.PreviewInstallPackageAsync (
-					identity.Id,
-					identity.Version.ToNormalizedString (),
-					dependencyBehavior,
-					allowPrerelease,
-					PrimarySourceRepositories,
-					Token);
-				if (actionsList.IsPackageAlreadyInstalled) {
-					LogPackageAlreadyInstalled (identity, project);
-				} else {
-					PreviewNuGetPackageActions (actionsList.Actions);
-				}
+				//var actionsList = await project.PreviewInstallPackageAsync (
+				//	identity.Id,
+				//	identity.Version.ToNormalizedString (),
+				//	dependencyBehavior,
+				//	allowPrerelease,
+				//	PrimarySourceRepositories,
+				//	Token);
+				//if (actionsList.IsPackageAlreadyInstalled) {
+				//	LogPackageAlreadyInstalled (identity, project);
+				//} else {
+				//	PreviewNuGetPackageActions (actionsList.Actions);
+				//}
 			} else {
-				var result = await project.InstallPackageAsync (
-					identity.Id,
-					identity.Version.ToNormalizedString (),
-					dependencyBehavior,
-					allowPrerelease,
-					ConflictAction,
-					PrimarySourceRepositories,
-					Token);
-				if (result.IsPackageAlreadyInstalled) {
-					LogPackageAlreadyInstalled (identity, project);
-				}
+				//var result = await project.InstallPackageAsync (
+				//	identity.Id,
+				//	dependencyBehavior,
+				//	allowPrerelease,
+				//	ConflictAction,
+				//	PrimarySourceRepositories,
+				//	Token);
+				//if (result.IsPackageAlreadyInstalled) {
+				//	LogPackageAlreadyInstalled (identity, project);
+				//}
 			}
 		}
 
-		void LogPackageAlreadyInstalled (PackageIdentity identity, Project project)
+		void LogPackageAlreadyInstalled (PackageIdentity identity, NuGetProject project)
 		{
 			LogPackageAlreadyInstalled (identity.ToString (), project);
 		}
 
-		void LogPackageAlreadyInstalled (string packageId, Project project)
+		void LogPackageAlreadyInstalled (string packageId, NuGetProject project)
 		{
-			string message = string.Format ("Package '{0}' already exists in project '{1}'", packageId, project.Name);
+			string message = string.Format ("Package '{0}' already exists in project '{1}'", packageId, project.GetName ());
 			Log (MessageLevel.Info, message);
 		}
 
@@ -133,7 +131,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// Install package by Id
 		/// </summary>
 		protected async Task InstallPackageByIdAsync (
-			Project project,
+			NuGetProject project,
 			string packageId,
 			DependencyBehavior dependencyBehavior,
 			bool allowPrerelease,
@@ -143,50 +141,32 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			//	return;
 			//}
 
-			if (isPreview) {
-				var actionsList = await project.PreviewInstallPackageAsync (
-					packageId,
-					null,
-					dependencyBehavior,
-					allowPrerelease,
-					PrimarySourceRepositories,
-					Token);
-				if (actionsList.IsPackageAlreadyInstalled) {
-					LogPackageAlreadyInstalled (packageId, project);
-				} else {
-					PreviewNuGetPackageActions (actionsList.Actions);
-				}
-			} else {
-				var result = await project.InstallPackageAsync (
-					packageId,
-					null,
-					dependencyBehavior,
-					allowPrerelease,
-					ConflictAction,
-					PrimarySourceRepositories,
-					Token);
-				if (result.IsPackageAlreadyInstalled) {
-					LogPackageAlreadyInstalled (packageId, project);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Normalize package Id input against server metadata for project K, which is case-sensitive.
-		/// </summary>
-		protected void NormalizePackageId (NuGetProject project)
-		{
-			if (!(project is ProjectKNuGetProjectBase)) {
-				return;
-			}
-
-			var metadata = Task.Run (() => GetPackagesFromRemoteSourceAsync (Id, includePrerelease: true)).Result;
-			if (!metadata.Any ()) {
-				return;
-			}
-
-			// note that we're assuming that package id is the same for all versions.
-			Id = metadata.First ().Identity.Id;
+			//if (isPreview) {
+			//	var actionsList = await project.PreviewInstallPackageAsync (
+			//		packageId,
+			//		null,
+			//		dependencyBehavior,
+			//		allowPrerelease,
+			//		PrimarySourceRepositories,
+			//		Token);
+			//	if (actionsList.IsPackageAlreadyInstalled) {
+			//		LogPackageAlreadyInstalled (packageId, project);
+			//	} else {
+			//		PreviewNuGetPackageActions (actionsList.Actions);
+			//	}
+			//} else {
+			//	var result = await project.InstallPackageAsync (
+			//		packageId,
+			//		null,
+			//		dependencyBehavior,
+			//		allowPrerelease,
+			//		ConflictAction,
+			//		PrimarySourceRepositories,
+			//		Token);
+			//	if (result.IsPackageAlreadyInstalled) {
+			//		LogPackageAlreadyInstalled (packageId, project);
+			//	}
+			//}
 		}
 
 		protected virtual void WarnIfParametersAreNotSupported ()

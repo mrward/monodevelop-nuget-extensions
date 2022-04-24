@@ -4,7 +4,7 @@
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2019 Microsoft
+// Copyright (c) 2022 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,16 +26,19 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NuGet.ProjectManagement;
 
-namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	//public interface IConsoleHostSolutionManager
-	//{
-	//	bool IsSolutionOpen { get; }
-	//	string DefaultProjectFileName { get; set; }
+	public interface IConsoleHostSolutionManager
+	{
+		bool IsSolutionOpen { get; }
+		string DefaultProjectFileName { get; }
 
-	//	Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ();
-	//	Task<global::EnvDTE.Project> GetDefaultProjectAsync ();
-	//	Task<global::EnvDTE.Project> GetProjectAsync (string projectName);
-	//}
+		Task<IEnumerable<NuGetProject>> GetAllProjectsAsync ();
+		Task<NuGetProject> GetDefaultProjectAsync ();
+		Task<NuGetProject> GetProjectAsync (string projectName);
+		Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject);
+	}
 }
+

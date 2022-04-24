@@ -49,9 +49,10 @@ namespace MonoDevelop.PackageManagement.VisualStudio
 
 		EnvDTE.Project FindProject (string uniqueName)
 		{
-			var projects = ConsoleHostServices.SolutionManager.GetAllProjectsAsync ().WaitAndGetResult ();
-			return projects
-				.SingleOrDefault (project => ProjectUniqueNameMatches (project, uniqueName));
+			return null;
+			//var projects = ConsoleHostServices.SolutionManager.GetAllProjectsAsync ().WaitAndGetResult ();
+			//return projects
+			//	.SingleOrDefault (project => ProjectUniqueNameMatches (project, uniqueName));
 		}
 
 		bool ProjectUniqueNameMatches (EnvDTE.Project project, string uniqueName)

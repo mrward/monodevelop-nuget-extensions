@@ -25,7 +25,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 	{
 		bool allowPrerelease;
 
-		List<Project> DTEProjects = new List<Project> ();
+		List<NuGetProject> Projects = new List<NuGetProject> ();
 
 		protected override void Preprocess ()
 		{
@@ -37,9 +37,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			Task.Run (async () => {
 				// Get the projects in the solution that's not the current default or specified project to sync the package identity to.
 				var projects = await SolutionManager.GetAllProjectsAsync ();
-				DTEProjects = projects
-					.Where (p => !StringComparer.OrdinalIgnoreCase.Equals (p.Name, ProjectName))
-					.Select (project => (Project)project)
+				Projects = projects
+					.Where (p => !StringComparer.OrdinalIgnoreCase.Equals (p.GetMetadata<string> (NuGetProjectMetadataKeys.Name), ProjectName))
 					.ToList ();
 			}).Wait ();
 		}
@@ -53,7 +52,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				return result;
 			}).WaitAndGetResult ();
 
-			if (DTEProjects.Count == 0) {
+			if (Projects.Count == 0) {
 				LogCore (MessageLevel.Info, string.Format (
 					CultureInfo.CurrentCulture,
 					"There are no other projects to sync the package '{0}'.",
@@ -78,7 +77,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task SyncPackages (PackageIdentity identity)
 		{
 			try {
-				foreach (var project in DTEProjects) {
+				foreach (var project in Projects) {
 					await InstallPackageByIdentityAsync (
 						project,
 						identity,
@@ -103,7 +102,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				var nVersion = PowerShellCmdletsUtility.GetNuGetVersionFromString (Version);
 				identity = new PackageIdentity (Id, nVersion);
 			} else {
-				identity = (await DTEProject.GetInstalledPackagesAsync (CancellationToken.None))
+				identity = (await Project.GetInstalledPackagesAsync (CancellationToken.None))
 					.Where (p => string.Equals (p.PackageIdentity.Id, Id, StringComparison.OrdinalIgnoreCase))
 					.Select (v => v.PackageIdentity).FirstOrDefault ();
 			}

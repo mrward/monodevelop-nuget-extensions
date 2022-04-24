@@ -8,8 +8,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using MonoDevelop.PackageManagement;
 using NuGet.Common;
 using NuGet.ProjectManagement;
 using NuGet.Resolver;
@@ -65,7 +64,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		[Parameter (ParameterSetName = "All")]
 		public SwitchParameter Reinstall { get; set; }
 
-		List<Project> DTEProjects { get; set; }
+		List<NuGetProject> Projects { get; set; }
 
 		protected override void Preprocess ()
 		{
@@ -74,10 +73,10 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			if (!projectSpecified) {
 				 Task.Run (async () => {
 					var projects = await SolutionManager.GetAllProjectsAsync ();
-					DTEProjects = projects.Select (project => (Project)project).ToList ();
+					Projects = projects.ToList ();
 				}).Wait ();
 			} else {
-				DTEProjects = new List<Project> { DTEProject };
+				Projects = new List<NuGetProject> { Project };
 			}
 		}
 
@@ -102,7 +101,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected override void WarnIfParametersAreNotSupported ()
 		{
 			if (Source != null) {
-				var projectNames = string.Join (",", DTEProjects.Select (p => p.UniqueName));
+				var projectNames = string.Join (",", Projects.Select (p => p.GetUniqueName ()));
 				if (!string.IsNullOrEmpty (projectNames)) {
 					var warning = string.Format (
 						CultureInfo.CurrentUICulture,
@@ -119,19 +118,19 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		async Task UpdateOrReinstallAllPackagesAsync ()
 		{
-			try {
-				await DTEProjects.UpdateAllPackagesAsync (
-					GetDependencyBehavior (),
-					allowPrerelease,
-					DetermineVersionConstraints (),
-					ConflictAction,
-					PrimarySourceRepositories,
-					Token);
-			} catch (Exception ex) {
-				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
-			} finally {
-				BlockingCollection.Add (new ExecutionCompleteMessage ());
-			}
+			//try {
+			//	await Projects.UpdateAllPackagesAsync (
+			//		GetDependencyBehavior (),
+			//		allowPrerelease,
+			//		DetermineVersionConstraints (),
+			//		ConflictAction,
+			//		PrimarySourceRepositories,
+			//		Token);
+			//} catch (Exception ex) {
+			//	Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
+			//} finally {
+			//	BlockingCollection.Add (new ExecutionCompleteMessage ());
+			//}
 		}
 
 		/// <summary>
@@ -154,34 +153,34 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		async Task PreviewAndExecuteUpdateActionsForSinglePackage ()
 		{
-			if (WhatIf.IsPresent) {
-				var actionsList = await DTEProjects.PreviewUpdatePackageAsync (
-					Id,
-					nugetVersion?.ToNormalizedString (),
-					GetDependencyBehavior (),
-					allowPrerelease,
-					DetermineVersionConstraints (),
-					PrimarySourceRepositories,
-					Token);
-				if (actionsList.IsPackageInstalled) {
-					PreviewNuGetPackageActions (actionsList.Actions);
-				} else {
-					Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
-				}
-			} else {
-				var result = await DTEProjects.UpdatePackageAsync (
-					Id,
-					nugetVersion?.ToNormalizedString (),
-					GetDependencyBehavior (),
-					allowPrerelease,
-					DetermineVersionConstraints (),
-					ConflictAction,
-					PrimarySourceRepositories,
-					Token);
-				if (!result.IsPackageInstalled) {
-					Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
-				}
-			}
+			//if (WhatIf.IsPresent) {
+			//	var actionsList = await Projects.PreviewUpdatePackageAsync (
+			//		Id,
+			//		nugetVersion?.ToNormalizedString (),
+			//		GetDependencyBehavior (),
+			//		allowPrerelease,
+			//		DetermineVersionConstraints (),
+			//		PrimarySourceRepositories,
+			//		Token);
+			//	if (actionsList.IsPackageInstalled) {
+			//		PreviewNuGetPackageActions (actionsList.Actions);
+			//	} else {
+			//		Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
+			//	}
+			//} else {
+			//	var result = await Projects.UpdatePackageAsync (
+			//		Id,
+			//		nugetVersion?.ToNormalizedString (),
+			//		GetDependencyBehavior (),
+			//		allowPrerelease,
+			//		DetermineVersionConstraints (),
+			//		ConflictAction,
+			//		PrimarySourceRepositories,
+			//		Token);
+			//	if (!result.IsPackageInstalled) {
+			//		Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
+			//	}
+			//}
 		}
 
 		/// <summary>

@@ -143,48 +143,33 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void OnActiveSourceChanged (SourceRepositoryViewModel source)
 		{
-			//if (rpc == null)
-			//	return;
+			EnsureHostInitialized ();
 
-			//try {
-			//	var message = new ActivePackageSourceChangedParams {
-			//		ActiveSource = GetPackageSource (source)
-			//	};
-			//	rpc.InvokeAsync (Methods.ActiveSourceName, message).Ignore ();
-			//} catch (Exception ex) {
-			//	LoggingService.LogError ("OnActiveSourceChanged error", ex);
-			//}
+			host.SetPropertyValueOnHost ("activePackageSource", GetActivePackageSourceName (source));
+		}
+
+		string GetActivePackageSourceName (SourceRepositoryViewModel source)
+		{
+			if (source == null) {
+				return null;
+			}
+
+			if (source.IsAggregate) {
+				// Cmdlets will use all enabled sources if the active package source is not defined.
+				return null;
+			}
+
+			return source.Name;
 		}
 
 		public void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource)
 		{
-			//try {
-			//	EnsureHostInitialized ();
-			//	var message = new PackageSourcesChangedParams {
-			//		ActiveSource = GetPackageSource (selectedPackageSource),
-			//		Sources = GetPackageSources (sources).ToArray ()
-			//	};
-			//	rpc.InvokeAsync (Methods.PackageSourcesChangedName, message).Ignore ();
-			//} catch (Exception ex) {
-			//	LoggingService.LogError ("OnPackageSourcesChanged error", ex);
-			//}
-		}
-
-		IEnumerable<PackageSource> GetPackageSources (IEnumerable<SourceRepositoryViewModel> sources)
-		{
-			return sources.Select (source => GetPackageSource (source));
-		}
-
-		PackageSource GetPackageSource (SourceRepositoryViewModel sourceRepositoryViewModel)
-		{
-			if (sourceRepositoryViewModel == null)
-				return null;
-
-			return new PackageSource {
-				Name = sourceRepositoryViewModel.Name,
-				Source = sourceRepositoryViewModel.PackageSource.Source,
-				IsAggregate = sourceRepositoryViewModel.IsAggregate
-			};
+			try {
+				EnsureHostInitialized ();
+				OnActiveSourceChanged (selectedPackageSource);
+			} catch (Exception ex) {
+				LoggingService.LogError ("OnPackageSourcesChanged error", ex);
+			}
 		}
 
 		public void OnMaxVisibleColumnsChanged (int columns)

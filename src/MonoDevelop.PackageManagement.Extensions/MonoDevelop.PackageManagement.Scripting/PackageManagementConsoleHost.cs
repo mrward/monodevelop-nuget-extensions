@@ -40,11 +40,13 @@ using NuGet.Protocol.Core.Types;
 using NuGetConsole;
 using NuGetConsole.Host.PowerShell;
 using NuGetConsole.Host;
+using NuGet.VisualStudio;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class PackageManagementConsoleHost : IPackageManagementConsoleHost
 	{
+		PackageManagementConsoleHostServiceProvider serviceProvider;
 		RegisteredPackageSources registeredPackageSources;
 		IPowerShellHostFactory powerShellHostFactory;
 		IPowerShellHost powerShellHost;
@@ -54,6 +56,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		IPackageManagementEvents packageEvents;
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 		Project defaultProject;
+		ICSharpCode.PackageManagement.EnvDTE.DTE dte;
 		Lazy<IScriptExecutor> scriptExecutor;
 		LazyCommandExpansion commandExpansion;
 		string prompt = "PM> ";
@@ -177,6 +180,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void InitPowerShell ()
 		{
+			InitConsoleHostServices ();
 			CreatePowerShellHost ();
 			AddModulesToImport ();
 			UpdateWorkingDirectory ();
@@ -189,15 +193,25 @@ namespace MonoDevelop.PackageManagement.Scripting
 			powerShellHost?.OnPackageSourcesChanged (PackageSources, ActivePackageSource);
 		}
 
+		void InitConsoleHostServices ()
+		{
+			dte = new ICSharpCode.PackageManagement.EnvDTE.DTE ();
+
+			serviceProvider = new PackageManagementConsoleHostServiceProvider (this);
+			serviceProvider.AddService (typeof (global::EnvDTE.DTE), dte);
+
+			ServiceLocator.InitializePackageServiceProvider (serviceProvider);
+		}
+
 		void CreatePowerShellHost ()
 		{
 			var clearConsoleHostCommand = new ClearPackageManagementConsoleHostCommand (this);
 			powerShellHost =
 				powerShellHostFactory.CreatePowerShellHost (
-					this.ScriptingConsole,
+					ScriptingConsole,
 					GetNuGetVersion (),
 					clearConsoleHostCommand,
-					new ICSharpCode.PackageManagement.EnvDTE.DTE ());
+					dte);
 		}
 
 		protected virtual Version GetNuGetVersion ()

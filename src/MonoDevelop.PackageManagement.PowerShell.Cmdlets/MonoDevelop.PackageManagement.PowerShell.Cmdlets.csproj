@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>..\..\bin</OutputPath>
@@ -12,19 +12,57 @@
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="StreamJsonRpc" Version="2.8.28" />
-    <PackageReference Include="NuGet.Indexing" Version="4.8.2" />
-    <PackageReference Include="NuGet.PackageManagement" Version="4.8.2" />
-    <PackageReference Include="NuGet.ProjectModel" Version="4.8.2" />
-    <PackageReference Include="NuGet.Protocol" Version="4.8.2" />
-    <PackageReference Include="NuGet.Resolver" Version="4.8.2" />
-    <PackageReference Include="NuGet.Versioning" Version="4.8.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core.csproj" />
     <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj" />
+    <ProjectReference Include="..\MonoDevelop.PackageManagement.Extensions\MonoDevelop.PackageManagement.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MonoDevelop.Core">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\MonoDevelop.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Configuration">
+      <HintPath>$(MDBinDir)\NuGet.Configuration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.PackageManagement">
+      <HintPath>$(MDBinDir)\NuGet.PackageManagement.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Protocol">
+      <HintPath>$(MDBinDir)\NuGet.Protocol.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Versioning">
+      <HintPath>$(MDBinDir)\NuGet.Versioning.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.ProjectModel">
+      <HintPath>$(MDBinDir)\NuGet.ProjectModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Frameworks">
+      <HintPath>$(MDBinDir)\NuGet.Frameworks.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Common">
+      <HintPath>$(MDBinDir)\NuGet.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Packaging">
+      <HintPath>$(MDBinDir)\NuGet.Packaging.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGet.Resolver">
+      <HintPath>$(MDBinDir)\NuGet.Resolver.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Indexing">
+      <HintPath>$(MDBinDir)\NuGet.Indexing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

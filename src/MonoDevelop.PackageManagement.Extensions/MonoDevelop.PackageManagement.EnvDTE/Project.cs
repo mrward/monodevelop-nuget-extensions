@@ -86,12 +86,7 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		}
 
 		public virtual string UniqueName {
-			get { return GetUniqueName (); }
-		}
-
-		string GetUniqueName ()
-		{
-			return MonoDevelop.Core.FileService.AbsoluteToRelativePath (DotNetProject.ParentSolution.BaseDirectory, FileName);
+			get { return DotNetProject.GetUniqueName (); }
 		}
 
 		public virtual string FileName {

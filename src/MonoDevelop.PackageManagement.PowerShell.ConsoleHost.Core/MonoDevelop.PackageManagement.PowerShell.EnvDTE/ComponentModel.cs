@@ -45,7 +45,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 			if (type == typeof (IPowerConsoleWindow)) {
 				return new PowerConsoleToolWindow ();
 			} else if (type == typeof (ISourceRepositoryProvider)) {
-				return ConsoleHostServices.SourceRepositoryProvider;
+				//return ConsoleHostServices.SourceRepositoryProvider;
 			}
 			//if (type.FullName == typeof (IConsoleInitializer).FullName) {
 			//	return new ConsoleInitializer (GetConsoleHost ());

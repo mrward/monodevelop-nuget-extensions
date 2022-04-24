@@ -7,8 +7,8 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using ICSharpCode.PackageManagement.EnvDTE;
+using MonoDevelop.PackageManagement;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
@@ -96,9 +96,9 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				// When ProjectName is not specified, get all of the projects in the solution
 				if (string.IsNullOrEmpty (ProjectName)) {
 					var projects = await SolutionManager.GetAllProjectsAsync ();
-					DTEProjects = projects.Select (project => (Project)project).ToList ();
+					Projects = projects.ToList ();
 				} else {
-					await GetDTEProjectAsync (ProjectName);
+					await GetProjectAsync (ProjectName);
 					DTEProjects = new List<Project> { DTEProject };
 				}
 			}).Wait ();
@@ -113,7 +113,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				CheckSolutionState ();
 
 				var packagesToDisplay = Task.Run (
-					() => GetInstalledPackagesAsync (DTEProjects, Filter, Skip, First, Token)).Result;
+					() => GetInstalledPackagesAsync (Projects, Filter, Skip, First, Token)).Result;
 
 				WriteInstalledPackages (packagesToDisplay);
 			} else {
@@ -169,7 +169,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		void WriteUpdatePackagesFromRemoteSourceAsyncInSolution ()
 		{
-			foreach (var project in DTEProjects) {
+			foreach (var project in Projects) {
 				bool projectHasUpdates = false;
 
 				var packages = GetUpdatePackagesFromRemoteSourceAsync (project).Result;
@@ -186,7 +186,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					LogCore (MessageLevel.Info, string.Format (
 						CultureInfo.CurrentCulture,
 						"No package updates are available from the current package source for project '{0}'.",
-						project.Name));
+						project.GetName ()));
 				}
 			}
 		}
@@ -194,7 +194,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <summary>
 		/// Gets package updates for the project found from the current remote source
 		/// </summary>
-		async Task<IEnumerable<PowerShellUpdatePackage>> GetUpdatePackagesFromRemoteSourceAsync (Project project)
+		async Task<IEnumerable<PowerShellUpdatePackage>> GetUpdatePackagesFromRemoteSourceAsync (NuGetProject project)
 		{
 			var installedPackages = await project.GetInstalledPackagesAsync (Token);
 			installedPackages = installedPackages.Where (p => !IsAutoReferenced (p));
@@ -221,7 +221,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				var metadata = await task.Item1;
 
 				if (metadata != null) {
-					var package = PowerShellUpdatePackage.GetPowerShellPackageUpdateView (metadata, task.Item2.PackageIdentity.Version, versionType, project.Name);
+					var package = PowerShellUpdatePackage.GetPowerShellPackageUpdateView (metadata, task.Item2.PackageIdentity.Version, versionType, project.GetName ());
 
 					var versions = package.Versions ?? Enumerable.Empty<NuGetVersion> ();
 					if (versions.Any ()) {
@@ -236,7 +236,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <summary>
 		/// Output installed packages to the project(s)
 		/// </summary>
-		void WriteInstalledPackages (Dictionary<Project, IEnumerable<Packaging.PackageReference>> dictionary)
+		void WriteInstalledPackages (Dictionary<NuGetProject, IEnumerable<Packaging.PackageReference>> dictionary)
 		{
 			// Get the PowerShellPackageWithProjectView
 			var view = PowerShellInstalledPackage.GetPowerShellPackageView (dictionary, null);

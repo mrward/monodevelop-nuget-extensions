@@ -17,7 +17,7 @@ namespace NuGet.PackageManagement.VisualStudio
 				throw new ArgumentNullException (nameof (targetFramework));
 			}
 
-			Path = path.Replace (Utility.Path.AltDirectorySeparatorChar, Utility.Path.DirectorySeparatorChar);
+			Path = path.Replace (System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
 			TargetFramework = new FrameworkName (targetFramework.DotNetFrameworkName); ;
 		}
 

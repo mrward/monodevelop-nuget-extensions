@@ -1,10 +1,10 @@
 ﻿//
-// IConsoleHostSolutionManager.cs
+// NuGetProjectExtensions.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2019 Microsoft
+// Copyright (c) 2022 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using NuGet.ProjectManagement;
 
-namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
+namespace MonoDevelop.PackageManagement
 {
-	//public interface IConsoleHostSolutionManager
-	//{
-	//	bool IsSolutionOpen { get; }
-	//	string DefaultProjectFileName { get; set; }
+	public static class NuGetProjectExtensions
+	{
+		public static string GetUniqueName (this NuGetProject project)
+		{
+			IDotNetProject dotNetProject = project.GetDotNetProject ();
+			if (dotNetProject != null) {
+				return dotNetProject.DotNetProject.GetUniqueName ();
+			}
 
-	//	Task<IEnumerable<global::EnvDTE.Project>> GetAllProjectsAsync ();
-	//	Task<global::EnvDTE.Project> GetDefaultProjectAsync ();
-	//	Task<global::EnvDTE.Project> GetProjectAsync (string projectName);
-	//}
+			return project.GetName ();
+		}
+
+		public static string GetName (this NuGetProject project)
+		{
+			return project.GetMetadata<string> (NuGetProjectMetadataKeys.Name);
+		}
+	}
 }
+

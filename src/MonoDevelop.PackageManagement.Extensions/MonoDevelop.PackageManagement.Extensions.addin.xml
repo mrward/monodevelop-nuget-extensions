@@ -17,7 +17,7 @@
 		<Import file="NuGet.Core.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
-		<Import file="PowerShellConsoleHost/ICSharpCode.SharpZipLib.dll" />
+		<!--<Import file="PowerShellConsoleHost/ICSharpCode.SharpZipLib.dll" />
 		<Import file="PowerShellConsoleHost/Lucene.Net.dll" />
 		<Import file="PowerShellConsoleHost/MessagePack.Annotations.dll" />
 		<Import file="PowerShellConsoleHost/MessagePack.dll" />
@@ -95,7 +95,7 @@
 		<Import file="PowerShellConsoleHost/System.ServiceModel.Security.dll" />
 		<Import file="PowerShellConsoleHost/System.ServiceProcess.ServiceController.dll" />
 		<Import file="PowerShellConsoleHost/System.Threading.AccessControl.dll" />
-		<Import file="PowerShellConsoleHost/System.Threading.Tasks.Dataflow.dll" />
+		<Import file="PowerShellConsoleHost/System.Threading.Tasks.Dataflow.dll" />-->
 	</Runtime>
 	<Dependencies>
 		<Addin id="Core" version="17.0"/>

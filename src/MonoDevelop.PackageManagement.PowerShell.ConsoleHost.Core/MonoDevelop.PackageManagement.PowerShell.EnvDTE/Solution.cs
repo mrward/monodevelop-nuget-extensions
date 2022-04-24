@@ -33,7 +33,7 @@ namespace MonoDevelop.PackageManagement.PowerShell.EnvDTE
 	{
 		public Solution ()
 		{
-			FileName = ConsoleHostServices.SolutionManager.SolutionFileName;
+			//FileName = ConsoleHostServices.SolutionManager.SolutionFileName;
 			Projects = new Projects (this);
 			SolutionBuild = new SolutionBuild (this);
 			var factory = new SolutionPropertyFactory (this);

@@ -1,5 +1,5 @@
 ﻿//
-// ConsoleHostServices.cs
+// PackageManagementConsoleHostServiceProvider.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,36 +24,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Concurrent;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
-using NuGet.PackageManagement.PowerShellCmdlets;
+using System;
+using System.Collections.Generic;
 using NuGet.Protocol.Core.Types;
-//using NuGet.VisualStudio;
 
-namespace MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	public static class ConsoleHostServices
+	class PackageManagementConsoleHostServiceProvider : IServiceProvider
 	{
-		public static void Initialize (DTE dte)
+		readonly PackageManagementConsoleHost consoleHost;
+
+		Dictionary<Type, object> services = new Dictionary<Type, object> ();
+
+		public PackageManagementConsoleHostServiceProvider (PackageManagementConsoleHost consoleHost)
 		{
-			//DTE = dte;
-			//SourceRepositoryProvider = new ConsoleHostSourceRepositoryProvider ();
-			//SolutionManager = new ConsoleHostSolutionManager ();
-
-			//var serviceProvider = new DefaultPackageServiceProvider ();
-			//serviceProvider.AddService (typeof (DTE), dte);
-			//serviceProvider.AddService (typeof (ISourceRepositoryProvider), SourceRepositoryProvider);
-			//serviceProvider.AddService (typeof (IConsoleHostSolutionManager), SolutionManager);
-
-			//ServiceLocator.InitializePackageServiceProvider (serviceProvider);
+			this.consoleHost = consoleHost;
 		}
 
-		//public static ConsoleHostSourceRepositoryProvider SourceRepositoryProvider { get; private set; }
+		public object GetService (Type serviceType)
+		{
+			lock (services) {
+				if (services.TryGetValue (serviceType, out object instance)) {
+					return instance;
+				}
 
-		//public static DTE DTE { get; private set; }
+				if (serviceType == typeof (ISourceRepositoryProvider)) {
+					return consoleHost.SolutionManager.CreateSourceRepositoryProvider ();
+				} else if (serviceType == typeof (IConsoleHostSolutionManager)) {
+					return consoleHost.SolutionManager;
+				}
+			}
+			return null;
+		}
 
-		//public static ConsoleHostSolutionManager SolutionManager { get; private set; }
-
-		public static BlockingCollection<Message> ActiveBlockingCollection { get; set; }
+		public void AddService (Type serviceType, object instance)
+		{
+			lock (services) {
+				services [serviceType] = instance;
+			}
+		}
 	}
 }

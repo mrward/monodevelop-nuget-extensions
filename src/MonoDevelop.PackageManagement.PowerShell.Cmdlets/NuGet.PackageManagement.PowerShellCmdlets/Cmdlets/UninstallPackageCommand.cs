@@ -43,7 +43,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			CheckSolutionState ();
 
 			Task.Run (async () => {
-				await GetDTEProjectAsync (ProjectName);
+				await GetProjectAsync (ProjectName);
 				//await CheckMissingPackagesAsync ();
 			}).Wait ();
 		}
@@ -62,7 +62,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task UninstallPackageAsync ()
 		{
 			try {
-				await UninstallPackageByIdAsync (DTEProject, Id, UninstallContext, WhatIf.IsPresent);
+				await UninstallPackageByIdAsync (Project, Id, UninstallContext, WhatIf.IsPresent);
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
 			} finally {
@@ -77,14 +77,14 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <param name="packageId"></param>
 		/// <param name="uninstallContext"></param>
 		/// <param name="isPreview"></param>
-		protected async Task UninstallPackageByIdAsync (Project project, string packageId, UninstallationContext uninstallContext, bool isPreview)
+		protected async Task UninstallPackageByIdAsync (NuGetProject project, string packageId, UninstallationContext uninstallContext, bool isPreview)
 		{
-			if (isPreview) {
-				var actions = await project.PreviewUninstallPackageAsync (packageId, uninstallContext, Token);
-				PreviewNuGetPackageActions (actions);
-			} else {
-				await project.UninstallPackageAsync (packageId, uninstallContext, CancellationToken.None);
-			}
+			//if (isPreview) {
+			//	var actions = await project.PreviewUninstallPackageAsync (packageId, uninstallContext, Token);
+			//	PreviewNuGetPackageActions (actions);
+			//} else {
+			//	await project.UninstallPackageAsync (packageId, uninstallContext, CancellationToken.None);
+			//}
 		}
 
 		/// <summary>

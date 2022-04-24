@@ -37,7 +37,7 @@ namespace NuGet.PackageManagement
 			if (IsHttpUrl (url)) {
 				// REVIEW: Will this allow a package author to execute arbitrary program on user's machine?
 				// We have limited the url to be HTTP only, but is it sufficient?
-				ConsoleHostServices.DTE.ItemOperations.Navigate (url.AbsoluteUri);
+				//ConsoleHostServices.DTE.ItemOperations.Navigate (url.AbsoluteUri);
 			}
 		}
 

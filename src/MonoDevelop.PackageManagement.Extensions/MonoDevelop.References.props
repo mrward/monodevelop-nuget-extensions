@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <MDBinDir>\Applications\Visual Studio %28Preview%29.app\Contents\MonoBundle</MDBinDir>
     <MonoInstallRootDirectory>$([MSBuild]::NormalizeDirectory('/Library/Frameworks/Mono.framework/Versions/Current'))</MonoInstallRootDirectory>
     <GtkInstallRootDirectory>$(MonoInstallRootDirectory)\lib\mono\gtk-sharp-2.0</GtkInstallRootDirectory>
   </PropertyGroup>

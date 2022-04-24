@@ -11,18 +11,20 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Threading;
 using System.Threading.Tasks;
+using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
+using ICSharpCode.PackageManagement.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
+using MonoDevelop.PackageManagement.Scripting;
 using NuGet.Common;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
-using NuGet.Versioning;
 using NuGet.VisualStudio;
 using PackageSource = NuGet.Configuration.PackageSource;
+using NuGetVersion = NuGet.Versioning.NuGetVersion;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
@@ -377,22 +379,22 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 		}
 
-		protected async Task GetDTEProjectAsync (string projectName = null)
+		protected async Task GetProjectAsync (string projectName = null)
 		{
 			if (string.IsNullOrEmpty (projectName)) {
-				DTEProject = (await SolutionManager.GetDefaultProjectAsync ()) as Project;
-				if (DTEProject == null) {
+				Project = (await SolutionManager.GetDefaultProjectAsync ());
+				if (Project == null) {
 					ErrorHandler.WriteProjectNotFoundError ("Default", terminating: true);
 				}
 			} else {
-				DTEProject = (await SolutionManager.GetProjectAsync (projectName)) as Project;
-				if (DTEProject == null) {
+				Project = (await SolutionManager.GetProjectAsync (projectName));
+				if (Project == null) {
 					ErrorHandler.WriteProjectNotFoundError (projectName, terminating: true);
 				}
 			}
 		}
 
-		protected Task<EnvDTE.Project> GetDefaultProjectAsync ()
+		protected Task<NuGetProject> GetDefaultProjectAsync ()
 		{
 			return SolutionManager.GetDefaultProjectAsync ();
 		}
@@ -404,10 +406,10 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		/// <param name="projectNames">An array of project names that may or may not include wildcards.</param>
 		/// <returns>Projects matching the project name(s) provided.</returns>
-		protected async Task<IEnumerable<EnvDTE.Project>> GetProjectsByNameAsync (string[] projectNames)
+		protected async Task<IEnumerable<NuGetProject>> GetProjectsByNameAsync (string[] projectNames)
 		{
-			var result = new List<EnvDTE.Project> ();
-			var allProjects = (await SolutionManager.GetAllProjectsAsync ()).ToList ();
+			var result = new List<NuGetProject> ();
+			var allProjects = (await SolutionManager.GetAllProjectsAsync ())?.ToList ();
 			var allValidProjectNames = await GetAllValidProjectNamesAsync (allProjects);
 
 			foreach (var projectName in projectNames) {
@@ -444,40 +446,40 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			return result;
 		}
 
-		EnvDTE.Project GetProject (IEnumerable<EnvDTE.Project> projects, string match)
+		NuGetProject GetProject (IEnumerable<NuGetProject> projects, string match)
 		{
 			return projects.FirstOrDefault (project => IsProjectNameMatch (project, match));
 		}
 
-		static bool IsProjectNameMatch (EnvDTE.Project project, string name)
+		static bool IsProjectNameMatch (NuGetProject project, string name)
 		{
-			return StringComparer.OrdinalIgnoreCase.Equals (project.UniqueName, name) ||
-				StringComparer.OrdinalIgnoreCase.Equals (project.Name, name);
+			return StringComparer.OrdinalIgnoreCase.Equals (project.GetUniqueName (), name) ||
+				StringComparer.OrdinalIgnoreCase.Equals (project.GetName (), name);
 		}
 
 		/// <summary>
 		/// Return all possibly valid project names in the current solution. This includes all
 		/// unique names and safe names.
 		/// </summary>
-		Task<IEnumerable<string>> GetAllValidProjectNamesAsync (List<EnvDTE.Project> allProjects)
+		async Task<IEnumerable<string>> GetAllValidProjectNamesAsync (IEnumerable<NuGetProject> allProjects)
 		{
-			var safeNames = allProjects.Select (project => project.Name);
-			var uniqueNames = allProjects.Select (project => project.UniqueName);
+			var safeNames = await Task.WhenAll (allProjects?.Select (p => SolutionManager.GetNuGetProjectSafeNameAsync (p)));
+			var uniqueNames = allProjects?.Select (p => p.GetUniqueName ());
 			var names = uniqueNames.Concat (safeNames).Distinct ();
-			return Task.FromResult (names);
+			return names;
 		}
 
 		/// <summary>
 		/// Get the list of installed packages based on Filter, Skip and First parameters. Used for Get-Package.
 		/// </summary>
 		/// <returns></returns>
-		protected static async Task<Dictionary<Project, IEnumerable<PackageReference>>> GetInstalledPackagesAsync (IEnumerable<Project> projects,
+		protected static async Task<Dictionary<NuGetProject, IEnumerable<PackageReference>>> GetInstalledPackagesAsync (IEnumerable<NuGetProject> projects,
 			string filter,
 			int skip,
 			int take,
 			CancellationToken token)
 		{
-			var installedPackages = new Dictionary<Project, IEnumerable<PackageReference>> ();
+			var installedPackages = new Dictionary<NuGetProject, IEnumerable<PackageReference>> ();
 
 			foreach (var project in projects) {
 				var packageRefs = await project.GetInstalledPackagesAsync (token);
