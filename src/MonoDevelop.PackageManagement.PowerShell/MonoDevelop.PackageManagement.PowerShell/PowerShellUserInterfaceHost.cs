@@ -32,8 +32,7 @@ using System.Management.Automation.Host;
 using System.Security;
 using System.Text;
 using MonoDevelop.PackageManagement.Scripting;
-//using MonoDevelop.PackageManagement.PowerShell.Protocol;
-//using NuGetConsole.Host.PowerShell.Implementation;
+using NuGetConsole.Host.PowerShell.Implementation;
 
 namespace MonoDevelop.PackageManagement.PowerShell
 {
@@ -42,12 +41,13 @@ namespace MonoDevelop.PackageManagement.PowerShell
 		IScriptingConsole scriptingConsole;
 		StringBuilder messageBuilder = new StringBuilder ();
 		PowerShellRawUserInterface rawUI;
-		//PowerShellUserInterfaceHostPrompt hostPrompt = new PowerShellUserInterfaceHostPrompt ();
+		PowerShellUserInterfaceHostPrompt hostPrompt;
 
 		public PowerShellUserInterfaceHost (IScriptingConsole scriptingConsole)
 		{
 			this.scriptingConsole = scriptingConsole;
 			rawUI = new PowerShellRawUserInterface (scriptingConsole);
+			hostPrompt = new PowerShellUserInterfaceHostPrompt (scriptingConsole);
 		}
 
 		public override PSHostRawUserInterface RawUI => rawUI;
@@ -59,27 +59,21 @@ namespace MonoDevelop.PackageManagement.PowerShell
 
 		public override Dictionary<string, PSObject> Prompt (string caption, string message, Collection<FieldDescription> descriptions)
 		{
-			//Logger.Log ("Prompt. caption: '{0}' message: '{1}'", caption, message);
 			return null;
 		}
 
 		public override int PromptForChoice (string caption, string message, Collection<ChoiceDescription> choices, int defaultChoice)
 		{
-		//	Logger.Log ("PromptForChoice. caption: '{0}' message: '{1}'", caption, message);
-
-			return -1;
-		//	return hostPrompt.PromptForChoice (caption, message, choices, defaultChoice);
+			return hostPrompt.PromptForChoice (caption, message, choices, defaultChoice);
 		}
 
 		public override PSCredential PromptForCredential (string caption, string message, string userName, string targetName)
 		{
-			//Logger.Log ("PromptForCredential. caption: '{0}' message: '{1}'", caption, message);
 			return null;
 		}
 
 		public override PSCredential PromptForCredential (string caption, string message, string userName, string targetName, PSCredentialTypes allowedCredentialTypes, PSCredentialUIOptions options)
 		{
-			//Logger.Log ("PromptForCredential. caption: '{0}' message: '{1}'", caption, message);
 			return null;
 		}
 

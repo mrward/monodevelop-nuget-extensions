@@ -9,16 +9,20 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation.Host;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using System.Text;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using System.Threading;
+using MonoDevelop.PackageManagement.Scripting;
 
 namespace NuGetConsole.Host.PowerShell.Implementation
 {
 	class PowerShellUserInterfaceHostPrompt
 	{
+		readonly IScriptingConsole scriptingConsole;
+
+		public PowerShellUserInterfaceHostPrompt (IScriptingConsole scriptingConsole)
+		{
+			this.scriptingConsole = scriptingConsole;
+		}
+
 		internal int PromptForChoice (
 			string caption,
 			string message,
@@ -111,21 +115,16 @@ namespace NuGetConsole.Host.PowerShell.Implementation
 			return chosen;
 		}
 
-		string ReadLine (string prompt, CancellationToken token =  default (CancellationToken))
+		string ReadLine (string prompt)
 		{
-			var message = new PromptForInputParams {
-				Message = prompt
-			};
-			var response = JsonRpcProvider.Rpc.InvokeWithParameterObjectAsync<PromptForInputResponse> (
-				Methods.PromptForInputName,
-				message,
-				token).WaitAndGetResult ();
-			return response.Line;
+			return scriptingConsole.PromptForInput (prompt)
+				.GetAwaiter ()
+				.GetResult ();
 		}
 
 		void WriteLine (string message)
 		{
-			PowerShellConsoleHost.Instance.Log (LogLevel.Info, message);
+			scriptingConsole.WriteLine (message, ScriptingStyle.Out);
 		}
 	}
 }

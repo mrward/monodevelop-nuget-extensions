@@ -72,12 +72,6 @@ namespace MonoDevelop.PackageManagement.Protocol
 			}
 		}
 
-		[JsonRpcMethod (Methods.ClearHostName)]
-		public void OnClearHost ()
-		{
-			scriptingConsole.Clear ();
-		}
-
 		[JsonRpcMethod (Methods.ShowConsoleName)]
 		public void OnShowConsole ()
 		{
@@ -86,18 +80,6 @@ namespace MonoDevelop.PackageManagement.Protocol
 				//var pad = IdeApp.Workbench.GetPad <PackageConsolePad> ();
 				//pad.BringToFront ();
 			}).Ignore ();
-		}
-
-		[JsonRpcMethod (Methods.PromptForInputName)]
-		public PromptForInputResponse OnPromptForInput (JToken arg)
-		{
-			var message = arg.ToObject<PromptForInputParams> ();
-
-			CancellationToken token = PackageManagementExtendedServices.ConsoleHost.Token;
-			string input = scriptingConsole.PromptForInput (message.Message).WaitAndGetResult (token);
-			return new PromptForInputResponse {
-				Line = input
-			};
 		}
 	}
 }
