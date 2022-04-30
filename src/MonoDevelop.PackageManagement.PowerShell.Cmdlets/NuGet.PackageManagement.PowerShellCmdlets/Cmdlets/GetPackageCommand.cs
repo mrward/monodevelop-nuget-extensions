@@ -81,7 +81,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 		public List<NuGetProject> Projects { get; private set; }
 
-		List<Project> DTEProjects { get; set; }
+		List<global::EnvDTE.Project> DTEProjects { get; set; }
 
 		protected override bool IsLoggingTimeDisabled => true;
 
@@ -99,7 +99,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					Projects = projects.ToList ();
 				} else {
 					await GetNuGetProjectAsync (ProjectName);
-					DTEProjects = new List<Project> { DTEProject };
+					DTEProjects = new List<global::EnvDTE.Project> { DTEProject };
 				}
 			}).Wait ();
 		}

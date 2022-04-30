@@ -5,8 +5,6 @@ using System;
 using System.Management.Automation;
 using System.Threading;
 using Microsoft.VisualStudio.Threading;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
 using NuGet.ProjectManagement;
 using Task = System.Threading.Tasks.Task;

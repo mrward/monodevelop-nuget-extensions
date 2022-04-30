@@ -12,8 +12,6 @@ using System.Management.Automation.Runspaces;
 using System.Threading;
 using System.Threading.Tasks;
 using MonoDevelop.PackageManagement;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using ICSharpCode.PackageManagement.EnvDTE;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Scripting;
 using NuGet.Common;
@@ -42,7 +40,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 			sourceRepositoryProvider = ServiceLocator.GetInstance<ISourceRepositoryProvider> ();
 			SolutionManager = ServiceLocator.GetInstance<IConsoleHostSolutionManager> ();
-			DTE = ServiceLocator.GetInstance<DTE> ();
+			DTE = ServiceLocator.GetInstance<global::EnvDTE.DTE> ();
 		}
 
 		protected IConsoleHostSolutionManager SolutionManager { get; }
@@ -71,11 +69,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <summary>
 		/// DTE instance for PowerShell Cmdlets
 		/// </summary>
-		protected DTE DTE { get; }
+		protected global::EnvDTE.DTE DTE { get; }
 
 		protected NuGetProject Project { get; set; }
 
-		protected Project DTEProject { get; set; }
+		protected global::EnvDTE.Project DTEProject { get; set; }
 
 		protected FileConflictAction? ConflictAction { get; set; }
 
@@ -100,13 +98,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			var stopWatch = new Stopwatch ();
 			stopWatch.Start ();
 			try {
-				RegisterBlockingCollectionWithHost ();
 				ProcessRecordCore ();
 			} catch (Exception ex) {
 				// unhandled exceptions should be terminating
 				ErrorHandler.HandleException (ex, terminating: true);
 			} finally {
-				UnregisterBlockingCollectionWithHost ();
 				UnsubscribeEvents ();
 			}
 
@@ -116,16 +112,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			if (!IsLoggingTimeDisabled) {
 				LogCore (MessageLevel.Info, string.Format (CultureInfo.CurrentCulture, "Time Elapsed: {0}", stopWatch.Elapsed));
 			}
-		}
-
-		void RegisterBlockingCollectionWithHost ()
-		{
-			ConsoleHostServices.ActiveBlockingCollection = BlockingCollection;
-		}
-
-		void UnregisterBlockingCollectionWithHost ()
-		{
-			ConsoleHostServices.ActiveBlockingCollection = null;
 		}
 
 		/// <summary>

@@ -4,14 +4,12 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.Threading;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using NuGet.ProjectManagement.Projects;
 using NuGet.Versioning;
 using Task = System.Threading.Tasks.Task;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {

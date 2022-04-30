@@ -8,11 +8,10 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
+using NuGet.VisualStudio;
 using Task = System.Threading.Tasks.Task;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
@@ -47,10 +46,10 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 			Preprocess ();
 
-			var identity = Task.Run (async delegate {
+			var identity = NuGetUIThreadHelper.JoinableTaskFactory.Run (async delegate {
 				var result = await GetPackageIdentity ();
 				return result;
-			}).WaitAndGetResult ();
+			});
 
 			if (Projects.Count == 0) {
 				LogCore (MessageLevel.Info, string.Format (

@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core;
-using MonoDevelop.PackageManagement.PowerShell.EnvDTE;
 using NuGet.Common;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
@@ -70,17 +68,6 @@ namespace NuGet.PackageManagement.VisualStudio
 
 			return master.WithVersions (
 				asyncValueFactory: () => MergeVersionsAsync (identity, completed));
-		}
-
-		public async Task<IPackageSearchMetadata> GetLatestPackageMetadataAsync (
-			PackageIdentity identity,
-			Project project,
-			bool includePrerelease,
-			CancellationToken cancellationToken)
-		{
-			// get all package references for all the projects and cache locally
-			var packageReferences = await project.GetInstalledPackagesAsync (cancellationToken);
-			return await GetLatestPackageMetadataAsync (identity, packageReferences, includePrerelease, cancellationToken);
 		}
 
 		public async Task<IPackageSearchMetadata> GetLatestPackageMetadataAsync (
