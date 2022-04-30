@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Management.Automation;
+using NuGet.VisualStudio;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
@@ -35,18 +36,24 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			Preprocess ();
 
 			if (All.IsPresent) {
-				var projects = SolutionManager.GetAllProjectsAsync ().Result;
+				var projects = NuGetUIThreadHelper.JoinableTaskFactory.Run (
+					async () => await SolutionManager.GetAllEnvDTEProjectsAsync ());
+
 				WriteObject (projects, enumerateCollection: true);
 			} else {
 				// No name specified; return default project (if not null)
 				if (Name == null) {
-					var defaultProject = GetDefaultProjectAsync ().Result;
+					var defaultProject = NuGetUIThreadHelper.JoinableTaskFactory.Run (
+						async () => await GetDefaultProjectAsync ());
+
 					if (defaultProject != null) {
 						WriteObject (defaultProject);
 					}
 				} else {
 					// get all projects matching name(s) - handles wildcards
-					var projects = GetProjectsByNameAsync (Name).Result;
+					var projects = NuGetUIThreadHelper.JoinableTaskFactory.Run (
+						async () => await GetProjectsByNameAsync (Name));
+
 					WriteObject (projects, enumerateCollection: true);
 				}
 			}

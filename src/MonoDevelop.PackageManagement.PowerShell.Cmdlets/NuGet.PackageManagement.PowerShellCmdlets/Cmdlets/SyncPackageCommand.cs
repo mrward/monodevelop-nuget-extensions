@@ -36,7 +36,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 			Task.Run (async () => {
 				// Get the projects in the solution that's not the current default or specified project to sync the package identity to.
-				var projects = await SolutionManager.GetAllProjectsAsync ();
+				var projects = await SolutionManager.GetAllNuGetProjectsAsync ();
 				Projects = projects
 					.Where (p => !StringComparer.OrdinalIgnoreCase.Equals (p.GetMetadata<string> (NuGetProjectMetadataKeys.Name), ProjectName))
 					.ToList ();

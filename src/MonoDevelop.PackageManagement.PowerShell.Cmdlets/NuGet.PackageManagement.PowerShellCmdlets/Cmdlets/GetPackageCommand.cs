@@ -95,10 +95,10 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			Task.Run (async () => {
 				// When ProjectName is not specified, get all of the projects in the solution
 				if (string.IsNullOrEmpty (ProjectName)) {
-					var projects = await SolutionManager.GetAllProjectsAsync ();
+					var projects = await SolutionManager.GetAllNuGetProjectsAsync ();
 					Projects = projects.ToList ();
 				} else {
-					await GetProjectAsync (ProjectName);
+					await GetNuGetProjectAsync (ProjectName);
 					DTEProjects = new List<Project> { DTEProject };
 				}
 			}).Wait ();

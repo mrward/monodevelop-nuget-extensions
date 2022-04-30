@@ -379,24 +379,30 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 		}
 
-		protected async Task GetProjectAsync (string projectName = null)
+		protected async Task GetNuGetProjectAsync (string projectName = null)
 		{
 			if (string.IsNullOrEmpty (projectName)) {
-				Project = (await SolutionManager.GetDefaultProjectAsync ());
+				Project = (await SolutionManager.GetDefaultNuGetProjectAsync ());
 				if (Project == null) {
 					ErrorHandler.WriteProjectNotFoundError ("Default", terminating: true);
 				}
 			} else {
-				Project = (await SolutionManager.GetProjectAsync (projectName));
+				Project = (await SolutionManager.GetNuGetProjectAsync (projectName));
 				if (Project == null) {
 					ErrorHandler.WriteProjectNotFoundError (projectName, terminating: true);
 				}
 			}
 		}
 
-		protected Task<NuGetProject> GetDefaultProjectAsync ()
+		protected async Task<EnvDTE.Project> GetDefaultProjectAsync ()
 		{
-			return SolutionManager.GetDefaultProjectAsync ();
+			NuGetProject defaultNuGetProject = await SolutionManager.GetDefaultNuGetProjectAsync ();
+			// Solution may be open without a project in it. Then defaultNuGetProject is null.
+			if (defaultNuGetProject != null) {
+				return await SolutionManager.GetEnvDTEProjectAsync (defaultNuGetProject);
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -406,11 +412,12 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		/// <param name="projectNames">An array of project names that may or may not include wildcards.</param>
 		/// <returns>Projects matching the project name(s) provided.</returns>
-		protected async Task<IEnumerable<NuGetProject>> GetProjectsByNameAsync (string[] projectNames)
+		protected async Task<IEnumerable<EnvDTE.Project>> GetProjectsByNameAsync (string[] projectNames)
 		{
-			var result = new List<NuGetProject> ();
-			var allProjects = (await SolutionManager.GetAllProjectsAsync ())?.ToList ();
+			var result = new List<EnvDTE.Project> ();
+			var allProjects = (await SolutionManager.GetAllNuGetProjectsAsync ())?.ToList ();
 			var allValidProjectNames = await GetAllValidProjectNamesAsync (allProjects);
+			var matchedNuGetProjects = new HashSet<NuGetProject>();
 
 			foreach (var projectName in projectNames) {
 				// if ctrl+c hit, leave immediately
@@ -434,11 +441,10 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				}
 
 				foreach (var match in matches) {
-					var matchedProject = GetProject (allProjects, match);
-					if (matchedProject != null) {
-						if (!result.Contains (matchedProject)) {
-							result.Add (matchedProject);
-						}
+					var matchedProject = GetNuGetProject (allProjects, match);
+					if (matchedProject != null && matchedNuGetProjects.Add (matchedProject)) {
+						var dteProject = await SolutionManager.GetEnvDTEProjectAsync (matchedProject);
+						result.Add (dteProject);
 					}
 				}
 			}
@@ -446,7 +452,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			return result;
 		}
 
-		NuGetProject GetProject (IEnumerable<NuGetProject> projects, string match)
+		NuGetProject GetNuGetProject (IEnumerable<NuGetProject> projects, string match)
 		{
 			return projects.FirstOrDefault (project => IsProjectNameMatch (project, match));
 		}

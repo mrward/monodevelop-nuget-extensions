@@ -35,9 +35,11 @@ namespace MonoDevelop.PackageManagement.Scripting
 		bool IsSolutionOpen { get; }
 		string DefaultProjectFileName { get; }
 
-		Task<IEnumerable<NuGetProject>> GetAllProjectsAsync ();
-		Task<NuGetProject> GetDefaultProjectAsync ();
-		Task<NuGetProject> GetProjectAsync (string projectName);
+		Task<IEnumerable<NuGetProject>> GetAllNuGetProjectsAsync ();
+		Task<IEnumerable<EnvDTE.Project>> GetAllEnvDTEProjectsAsync ();
+		Task<NuGetProject> GetDefaultNuGetProjectAsync ();
+		Task<NuGetProject> GetNuGetProjectAsync (string projectName);
+		Task<global::EnvDTE.Project> GetEnvDTEProjectAsync (NuGetProject nuGetProject);
 		Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject);
 	}
 }

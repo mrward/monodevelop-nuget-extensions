@@ -64,5 +64,9 @@
     <Reference Include="NuGet.Indexing">
       <HintPath>$(MDBinDir)\NuGet.Indexing.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Threading">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Threading.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -69,7 +69,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			DetermineFileConflictAction ();
 
 			Task.Run (async delegate {
-				await GetProjectAsync (ProjectName);
+				await GetNuGetProjectAsync (ProjectName);
 				//await CheckMissingPackagesAsync ();
 				//await CheckPackageManagementFormat ();
 			}).Wait ();

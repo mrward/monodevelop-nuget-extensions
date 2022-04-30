@@ -147,19 +147,30 @@ namespace MonoDevelop.PackageManagement.Scripting
 			throw new NotImplementedException ();
 		}
 
-		public Task<NuGetProject> GetNuGetProjectAsync (string nuGetProjectSafeName)
+		public Task<global::EnvDTE.Project> GetEnvDTEProjectAsync (NuGetProject nuGetProject)
+		{
+			IDotNetProject dotNetProject = nuGetProject.GetDotNetProject ();
+			if (dotNetProject != null) {
+				var project = new ICSharpCode.PackageManagement.EnvDTE.Project (dotNetProject.DotNetProject);
+				return Task.FromResult<global::EnvDTE.Project> (project);
+			}
+			return null;
+		}
+
+		public Task<IEnumerable<global::EnvDTE.Project>> GetAllEnvDTEProjectsAsync ()
 		{
 			GetSolutionManager ();
 
-			NuGetProject project = null;
+			if (solutionManager == null)
+				return Task.FromResult (Enumerable.Empty<global::EnvDTE.Project> ());
 
-			var dotNetProject = IdeApp.ProjectOperations.CurrentSelectedSolution?.FindProjectByName (nuGetProjectSafeName) as DotNetProject;
-			if (dotNetProject != null) {
-				var factory = new ConsoleHostNuGetProjectFactory (solutionManager.Settings);
-				project = factory.CreateNuGetProject (dotNetProject);
+			var projects = new List<global::EnvDTE.Project>();
+
+			foreach (DotNetProject project in solutionManager.Solution.GetAllDotNetProjects ()) {
+				projects.Add (new ICSharpCode.PackageManagement.EnvDTE.Project (project));
 			}
 
-			return Task.FromResult (project);
+			return Task.FromResult (projects.AsEnumerable ());
 		}
 
 		public Task<IEnumerable<NuGetProject>> GetNuGetProjectsAsync ()
@@ -190,7 +201,10 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 			// Try searching for simple names first
 			string name = nuGetProject.GetMetadata<string> (NuGetProjectMetadataKeys.Name);
-			if ((await GetNuGetProjectAsync (name)) == nuGetProject) {
+			var matchedNuGetProject = await GetNuGetProjectAsync (name);
+
+			var matchedDotNetProject = matchedNuGetProject?.GetDotNetProject ()?.DotNetProject;
+			if (matchedDotNetProject == nuGetProject.GetDotNetProject ().DotNetProject) {
 				return name;
 			}
 
@@ -256,12 +270,12 @@ namespace MonoDevelop.PackageManagement.Scripting
 			}
 		}
 
-		public Task<IEnumerable<NuGetProject>> GetAllProjectsAsync ()
+		public Task<IEnumerable<NuGetProject>> GetAllNuGetProjectsAsync ()
 		{
 			return GetNuGetProjectsAsync ();
 		}
 
-		public Task<NuGetProject> GetDefaultProjectAsync ()
+		public Task<NuGetProject> GetDefaultNuGetProjectAsync ()
 		{
 			var project = PackageManagementExtendedServices.ConsoleHost.DefaultProject as DotNetProject;
 			if (project != null) {
@@ -272,13 +286,13 @@ namespace MonoDevelop.PackageManagement.Scripting
 			return null;
 		}
 
-		public async Task<NuGetProject> GetProjectAsync (string projectName)
+		public async Task<NuGetProject> GetNuGetProjectAsync (string projectName)
 		{
 			if (string.IsNullOrEmpty (projectName)) {
 				return null;
 			}
 
-			var projects = await GetAllProjectsAsync ();
+			var projects = await GetAllNuGetProjectsAsync ();
 			return projects.FirstOrDefault (project => IsMatch (project, projectName));
 		}
 

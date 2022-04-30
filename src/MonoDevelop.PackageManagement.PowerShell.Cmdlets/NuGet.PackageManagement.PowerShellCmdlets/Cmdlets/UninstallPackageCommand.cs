@@ -43,7 +43,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			CheckSolutionState ();
 
 			Task.Run (async () => {
-				await GetProjectAsync (ProjectName);
+				await GetNuGetProjectAsync (ProjectName);
 				//await CheckMissingPackagesAsync ();
 			}).Wait ();
 		}

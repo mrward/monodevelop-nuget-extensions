@@ -72,7 +72,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			ParseUserInputForVersion ();
 			if (!projectSpecified) {
 				 Task.Run (async () => {
-					var projects = await SolutionManager.GetAllProjectsAsync ();
+					var projects = await SolutionManager.GetAllNuGetProjectsAsync ();
 					Projects = projects.ToList ();
 				}).Wait ();
 			} else {

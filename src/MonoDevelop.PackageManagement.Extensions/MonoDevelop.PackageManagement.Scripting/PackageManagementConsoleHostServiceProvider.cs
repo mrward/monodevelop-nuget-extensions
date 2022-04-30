@@ -26,6 +26,8 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.Threading;
+using MonoDevelop.Core;
 using NuGet.Protocol.Core.Types;
 
 namespace MonoDevelop.PackageManagement.Scripting
