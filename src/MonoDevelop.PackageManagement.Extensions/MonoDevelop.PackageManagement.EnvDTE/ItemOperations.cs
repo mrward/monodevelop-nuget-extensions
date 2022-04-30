@@ -27,9 +27,9 @@
 //
 
 using System;
+using System.Threading.Tasks;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
-using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
@@ -41,19 +41,21 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 
 		public void OpenFile (string fileName)
 		{
-			Runtime.RunInMainThread (() => {
-				OpenFile (new FilePath (fileName));
+			Runtime.RunInMainThread (async () => {
+				await OpenFileAsync (new FilePath (fileName));
 			}).Wait ();
 		}
 
-		void OpenFile (FilePath filePath)
+		Task OpenFileAsync (FilePath filePath)
 		{
-			IdeApp.Workbench.OpenDocument (filePath, null, true);
+			return IdeApp.Workbench.OpenDocument (filePath, null, true);
 		}
 
 		public void Navigate (string url)
 		{
-			IdeServices.DesktopService.OpenFile (url);
+			Runtime.RunInMainThread (() => {
+				IdeServices.DesktopService.ShowUrl (url);
+			}).Wait ();
 		}
 		
 		public global::EnvDTE.Window NewFile (string fileName)
