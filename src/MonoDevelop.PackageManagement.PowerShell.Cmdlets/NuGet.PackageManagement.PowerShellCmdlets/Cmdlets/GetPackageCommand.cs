@@ -3,9 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
+using System.Management.Automation.Host;
 using System.Threading.Tasks;
 using MonoDevelop.PackageManagement;
 using NuGet.Packaging;
@@ -303,21 +306,20 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 		int AskToContinueDisplayPackages ()
 		{
-			return 1;
-			//// Add a line before message prompt
-			//WriteLine ();
-			//var choices = new Collection<ChoiceDescription>
-			//	{
-			//		new ChoiceDescription(Resources.Cmdlet_Yes, Resources.Cmdlet_DisplayMorePackagesYesHelp),
-			//		new ChoiceDescription(Resources.Cmdlet_No, Resources.Cmdlet_DisplayMorePackagesNoHelp)
-			//	};
+			// Add a line before message prompt
+			WriteLine ();
+			var choices = new Collection<ChoiceDescription>
+				{
+					new ChoiceDescription("&Yes", "Continue to display more packages"),
+					new ChoiceDescription("&No", "Stop displaying more packages")
+				};
 
-			//var choice = Host.UI.PromptForChoice (string.Empty, Resources.Cmdlet_PrompToDisplayMorePackages, choices, defaultChoice: 1);
+			var choice = Host.UI.PromptForChoice (string.Empty, "There may be more packages to display. Do you want to continue?", choices, defaultChoice: 1);
 
-			//Debug.Assert (choice >= 0 && choice < 2);
-			//// Add a line after
-			//WriteLine ();
-			//return choice;
+			Debug.Assert (choice >= 0 && choice < 2);
+			// Add a line after
+			WriteLine ();
+			return choice;
 		}
 
 		static bool IsAutoReferenced (PackageReference reference)
