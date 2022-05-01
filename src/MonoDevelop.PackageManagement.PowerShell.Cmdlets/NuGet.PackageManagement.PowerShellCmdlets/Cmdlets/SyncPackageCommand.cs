@@ -8,9 +8,11 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using System.Threading.Tasks;
+using MonoDevelop.PackageManagement;
 using NuGet.Common;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
+using NuGet.Protocol.Core.Types;
 using NuGet.VisualStudio;
 using Task = System.Threading.Tasks.Task;
 
@@ -30,16 +32,16 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 			base.Preprocess ();
 			if (string.IsNullOrEmpty (ProjectName)) {
-				ProjectName = DTEProject.Name;
+				ProjectName = Project.GetName ();
 			}
 
-			Task.Run (async () => {
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
 				// Get the projects in the solution that's not the current default or specified project to sync the package identity to.
 				var projects = await SolutionManager.GetAllNuGetProjectsAsync ();
 				Projects = projects
-					.Where (p => !StringComparer.OrdinalIgnoreCase.Equals (p.GetMetadata<string> (NuGetProjectMetadataKeys.Name), ProjectName))
+					.Where (p => !StringComparer.OrdinalIgnoreCase.Equals (p.GetName (), ProjectName))
 					.ToList ();
-			}).Wait ();
+			});
 		}
 
 		protected override void ProcessRecordCore ()
@@ -59,12 +61,12 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			} else if (identity == null) {
 				LogCore (MessageLevel.Info, string.Format (
 					CultureInfo.CurrentCulture,
-					"Package with the Id '{0}' is not installed to project '{1}'.",
+					"Package with the Id '{0}' is not installed in project '{1}'.",
 					Id,
 					ProjectName));
 			} else {
 				allowPrerelease = IncludePrerelease.IsPresent || identity.Version.IsPrerelease;
-				Task.Run (() => SyncPackages (identity));
+				Task.Run (() => SyncPackages (Projects, identity));
 				WaitAndLogPackageActions ();
 			}
 		}
@@ -72,17 +74,21 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <summary>
 		/// Async call for sync package to the version installed to the specified or current project.
 		/// </summary>
-		/// <param name="identity"></param>
-		async Task SyncPackages (PackageIdentity identity)
+		async Task SyncPackages (IEnumerable<NuGetProject> projects, PackageIdentity identity)
 		{
 			try {
-				foreach (var project in Projects) {
-					await InstallPackageByIdentityAsync (
-						project,
-						identity,
+				using (var sourceCacheContext = new SourceCacheContext ()) {
+					var resolutionContext = new ResolutionContext (
 						GetDependencyBehavior (),
 						allowPrerelease,
-						WhatIf.IsPresent);
+						false,
+						VersionConstraints.None,
+						new GatherCache (),
+						sourceCacheContext);
+
+					foreach (var project in projects) {
+						await InstallPackageByIdentityAsync (project, identity, resolutionContext, this, WhatIf.IsPresent);
+					}
 				}
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));

@@ -27,6 +27,8 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.ComponentModelHost;
+using NuGet.Configuration;
+using NuGet.PackageManagement;
 using NuGet.Protocol.Core.Types;
 using NuGetConsole;
 
@@ -68,6 +70,12 @@ namespace MonoDevelop.PackageManagement.Scripting
 				//}
 				} else if (serviceType == typeof (SComponentModel)) {
 					return new ComponentModel ();
+				} else if (serviceType == typeof (IConsoleHostNuGetPackageManager)) {
+					return consoleHost.CreatePackageManager ();
+				} else if (serviceType == typeof (ISettings)) {
+					return consoleHost.Settings;
+				} else if (serviceType == typeof (ICommonOperations)) {
+					return new MonoDevelopCommonOperations ();
 				}
 			}
 			return null;

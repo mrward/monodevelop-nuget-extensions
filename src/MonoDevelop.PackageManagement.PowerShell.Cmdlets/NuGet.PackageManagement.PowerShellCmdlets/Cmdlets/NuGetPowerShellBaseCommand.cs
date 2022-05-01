@@ -4,43 +4,80 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
+using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Scripting;
 using NuGet.Common;
+using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
+using NuGet.Packaging.PackageExtraction;
+using NuGet.Packaging.Signing;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.VisualStudio;
 using PackageSource = NuGet.Configuration.PackageSource;
 using NuGetVersion = NuGet.Versioning.NuGetVersion;
+using ExecutionContext = NuGet.ProjectManagement.ExecutionContext;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
-	public abstract class NuGetPowerShellBaseCommand : PSCmdlet, IErrorHandler
+	public abstract class NuGetPowerShellBaseCommand : PSCmdlet, IErrorHandler, IPSNuGetProjectContext
 	{
 		readonly BlockingCollection<Message> blockingCollection = new BlockingCollection<Message> ();
 
-		SourceRepository activeSourceRepository;
-		ISourceRepositoryProvider sourceRepositoryProvider;
+		readonly ISourceRepositoryProvider sourceRepositoryProvider;
+		readonly ICommonOperations commonOperations;
+
+		Guid operationId;
+
+		bool overwriteAll;
+		bool ignoreAll;
 
 		internal const string ActivePackageSourceKey = "activePackageSource";
 		const string CancellationTokenKey = "CancellationTokenKey";
 
+		SourceRepository activeSourceRepository;
+
 		public NuGetPowerShellBaseCommand ()
 		{
 			sourceRepositoryProvider = ServiceLocator.GetInstance<ISourceRepositoryProvider> ();
+			ConfigSettings = ServiceLocator.GetInstance<ISettings> ();
 			SolutionManager = ServiceLocator.GetInstance<IConsoleHostSolutionManager> ();
 			DTE = ServiceLocator.GetInstance<global::EnvDTE.DTE> ();
+
+			var logger = new LoggerAdapter (this);
+			PackageExtractionContext = new PackageExtractionContext (
+				PackageSaveMode.Defaultv2,
+				PackageExtractionBehavior.XmlDocFileSaveMode,
+				ClientPolicyContext.GetClientPolicy (ConfigSettings, logger),
+				logger);
+
+			if (commonOperations != null) {
+				ExecutionContext = new IDEExecutionContext (commonOperations);
+			}
+		}
+
+		public XDocument OriginalPackagesConfig { get; set; }
+
+		/// <summary>
+		/// NuGet Package Manager for PowerShell Cmdlets
+		/// </summary>
+		protected IConsoleHostNuGetPackageManager PackageManager {
+			get {
+				return ServiceLocator.GetInstance<IConsoleHostNuGetPackageManager> ();
+			}
 		}
 
 		protected IConsoleHostSolutionManager SolutionManager { get; }
@@ -57,14 +94,10 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		protected IEnumerable<SourceRepository> EnabledSourceRepositories { get; private set; }
 
-		protected IErrorHandler ErrorHandler {
-			get { return this; }
-		}
-
 		/// <summary>
-		/// Determine if needs to log total time elapsed or not
+		/// Settings read from the config files
 		/// </summary>
-		protected virtual bool IsLoggingTimeDisabled { get; }
+		protected ISettings ConfigSettings { get; }
 
 		/// <summary>
 		/// DTE instance for PowerShell Cmdlets
@@ -72,8 +105,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected global::EnvDTE.DTE DTE { get; }
 
 		protected NuGetProject Project { get; set; }
-
-		protected global::EnvDTE.Project DTEProject { get; set; }
 
 		protected FileConflictAction? ConflictAction { get; set; }
 
@@ -92,6 +123,15 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				return (CancellationToken)tokenProp;
 			}
 		}
+
+		protected IErrorHandler ErrorHandler {
+			get { return this; }
+		}
+
+		/// <summary>
+		/// Determine if needs to log total time elapsed or not
+		/// </summary>
+		protected virtual bool IsLoggingTimeDisabled { get; }
 
 		protected override sealed void ProcessRecord ()
 		{
@@ -195,16 +235,14 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			return results?.OrderByDescending (v => v).ToArray ();
 		}
 
-		protected void PreviewNuGetPackageActions (IEnumerable<PackageActionInfo> actions)
+		protected void PreviewNuGetPackageActions (IEnumerable<NuGetProjectAction> actions)
 		{
 			if (actions == null
 				|| !actions.Any ()) {
 				Log (MessageLevel.Info, "No package actions available to be executed.");
 			} else {
 				foreach (var action in actions) {
-					var version = NuGetVersion.Parse (action.PackageVersion);
-					var identity = new PackageIdentity (action.PackageId, version);
-					Log (MessageLevel.Info, action.Type + " " + identity);
+					Log (MessageLevel.Info, action.NuGetProjectActionType + " " + action.PackageIdentity);
 				}
 			}
 		}
@@ -576,6 +614,70 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 		}
 
+		public FileConflictAction ResolveFileConflict (string message)
+		{
+			if (overwriteAll) {
+				return FileConflictAction.OverwriteAll;
+			}
+
+			if (ignoreAll) {
+				return FileConflictAction.IgnoreAll;
+			}
+
+			if (ConflictAction != null
+				&& ConflictAction != FileConflictAction.PromptUser) {
+				return (FileConflictAction)ConflictAction;
+			}
+
+			var choices = new Collection<ChoiceDescription> {
+				new ChoiceDescription("&Yes", "Overwrite this file"),
+				new ChoiceDescription("Yes to &All", "Overwrite this file and all subsequent files"),
+				new ChoiceDescription("&No", "Skip this file"),
+				new ChoiceDescription("No to Al&l", "Skip this file and all subsequent files")
+			};
+
+			int choice = Host.UI.PromptForChoice ("File Conflict", message, choices, defaultChoice: 2);
+
+			Debug.Assert (choice >= 0 && choice < 4);
+			switch (choice) {
+				case 0:
+					return FileConflictAction.Overwrite;
+
+				case 1:
+					overwriteAll = true;
+					return FileConflictAction.OverwriteAll;
+
+				case 2:
+					return FileConflictAction.Ignore;
+
+				case 3:
+					ignoreAll = true;
+					return FileConflictAction.IgnoreAll;
+			}
+
+			return FileConflictAction.Ignore;
+		}
+
+		/// <summary>
+		/// Implement INuGetProjectContext.Log(). Called by worker thread.
+		/// </summary>
+		public void Log (MessageLevel level, string message, params object[] args)
+		{
+			if (args.Length > 0) {
+				message = string.Format (CultureInfo.CurrentCulture, message, args);
+			}
+
+			BlockingCollection.Add (new LogMessage (level, message));
+		}
+
+		/// <summary>
+		/// Implement INuGetProjectContext.Log(). Called by worker thread.
+		/// </summary>
+		public void Log (ILogMessage message)
+		{
+			BlockingCollection.Add (new LogMessage (LogUtility.LogLevelToMessageLevel (message.Level), message.FormatWithCode ()));
+		}
+
 		/// <summary>
 		/// LogCore that write messages to the PowerShell console via PowerShellExecution thread.
 		/// </summary>
@@ -600,15 +702,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					WriteError (formattedMessage);
 					break;
 			}
-		}
-
-		public void Log (MessageLevel level, string message, params object[] args)
-		{
-			if (args.Length > 0) {
-				message = string.Format (CultureInfo.CurrentCulture, message, args);
-			}
-
-			BlockingCollection.Add (new LogMessage (level, message));
 		}
 
 		protected void WaitAndLogPackageActions ()
@@ -679,5 +772,35 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		}
 
 		protected BlockingCollection<Message> BlockingCollection => blockingCollection;
+
+		public PackageExtractionContext PackageExtractionContext { get; set; }
+
+		public ISourceControlManagerProvider SourceControlManagerProvider { get; }
+
+		public ExecutionContext ExecutionContext { get; protected set; }
+
+		public void ReportError (string message)
+		{
+			// no-op
+		}
+
+		public void ReportError (ILogMessage message)
+		{
+			// no-op
+		}
+
+		public NuGetActionType ActionType { get; set; }
+
+		public Guid OperationId {
+			get {
+				if (operationId == Guid.Empty) {
+					operationId = Guid.NewGuid ();
+				}
+				return operationId;
+			}
+			set {
+				operationId = value;
+			}
+		}
 	}
 }

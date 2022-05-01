@@ -10,13 +10,15 @@ using System.Linq;
 using System.Management.Automation;
 using System.Net;
 using System.Text;
-using Microsoft.VisualStudio.Threading;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
+using NuGet.Packaging.Signing;
 using NuGet.ProjectManagement;
+using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using NuGet.VisualStudio;
 using Task = System.Threading.Tasks.Task;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
@@ -41,23 +43,31 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			if (readFromDirectPackagePath) {
 				UpdateActiveSourceRepository (Source);
 			}
+
+			ActionType = NuGetActionType.Install;
 		}
 
 		protected override void ProcessRecordCore ()
 		{
 			Preprocess ();
 
-			WarnIfParametersAreNotSupported ();
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
+				//await _lockService.ExecuteNuGetOperationAsync (() => {
+					WarnIfParametersAreNotSupported ();
 
-			if (!readFromPackagesConfig
-				&& !readFromDirectPackagePath
-				&& nugetVersion == null) {
-				Task.Run (InstallPackageByIdAsync).Forget ();
-			} else {
-				var identities = GetPackageIdentities ();
-				Task.Run (() => InstallPackagesAsync (identities)).Forget ();
-			}
-			WaitAndLogPackageActions ();
+					if (!readFromPackagesConfig
+						&& !readFromDirectPackagePath
+						&& nugetVersion == null) {
+						Task.Run (InstallPackageByIdAsync);
+					} else {
+						var identities = GetPackageIdentities ();
+						Task.Run (() => InstallPackagesAsync (identities));
+					}
+					WaitAndLogPackageActions ();
+
+					return Task.FromResult (true);
+				//}, Token);
+			});
 		}
 
 		/// <summary>
@@ -66,8 +76,30 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task InstallPackagesAsync (IEnumerable<PackageIdentity> identities)
 		{
 			try {
-				foreach (var identity in identities) {
-					await InstallPackageByIdentityAsync (Project, identity,GetDependencyBehavior (), allowPrerelease, WhatIf.IsPresent);
+				using (var sourceCacheContext = new SourceCacheContext ()) {
+					var resolutionContext = new ResolutionContext (
+						GetDependencyBehavior (),
+						allowPrerelease,
+						false,
+						VersionConstraints.None,
+						new GatherCache (),
+						sourceCacheContext);
+
+					foreach (var identity in identities) {
+						await InstallPackageByIdentityAsync (Project, identity, resolutionContext, this, WhatIf.IsPresent);
+					}
+				}
+			} catch (SignatureException ex) {
+				// set nuget operation status to failed when an exception is thrown
+
+				if (!string.IsNullOrEmpty (ex.Message)) {
+					Log (ex.AsLogMessage ());
+				}
+
+				if (ex.Results != null) {
+					var logMessages = ex.Results.SelectMany (p => p.Issues).ToList ();
+
+					logMessages.ForEach (p => Log (ex.AsLogMessage ()));
 				}
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
@@ -82,7 +114,36 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task InstallPackageByIdAsync ()
 		{
 			try {
-				await InstallPackageByIdAsync (Project, Id, GetDependencyBehavior (), allowPrerelease, WhatIf.IsPresent);
+				using (var sourceCacheContext = new SourceCacheContext ()) {
+					var resolutionContext = new ResolutionContext (
+						GetDependencyBehavior (),
+						allowPrerelease,
+						false,
+						VersionConstraints.None,
+						new GatherCache (),
+						sourceCacheContext);
+
+					await InstallPackageByIdAsync (Project, Id, resolutionContext, this, WhatIf.IsPresent);
+				}
+			} catch (FatalProtocolException ex) {
+
+				// Additional information about the exception can be observed by using the -verbose switch with the install-package command
+				Log (MessageLevel.Debug, ExceptionUtilities.DisplayMessage (ex));
+
+				// Wrap FatalProtocolException coming from the server with a user friendly message
+				var error = string.Format (CultureInfo.CurrentUICulture, "Unable to find package '{0}' at source '{1}'.", Id, Source);
+				Log (MessageLevel.Error, error);
+			} catch (SignatureException ex) {
+
+				if (!string.IsNullOrEmpty (ex.Message)) {
+					Log (ex.AsLogMessage ());
+				}
+
+				if (ex.Results != null) {
+					var logMessages = ex.Results.SelectMany (p => p.Issues).ToList ();
+
+					logMessages.ForEach (p => Log (p));
+				}
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
 			} finally {
@@ -211,13 +272,13 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 						var downloadPath = Path.Combine (Source, identity + PackagingCoreConstants.NupkgExtension);
 
 						using (var client = new System.Net.Http.HttpClient ()) {
-							Task.Run (async delegate {
+							NuGetUIThreadHelper.JoinableTaskFactory.Run (async delegate {
 								using (var downloadStream = await client.GetStreamAsync (Id)) {
 									using (var targetPackageStream = new FileStream (downloadPath, FileMode.Create, FileAccess.Write)) {
 										await downloadStream.CopyToAsync (targetPackageStream);
 									}
 								}
-							}).Wait ();
+							});
 						}
 					}
 				} else {

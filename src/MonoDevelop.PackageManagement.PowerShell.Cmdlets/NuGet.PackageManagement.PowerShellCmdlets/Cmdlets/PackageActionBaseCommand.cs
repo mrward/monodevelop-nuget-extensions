@@ -1,15 +1,18 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
-using MonoDevelop.PackageManagement;
+using System.Threading;
+using NuGet.Configuration;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.ProjectManagement.Projects;
 using NuGet.Resolver;
+using NuGet.VisualStudio;
 using Task = System.Threading.Tasks.Task;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
@@ -68,11 +71,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			UpdateActiveSourceRepository (result.SourceRepository);
 			DetermineFileConflictAction ();
 
-			Task.Run (async delegate {
+			NuGetUIThreadHelper.JoinableTaskFactory.Run(async delegate {
 				await GetNuGetProjectAsync (ProjectName);
 				//await CheckMissingPackagesAsync ();
 				//await CheckPackageManagementFormat ();
-			}).Wait ();
+			});
 		}
 
 		protected override void ProcessRecordCore ()
@@ -85,46 +88,27 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected async Task InstallPackageByIdentityAsync (
 			NuGetProject project,
 			PackageIdentity identity,
-			DependencyBehavior dependencyBehavior,
-			bool allowPrerelease,
+			ResolutionContext resolutionContext,
+			INuGetProjectContext projectContext,
 			bool isPreview)
 		{
-			if (isPreview) {
-				//var actionsList = await project.PreviewInstallPackageAsync (
-				//	identity.Id,
-				//	identity.Version.ToNormalizedString (),
-				//	dependencyBehavior,
-				//	allowPrerelease,
-				//	PrimarySourceRepositories,
-				//	Token);
-				//if (actionsList.IsPackageAlreadyInstalled) {
-				//	LogPackageAlreadyInstalled (identity, project);
-				//} else {
-				//	PreviewNuGetPackageActions (actionsList.Actions);
-				//}
-			} else {
-				//var result = await project.InstallPackageAsync (
-				//	identity.Id,
-				//	dependencyBehavior,
-				//	allowPrerelease,
-				//	ConflictAction,
-				//	PrimarySourceRepositories,
-				//	Token);
-				//if (result.IsPackageAlreadyInstalled) {
-				//	LogPackageAlreadyInstalled (identity, project);
-				//}
+			try {
+				var actions = await PackageManager.PreviewInstallPackageAsync (project, identity, resolutionContext, projectContext, PrimarySourceRepositories, null, CancellationToken.None);
+
+				if (!ShouldContinueDueToDotnetDeprecation (actions, isPreview)) {
+					return;
+				}
+
+				if (isPreview) {
+					PreviewNuGetPackageActions (actions);
+				} else {
+					PackageManager.SetDirectInstall (identity, projectContext);
+					await PackageManager.ExecuteNuGetProjectActionsAsync (project, actions, this, resolutionContext.SourceCacheContext, CancellationToken.None);
+					PackageManager.ClearDirectInstall (projectContext);
+				}
+			} catch (InvalidOperationException ex) when (ex.InnerException is PackageAlreadyInstalledException) {
+				Log (MessageLevel.Info, ex.Message);
 			}
-		}
-
-		void LogPackageAlreadyInstalled (PackageIdentity identity, NuGetProject project)
-		{
-			LogPackageAlreadyInstalled (identity.ToString (), project);
-		}
-
-		void LogPackageAlreadyInstalled (string packageId, NuGetProject project)
-		{
-			string message = string.Format ("Package '{0}' already exists in project '{1}'", packageId, project.GetName ());
-			Log (MessageLevel.Info, message);
 		}
 
 		/// <summary>
@@ -133,40 +117,29 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected async Task InstallPackageByIdAsync (
 			NuGetProject project,
 			string packageId,
-			DependencyBehavior dependencyBehavior,
-			bool allowPrerelease,
+			ResolutionContext resolutionContext,
+			INuGetProjectContext projectContext,
 			bool isPreview)
 		{
-			//if (!ShouldContinueDueToDotnetDeprecation (actions, isPreview)) {
-			//	return;
-			//}
+			try {
+				var actions = await PackageManager.PreviewInstallPackageAsync (project, packageId, resolutionContext, projectContext, PrimarySourceRepositories, null, CancellationToken.None);
 
-			//if (isPreview) {
-			//	var actionsList = await project.PreviewInstallPackageAsync (
-			//		packageId,
-			//		null,
-			//		dependencyBehavior,
-			//		allowPrerelease,
-			//		PrimarySourceRepositories,
-			//		Token);
-			//	if (actionsList.IsPackageAlreadyInstalled) {
-			//		LogPackageAlreadyInstalled (packageId, project);
-			//	} else {
-			//		PreviewNuGetPackageActions (actionsList.Actions);
-			//	}
-			//} else {
-			//	var result = await project.InstallPackageAsync (
-			//		packageId,
-			//		null,
-			//		dependencyBehavior,
-			//		allowPrerelease,
-			//		ConflictAction,
-			//		PrimarySourceRepositories,
-			//		Token);
-			//	if (result.IsPackageAlreadyInstalled) {
-			//		LogPackageAlreadyInstalled (packageId, project);
-			//	}
-			//}
+				if (!ShouldContinueDueToDotnetDeprecation (actions, isPreview)) {
+					return;
+				}
+
+
+				if (isPreview) {
+					PreviewNuGetPackageActions (actions);
+				} else {
+					var identity = actions.Select (v => v.PackageIdentity).Where (p => p.Id.Equals (packageId, StringComparison.OrdinalIgnoreCase)).FirstOrDefault ();
+					PackageManager.SetDirectInstall (identity, projectContext);
+					await PackageManager.ExecuteNuGetProjectActionsAsync (project, actions, this, resolutionContext.SourceCacheContext, CancellationToken.None);
+					PackageManager.ClearDirectInstall (projectContext);
+				}
+			} catch (InvalidOperationException ex) when (ex.InnerException is PackageAlreadyInstalledException) {
+				Log (MessageLevel.Info, ex.Message);
+			}
 		}
 
 		protected virtual void WarnIfParametersAreNotSupported ()
@@ -200,6 +173,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 		protected bool ShouldContinueDueToDotnetDeprecation (IEnumerable<NuGetProjectAction> actions, bool whatIf)
 		{
+			return true;
 			//// Don't prompt if the user has chosen to ignore this warning.
 			//// Also, -WhatIf should not prompt the user since there is not action performed anyway.
 			//if (DotnetDeprecatedPrompt.GetDoNotShowPromptState () || whatIf) {
@@ -255,7 +229,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			//	return true;
 			//}
 
-			return false; // No
+			//return false; // No
 		}
 
 		/// <summary>
@@ -286,15 +260,14 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <summary>
 		/// Get the value of DependencyBehavior from NuGet.Config file
 		/// </summary>
-		/// <returns></returns>
 		protected DependencyBehavior GetDependencyBehaviorFromConfig ()
 		{
-			//string dependencySetting = ConfigSettings.GetValue ("config", "dependencyversion");
-			//DependencyBehavior behavior;
-			//bool success = Enum.TryParse (dependencySetting, true, out behavior);
-			//if (success) {
-			//	return behavior;
-			//}
+			var dependencySetting = SettingsUtility.GetConfigValue (ConfigSettings, ConfigurationConstants.DependencyVersion);
+			DependencyBehavior behavior;
+			var success = Enum.TryParse (dependencySetting, ignoreCase: true, result: out behavior);
+			if (success) {
+				return behavior;
+			}
 			// Default to Lowest
 			return DependencyBehavior.Lowest;
 		}

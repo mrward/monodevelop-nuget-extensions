@@ -41,7 +41,7 @@ using NuGet.Protocol.Core.Types;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	internal class ConsoleHostNuGetPackageManager : INuGetPackageManager
+	internal class ConsoleHostNuGetPackageManager : IConsoleHostNuGetPackageManager, INuGetPackageManager
 	{
 		readonly IMonoDevelopSolutionManager solutionManager;
 		readonly NuGetPackageManager packageManager;
@@ -82,34 +82,46 @@ namespace MonoDevelop.PackageManagement.Scripting
 			NuGetPackageManager.SetDirectInstall (directInstall, nuGetProjectContext);
 		}
 
-		public Task ExecuteNuGetProjectActionsAsync (
+		public async Task ExecuteNuGetProjectActionsAsync (
 			NuGetProject nuGetProject,
 			IEnumerable<NuGetProjectAction> nuGetProjectActions,
 			INuGetProjectContext nuGetProjectContext,
 			SourceCacheContext sourceCacheContext,
 			CancellationToken token)
 		{
-			return packageManager.ExecuteNuGetProjectActionsAsync (
-				nuGetProject,
-				nuGetProjectActions,
-				nuGetProjectContext,
-				sourceCacheContext,
-				token);
+			try {
+				await packageManager.ExecuteNuGetProjectActionsAsync (
+					nuGetProject,
+					nuGetProjectActions,
+					nuGetProjectContext,
+					sourceCacheContext,
+					token);
+
+				await nuGetProject.RunPostProcessAsync (nuGetProjectContext, token);
+			} finally {
+				OnPackageOperationsFinished ();
+			}
 		}
 
-		public Task ExecuteNuGetProjectActionsAsync (
+		public async Task ExecuteNuGetProjectActionsAsync (
 			IEnumerable<NuGetProject> nuGetProjects,
 			IEnumerable<NuGetProjectAction> nuGetProjectActions,
 			INuGetProjectContext nuGetProjectContext,
 			SourceCacheContext sourceCacheContext,
 			CancellationToken token)
 		{
-			return packageManager.ExecuteNuGetProjectActionsAsync (
-				nuGetProjects,
-				nuGetProjectActions,
-				nuGetProjectContext,
-				sourceCacheContext,
-				token);
+			try {
+				await packageManager.ExecuteNuGetProjectActionsAsync (
+					nuGetProjects,
+					nuGetProjectActions,
+					nuGetProjectContext,
+					sourceCacheContext,
+					token);
+
+				await RunPostProcessAsync (nuGetProjects.ToList (), nuGetProjectContext, token);
+			} finally {
+				OnPackageOperationsFinished ();
+			}
 		}
 
 		public Task<ResolvedPackage> GetLatestVersionAsync (
@@ -133,6 +145,26 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public Task<IEnumerable<NuGetProjectAction>> PreviewInstallPackageAsync (
 			NuGetProject nuGetProject,
 			PackageIdentity packageIdentity,
+			ResolutionContext resolutionContext,
+			INuGetProjectContext nuGetProjectContext,
+			IEnumerable<SourceRepository> primarySources,
+			IEnumerable<SourceRepository> secondarySources,
+			CancellationToken token)
+		{
+			return packageManager.PreviewInstallPackageAsync (
+				nuGetProject,
+				packageIdentity,
+				resolutionContext,
+				nuGetProjectContext,
+				primarySources,
+				secondarySources,
+				token
+			);
+		}
+
+		public Task<IEnumerable<NuGetProjectAction>> PreviewInstallPackageAsync (
+			NuGetProject nuGetProject,
+			string packageIdentity,
 			ResolutionContext resolutionContext,
 			INuGetProjectContext nuGetProjectContext,
 			IEnumerable<SourceRepository> primarySources,
@@ -359,7 +391,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		}
 
 		async Task RestorePackagesAsync (
-			List<BuildIntegratedNuGetProject> projects,
+			IEnumerable<BuildIntegratedNuGetProject> projects,
 			CancellationToken token)
 		{
 			var packageRestorer = new MonoDevelopBuildIntegratedRestorer (solutionManager);
@@ -381,6 +413,11 @@ namespace MonoDevelop.PackageManagement.Scripting
 					});
 				}
 			}
+		}
+
+		void OnPackageOperationsFinished ()
+		{
+			PackageManagementServices.PackageManagementEvents.OnPackageOperationsFinished ();
 		}
 	}
 }
