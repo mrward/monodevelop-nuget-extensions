@@ -7,18 +7,23 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Threading;
 using MonoDevelop.PackageManagement;
 using NuGet.Common;
+using NuGet.Packaging.Core;
+using NuGet.Packaging.Signing;
 using NuGet.ProjectManagement;
+using NuGet.ProjectManagement.Projects;
+using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
+using NuGet.VisualStudio;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
 	[Cmdlet (VerbsData.Update, "Package", DefaultParameterSetName = "All")]
 	public class UpdatePackageCommand : PackageActionBaseCommand
 	{
+		UninstallationContext uninstallcontext;
 		string id;
 		string projectName;
 		bool idSpecified;
@@ -71,31 +76,40 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			base.Preprocess ();
 			ParseUserInputForVersion ();
 			if (!projectSpecified) {
-				 Task.Run (async () => {
+				NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
 					var projects = await SolutionManager.GetAllNuGetProjectsAsync ();
 					Projects = projects.ToList ();
-				}).Wait ();
+				});
 			} else {
 				Projects = new List<NuGetProject> { Project };
+			}
+
+			if (Reinstall) {
+				ActionType = NuGetActionType.Reinstall;
+			} else {
+				ActionType = NuGetActionType.Update;
 			}
 		}
 
 		protected override void ProcessRecordCore ()
 		{
 			Preprocess ();
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
+				WarnIfParametersAreNotSupported ();
 
-			WarnIfParametersAreNotSupported ();
+				// Update-Package without ID specified
+				if (!idSpecified) {
+					Task.Run (UpdateOrReinstallAllPackagesAsync);
+				}
+				// Update-Package with Id specified
+				else {
+					Task.Run (UpdateOrReinstallSinglePackageAsync);
+				}
 
-			// Update-Package without ID specified
-			if (!idSpecified) {
-				Task.Run (UpdateOrReinstallAllPackagesAsync).Forget ();
-			}
-			// Update-Package with Id specified
-			else {
-				Task.Run (UpdateOrReinstallSinglePackageAsync).Forget ();
-			}
+				WaitAndLogPackageActions ();
 
-			WaitAndLogPackageActions ();
+				return Task.FromResult (true);
+			});
 		}
 
 		protected override void WarnIfParametersAreNotSupported ()
@@ -113,24 +127,84 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 		}
 
+		void WarnForReinstallOfBuildIntegratedProjects (IEnumerable<BuildIntegratedNuGetProject> projects)
+		{
+			if (projects.Any ()) {
+				var projectNames = string.Join (",", projects.Select (p => p.GetUniqueName ()));
+				var warning = string.Format (CultureInfo.CurrentCulture, "The `-Reinstall` parameter does not apply to PackageReference based projects '{0}'.", projectNames);
+				Log (MessageLevel.Warning, warning);
+			}
+		}
+
 		/// <summary>
 		/// Update or reinstall all packages installed to a solution. For Update-Package or Update-Package -Reinstall.
 		/// </summary>
 		async Task UpdateOrReinstallAllPackagesAsync ()
 		{
-			//try {
-			//	await Projects.UpdateAllPackagesAsync (
-			//		GetDependencyBehavior (),
-			//		allowPrerelease,
-			//		DetermineVersionConstraints (),
-			//		ConflictAction,
-			//		PrimarySourceRepositories,
-			//		Token);
-			//} catch (Exception ex) {
-			//	Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
-			//} finally {
-			//	BlockingCollection.Add (new ExecutionCompleteMessage ());
-			//}
+			try {
+				using (var sourceCacheContext = new SourceCacheContext ()) {
+					var resolutionContext = new ResolutionContext (
+						GetDependencyBehavior (),
+						allowPrerelease,
+						ShouldAllowDelistedPackages (),
+						DetermineVersionConstraints (),
+						new GatherCache (),
+						sourceCacheContext);
+
+					// PackageReference projects don't support `Update-Package -Reinstall`. 
+					List<NuGetProject> applicableProjects = GetApplicableProjectsAndWarnForRest (Projects);
+
+					// if the source is explicitly specified we will use exclusively that source otherwise use ALL enabled sources
+					var actions = await PackageManager.PreviewUpdatePackagesAsync (
+						applicableProjects,
+						resolutionContext,
+						this,
+						PrimarySourceRepositories,
+						PrimarySourceRepositories,
+						Token);
+
+					await ExecuteActions (actions, sourceCacheContext);
+				}
+			} catch (SignatureException ex) {
+
+				if (!string.IsNullOrEmpty (ex.Message)) {
+					Log (ex.AsLogMessage ());
+				}
+
+				if (ex.Results != null) {
+					var logMessages = ex.Results.SelectMany (p => p.Issues).ToList ();
+
+					logMessages.ForEach (p => Log (ex.AsLogMessage ()));
+				}
+			} catch (Exception ex) {
+				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
+			} finally {
+				BlockingCollection.Add (new ExecutionCompleteMessage ());
+			}
+		}
+
+		List<NuGetProject> GetApplicableProjectsAndWarnForRest (List<NuGetProject> applicableProjects)
+		{
+			if (Reinstall.IsPresent) {
+				var buildIntegratedProjects = new List<NuGetProject> ();
+				var nonBuildIntegratedProjects = new List<NuGetProject> ();
+
+				foreach (var project in applicableProjects) {
+					if (project is BuildIntegratedNuGetProject buildIntegratedNuGetProject) {
+						buildIntegratedProjects.Add (buildIntegratedNuGetProject);
+					} else {
+						nonBuildIntegratedProjects.Add (project);
+					}
+				}
+
+				if (buildIntegratedProjects != null && buildIntegratedProjects.Any ()) {
+					WarnForReinstallOfBuildIntegratedProjects (buildIntegratedProjects.AsEnumerable ().Cast<BuildIntegratedNuGetProject> ());
+				}
+
+				return nonBuildIntegratedProjects;
+			}
+
+			return applicableProjects;
 		}
 
 		/// <summary>
@@ -140,7 +214,23 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task UpdateOrReinstallSinglePackageAsync ()
 		{
 			try {
-				await PreviewAndExecuteUpdateActionsForSinglePackage ();
+				var isPackageInstalled = await IsPackageInstalledAsync (Id);
+
+				if (isPackageInstalled) {
+					await PreviewAndExecuteUpdateActionsForSinglePackage ();
+				} else {
+					Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
+				}
+			} catch (SignatureException ex) {
+				if (!string.IsNullOrEmpty (ex.Message)) {
+					Log (ex.AsLogMessage ());
+				}
+
+				if (ex.Results != null) {
+					var logMessages = ex.Results.SelectMany (p => p.Issues).ToList ();
+
+					logMessages.ForEach (p => Log (p));
+				}
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
 			} finally {
@@ -153,34 +243,79 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// </summary>
 		async Task PreviewAndExecuteUpdateActionsForSinglePackage ()
 		{
-			//if (WhatIf.IsPresent) {
-			//	var actionsList = await Projects.PreviewUpdatePackageAsync (
-			//		Id,
-			//		nugetVersion?.ToNormalizedString (),
-			//		GetDependencyBehavior (),
-			//		allowPrerelease,
-			//		DetermineVersionConstraints (),
-			//		PrimarySourceRepositories,
-			//		Token);
-			//	if (actionsList.IsPackageInstalled) {
-			//		PreviewNuGetPackageActions (actionsList.Actions);
-			//	} else {
-			//		Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
-			//	}
-			//} else {
-			//	var result = await Projects.UpdatePackageAsync (
-			//		Id,
-			//		nugetVersion?.ToNormalizedString (),
-			//		GetDependencyBehavior (),
-			//		allowPrerelease,
-			//		DetermineVersionConstraints (),
-			//		ConflictAction,
-			//		PrimarySourceRepositories,
-			//		Token);
-			//	if (!result.IsPackageInstalled) {
-			//		Log (MessageLevel.Error, "'{0}' was not installed in any project. Update failed.", Id);
-			//	}
-			//}
+			var actions = Enumerable.Empty<NuGetProjectAction> ();
+
+			using (var sourceCacheContext = new SourceCacheContext ()) {
+				var resolutionContext = new ResolutionContext (
+					GetDependencyBehavior (),
+					allowPrerelease,
+					ShouldAllowDelistedPackages (),
+					DetermineVersionConstraints (),
+					new GatherCache (),
+					sourceCacheContext);
+
+				// PackageReference projects don't support `Update-Package -Reinstall`. 
+				List<NuGetProject> applicableProjects = GetApplicableProjectsAndWarnForRest (Projects);
+
+				// If -Version switch is specified
+				if (!string.IsNullOrEmpty (Version)) {
+					actions = await PackageManager.PreviewUpdatePackagesAsync (
+						new PackageIdentity (Id, PowerShellCmdletsUtility.GetNuGetVersionFromString (Version)),
+						applicableProjects,
+						resolutionContext,
+						this,
+						PrimarySourceRepositories,
+						EnabledSourceRepositories,
+						Token);
+				} else {
+					actions = await PackageManager.PreviewUpdatePackagesAsync (
+						Id,
+						applicableProjects,
+						resolutionContext,
+						this,
+						PrimarySourceRepositories,
+						EnabledSourceRepositories,
+						Token);
+				}
+
+				await ExecuteActions (actions, sourceCacheContext);
+			}
+		}
+
+		/// <summary>
+		/// Method checks if the package to be updated is installed in any package or not.
+		/// </summary>
+		/// <param name="packageId">Id of the package to be updated/checked</param>
+		/// <returns><code>bool</code> indicating whether the package is already installed, on any project, or not</returns>
+		async Task<bool> IsPackageInstalledAsync (string packageId)
+		{
+			foreach (var project in Projects) {
+				var installedPackages = await project.GetInstalledPackagesAsync (Token);
+
+				if (installedPackages.Select (installedPackage => installedPackage.PackageIdentity.Id)
+					.Any (installedPackageId => installedPackageId.Equals (packageId, StringComparison.OrdinalIgnoreCase))) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Execute the project actions
+		/// </summary>
+		async Task ExecuteActions (IEnumerable<NuGetProjectAction> actions, SourceCacheContext sourceCacheContext)
+		{
+			if (!ShouldContinueDueToDotnetDeprecation (actions, WhatIf.IsPresent)) {
+				return;
+			}
+
+			if (WhatIf.IsPresent) {
+				// For -WhatIf, only preview the actions
+				PreviewNuGetPackageActions (actions);
+			} else {
+				// Execute project actions by Package Manager
+				await PackageManager.ExecuteNuGetProjectActionsAsync (Projects, actions, this, sourceCacheContext, Token);
+			}
 		}
 
 		/// <summary>
@@ -196,6 +331,16 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				}
 			}
 			allowPrerelease = IncludePrerelease.IsPresent || versionSpecifiedPrerelease;
+		}
+
+		/// <summary>
+		/// Uninstallation Context for Update-Package -Reinstall command
+		/// </summary>
+		public UninstallationContext UninstallContext {
+			get {
+				uninstallcontext = new UninstallationContext (false, Reinstall.IsPresent);
+				return uninstallcontext;
+			}
 		}
 
 		/// <summary>
@@ -226,6 +371,19 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			} else {
 				return VersionConstraints.None;
 			}
+		}
+
+		/// <summary>
+		/// Determine if the update action should allow use of delisted packages
+		/// </summary>
+		bool ShouldAllowDelistedPackages ()
+		{
+			// If a delisted package is already installed, it should be reinstallable too.
+			if (Reinstall.IsPresent) {
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

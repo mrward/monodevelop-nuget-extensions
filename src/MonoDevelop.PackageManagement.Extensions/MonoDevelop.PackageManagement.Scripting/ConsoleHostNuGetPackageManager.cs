@@ -419,5 +419,63 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			PackageManagementServices.PackageManagementEvents.OnPackageOperationsFinished ();
 		}
+
+		public Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackagesAsync (
+			string packageId,
+			IEnumerable<NuGetProject> nuGetProjects,
+			ResolutionContext resolutionContext,
+			INuGetProjectContext nuGetProjectContext,
+			IEnumerable<SourceRepository> primarySources,
+			IEnumerable<SourceRepository> secondarySources,
+			CancellationToken token)
+		{
+			return packageManager.PreviewUpdatePackagesAsync (
+				packageId,
+				nuGetProjects,
+				resolutionContext,
+				nuGetProjectContext,
+				primarySources,
+				secondarySources,
+				token
+			);
+		}
+
+		public Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackagesAsync (
+			PackageIdentity packageIdentity,
+			IEnumerable<NuGetProject> nuGetProjects,
+			ResolutionContext resolutionContext,
+			INuGetProjectContext nuGetProjectContext,
+			IEnumerable<SourceRepository> primarySources,
+			IEnumerable<SourceRepository> secondarySources,
+			CancellationToken token)
+		{
+			return packageManager.PreviewUpdatePackagesAsync (
+				packageIdentity,
+				nuGetProjects,
+				resolutionContext,
+				nuGetProjectContext,
+				primarySources,
+				secondarySources,
+				token
+			);
+		}
+
+		public Task<IEnumerable<NuGetProjectAction>> PreviewUpdatePackagesAsync (
+			IEnumerable<NuGetProject> nuGetProjects,
+			ResolutionContext resolutionContext,
+			INuGetProjectContext nuGetProjectContext,
+			IEnumerable<SourceRepository> primarySources,
+			IEnumerable<SourceRepository> secondarySources,
+			CancellationToken token)
+		{
+			return packageManager.PreviewUpdatePackagesAsync (
+				nuGetProjects,
+				resolutionContext,
+				nuGetProjectContext,
+				primarySources,
+				secondarySources,
+				token
+			);
+		}
 	}
 }
