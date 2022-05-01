@@ -1,5 +1,5 @@
 ﻿//
-// PowerConsoleToolWindow.cs
+// ComponentModel.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,14 +24,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using NuGet.VisualStudio;
 
-namespace NuGetConsole
+namespace Microsoft.VisualStudio.ComponentModelHost
 {
-	class PowerConsoleToolWindow : IPowerConsoleWindow
+	class ComponentModel : SComponentModel, IComponentModel
 	{
-		public void Show ()
+		public T GetService<T> ()
+			where T : class
 		{
-			//JsonRpcProvider.Rpc.NotifyAsync (Methods.ShowConsoleName).WaitAndGetResult ();
+			return ServiceLocator.GetInstance<T>() as T;
+		}
+
+		public object GetService (Type type)
+		{
+			return ServiceLocator.PackageServiceProvider?.GetService (type);
 		}
 	}
 }

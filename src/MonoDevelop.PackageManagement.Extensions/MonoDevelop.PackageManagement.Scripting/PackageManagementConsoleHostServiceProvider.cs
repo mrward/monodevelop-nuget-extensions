@@ -26,9 +26,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.Threading;
-using MonoDevelop.Core;
+using Microsoft.VisualStudio.ComponentModelHost;
 using NuGet.Protocol.Core.Types;
+using NuGetConsole;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
@@ -54,6 +54,20 @@ namespace MonoDevelop.PackageManagement.Scripting
 					return consoleHost.SolutionManager.CreateSourceRepositoryProvider ();
 				} else if (serviceType == typeof (IConsoleHostSolutionManager)) {
 					return consoleHost.SolutionManager;
+				//} else if (serviceType == typeof (SVsExtensionManager)) {
+				//	return new SVsExtensionManager ();
+				//} else if (serviceType == typeof (IVsSolution) ||
+				//	serviceType == typeof (SVsSolution)) {
+				//	return new VsSolution ();
+				} else if (serviceType == typeof (IPowerConsoleWindow)) {
+					return new PowerConsoleToolWindow ();
+				//if (type.FullName == typeof (IConsoleInitializer).FullName) {
+				//	return new ConsoleInitializer (GetConsoleHost ());
+				//} else if (type.FullName == typeof (IVsPackageInstallerServices).FullName) {
+				//	return new VsPackageInstallerServices (GetSolution ());
+				//}
+				} else if (serviceType == typeof (SComponentModel)) {
+					return new ComponentModel ();
 				}
 			}
 			return null;
