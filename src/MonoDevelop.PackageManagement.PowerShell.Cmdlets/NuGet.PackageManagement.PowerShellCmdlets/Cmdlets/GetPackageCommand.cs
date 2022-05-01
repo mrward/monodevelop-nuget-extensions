@@ -7,12 +7,12 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
-using ICSharpCode.PackageManagement.EnvDTE;
 using MonoDevelop.PackageManagement;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using NuGet.VisualStudio;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
 {
@@ -81,8 +81,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 		public List<NuGetProject> Projects { get; private set; }
 
-		List<global::EnvDTE.Project> DTEProjects { get; set; }
-
 		protected override bool IsLoggingTimeDisabled => true;
 
 		void Preprocess ()
@@ -92,16 +90,17 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			CollapseVersions = !AllVersions.IsPresent;
 			UpdateActiveSourceRepository (Source);
 
-			Task.Run (async () => {
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
+				await GetNuGetProjectAsync (ProjectName);
+
 				// When ProjectName is not specified, get all of the projects in the solution
 				if (string.IsNullOrEmpty (ProjectName)) {
 					var projects = await SolutionManager.GetAllNuGetProjectsAsync ();
 					Projects = projects.ToList ();
 				} else {
-					await GetNuGetProjectAsync (ProjectName);
-					DTEProjects = new List<global::EnvDTE.Project> { DTEProject };
+					Projects = new List<NuGetProject> { Project };
 				}
-			}).Wait ();
+			});
 		}
 
 		protected override void ProcessRecordCore ()
@@ -112,8 +111,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			if (!UseRemoteSource) {
 				CheckSolutionState ();
 
-				var packagesToDisplay = Task.Run (
-					() => GetInstalledPackagesAsync (Projects, Filter, Skip, First, Token)).Result;
+				var packagesToDisplay = NuGetUIThreadHelper.JoinableTaskFactory.Run (
+					() => GetInstalledPackagesAsync (Projects, Filter, Skip, First, Token));
 
 				WriteInstalledPackages (packagesToDisplay);
 			} else {
@@ -154,47 +153,22 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				// Get package udpates from the current source and taking targetframeworks into account.
 				else {
 					CheckSolutionState ();
-					WriteUpdatePackagesFromRemoteSourceAsyncInSolution ();
+					NuGetUIThreadHelper.JoinableTaskFactory.Run (WriteUpdatePackagesFromRemoteSourceAsyncInSolutionAsync);
 				}
 			}
 		}
 
-		/// <summary>
-		/// This is a bit different to the NuGet.Client code. Here we are running the Task based method
-		/// directly and blocking by using .Result. Using the origin await code resulted in the
-		/// WriteObject, which was originally done outside this method, from being run on a different
-		/// thread and causing a PSInvalidOperationException: The WriteObject and WriteError methods cannot
-		/// be called from outside the overrides of the BeginProcessing, ProcessRecord, and EndProcessing
-		/// methods, and they can only be called from within the same thread.
-		/// </summary>
-		void WriteUpdatePackagesFromRemoteSourceAsyncInSolution ()
+		async Task WriteUpdatePackagesFromRemoteSourceAsyncInSolutionAsync ()
 		{
 			foreach (var project in Projects) {
-				bool projectHasUpdates = false;
-
-				var packages = GetUpdatePackagesFromRemoteSourceAsync (project).Result;
-
-				foreach (var package in packages) {
-					var versions = package.Versions ?? Enumerable.Empty<NuGetVersion> ();
-					if (versions.Any ()) {
-						projectHasUpdates = true;
-						WriteObject (package);
-					}
-				}
-
-				if (!projectHasUpdates) {
-					LogCore (MessageLevel.Info, string.Format (
-						CultureInfo.CurrentCulture,
-						"No package updates are available from the current package source for project '{0}'.",
-						project.GetName ()));
-				}
+				await WriteUpdatePackagesFromRemoteSourceAsync (project);
 			}
 		}
 
 		/// <summary>
-		/// Gets package updates for the project found from the current remote source
+		/// Output package updates to current project(s) found from the current remote source
 		/// </summary>
-		async Task<IEnumerable<PowerShellUpdatePackage>> GetUpdatePackagesFromRemoteSourceAsync (NuGetProject project)
+		async Task WriteUpdatePackagesFromRemoteSourceAsync (NuGetProject project)
 		{
 			var installedPackages = await project.GetInstalledPackagesAsync (Token);
 			installedPackages = installedPackages.Where (p => !IsAutoReferenced (p));
@@ -206,11 +180,11 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				versionType = VersionType.Updates;
 			}
 
-			var packages = new List<PowerShellUpdatePackage> ();
+			var projectHasUpdates = false;
 
 			var metadataTasks = installedPackages.Select (installedPackage =>
 				 Task.Run (async () => {
-					 var metadata = await GetLatestPackageFromRemoteSourceAsync (installedPackages, installedPackage.PackageIdentity, IncludePrerelease.IsPresent);
+					 var metadata = await GetLatestPackageFromRemoteSourceAsync (installedPackage.PackageIdentity, IncludePrerelease.IsPresent);
 					 if (metadata != null) {
 						 await metadata.GetVersionsAsync ();
 					 }
@@ -221,16 +195,22 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				var metadata = await task.Item1;
 
 				if (metadata != null) {
-					var package = PowerShellUpdatePackage.GetPowerShellPackageUpdateView (metadata, task.Item2.PackageIdentity.Version, versionType, project.GetName ());
+					var package = PowerShellUpdatePackage.GetPowerShellPackageUpdateView (metadata, task.Item2.PackageIdentity.Version, versionType, project);
 
 					var versions = package.Versions ?? Enumerable.Empty<NuGetVersion> ();
 					if (versions.Any ()) {
-						packages.Add (package);
+						projectHasUpdates = true;
+						WriteObject (package);
 					}
 				}
 			}
 
-			return packages;
+			if (!projectHasUpdates) {
+				LogCore (MessageLevel.Info, string.Format (
+					CultureInfo.CurrentCulture,
+					"No package updates are available from the current package source for project '{0}'.",
+					project.GetName ()));
+			}
 		}
 
 		/// <summary>

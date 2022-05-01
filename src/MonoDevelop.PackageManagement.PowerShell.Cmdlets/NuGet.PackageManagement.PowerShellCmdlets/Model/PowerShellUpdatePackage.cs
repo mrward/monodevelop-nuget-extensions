@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.Threading;
+using MonoDevelop.PackageManagement;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
@@ -24,12 +25,12 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <summary>
 		/// Get the view of PowerShellPackage. Used for Get-Package -Updates command.
 		/// </summary>
-		internal static PowerShellUpdatePackage GetPowerShellPackageUpdateView (IPackageSearchMetadata data, NuGetVersion version, VersionType versionType, string projectName)
+		internal static PowerShellUpdatePackage GetPowerShellPackageUpdateView (IPackageSearchMetadata data, NuGetVersion version, VersionType versionType, NuGetProject project)
 		{
 			var package = new PowerShellUpdatePackage () {
 				Id = data.Identity.Id,
 				Description = data.Summary,
-				ProjectName = projectName,
+				ProjectName = project.GetName (),
 				AsyncLazyVersions = new AsyncLazy<IEnumerable<NuGetVersion>> (async delegate {
 					var versions = (await data.GetVersionsAsync ()) ?? Enumerable.Empty<VersionInfo> ();
 					var results = versions.Select (v => v.Version).OrderByDescending (v => v)

@@ -171,7 +171,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				cancellationToken: Token);
 		}
 
-		protected async Task<IPackageSearchMetadata> GetLatestPackageFromRemoteSourceAsync (IEnumerable<PackageReference> packageReferences, PackageIdentity identity, bool includePrerelease)
+		protected async Task<IPackageSearchMetadata> GetLatestPackageFromRemoteSourceAsync (PackageIdentity identity, bool includePrerelease)
 		{
 			var metadataProvider = new MultiSourcePackageMetadataProvider (
 				PrimarySourceRepositories,
@@ -179,7 +179,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				optionalGlobalLocalRepositories: null,
 				logger: Common.NullLogger.Instance);
 
-			return await metadataProvider.GetLatestPackageMetadataAsync (identity, packageReferences, includePrerelease, Token);
+			return await metadataProvider.GetLatestPackageMetadataAsync (identity, Project, includePrerelease, Token);
 		}
 
 		protected async Task<IEnumerable<string>> GetPackageIdsFromRemoteSourceAsync (string idPrefix, bool includePrerelease)
