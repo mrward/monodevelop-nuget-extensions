@@ -7,6 +7,8 @@ using System.Threading;
 using Microsoft.VisualStudio.Threading;
 using NuGet.Common;
 using NuGet.ProjectManagement;
+using NuGet.Protocol.Core.Types;
+using NuGet.VisualStudio;
 using Task = System.Threading.Tasks.Task;
 
 namespace NuGet.PackageManagement.PowerShellCmdlets
@@ -40,18 +42,24 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 			CheckSolutionState ();
 
-			Task.Run (async () => {
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
 				await GetNuGetProjectAsync (ProjectName);
 				//await CheckMissingPackagesAsync ();
-			}).Wait ();
+			});
+
+			ActionType = NuGetActionType.Uninstall;
 		}
 
 		protected override void ProcessRecordCore ()
 		{
 			Preprocess ();
 
-			UninstallPackageAsync ().Forget ();
-			WaitAndLogPackageActions ();
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
+				Task.Run (UninstallPackageAsync);
+				WaitAndLogPackageActions ();
+
+				return Task.FromResult (true);
+			});
 		}
 
 		/// <summary>
@@ -60,7 +68,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		async Task UninstallPackageAsync ()
 		{
 			try {
-				await UninstallPackageByIdAsync (Project, Id, UninstallContext, WhatIf.IsPresent);
+				await UninstallPackageByIdAsync (Project, Id, UninstallContext, this, WhatIf.IsPresent);
 			} catch (Exception ex) {
 				Log (MessageLevel.Error, ExceptionUtilities.DisplayMessage (ex));
 			} finally {
@@ -75,14 +83,15 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		/// <param name="packageId"></param>
 		/// <param name="uninstallContext"></param>
 		/// <param name="isPreview"></param>
-		protected async Task UninstallPackageByIdAsync (NuGetProject project, string packageId, UninstallationContext uninstallContext, bool isPreview)
+		protected async Task UninstallPackageByIdAsync (NuGetProject project, string packageId, UninstallationContext uninstallContext, INuGetProjectContext projectContext, bool isPreview)
 		{
-			//if (isPreview) {
-			//	var actions = await project.PreviewUninstallPackageAsync (packageId, uninstallContext, Token);
-			//	PreviewNuGetPackageActions (actions);
-			//} else {
-			//	await project.UninstallPackageAsync (packageId, uninstallContext, CancellationToken.None);
-			//}
+			var actions = await PackageManager.PreviewUninstallPackageAsync (project, packageId, uninstallContext, projectContext, CancellationToken.None);
+
+			if (isPreview) {
+				PreviewNuGetPackageActions (actions);
+			} else {
+				await PackageManager.ExecuteNuGetProjectActionsAsync (project, actions, projectContext, NullSourceCacheContext.Instance, CancellationToken.None);
+			}
 		}
 
 		/// <summary>

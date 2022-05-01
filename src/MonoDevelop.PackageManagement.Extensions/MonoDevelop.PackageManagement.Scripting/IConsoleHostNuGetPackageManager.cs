@@ -57,6 +57,13 @@ namespace MonoDevelop.PackageManagement
 			IEnumerable<SourceRepository> secondarySources,
 			CancellationToken token);
 
+		Task<IEnumerable<NuGetProjectAction>> PreviewUninstallPackageAsync (
+			NuGetProject nuGetProject,
+			string packageId,
+			UninstallationContext uninstallationContext,
+			INuGetProjectContext nuGetProjectContext,
+			CancellationToken token);
+
 		Task ExecuteNuGetProjectActionsAsync (
 			NuGetProject nuGetProject,
 			IEnumerable<NuGetProjectAction> nuGetProjectActions,
