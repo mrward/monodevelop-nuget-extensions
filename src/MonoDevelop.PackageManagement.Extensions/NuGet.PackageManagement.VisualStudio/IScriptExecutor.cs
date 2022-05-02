@@ -19,8 +19,7 @@ namespace NuGet.PackageManagement.VisualStudio
 			string scriptRelativePath,
 			DotNetProject project,
 			INuGetProjectContext nuGetProjectContext,
-			bool throwOnFailure,
-			CancellationToken token);
+			bool throwOnFailure);
 
 		bool TryMarkVisited (PackageIdentity packageIdentity, PackageInitPS1State initPS1State);
 

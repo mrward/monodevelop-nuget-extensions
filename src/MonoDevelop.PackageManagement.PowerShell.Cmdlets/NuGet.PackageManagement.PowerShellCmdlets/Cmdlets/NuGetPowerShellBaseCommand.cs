@@ -36,12 +36,14 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 	public abstract class NuGetPowerShellBaseCommand : PSCmdlet, IErrorHandler, IPSNuGetProjectContext
 	{
 		readonly BlockingCollection<Message> blockingCollection = new BlockingCollection<Message> ();
+		readonly Semaphore scriptEndSemaphore = new Semaphore (0, int.MaxValue);
 
 		readonly ISourceRepositoryProvider sourceRepositoryProvider;
 		readonly ICommonOperations commonOperations;
 
 		Guid operationId;
 
+		Exception scriptException;
 		bool overwriteAll;
 		bool ignoreAll;
 
@@ -55,6 +57,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			sourceRepositoryProvider = ServiceLocator.GetInstance<ISourceRepositoryProvider> ();
 			ConfigSettings = ServiceLocator.GetInstance<ISettings> ();
 			SolutionManager = ServiceLocator.GetInstance<IConsoleHostSolutionManager> ();
+			commonOperations = ServiceLocator.GetInstance<ICommonOperations> ();
 			DTE = ServiceLocator.GetInstance<global::EnvDTE.DTE> ();
 
 			var logger = new LoggerAdapter (this);
@@ -586,8 +589,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				category: ErrorCategory.InvalidOperation);
 		}
 
-		public bool IsExecuting { get; set; }
-
 		protected void WriteError (string message)
 		{
 			if (!String.IsNullOrEmpty (message)) {
@@ -715,7 +716,7 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 					var scriptMessage = message as ScriptMessage;
 					if (scriptMessage != null) {
-						ExecutePSScriptInternal (scriptMessage);
+						ExecutePSScriptInternal (scriptMessage.ScriptPath);
 						continue;
 					}
 
@@ -735,26 +736,12 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 			}
 		}
 
-		void ExecutePSScriptInternal (ScriptMessage message)
+		public void ExecutePSScriptInternal (string path)
 		{
 			try {
-				var request = new ScriptExecutionRequest (
-					message.ScriptPath,
-					message.InstallPath,
-					message.Identity,
-					message.Project);
-
-				var psVariable = SessionState.PSVariable;
-
-				// set temp variables to pass to the script
-				psVariable.Set ("__rootPath", request.InstallPath);
-				psVariable.Set ("__toolsPath", request.ToolsPath);
-				psVariable.Set ("__package", request.ScriptPackage);
-				psVariable.Set ("__project", request.Project);
-
-				if (request.ScriptPath != null) {
-					string command = "& " + PathUtility.EscapePSPath (request.ScriptPath) + " $__rootPath $__toolsPath $__package $__project";
-					LogCore (MessageLevel.Info, String.Format (CultureInfo.CurrentCulture, "Executing script file '{0}'", request.ScriptPath));
+				if (path != null) {
+					string command = "& " + PathUtility.EscapePSPath (path) + " $__rootPath $__toolsPath $__package $__project";
+					LogCore (MessageLevel.Info, string.Format (CultureInfo.CurrentCulture, "Executing script file '{0}'", path));
 
 					InvokeCommand.InvokeScript (command, false, PipelineResultTypes.Error, null, null);
 				}
@@ -765,15 +752,40 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 				SessionState.PSVariable.Remove ("__package");
 				SessionState.PSVariable.Remove ("__project");
 			} catch (Exception ex) {
-				message.Exception = ex;
+				scriptException = ex;
 			} finally {
-				message.EndSemaphore.Release ();
+				ScriptEndSemaphore.Release ();
 			}
 		}
 
 		protected BlockingCollection<Message> BlockingCollection => blockingCollection;
 
+		protected Semaphore ScriptEndSemaphore => scriptEndSemaphore;
+
+		public bool IsExecuting { get; private set; }
+
+		public PSCmdlet CurrentPSCmdlet {
+			get { return this; }
+		}
+
 		public PackageExtractionContext PackageExtractionContext { get; set; }
+
+		public void ExecutePSScript (string scriptPath, bool throwOnFailure)
+		{
+			BlockingCollection.Add (new ScriptMessage (scriptPath));
+
+			// added Token waitHandler as well in case token is being cancelled.
+			WaitHandle.WaitAny (new WaitHandle[] { ScriptEndSemaphore, Token.WaitHandle });
+
+			if (scriptException != null) {
+				// Re-throw the exception so that Package Manager rolls back the action
+				if (throwOnFailure) {
+					throw scriptException;
+				}
+
+				Log (MessageLevel.Warning, scriptException.Message);
+			}
+		}
 
 		public ISourceControlManagerProvider SourceControlManagerProvider { get; }
 

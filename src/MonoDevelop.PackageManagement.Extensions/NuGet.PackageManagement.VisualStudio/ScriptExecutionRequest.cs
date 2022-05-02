@@ -45,7 +45,7 @@ namespace NuGet.PackageManagement.VisualStudio
 
 		public string BuildCommand ()
 		{
-			var escapedScriptPath = PathUtility.EscapePSPath (ScriptPath);
+			var escapedScriptPath = NuGet.Common.PathUtility.EscapePSPath (ScriptPath);
 			var command = new StringBuilder (
 				"$__pc_args=@(); " +
 				"$input|%{$__pc_args+=$_}; " +

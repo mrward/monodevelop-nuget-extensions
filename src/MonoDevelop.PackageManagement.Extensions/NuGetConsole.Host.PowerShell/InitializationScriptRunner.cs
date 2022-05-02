@@ -4,9 +4,11 @@
 // Based on src/NuGet.Clients/NuGetConsole.Host.PowerShell/PowerShellHost.cs
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
@@ -67,7 +69,7 @@ namespace NuGetConsole.Host.PowerShell
 			try {
 				var toolsPath = Path.Combine (installPath, "tools");
 				if (Directory.Exists (toolsPath)) {
-					//AddPathToEnvironment (toolsPath);
+					AddPathToEnvironment (toolsPath);
 
 					var relativePath = Path.Combine ("tools", PowerShellScripts.Init);
 
@@ -77,8 +79,7 @@ namespace NuGetConsole.Host.PowerShell
 						relativePath,
 						null,
 						context,
-						false,
-						token);
+						false);
 
 					return;
 				}
@@ -89,19 +90,19 @@ namespace NuGetConsole.Host.PowerShell
 			}
 		}
 
-		//static void AddPathToEnvironment (string path)
-		//{
-		//	var currentPath = Environment.GetEnvironmentVariable ("path", EnvironmentVariableTarget.Process);
+		static void AddPathToEnvironment (string path)
+		{
+			var currentPath = Environment.GetEnvironmentVariable ("PATH", EnvironmentVariableTarget.Process) ?? string.Empty;
 
-		//	var currentPaths = new HashSet<string> (
-		//		currentPath.Split (Path.PathSeparator).Select (p => p.Trim ()),
-		//		StringComparer.OrdinalIgnoreCase);
+			var currentPaths = new HashSet<string> (
+				currentPath.Split (Path.PathSeparator).Select (p => p.Trim ()),
+				StringComparer.OrdinalIgnoreCase);
 
-		//	if (currentPaths.Add (path)) {
-		//		var newPath = currentPath + Path.PathSeparator + path;
-		//		Environment.SetEnvironmentVariable ("path", newPath, EnvironmentVariableTarget.Process);
-		//	}
-		//}
+			if (currentPaths.Add (path)) {
+				var newPath = currentPath + Path.PathSeparator + path;
+				Environment.SetEnvironmentVariable ("PATH", newPath, EnvironmentVariableTarget.Process);
+			}
+		}
 
 		static IMonoDevelopSolutionManager GetSolutionManager (Solution solution)
 		{

@@ -128,7 +128,6 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 					return;
 				}
 
-
 				if (isPreview) {
 					PreviewNuGetPackageActions (actions);
 				} else {

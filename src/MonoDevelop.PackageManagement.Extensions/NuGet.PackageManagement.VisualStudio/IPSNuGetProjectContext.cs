@@ -8,10 +8,10 @@ namespace NuGet.PackageManagement.VisualStudio
 {
     public interface IPSNuGetProjectContext : INuGetProjectContext
     {
-        //bool IsExecuting { get; }
+        bool IsExecuting { get; }
 
-        //PSCmdlet CurrentPSCmdlet { get; }
+        PSCmdlet CurrentPSCmdlet { get; }
 
-        //void ExecutePSScript (string scriptPath, bool throwOnFailure);
+        void ExecutePSScript (string scriptPath, bool throwOnFailure);
     }
 }

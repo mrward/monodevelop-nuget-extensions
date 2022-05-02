@@ -27,6 +27,7 @@
 using System;
 using System.IO;
 using MonoDevelop.Core;
+using MonoDevelop.PackageManagement.Protocol;
 using MonoDevelop.Projects;
 using NuGet.Common;
 using NuGet.Configuration;
@@ -72,11 +73,11 @@ namespace MonoDevelop.PackageManagement
 
 			NuGetProject dotNetCoreProject = DotNetCoreNuGetProject.Create (project);
 			if (dotNetCoreProject != null)
-				return dotNetCoreProject;
+				return dotNetCoreProject.WithConsoleHostProjectServices (project);
 
 			NuGetProject packageReferenceProject = PackageReferenceNuGetProject.Create (project);
 			if (packageReferenceProject != null)
-				return packageReferenceProject;
+				return packageReferenceProject.WithConsoleHostProjectServices (project);
 
 			var projectSystem = new ConsoleHostMSBuildNuGetProjectSystem (project, context);
 
@@ -87,7 +88,7 @@ namespace MonoDevelop.PackageManagement
 					projectJsonPath,
 					project.FileName,
 					project,
-					settings);
+					settings).WithConsoleHostProjectServices (project);
 			}
 
 			string baseDirectory = GetBaseDirectory (project);
@@ -98,7 +99,7 @@ namespace MonoDevelop.PackageManagement
 			return new ConsoleHostMSBuildNuGetProject (
 				projectSystem, 
 				folderNuGetProjectFullPath, 
-				packagesConfigFolderPath);
+				packagesConfigFolderPath).WithConsoleHostProjectServices (project);
 		}
 
 		static string GetBaseDirectory (DotNetProject project)

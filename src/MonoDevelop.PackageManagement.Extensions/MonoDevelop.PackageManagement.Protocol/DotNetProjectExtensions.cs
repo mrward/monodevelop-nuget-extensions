@@ -48,7 +48,7 @@ namespace MonoDevelop.PackageManagement.Protocol
 					.WithConsoleHostProjectServices (project);
 			}
 
-			return new MonoDevelopNuGetProjectFactory ()
+			return new ConsoleHostNuGetProjectFactory ()
 				.CreateNuGetProject (project)
 				.WithConsoleHostProjectServices (project);
 		}

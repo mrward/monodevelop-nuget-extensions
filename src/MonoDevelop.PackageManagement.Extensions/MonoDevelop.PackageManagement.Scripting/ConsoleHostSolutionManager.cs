@@ -279,7 +279,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			var project = PackageManagementExtendedServices.ConsoleHost.DefaultProject as DotNetProject;
 			if (project != null) {
-				var factory = new MonoDevelopNuGetProjectFactory ();
+				var factory = new ConsoleHostNuGetProjectFactory ();
 				NuGetProject nuGetProject = factory.CreateNuGetProject (project);
 				return Task.FromResult (nuGetProject);
 			}

@@ -32,27 +32,12 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 
 	public class ScriptMessage : Message
 	{
-		public ScriptMessage (
-			string scriptPath,
-			string installPath,
-			PackageIdentity identity,
-			global::EnvDTE.Project project)
+		public ScriptMessage (string scriptPath)
 		{
 			ScriptPath = scriptPath;
-			InstallPath = installPath;
-			Identity = identity;
-			Project = project;
-
-			EndSemaphore = new Semaphore (0, int.MaxValue);
 		}
 
 		public string ScriptPath { get; set; }
-		public string InstallPath { get; }
-		public PackageIdentity Identity { get; }
-		public global::EnvDTE.Project Project { get; }
-
-		public Semaphore EndSemaphore { get; private set; }
-		public Exception Exception { get; set; }
 	}
 
 	/// <summary>

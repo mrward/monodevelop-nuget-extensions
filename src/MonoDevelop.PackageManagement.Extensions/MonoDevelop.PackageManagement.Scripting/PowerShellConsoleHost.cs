@@ -73,13 +73,22 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public IList<string> ModulesToImport => modulesToImport;
 		public Version Version { get; }
 
-		public event EventHandler Exited;
-
 		public void ExecuteCommand (string command)
 		{
 			try {
 				EnsureHostInitialized ();
 				InvokePowerShellInternal (command);
+			} catch (Exception ex) {
+				string errorMessage = ExceptionUtilities.DisplayMessage (ex);
+				scriptingConsole.WriteLine (errorMessage, ScriptingStyle.Error);
+			}
+		}
+
+		public void ExecuteCommand (string command, object[] inputs)
+		{
+			try {
+				EnsureHostInitialized ();
+				InvokePowerShellInternal (command, inputs);
 			} catch (Exception ex) {
 				string errorMessage = ExceptionUtilities.DisplayMessage (ex);
 				scriptingConsole.WriteLine (errorMessage, ScriptingStyle.Error);
@@ -243,7 +252,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public IScriptExecutor CreateScriptExecutor ()
 		{
 			EnsureHostInitialized ();
-			return new ScriptExecutor ();
+			return new ScriptExecutor (this);
 		}
 
 		public ITabExpansion CreateTabExpansion ()
@@ -267,10 +276,8 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void RefreshHostCancellationToken ()
 		{
-			if (cancellationTokenSource.IsCancellationRequested) {
-				cancellationTokenSource.Dispose ();
-				cancellationTokenSource = new CancellationTokenSource ();
-			}
+			cancellationTokenSource.Dispose ();
+			cancellationTokenSource = new CancellationTokenSource ();
 
 			host.SetPropertyValueOnHost ("CancellationTokenKey", cancellationTokenSource.Token);
 		}
@@ -358,7 +365,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			} finally {
 				currentPipeline = null;
 			}
-			return null;
 		}
 	}
 }

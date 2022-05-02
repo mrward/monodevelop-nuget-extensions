@@ -39,6 +39,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		IList<string> ModulesToImport { get; }
 		Version Version { get; }
 		void ExecuteCommand (string command);
+		void ExecuteCommand (string command, object[] inputs);
 
 		void OnActiveSourceChanged (SourceRepositoryViewModel source);
 		void OnPackageSourcesChanged (IEnumerable<SourceRepositoryViewModel> sources, SourceRepositoryViewModel selectedPackageSource);
@@ -52,7 +53,5 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		IScriptExecutor CreateScriptExecutor ();
 		ITabExpansion CreateTabExpansion ();
-
-		event EventHandler Exited;
 	}
 }

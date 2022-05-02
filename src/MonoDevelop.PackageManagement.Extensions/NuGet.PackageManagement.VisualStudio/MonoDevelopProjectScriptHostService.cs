@@ -44,8 +44,7 @@ namespace NuGet.PackageManagement.VisualStudio
 				scriptRelativePath,
 				project,
 				projectContext,
-				throwOnFailure,
-				token);
+				throwOnFailure);
 		}
 
 		public async Task<bool> ExecutePackageInitScriptAsync (
@@ -83,8 +82,7 @@ namespace NuGet.PackageManagement.VisualStudio
 								initPS1RelativePath,
 								project,
 								projectContext,
-								throwOnFailure,
-								token);
+								throwOnFailure);
 						}
 					}
 				}

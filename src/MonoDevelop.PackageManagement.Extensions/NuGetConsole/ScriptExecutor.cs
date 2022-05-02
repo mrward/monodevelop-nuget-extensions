@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +12,13 @@ using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Protocol;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
-using StreamJsonRpc;
 
 namespace NuGetConsole
 {
@@ -26,12 +27,12 @@ namespace NuGetConsole
 		ConcurrentDictionary<PackageIdentity, PackageInitPS1State> InitScriptExecutions
 			= new ConcurrentDictionary<PackageIdentity, PackageInitPS1State> (PackageIdentityComparer.Default);
 
+		IPowerShellHost host;
 		Lazy<ISettings> Settings { get; set; }
-		JsonRpc rpc;
 
-		public ScriptExecutor ()
+		public ScriptExecutor (IPowerShellHost host)
 		{
-			//this.rpc = rpc;
+			this.host = host;
 			Settings = new Lazy<ISettings> (() => SettingsLoader.LoadDefaultSettings ());
 			Reset ();
 		}
@@ -47,8 +48,7 @@ namespace NuGetConsole
 			string relativeScriptPath,
 			DotNetProject project,
 			INuGetProjectContext nuGetProjectContext,
-			bool throwOnFailure,
-			CancellationToken token)
+			bool throwOnFailure)
 		{
 			var scriptPath = Path.Combine (installPath, relativeScriptPath);
 
@@ -58,30 +58,35 @@ namespace NuGetConsole
 					return true;
 				}
 
-				var consoleNuGetProjectContext = nuGetProjectContext as ConsoleHostNuGetProjectContext;
-				if (consoleNuGetProjectContext != null &&
-					consoleNuGetProjectContext.IsExecutingPowerShellCommand) {
-					var message = new RunScriptParams {
-						ScriptPath = scriptPath,
-						InstallPath = installPath,
-						PackageId = identity.Id,
-						PackageVersion = identity.Version.ToNormalizedString (),
-						Project = project.CreateProjectInformation (),
-						ThrowOnFailure = throwOnFailure
-					};
-					await RunScriptWithRemotePowerShellConsoleHost (message, nuGetProjectContext, throwOnFailure, token);
-				} else {
-					var logMessage = GettextCatalog.GetString ("Executing script file '{0}'...", scriptPath);
-					nuGetProjectContext.Log (MessageLevel.Info, logMessage);
+				var dteProject = new ICSharpCode.PackageManagement.EnvDTE.Project (project);
+				var request = new ScriptExecutionRequest (scriptPath, installPath, identity, dteProject);
 
-					var message = new RunInitScriptParams {
-						ScriptPath = scriptPath,
-						InstallPath = installPath,
-						PackageId = identity.Id,
-						PackageVersion = identity.Version.ToNormalizedString (),
-						ThrowOnFailure = throwOnFailure
-					};
-					await RunInitScriptWithRemotePowerShellConsoleHost (message, nuGetProjectContext, throwOnFailure, token);
+				var psNuGetProjectContext = nuGetProjectContext as IPSNuGetProjectContext;
+				if (psNuGetProjectContext != null
+					&& psNuGetProjectContext.IsExecuting
+					&& psNuGetProjectContext.CurrentPSCmdlet != null) {
+					var psVariable = psNuGetProjectContext.CurrentPSCmdlet.SessionState.PSVariable;
+
+					// set temp variables to pass to the script
+					psVariable.Set ("__rootPath", request.InstallPath);
+					psVariable.Set ("__toolsPath", request.ToolsPath);
+					psVariable.Set ("__package", request.ScriptPackage);
+					psVariable.Set ("__project", request.Project);
+
+					psNuGetProjectContext.ExecutePSScript (request.ScriptPath, throwOnFailure);
+				} else {
+					var logMessage = string.Format (CultureInfo.CurrentCulture, "Executing script file '{0}'...", scriptPath);
+					// logging to both the Output window and progress window.
+					nuGetProjectContext.Log (MessageLevel.Info, logMessage);
+					try {
+						await ExecuteScriptCoreAsync (request);
+					} catch (Exception ex) {
+						// throwFailure is set by Package Manager.
+						if (throwOnFailure) {
+							throw;
+						}
+						nuGetProjectContext.Log (MessageLevel.Warning, ex.Message);
+					}
 				}
 
 				return true;
@@ -91,45 +96,6 @@ namespace NuGetConsole
 				}
 			}
 			return false;
-		}
-
-		async Task RunScriptWithRemotePowerShellConsoleHost (
-			RunScriptParams message,
-			INuGetProjectContext nuGetProjectContext,
-			bool throwOnFailure,
-			CancellationToken token)
-		{
-			await RunScriptWithRemotePowerShellConsoleHost (Methods.RunScript, message, nuGetProjectContext, throwOnFailure, token);
-		}
-
-		async Task RunInitScriptWithRemotePowerShellConsoleHost (
-			RunInitScriptParams message,
-			INuGetProjectContext nuGetProjectContext,
-			bool throwOnFailure,
-			CancellationToken token)
-		{
-			await RunScriptWithRemotePowerShellConsoleHost (Methods.RunInitScript, message, nuGetProjectContext, throwOnFailure, token);
-		}
-
-		async Task RunScriptWithRemotePowerShellConsoleHost (
-			string method,
-			object message,
-			INuGetProjectContext nuGetProjectContext,
-			bool throwOnFailure,
-			CancellationToken token)
-		{
-			try {
-				var result = await rpc.InvokeWithCancellationAsync<RunScriptResult> (method, new[] { message }, token);
-				if (!result.Success) {
-					throw new ApplicationException (result.ErrorMessage);
-				}
-			} catch (Exception ex) {
-				if (throwOnFailure) {
-					throw;
-				} else {
-					nuGetProjectContext.Log (MessageLevel.Warning, ex.Message);
-				}
-			}
 		}
 
 		public bool TryMarkVisited (PackageIdentity packageIdentity, PackageInitPS1State initPS1State)
@@ -143,6 +109,15 @@ namespace NuGetConsole
 		public Task<bool> ExecuteInitScriptAsync (PackageIdentity identity, CancellationToken token)
 		{
 			throw new NotImplementedException ("ScriptExecutor.ExecuteInitScriptAsync is not implemented");
+		}
+
+		async Task ExecuteScriptCoreAsync (ScriptExecutionRequest request)
+		{
+			// Host.Execute calls powershell's pipeline.Invoke and blocks the calling thread
+			// to switch to powershell pipeline execution thread. In order not to block the UI thread,
+			// go off the UI thread. This is important, since, switches to UI thread,
+			// using SwitchToMainThreadAsync will deadlock otherwise
+			await Task.Run (() => host.ExecuteCommand (request.BuildCommand (), request.BuildInput ()));
 		}
 	}
 }
