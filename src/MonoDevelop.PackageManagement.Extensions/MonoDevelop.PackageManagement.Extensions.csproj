@@ -15,7 +15,6 @@
   </ItemGroup>
   <Import Project="PostBuildEvent.proj" />
   <ItemGroup>
-    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
     <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj" />
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj" />
   </ItemGroup>

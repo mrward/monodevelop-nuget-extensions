@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.Extensions", "MonoDevelop.PackageManagement.Extensions\MonoDevelop.PackageManagement.Extensions.csproj", "{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell.Protocol", "MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj", "{56ADE615-648E-4F93-9F7C-636AA0737A7B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell.ConsoleHost", "MonoDevelop.PackageManagement.PowerShell.ConsoleHost\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.csproj", "{03E63744-94E9-4920-BFD5-D0920D4AA544}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDevelop.PackageManagement.PowerShell.Cmdlets", "MonoDevelop.PackageManagement.PowerShell.Cmdlets\MonoDevelop.PackageManagement.PowerShell.Cmdlets.csproj", "{A727E5B6-8026-4454-9354-0956205D6384}"
@@ -33,14 +31,6 @@ Global
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|x86.ActiveCfg = Release|Any CPU
 		{649C747C-79BF-494A-9EFF-A7CD3CA56CDE}.Release|x86.Build.0 = Release|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Debug|x86.Build.0 = Debug|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|x86.ActiveCfg = Release|Any CPU
-		{56ADE615-648E-4F93-9F7C-636AA0737A7B}.Release|x86.Build.0 = Release|Any CPU
 		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03E63744-94E9-4920-BFD5-D0920D4AA544}.Debug|x86.ActiveCfg = Debug|Any CPU

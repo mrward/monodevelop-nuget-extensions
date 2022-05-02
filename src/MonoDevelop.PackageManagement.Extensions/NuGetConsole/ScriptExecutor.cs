@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
-using MonoDevelop.PackageManagement.Protocol;
 using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.Configuration;

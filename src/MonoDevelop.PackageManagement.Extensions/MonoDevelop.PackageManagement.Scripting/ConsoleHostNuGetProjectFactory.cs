@@ -27,14 +27,13 @@
 using System;
 using System.IO;
 using MonoDevelop.Core;
-using MonoDevelop.PackageManagement.Protocol;
 using MonoDevelop.Projects;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
 using NuGet.ProjectManagement;
 
-namespace MonoDevelop.PackageManagement
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class ConsoleHostNuGetProjectFactory
 	{

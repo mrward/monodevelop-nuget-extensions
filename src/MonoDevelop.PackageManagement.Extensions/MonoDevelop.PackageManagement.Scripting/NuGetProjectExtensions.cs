@@ -1,5 +1,5 @@
 ﻿//
-// StringExtensions.cs
+// NuGetProjectExtensions.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,32 +24,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using NuGet.PackageManagement;
+using System.Reflection;
+using MonoDevelop.PackageManagement.Scripting;
 using NuGet.ProjectManagement;
-using NuGet.Resolver;
+using MonoDevelop.Projects;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement.Scripting
 {
-	static class StringExtensions
+	static class NuGetProjectExtensions
 	{
-		public static DependencyBehavior ToDependencyBehaviorEnum (this string item)
+		public static NuGetProject WithConsoleHostProjectServices (this NuGetProject project, DotNetProject dotNetProject)
 		{
-			return (DependencyBehavior)Enum.Parse (typeof (DependencyBehavior), item);
+			var projectServices = new ConsoleHostNuGetProjectServices (dotNetProject, project);
+			return project.WithConsoleHostProjectServices (projectServices);
 		}
 
-		public static VersionConstraints ToVersionContrainsEnum (this string item)
+		public static NuGetProject WithConsoleHostProjectServices (
+			this NuGetProject project,
+			ConsoleHostNuGetProjectServices projectServices)
 		{
-			return (VersionConstraints)Enum.Parse (typeof (VersionConstraints), item);
-		}
+			var flags = BindingFlags.Public | BindingFlags.Instance;
+			PropertyInfo property = typeof (NuGetProject).GetProperty ("ProjectServices", flags);
+			property.SetValue (project, projectServices);
 
-		public static FileConflictAction? ToFileConflictActionEnum (this string item)
-		{
-			if (string.IsNullOrEmpty (item)) {
-				return null;
-			}
-
-			return (FileConflictAction)Enum.Parse (typeof (FileConflictAction), item);
+			return project;
 		}
 	}
 }

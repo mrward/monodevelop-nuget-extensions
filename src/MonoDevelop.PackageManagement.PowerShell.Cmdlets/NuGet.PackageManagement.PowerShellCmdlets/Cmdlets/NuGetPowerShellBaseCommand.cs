@@ -15,7 +15,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using MonoDevelop.PackageManagement;
-using MonoDevelop.PackageManagement.PowerShell.Protocol;
 using MonoDevelop.PackageManagement.Scripting;
 using NuGet.Common;
 using NuGet.Configuration;

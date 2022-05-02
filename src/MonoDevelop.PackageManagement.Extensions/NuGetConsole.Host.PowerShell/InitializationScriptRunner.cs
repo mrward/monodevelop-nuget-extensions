@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 using System.Linq;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Projects;
 using NuGet.PackageManagement;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
-using MonoDevelop.PackageManagement.Protocol;
 
 namespace NuGetConsole.Host.PowerShell
 {

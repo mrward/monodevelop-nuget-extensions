@@ -33,7 +33,7 @@ using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.ProjectManagement;
 
-namespace MonoDevelop.PackageManagement.Protocol
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	class ConsoleHostNuGetProjectContext : INuGetProjectContext
 	{

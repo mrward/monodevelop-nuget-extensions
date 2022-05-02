@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Cmdlets\MonoDevelop.PackageManagement.PowerShell.Cmdlets.csproj" />
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core\MonoDevelop.PackageManagement.PowerShell.ConsoleHost.Core.csproj" />
     <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj" />

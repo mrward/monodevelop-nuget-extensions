@@ -53,7 +53,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.1.46" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell.Protocol\MonoDevelop.PackageManagement.PowerShell.Protocol.csproj" />
     <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj" />
   </ItemGroup>
 </Project>
