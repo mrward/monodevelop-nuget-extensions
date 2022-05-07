@@ -30,7 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class ProjectPropertyFactory : IPropertyFactory
 	{

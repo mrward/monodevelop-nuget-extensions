@@ -28,7 +28,7 @@
 
 using System;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class ProjectObject : MarshalByRefObject, global::EnvDTE.ProjectObject
 	{

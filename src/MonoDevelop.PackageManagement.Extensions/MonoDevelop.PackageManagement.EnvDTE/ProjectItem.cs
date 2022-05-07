@@ -34,7 +34,7 @@ using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.Ide.Gui;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class ProjectItem : MonoDevelop.EnvDTE.ProjectItemBase, global::EnvDTE.ProjectItem
 	{

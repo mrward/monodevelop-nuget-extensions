@@ -31,7 +31,7 @@ using System.Linq;
 using Microsoft.Build.Construction;
 using MonoDevelop.Projects.MSBuild;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	public class MSBuildProjectImportsMergeResult
 	{

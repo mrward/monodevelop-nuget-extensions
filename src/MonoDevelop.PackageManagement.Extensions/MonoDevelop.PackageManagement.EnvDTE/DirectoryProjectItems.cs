@@ -30,7 +30,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class DirectoryProjectItems : ProjectItems
 	{

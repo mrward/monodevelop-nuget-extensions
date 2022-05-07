@@ -26,7 +26,7 @@
 //
 
 using System;
-using ICSharpCode.PackageManagement.Scripting;
+using MonoDevelop.PackageManagement.Scripting;
 using MonoDevelop.Core;
 using MonoDevelop.Projects;
 using MonoDevelop.Projects.MSBuild;

@@ -31,7 +31,7 @@ using System.IO;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.Core;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public static class FileProjectItemExtensions
 	{

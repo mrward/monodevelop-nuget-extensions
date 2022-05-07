@@ -28,7 +28,7 @@
 
 using System;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class Window : MonoDevelop.EnvDTE.WindowBase, global::EnvDTE.Window
 	{

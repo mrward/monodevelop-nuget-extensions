@@ -33,7 +33,7 @@ using System.Linq;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.PackageManagement;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class Projects : MarshalByRefObject, IEnumerable<Project>, global::EnvDTE.Projects
 	{

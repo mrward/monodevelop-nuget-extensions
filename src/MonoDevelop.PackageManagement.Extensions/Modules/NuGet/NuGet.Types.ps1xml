@@ -2,7 +2,7 @@
 <Types>
     <Type>
         <!-- EnvDTE.Project -->
-        <Name>ICSharpCode.PackageManagement.EnvDTE.Project</Name>
+        <Name>MonoDevelop.PackageManagement.EnvDTE.Project</Name>
         <Members>
             <CodeProperty>
                 <Name>ProjectName</Name>

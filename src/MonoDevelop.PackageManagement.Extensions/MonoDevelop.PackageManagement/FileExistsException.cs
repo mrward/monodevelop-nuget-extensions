@@ -29,7 +29,7 @@
 using System;
 using System.IO;
 
-namespace ICSharpCode.PackageManagement
+namespace MonoDevelop.PackageManagement
 {
 	[Serializable]
 	public class FileExistsException : Exception

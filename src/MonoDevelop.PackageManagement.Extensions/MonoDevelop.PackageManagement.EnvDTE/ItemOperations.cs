@@ -32,7 +32,7 @@ using EnvDTE;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class ItemOperations : MarshalByRefObject, global::EnvDTE.ItemOperations
 	{

@@ -28,7 +28,7 @@
 using System;
 using MonoDevelop.Projects;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal interface IGlobalMSBuildProjectCollection : IDisposable
 	{

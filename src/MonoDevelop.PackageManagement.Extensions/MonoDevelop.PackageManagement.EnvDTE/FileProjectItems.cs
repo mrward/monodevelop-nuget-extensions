@@ -33,7 +33,7 @@ using System.Linq;
 using MonoDevelop.PackageManagement;
 using MD = MonoDevelop.Projects;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	/// <summary>
 	/// A file can have child project items if it has files that depend upon it.

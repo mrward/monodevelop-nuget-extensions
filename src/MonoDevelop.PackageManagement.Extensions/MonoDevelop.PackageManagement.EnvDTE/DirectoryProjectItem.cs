@@ -32,7 +32,7 @@ using System.Linq;
 
 using MD = MonoDevelop.Projects;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class DirectoryProjectItem : ProjectItem
 	{

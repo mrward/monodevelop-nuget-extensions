@@ -30,7 +30,7 @@
 using System;
 using MD = MonoDevelop.Projects;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class Reference3 : Reference, global::EnvDTE.Reference3
 	{

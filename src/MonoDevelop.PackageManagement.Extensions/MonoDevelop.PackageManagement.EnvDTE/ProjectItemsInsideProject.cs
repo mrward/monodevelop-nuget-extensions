@@ -35,7 +35,7 @@ using MD = MonoDevelop.Projects;
 using MonoDevelop.PackageManagement;
 using MonoDevelop.Core;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	internal class ProjectItemsInsideProject : EnumerableProjectItems
 	{

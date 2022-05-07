@@ -35,7 +35,7 @@ using System.Linq;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.PackageManagement;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class DTE : MonoDevelop.EnvDTE.DTEBase, global::EnvDTE.DTE//, IServiceProvider
 	{

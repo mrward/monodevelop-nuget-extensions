@@ -56,7 +56,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		IPackageManagementEvents packageEvents;
 		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 		Project defaultProject;
-		ICSharpCode.PackageManagement.EnvDTE.DTE dte;
+		MonoDevelop.PackageManagement.EnvDTE.DTE dte;
 		Lazy<IScriptExecutor> scriptExecutor;
 		LazyCommandExpansion commandExpansion;
 		string prompt = "PM> ";
@@ -195,7 +195,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void InitConsoleHostServices ()
 		{
-			dte = new ICSharpCode.PackageManagement.EnvDTE.DTE ();
+			dte = new MonoDevelop.PackageManagement.EnvDTE.DTE ();
 
 			serviceProvider = new PackageManagementConsoleHostServiceProvider (this);
 			serviceProvider.AddService (typeof (global::EnvDTE.DTE), dte);

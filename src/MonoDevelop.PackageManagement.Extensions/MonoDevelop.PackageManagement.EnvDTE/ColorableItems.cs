@@ -31,7 +31,7 @@ using System;
 //using System.Drawing;
 //using Wpf = System.Windows.Media;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class ColorableItems : MarshalByRefObject, global::EnvDTE.ColorableItems
 	{

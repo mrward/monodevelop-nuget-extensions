@@ -28,7 +28,7 @@
 
 using System;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class SolutionProperty : Property
 	{

@@ -29,7 +29,7 @@
 using System;
 using DotNetProject = MonoDevelop.Projects.DotNetProject;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public static class ProjectType
 	{

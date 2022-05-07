@@ -36,7 +36,7 @@ using MonoDevelop.PackageManagement.Scripting;
 using DotNetProject = MonoDevelop.Projects.DotNetProject;
 using NuGet.ProjectManagement;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class GlobalMSBuildProjectCollection : IGlobalMSBuildProjectCollection
 	{

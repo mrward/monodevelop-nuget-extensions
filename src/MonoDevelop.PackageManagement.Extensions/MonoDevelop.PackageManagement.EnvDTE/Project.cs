@@ -37,7 +37,7 @@ using MD = MonoDevelop.Projects;
 using MonoDevelop.Ide;
 using MonoDevelop.Ide.Gui;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class Project : MonoDevelop.EnvDTE.ProjectBase, global::EnvDTE.Project
 	{

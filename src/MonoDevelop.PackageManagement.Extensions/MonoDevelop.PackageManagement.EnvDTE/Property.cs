@@ -28,7 +28,7 @@
 
 using System;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class Property : MonoDevelop.EnvDTE.PropertyBase, global::EnvDTE.Property
 	{

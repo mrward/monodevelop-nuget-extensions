@@ -29,7 +29,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public interface IPropertyFactory
 	{

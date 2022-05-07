@@ -31,7 +31,7 @@ using MonoDevelop.Ide;
 using MonoDevelop.Core;
 using Xwt.Drawing;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class TextEditorFontSizeProperty : Property
 	{

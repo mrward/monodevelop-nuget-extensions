@@ -34,7 +34,7 @@ using System.Linq;
 using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class ProjectItems : MarshalByRefObject, IEnumerable, global::EnvDTE.ProjectItems
 	{

@@ -34,7 +34,7 @@ using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.PackageManagement;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class Solution : MonoDevelop.EnvDTE.SolutionBase, global::EnvDTE.Solution
 	{

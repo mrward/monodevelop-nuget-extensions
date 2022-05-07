@@ -35,7 +35,7 @@ using MonoDevelop.Core;
 using MonoDevelop.PackageManagement;
 using DotNetProject = MonoDevelop.Projects.DotNetProject;
 
-namespace ICSharpCode.PackageManagement.Scripting
+namespace MonoDevelop.PackageManagement.Scripting
 {
 	internal class MSBuildProjectPropertiesMerger
 	{

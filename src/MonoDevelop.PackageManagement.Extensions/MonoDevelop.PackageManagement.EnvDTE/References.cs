@@ -34,7 +34,7 @@ using MonoDevelop.Core;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.PackageManagement;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class References : MarshalByRefObject, IEnumerable, global::EnvDTE.References
 	{

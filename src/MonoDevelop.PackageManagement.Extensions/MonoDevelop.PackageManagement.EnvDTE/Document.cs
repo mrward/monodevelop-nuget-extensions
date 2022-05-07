@@ -31,7 +31,7 @@ using EnvDTE;
 using MonoDevelop.Core;
 using MD = MonoDevelop.Ide.Gui;
 
-namespace ICSharpCode.PackageManagement.EnvDTE
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
 	public class Document : MonoDevelop.EnvDTE.DocumentBase, global::EnvDTE.Document
 	{

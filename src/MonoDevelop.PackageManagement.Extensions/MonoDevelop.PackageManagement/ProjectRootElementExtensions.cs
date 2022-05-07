@@ -29,7 +29,7 @@ using System;
 using System.Linq;
 using Microsoft.Build.Construction;
 
-namespace ICSharpCode.PackageManagement
+namespace MonoDevelop.PackageManagement
 {
 	public static class ProjectRootElementExtensions
 	{
