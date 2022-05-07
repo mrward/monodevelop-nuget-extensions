@@ -47,7 +47,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			this.solution = projectService.OpenSolution;
 			this.Projects = new Projects (projectService);
 //			this.Globals = new SolutionGlobals (this);
-//			this.SolutionBuild = new SolutionBuild (this, projectService.ProjectBuilder);
+			this.SolutionBuild = new SolutionBuild (this);
 			CreateProperties ();
 		}
 
@@ -56,6 +56,8 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			var propertyFactory = new SolutionPropertyFactory (this);
 			Properties = new Properties (propertyFactory);
 		}
+
+		internal MD.Solution MonoDevelopSolution => solution;
 
 		public string FullName {
 			get { return FileName; }
@@ -106,6 +108,20 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				return new Project (project);
 			}
 			return null;
+		}
+
+		internal IEnumerable<Project> GetStartupProjects ()
+		{
+			if (solution.SingleStartup) {
+				yield return GetStartupProject ();
+			} else {
+				foreach (MD.SolutionItem solutionItem in solution.MultiStartupItems) {
+					var project = solutionItem as MD.DotNetProject;
+					if (project != null) {
+						yield return new Project (project);
+					}
+				}
+			}
 		}
 
 		internal IEnumerable<string> GetAllPropertyNames ()
