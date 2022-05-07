@@ -15,12 +15,17 @@
   </ItemGroup>
   <Import Project="PostBuildEvent.proj" />
   <ItemGroup>
-    <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj" />
+    <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\MonoDevelop.PackageManagement.PowerShell\MonoDevelop.PackageManagement.PowerShell.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore">
       <HintPath>$(MDBinDir)\PresentationCore.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.EnvDTE">
+      <HintPath>$(OutputPath)\MonoDevelop.EnvDTE.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

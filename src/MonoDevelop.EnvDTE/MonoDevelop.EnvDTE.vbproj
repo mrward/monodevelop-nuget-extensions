@@ -6,8 +6,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SignAssembly>true</SignAssembly>
     <PublicSign>True</PublicSign>
+    <OutputPath>..\..\bin</OutputPath>
     <AssemblyOriginatorKeyFile>..\MonoDevelop-Public.snk</AssemblyOriginatorKeyFile>
     <UseSharedCompilation>false</UseSharedCompilation>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
