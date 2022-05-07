@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 using MonoDevelop.PackageManagement;
 using NuGet.Common;
 using NuGet.Packaging.Core;
@@ -94,16 +95,16 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		protected override void ProcessRecordCore ()
 		{
 			Preprocess ();
-			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (() => {
 				WarnIfParametersAreNotSupported ();
 
 				// Update-Package without ID specified
 				if (!idSpecified) {
-					Task.Run (UpdateOrReinstallAllPackagesAsync);
+					Task.Run (UpdateOrReinstallAllPackagesAsync).Forget ();
 				}
 				// Update-Package with Id specified
 				else {
-					Task.Run (UpdateOrReinstallSinglePackageAsync);
+					Task.Run (UpdateOrReinstallSinglePackageAsync).Forget ();
 				}
 
 				WaitAndLogPackageActions ();

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Net;
 using System.Text;
+using Microsoft.VisualStudio.Threading;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Packaging;
@@ -51,17 +52,17 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 			Preprocess ();
 
-			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (() => {
 				//await _lockService.ExecuteNuGetOperationAsync (() => {
 					WarnIfParametersAreNotSupported ();
 
 					if (!readFromPackagesConfig
 						&& !readFromDirectPackagePath
 						&& nugetVersion == null) {
-						Task.Run (InstallPackageByIdAsync);
+						Task.Run (InstallPackageByIdAsync).Forget ();
 					} else {
 						var identities = GetPackageIdentities ();
-						Task.Run (() => InstallPackagesAsync (identities));
+						Task.Run (() => InstallPackagesAsync (identities)).Forget ();
 					}
 					WaitAndLogPackageActions ();
 

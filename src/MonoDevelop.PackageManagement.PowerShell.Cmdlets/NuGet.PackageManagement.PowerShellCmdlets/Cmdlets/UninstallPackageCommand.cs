@@ -54,8 +54,8 @@ namespace NuGet.PackageManagement.PowerShellCmdlets
 		{
 			Preprocess ();
 
-			NuGetUIThreadHelper.JoinableTaskFactory.Run (async () => {
-				Task.Run (UninstallPackageAsync);
+			NuGetUIThreadHelper.JoinableTaskFactory.Run (() => {
+				Task.Run (UninstallPackageAsync).Forget ();
 				WaitAndLogPackageActions ();
 
 				return Task.FromResult (true);
