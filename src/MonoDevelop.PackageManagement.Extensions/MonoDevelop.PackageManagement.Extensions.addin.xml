@@ -13,7 +13,6 @@
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
 		<Import file="MonoDevelop.EnvDTE.dll" />
 		<Import file="MonoDevelop.PackageManagement.PowerShell.Protocol.dll" />
-		<Import file="NuGet.Core.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
 		<!--<Import file="PowerShellConsoleHost/ICSharpCode.SharpZipLib.dll" />

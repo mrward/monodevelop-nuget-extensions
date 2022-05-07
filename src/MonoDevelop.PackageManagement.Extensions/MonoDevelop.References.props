@@ -92,9 +92,6 @@
       <HintPath>$(MDBinDir)\Addins\MonoDevelop.PackageManagement\MonoDevelop.PackageManagement.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NuGet.Core">
-      <HintPath>..\..\lib\NuGet.Core.dll</HintPath>
-    </Reference>
     <Reference Include="NuGet.Configuration">
       <HintPath>$(MDBinDir)\NuGet.Configuration.dll</HintPath>
       <Private>False</Private>

@@ -25,7 +25,7 @@
 // THE SOFTWARE.
 //
 using System;
-using NuGet;
+using NuGet.Versioning;
 
 namespace MonoDevelop.PackageManagement
 {
@@ -65,7 +65,11 @@ namespace MonoDevelop.PackageManagement
 			if (String.IsNullOrEmpty (Version))
 				return null;
 
-			return new SemanticVersion (Version);
+			if (SemanticVersion.TryParse (Version, out SemanticVersion version)) {
+				return version;
+			}
+
+			return null;
 		}
 
 		public string GetVersionString ()

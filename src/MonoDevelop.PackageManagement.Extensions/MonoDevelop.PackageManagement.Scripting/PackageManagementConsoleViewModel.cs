@@ -165,7 +165,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		void ProjectsChanged (IEnumerable<Project> newProjects)
 		{
 			Projects.Clear ();
-			NuGet.CollectionExtensions.AddRange (Projects, newProjects);
+			NuGet.Packaging.CollectionExtensions.AddRange (Projects, newProjects);
 			UpdateDefaultProject ();
 		}
 

@@ -59,8 +59,6 @@ namespace AddinManifestImportFilesGenerator
 
 					WriteImportAssemblyElement (writer, "MonoDevelop.PackageManagement.Extensions.dll");
 					WriteImportFileElement (writer, "MonoDevelop.EnvDTE.dll");
-					WriteImportFileElement (writer, "MonoDevelop.PackageManagement.PowerShell.Protocol.dll");
-					WriteImportFileElement (writer, "NuGet.Core.dll");
 					WriteImportFileElement (writer, "NuGet.Resolver.dll");
 					WriteImportFileElement (writer, "NuGet-LICENSE.txt");
 					WriteImportFileElement (writer, "StreamJsonRpc.dll");
