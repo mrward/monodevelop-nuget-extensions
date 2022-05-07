@@ -13,7 +13,6 @@
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
 		<Import file="MonoDevelop.EnvDTE.dll" />
 		<Import file="MonoDevelop.PackageManagement.PowerShell.Protocol.dll" />
-		<Import file="MonoPcl.exe" />
 		<Import file="NuGet.Core.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
@@ -111,7 +110,6 @@
 	<Extension path="/MonoDevelop/Ide/SearchCategories">
 		<Class class="MonoDevelop.PackageManagement.InstallPackageSearchCategory" />
 		<Class class="MonoDevelop.PackageManagement.NuGetPackageSearchCategory" />
-		<Class class="MonoDevelop.PackageManagement.PortableClassLibrarySearchCategory" />
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/Pads">

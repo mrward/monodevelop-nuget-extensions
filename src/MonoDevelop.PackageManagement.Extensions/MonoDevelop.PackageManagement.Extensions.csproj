@@ -13,7 +13,6 @@
    <ItemGroup>
     <EmbeddedResource Include="MonoDevelop.PackageManagement.Extensions.addin.xml" />
   </ItemGroup>
-  <Import Project="PostBuildEvent.proj" />
   <ItemGroup>
     <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
