@@ -32,9 +32,7 @@ using NuGetConsole;
 namespace MonoDevelop.PackageManagement.Scripting
 {
 	/// <summary>
-	/// Creates the ICommandExpansion lazily just before it is needed. It requires the
-	/// JsonRpc instance to be created which is not available until the PowerShell
-	/// host is initialized.
+	/// Creates the ICommandExpansion lazily just before it is needed.
 	/// </summary>
 	class LazyCommandExpansion : ICommandExpansion
 	{

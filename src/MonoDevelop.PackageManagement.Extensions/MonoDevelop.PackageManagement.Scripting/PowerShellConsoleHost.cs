@@ -182,59 +182,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void OnMaxVisibleColumnsChanged (int columns)
 		{
-			//if (rpc == null) {
-			//	// Column information should be updated after the first PowerShell command is run with
-			//	// remote PowerShell host.
-			//	return;
-			//}
-
-			//try {
-			//	rpc.InvokeAsync (Methods.MaxVisibleColumnsChangedName, columns).Ignore ();
-			//} catch (Exception ex) {
-			//	LoggingService.LogError ("OnMaxVisibleColumnsChanged error", ex);
-			//}
-		}
-
-		public void SolutionLoaded (Solution solution)
-		{
-			//if (rpc == null)
-			//	return;
-
-			//try {
-			//	var message = new SolutionParams {
-			//		FileName = solution.FileName
-			//	};
-			//	rpc.InvokeAsync (Methods.SolutionLoadedName, message).Ignore ();
-			//} catch (Exception ex) {
-			//	LoggingService.LogError ("SolutionLoaded error", ex);
-			//}
-		}
-
-		public void SolutionUnloaded ()
-		{
-			//if (rpc == null)
-			//	return;
-
-			//try {
-			//	rpc.InvokeAsync (Methods.SolutionUnloadedName).Ignore ();
-			//} catch (Exception ex) {
-			//	LoggingService.LogError ("SolutionUnloaded error", ex);
-			//}
-		}
-
-		public void OnDefaultProjectChanged (Project project)
-		{
-			//if (rpc == null)
-			//	return;
-
-			//try {
-			//	var message = new DefaultProjectChangedParams {
-			//		FileName = project?.FileName
-			//	};
-			//	rpc.InvokeAsync (Methods.DefaultProjectChangedName, message).Ignore ();
-			//} catch (Exception ex) {
-			//	LoggingService.LogError ("OnDefaultProjectChanged error", ex);
-			//}
+			// TODO:
 		}
 
 		public void StopCommand ()

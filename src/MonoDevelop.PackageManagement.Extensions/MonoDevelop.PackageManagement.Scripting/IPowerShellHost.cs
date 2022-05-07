@@ -46,9 +46,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void OnMaxVisibleColumnsChanged (int columns);
 
-		void SolutionLoaded (Solution solution);
-		void SolutionUnloaded ();
-		void OnDefaultProjectChanged (Project project);
 		void StopCommand ();
 
 		IScriptExecutor CreateScriptExecutor ();

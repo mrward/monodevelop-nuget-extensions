@@ -103,7 +103,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			set {
 				if (defaultProject != value) {
 					defaultProject = value;
-					powerShellHost?.OnDefaultProjectChanged (defaultProject);
 				}
 			}
 		}
@@ -273,8 +272,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 			var solution = PackageManagementServices.ProjectService.OpenSolution?.Solution;
 			if (solution != null) {
 				UpdateWorkingDirectory (solution);
-				powerShellHost?.SolutionLoaded (solution);
-				powerShellHost?.OnDefaultProjectChanged (DefaultProject);
 				RunPowerShellInitializationScripts (solution);
 			} else {
 				UpdateWorkingDirectory ();
@@ -420,14 +417,12 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public void OnSolutionUnloaded ()
 		{
 			UpdateWorkingDirectory ();
-			powerShellHost?.SolutionUnloaded ();
 			ScriptExecutor.Reset ();
 		}
 
 		void SolutionLoaded (object sender, SolutionEventArgs e)
 		{
 			UpdateWorkingDirectory (e.Solution);
-			powerShellHost?.SolutionLoaded (e.Solution);
 			RunPowerShellInitializationScripts (e.Solution);
 		}
 
