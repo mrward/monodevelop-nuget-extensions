@@ -36,7 +36,7 @@ using MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class ProjectItem : global::EnvDTE.ProjectItemBase, global::EnvDTE.ProjectItem
+	public class ProjectItem : MonoDevelop.EnvDTE.ProjectItemBase, global::EnvDTE.ProjectItem
 	{
 		MD.ProjectFile projectItem;
 		Project containingProject;
@@ -188,14 +188,14 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			}).Wait ();
 		}
 
-		public global::EnvDTE.FileCodeModel2 FileCodeModel {
-			get {
+//		public global::EnvDTE.FileCodeModel2 FileCodeModel {
+//			get {
 //				if (!IsDirectory) {
 //					return new FileCodeModel2 (CreateModelContext (), containingProject);
 //				}
-				return null;
-			}
-		}
+//				return null;
+//			}
+//		}
 
 //		CodeModelContext CreateModelContext ()
 //		{
@@ -295,5 +295,42 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			return containingProject.GetRelativePath (directory);
 		}
+
+		public bool SaveAs (string NewFileName)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void ExpandView ()
+		{
+		}
+
+		public bool IsDirty { get; set; }
+
+		string global::EnvDTE.ProjectItem.Name { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
+
+		protected override bool GetIsOpen(string viewKind)
+		{
+			return false;
+		}
+
+		public object Object => throw new NotImplementedException ();
+
+		protected override object GetExtender (string extender)
+		{
+			return null;
+		}
+
+		public object ExtenderNames => throw new NotImplementedException ();
+
+		public string ExtenderCATID => throw new NotImplementedException ();
+
+		public bool Saved { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public global::EnvDTE.ConfigurationManager ConfigurationManager => throw new NotImplementedException ();
+
+		global::EnvDTE.FileCodeModel global::EnvDTE.ProjectItem.FileCodeModel => throw new NotImplementedException ();
 	}
 }

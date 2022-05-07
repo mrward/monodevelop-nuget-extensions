@@ -1,4 +1,10 @@
-﻿' Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
+﻿'
+' PropertyBase.cs
+'
+' Author:
+'       Matt Ward <matt.ward@microsoft.com>
+'
+' Copyright (c) 2022 Microsoft
 ' 
 ' Permission is hereby granted, free of charge, to any person obtaining a copy of this
 ' software and associated documentation files (the "Software"), to deal in the Software
@@ -19,31 +25,25 @@
 Imports System
 
 Namespace MonoDevelop.EnvDTE
-	Public MustInherit Class ProjectItemBase
+	Public MustInherit Class PropertyBase
 		Inherits MarshalByRefObject
 
-		ReadOnly Property FileNames(index As Short) As String
+		Property IndexedValue(
+			Index1 As Object,
+			Optional Index2 As Object = Nothing,
+			Optional Index3 As Object = Nothing,
+			Optional Index4 As Object = Nothing) As Object
 			Get
-				Return GetFileNames(index)
+				Return GetIndexedValue(Index1, Index2, Index3, Index4)
 			End Get
+			Set(Value As Object)
+				SetIndexedValue(Value, Index1, Index2, Index3, Index4)
+			End Set
 		End Property
 
-		Protected MustOverride Function GetFileNames(index As Short) As String
+		Protected MustOverride Function GetIndexedValue(Index1 As Object, Index2 As Object, Index3 As Object, Index4 As Object) As Object
 
-		ReadOnly Property IsOpen(Optional ViewKind As String = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") As Boolean
-			Get
-				Return GetIsOpen(ViewKind)
-			End Get
-		End Property
+		Protected MustOverride Sub SetIndexedValue(Value As Object, Index1 As Object, Index2 As Object, Index3 As Object, Index4 As Object)
 
-		Protected MustOverride Function GetIsOpen(ViewKind As String) As Boolean
-
-		ReadOnly Property Extender(ExtenderName As String) As Object
-			Get
-				Return GetExtender(ExtenderName)
-			End Get
-		End Property
-
-		Protected MustOverride Function GetExtender(Extender As String) As Object
 	End Class
 End Namespace

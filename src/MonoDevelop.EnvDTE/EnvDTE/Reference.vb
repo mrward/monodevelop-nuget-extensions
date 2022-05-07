@@ -22,7 +22,7 @@ Namespace EnvDTE
 		ReadOnly Property Name() As String
 		ReadOnly Property Path() As String
 		ReadOnly Property PublicKeyToken As String
-		ReadOnly Property SourceProject() As Project
+		'ReadOnly Property SourceProject() As Project
 		ReadOnly Property StrongName As Boolean
 		
 		Sub Remove()

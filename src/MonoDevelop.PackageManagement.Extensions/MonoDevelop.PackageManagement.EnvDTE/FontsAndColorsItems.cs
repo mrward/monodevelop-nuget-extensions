@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -62,41 +63,53 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			return String.Equals (name, PlainTextItem, StringComparison.InvariantCultureIgnoreCase);
 		}
 
-//		ColorableItems CreatePlainTextColorableItems ()
-//		{
-//			CustomizedHighlightingColor color = FindPlainTextHighlightingColor ();
-//			if (color == null) {
-//				color = AddPlainTextHighlightingColorToCustomColors ();
-//			}
-//			return new ColorableItems (PlainTextItem, color, this);
-//		}
-//
-//		CustomizedHighlightingColor FindPlainTextHighlightingColor ()
-//		{
-//			return Colors.Find (c => c.Name == CustomizingHighlighter.DefaultTextAndBackground);
-//		}
-//
-//		CustomizedHighlightingColor AddPlainTextHighlightingColorToCustomColors ()
-//		{
-//			var color = new CustomizedHighlightingColor () {
-//				Name = CustomizingHighlighter.DefaultTextAndBackground
-//			};
-//			Colors.Add (color);
-//			return color;
-//		}
-//
-//		List<CustomizedHighlightingColor> Colors {
-//			get {
-//				if (colors == null) {
-//					colors = new List<CustomizedHighlightingColor> (highlightingRules.LoadColors ());
-//				}
-//				return colors;
-//			}
-//		}
-//
-//		internal void Save ()
-//		{
-//			highlightingRules.SaveColors (Colors);
-//		}
+		public IEnumerator GetEnumerator ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.ColorableItems Item (object index)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public int Count => throw new NotImplementedException ();
+
+		//		ColorableItems CreatePlainTextColorableItems ()
+		//		{
+		//			CustomizedHighlightingColor color = FindPlainTextHighlightingColor ();
+		//			if (color == null) {
+		//				color = AddPlainTextHighlightingColorToCustomColors ();
+		//			}
+		//			return new ColorableItems (PlainTextItem, color, this);
+		//		}
+		//
+		//		CustomizedHighlightingColor FindPlainTextHighlightingColor ()
+		//		{
+		//			return Colors.Find (c => c.Name == CustomizingHighlighter.DefaultTextAndBackground);
+		//		}
+		//
+		//		CustomizedHighlightingColor AddPlainTextHighlightingColorToCustomColors ()
+		//		{
+		//			var color = new CustomizedHighlightingColor () {
+		//				Name = CustomizingHighlighter.DefaultTextAndBackground
+		//			};
+		//			Colors.Add (color);
+		//			return color;
+		//		}
+		//
+		//		List<CustomizedHighlightingColor> Colors {
+		//			get {
+		//				if (colors == null) {
+		//					colors = new List<CustomizedHighlightingColor> (highlightingRules.LoadColors ());
+		//				}
+		//				return colors;
+		//			}
+		//		}
+		//
+		//		internal void Save ()
+		//		{
+		//			highlightingRules.SaveColors (Colors);
+		//		}
 	}
 }

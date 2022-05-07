@@ -20,7 +20,7 @@ Namespace EnvDTE
 	Public Interface ProjectObject
 		
 		ReadOnly Property References() As References
-		ReadOnly Property Project() As Project
-		ReadOnly Property DTE() As DTE
+		'ReadOnly Property Project() As Project
+		'ReadOnly Property DTE() As DTE
 	End Interface
 End Namespace

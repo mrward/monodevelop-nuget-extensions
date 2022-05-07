@@ -1,5 +1,11 @@
-﻿' Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-' 
+﻿'
+' DocumentBase.cs
+'
+' Author:
+'       Matt Ward <matt.ward@microsoft.com>
+'
+' Copyright (c) 2022 Microsoft
+'
 ' Permission is hereby granted, free of charge, to any person obtaining a copy of this
 ' software and associated documentation files (the "Software"), to deal in the Software
 ' without restriction, including without limitation the rights to use, copy, modify, merge,
@@ -19,24 +25,8 @@
 Imports System
 
 Namespace MonoDevelop.EnvDTE
-	Public MustInherit Class ProjectItemBase
+	Public MustInherit Class DocumentBase
 		Inherits MarshalByRefObject
-
-		ReadOnly Property FileNames(index As Short) As String
-			Get
-				Return GetFileNames(index)
-			End Get
-		End Property
-
-		Protected MustOverride Function GetFileNames(index As Short) As String
-
-		ReadOnly Property IsOpen(Optional ViewKind As String = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") As Boolean
-			Get
-				Return GetIsOpen(ViewKind)
-			End Get
-		End Property
-
-		Protected MustOverride Function GetIsOpen(ViewKind As String) As Boolean
 
 		ReadOnly Property Extender(ExtenderName As String) As Object
 			Get

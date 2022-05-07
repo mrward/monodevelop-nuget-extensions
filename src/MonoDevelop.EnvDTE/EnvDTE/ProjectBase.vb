@@ -19,24 +19,8 @@
 Imports System
 
 Namespace MonoDevelop.EnvDTE
-	Public MustInherit Class ProjectItemBase
+	Public MustInherit Class ProjectBase
 		Inherits MarshalByRefObject
-
-		ReadOnly Property FileNames(index As Short) As String
-			Get
-				Return GetFileNames(index)
-			End Get
-		End Property
-
-		Protected MustOverride Function GetFileNames(index As Short) As String
-
-		ReadOnly Property IsOpen(Optional ViewKind As String = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") As Boolean
-			Get
-				Return GetIsOpen(ViewKind)
-			End Get
-		End Property
-
-		Protected MustOverride Function GetIsOpen(ViewKind As String) As Boolean
 
 		ReadOnly Property Extender(ExtenderName As String) As Object
 			Get

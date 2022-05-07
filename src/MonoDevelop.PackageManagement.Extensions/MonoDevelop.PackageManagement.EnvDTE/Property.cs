@@ -30,7 +30,7 @@ using System;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Property : MarshalByRefObject, global::EnvDTE.Property
+	public class Property : MonoDevelop.EnvDTE.PropertyBase, global::EnvDTE.Property
 	{
 		public Property (string name)
 		{
@@ -66,5 +66,29 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			return null;
 		}
+
+		public void let_Value (object lppvReturn)
+		{
+			throw new NotImplementedException ();
+		}
+
+		protected override object GetIndexedValue(object index1, object index2, object index3, object index4)
+		{
+			return null;
+		}
+
+		protected override void SetIndexedValue (object value, object index1, object index2, object index3, object index4)
+		{
+		}
+
+		public short NumIndices => throw new NotImplementedException ();
+
+		public object Application => throw new NotImplementedException ();
+
+		public global::EnvDTE.Properties Parent => throw new NotImplementedException ();
+
+		public global::EnvDTE.Properties Collection => throw new NotImplementedException ();
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
 	}
 }

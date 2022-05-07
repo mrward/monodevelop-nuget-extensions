@@ -190,5 +190,24 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public virtual string Kind {
 			get { return global::EnvDTE.Constants.vsProjectItemKindPhysicalFolder; }
 		}
+
+		public global::EnvDTE.ProjectItem AddFromTemplate (string FileName, string Name)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.ProjectItem AddFolder (string Name, string Kind = "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}")
+		{
+			throw new NotImplementedException ();
+		}
+
+		global::EnvDTE.ProjectItem global::EnvDTE.ProjectItems.AddFromFileCopy (string FilePath)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
+
+		public global::EnvDTE.Project ContainingProject => throw new NotImplementedException ();
 	}
 }

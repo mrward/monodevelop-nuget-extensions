@@ -12,6 +12,9 @@
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MonoDevelop.EnvDTE\MonoDevelop.EnvDTE.vbproj" />
+    <Reference Include="Microsoft.VisualStudio.Interop">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Interop.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

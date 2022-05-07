@@ -1,5 +1,5 @@
 ﻿//
-// IConsoleHostSolutionManager.cs
+// Reference3.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,23 +24,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using NuGet.ProjectManagement;
-
-namespace MonoDevelop.PackageManagement.Scripting
+namespace EnvDTE
 {
-	public interface IConsoleHostSolutionManager
+	public interface Reference3 : Reference
 	{
-		bool IsSolutionOpen { get; }
-		string DefaultProjectFileName { get; }
-
-		Task<IEnumerable<NuGetProject>> GetAllNuGetProjectsAsync ();
-		Task<IEnumerable<global::EnvDTE.Project>> GetAllEnvDTEProjectsAsync ();
-		Task<NuGetProject> GetDefaultNuGetProjectAsync ();
-		Task<NuGetProject> GetNuGetProjectAsync (string projectName);
-		Task<global::EnvDTE.Project> GetEnvDTEProjectAsync (NuGetProject nuGetProject);
-		Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject);
+		bool AutoReferenced { get; }
 	}
 }
 

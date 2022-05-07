@@ -54,5 +54,18 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			return propertyFactory.GetEnumerator ();
 		}
+
+		public global::EnvDTE.Property Item (object index)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public object Application => throw new NotImplementedException ();
+
+		public object Parent => throw new NotImplementedException ();
+
+		public int Count => throw new NotImplementedException ();
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
 	}
 }

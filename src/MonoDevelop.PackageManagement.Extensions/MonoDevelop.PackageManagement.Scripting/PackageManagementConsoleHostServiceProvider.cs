@@ -27,6 +27,8 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell.Interop;
+using MonoDevelop.PackageManagement.VisualStudio;
 using NuGet.Configuration;
 using NuGet.PackageManagement;
 using NuGet.Protocol.Core.Types;
@@ -58,9 +60,6 @@ namespace MonoDevelop.PackageManagement.Scripting
 					return consoleHost.SolutionManager;
 				//} else if (serviceType == typeof (SVsExtensionManager)) {
 				//	return new SVsExtensionManager ();
-				//} else if (serviceType == typeof (IVsSolution) ||
-				//	serviceType == typeof (SVsSolution)) {
-				//	return new VsSolution ();
 				} else if (serviceType == typeof (IPowerConsoleWindow)) {
 					return new PowerConsoleToolWindow ();
 				//if (type.FullName == typeof (IConsoleInitializer).FullName) {
@@ -76,6 +75,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 					return consoleHost.Settings;
 				} else if (serviceType == typeof (ICommonOperations)) {
 					return new MonoDevelopCommonOperations ();
+				} else if (serviceType == typeof (IVsSolution) ||
+					serviceType == typeof (SVsSolution)) {
+					return new VsSolution ();
 				}
 			}
 			return null;

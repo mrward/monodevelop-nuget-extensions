@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.Core;
@@ -35,7 +36,7 @@ using MonoDevelop.PackageManagement;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Solution : MarshalByRefObject, global::EnvDTE.Solution
+	public class Solution : MonoDevelop.EnvDTE.SolutionBase, global::EnvDTE.Solution
 	{
 		IExtendedPackageManagementProjectService projectService;
 		MD.Solution solution;
@@ -115,9 +116,85 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			};
 		}
 
-//		internal SolutionConfiguration GetActiveConfiguration ()
-//		{
-//			return new SolutionConfiguration (solution);
-//		}
+		//		internal SolutionConfiguration GetActiveConfiguration ()
+		//		{
+		//			return new SolutionConfiguration (solution);
+		//		}
+
+		public global::EnvDTE.Project Item (object index)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public IEnumerator GetEnumerator ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SaveAs (string fileName)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.Project AddFromTemplate (string fileName, string destination, string projectName, bool exclusive = false)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.Project AddFromFile (string fileName, bool exclusive = false)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Open (string fileName)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Close (bool saveFirst = false)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Remove (global::EnvDTE.Project project)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Create (string destination, string name)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public string ProjectItemsTemplatePath (string projectKind)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
+
+		public global::EnvDTE.DTE Parent => throw new NotImplementedException ();
+
+		public int Count => throw new NotImplementedException ();
+
+		public bool IsDirty { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		protected override string GetTemplatePath(string projectType)
+		{
+			return null;
+		}
+
+		public bool Saved { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public global::EnvDTE.AddIns AddIns => throw new NotImplementedException ();
+
+		protected override object GetExtender(string extenderName)
+		{
+			return null;
+		}
+
+		public object ExtenderNames => throw new NotImplementedException ();
+
+		public string ExtenderCATID => throw new NotImplementedException ();
 	}
 }

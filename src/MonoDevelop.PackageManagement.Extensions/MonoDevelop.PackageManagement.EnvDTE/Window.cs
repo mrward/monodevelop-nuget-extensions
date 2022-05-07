@@ -30,7 +30,7 @@ using System;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Window : MarshalByRefObject, global::EnvDTE.Window
+	public class Window : MonoDevelop.EnvDTE.WindowBase, global::EnvDTE.Window
 	{
 		public Window ()
 		{
@@ -39,5 +39,88 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public global::EnvDTE.Document Document {
 			get { throw new NotImplementedException(); }
 		}
+
+		public void SetFocus ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SetKind (global::EnvDTE.vsWindowType eKind)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Detach ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Attach (IntPtr lWindowHandle)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Activate ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Close (global::EnvDTE.vsSaveChanges SaveChanges = global::EnvDTE.vsSaveChanges.vsSaveChangesNo)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SetSelectionContainer (ref object[] Objects)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SetTabPicture (object Picture)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.Windows Collection => throw new NotImplementedException ();
+
+		public bool Visible { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public int Left { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public int Top { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public int Width { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public int Height { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public global::EnvDTE.vsWindowState WindowState { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public global::EnvDTE.vsWindowType Type => throw new NotImplementedException ();
+
+		public global::EnvDTE.LinkedWindows LinkedWindows => throw new NotImplementedException ();
+
+		public global::EnvDTE.Window LinkedWindowFrame => throw new NotImplementedException ();
+
+		public IntPtr HWnd => throw new NotImplementedException ();
+
+		public string Kind => throw new NotImplementedException ();
+
+		public string ObjectKind => throw new NotImplementedException ();
+
+		public object Object => throw new NotImplementedException ();
+
+		protected override object GetDocumentData (string bstrWhichData)
+		{
+			return null;
+		}
+
+		public global::EnvDTE.ProjectItem ProjectItem => throw new NotImplementedException ();
+
+		public global::EnvDTE.Project Project => throw new NotImplementedException ();
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
+
+		public object Selection => throw new NotImplementedException ();
+
+		public bool Linkable { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public string Caption { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public bool IsFloating { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public bool AutoHides { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public global::EnvDTE.ContextAttributes ContextAttributes => throw new NotImplementedException ();
 	}
 }

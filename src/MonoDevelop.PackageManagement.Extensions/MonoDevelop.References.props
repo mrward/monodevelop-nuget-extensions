@@ -20,6 +20,10 @@
       <Private>False</Private>
       <HintPath>$(MDBinDir)\Microsoft.Build.dll</HintPath>
     </Reference>
+     <Reference Include="Microsoft.VisualStudio.Interop">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Interop.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Threading">
       <Private>False</Private>
       <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Threading.dll</HintPath>

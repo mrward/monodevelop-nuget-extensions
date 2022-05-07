@@ -28,6 +28,7 @@
 
 using System;
 using System.Threading.Tasks;
+using EnvDTE;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
 
@@ -62,5 +63,41 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			throw new NotImplementedException();
 		}
+
+		public global::EnvDTE.Window OpenFile (string FileName, string ViewKind = "{00000000-0000-0000-0000-000000000000}")
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.Window NewFile (string Item = "General\\Text File", string Name = "", string ViewKind = "{00000000-0000-0000-0000-000000000000}")
+		{
+			throw new NotImplementedException ();
+		}
+
+		public bool IsFileOpen (string FileName, string ViewKind = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.ProjectItem AddExistingItem (string FileName)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.ProjectItem AddNewItem (string Item = "General\\Text File", string Name = "")
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.Window Navigate (string URL = "", vsNavigateOptions Options = vsNavigateOptions.vsNavigateOptionsDefault)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
+
+		public global::EnvDTE.DTE Parent => throw new NotImplementedException ();
+
+		public vsPromptResult PromptToSave => throw new NotImplementedException ();
 	}
 }

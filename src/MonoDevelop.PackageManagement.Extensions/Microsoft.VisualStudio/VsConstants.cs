@@ -1,10 +1,10 @@
 ﻿//
-// IConsoleHostSolutionManager.cs
+// VsConstants.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2022 Microsoft
+// Copyright (c) 2019 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,23 +24,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using NuGet.ProjectManagement;
-
-namespace MonoDevelop.PackageManagement.Scripting
+namespace Microsoft.VisualStudio
 {
-	public interface IConsoleHostSolutionManager
+	public class VsConstants
 	{
-		bool IsSolutionOpen { get; }
-		string DefaultProjectFileName { get; }
+		public const int S_OK = 0;
 
-		Task<IEnumerable<NuGetProject>> GetAllNuGetProjectsAsync ();
-		Task<IEnumerable<global::EnvDTE.Project>> GetAllEnvDTEProjectsAsync ();
-		Task<NuGetProject> GetDefaultNuGetProjectAsync ();
-		Task<NuGetProject> GetNuGetProjectAsync (string projectName);
-		Task<global::EnvDTE.Project> GetEnvDTEProjectAsync (NuGetProject nuGetProject);
-		Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject);
+		public const int E_FAIL = -2147467259;
 	}
 }
-

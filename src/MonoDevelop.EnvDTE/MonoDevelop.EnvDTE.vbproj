@@ -10,4 +10,21 @@
     <UseSharedCompilation>false</UseSharedCompilation>
   </PropertyGroup>
 
+  <ItemGroup>
+     <Reference Include="Microsoft.VisualStudio.Interop">
+      <Private>False</Private>
+      <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Interop.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\*.vb" />
+    <Compile Include="EnvDTE\ProjectItemBase.vb" />
+    <Compile Include="EnvDTE\DocumentBase.vb" />
+    <Compile Include="EnvDTE\ProjectBase.vb" />
+    <Compile Include="EnvDTE\WindowBase.vb" />
+    <Compile Include="EnvDTE\DTEBase.vb" />
+    <Compile Include="EnvDTE\PropertyBase.vb" />
+    <Compile Include="EnvDTE\SolutionBase.vb" />
+  </ItemGroup>
 </Project>

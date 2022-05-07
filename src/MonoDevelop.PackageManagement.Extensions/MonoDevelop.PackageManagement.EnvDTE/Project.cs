@@ -39,7 +39,7 @@ using MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Project : MarshalByRefObject, global::EnvDTE.Project
+	public class Project : MonoDevelop.EnvDTE.ProjectBase, global::EnvDTE.Project
 	{
 		IExtendedPackageManagementProjectService projectService;
 		IPackageManagementFileService fileService;
@@ -350,5 +350,40 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 			string relativePath = MonoDevelop.Core.FileService.AbsoluteToRelativePath (DotNetProject.BaseDirectory, filePath);
 			return !relativePath.StartsWith ("..");
 		}
+
+		public void SaveAs (string NewFileName)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Save (string FileName = "")
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Delete ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		string global::EnvDTE.Project.Name { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+		public bool IsDirty { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public global::EnvDTE.Projects Collection => throw new NotImplementedException ();
+
+		protected override object GetExtender(string extenderName)
+		{
+			return null;
+		}
+
+		public object ExtenderNames => throw new NotImplementedException ();
+
+		public string ExtenderCATID => throw new NotImplementedException ();
+
+		public bool Saved { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public global::EnvDTE.Globals Globals => throw new NotImplementedException ();
+
+		public global::EnvDTE.ProjectItem ParentProjectItem => throw new NotImplementedException ();
 	}
 }

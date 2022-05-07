@@ -27,12 +27,13 @@
 //
 
 using System;
+using EnvDTE;
 using MonoDevelop.Core;
 using MD = MonoDevelop.Ide.Gui;
 
 namespace ICSharpCode.PackageManagement.EnvDTE
 {
-	public class Document : MarshalByRefObject, global::EnvDTE.Document
+	public class Document : MonoDevelop.EnvDTE.DocumentBase, global::EnvDTE.Document
 	{
 		MD.Document document;
 
@@ -57,5 +58,92 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		{
 			throw new NotImplementedException();
 		}
+
+		public void Activate ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Close (vsSaveChanges Save = vsSaveChanges.vsSaveChangesPrompt)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.Window NewWindow ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public bool Redo ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public bool Undo ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public vsSaveStatus Save (string FileName = "")
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void PrintOut ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void ClearBookmarks ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public bool MarkText (string Pattern, int Flags = 0)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public bool ReplaceText (string FindText, string ReplaceText, int Flags = 0)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
+
+		public string Kind => throw new NotImplementedException ();
+
+		public Documents Collection => throw new NotImplementedException ();
+
+		public global::EnvDTE.Window ActiveWindow => throw new NotImplementedException ();
+
+		public string Name => throw new NotImplementedException ();
+
+		public string Path => throw new NotImplementedException ();
+
+		public bool ReadOnly { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public Windows Windows => throw new NotImplementedException ();
+
+		public global::EnvDTE.ProjectItem ProjectItem => throw new NotImplementedException ();
+
+		public object Selection => throw new NotImplementedException ();
+
+		protected override object GetExtender (string extenderName)
+		{
+			return null;
+		}
+
+		public object ExtenderNames => throw new NotImplementedException ();
+
+		public string ExtenderCATID => throw new NotImplementedException ();
+
+		public int IndentSize => throw new NotImplementedException ();
+
+		public string Language { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
+
+		public int TabSize => throw new NotImplementedException ();
+
+		public string Type => throw new NotImplementedException ();
 	}
 }

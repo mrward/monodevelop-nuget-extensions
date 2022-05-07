@@ -1,5 +1,5 @@
 ﻿//
-// IConsoleHostSolutionManager.cs
+// IComponentModel.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
@@ -24,23 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using NuGet.ProjectManagement;
+using System;
 
-namespace MonoDevelop.PackageManagement.Scripting
+namespace Microsoft.VisualStudio.ComponentModelHost
 {
-	public interface IConsoleHostSolutionManager
+	public interface IComponentModel
 	{
-		bool IsSolutionOpen { get; }
-		string DefaultProjectFileName { get; }
-
-		Task<IEnumerable<NuGetProject>> GetAllNuGetProjectsAsync ();
-		Task<IEnumerable<global::EnvDTE.Project>> GetAllEnvDTEProjectsAsync ();
-		Task<NuGetProject> GetDefaultNuGetProjectAsync ();
-		Task<NuGetProject> GetNuGetProjectAsync (string projectName);
-		Task<global::EnvDTE.Project> GetEnvDTEProjectAsync (NuGetProject nuGetProject);
-		Task<string> GetNuGetProjectSafeNameAsync (NuGetProject nuGetProject);
+		T GetService<T> ()
+			where T : class;
 	}
 }
 

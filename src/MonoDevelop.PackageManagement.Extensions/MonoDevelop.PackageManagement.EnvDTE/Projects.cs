@@ -94,5 +94,18 @@ namespace ICSharpCode.PackageManagement.EnvDTE
 		public int Count {
 			get { return GetProjectsInSolution ().Count (); }
 		}
+
+		IEnumerator global::EnvDTE.Projects.GetEnumerator ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public global::EnvDTE.DTE Parent => throw new NotImplementedException ();
+
+		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();
+
+		public global::EnvDTE.Properties Properties => throw new NotImplementedException ();
+
+		public string Kind => throw new NotImplementedException ();
 	}
 }
