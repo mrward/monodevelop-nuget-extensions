@@ -1,1 +1,0 @@
-dotnet publish src/MonoDevelop.PackageManagement.PowerShell.ConsoleHost/MonoDevelop.PackageManagement.PowerShell.ConsoleHost.csproj --no-build --self-contained --runtime osx-x64
