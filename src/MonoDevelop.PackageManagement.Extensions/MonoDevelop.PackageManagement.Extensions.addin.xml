@@ -11,6 +11,7 @@
 
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
+		<Import assembly="Microsoft.Management.Infrastructure.dll" />
 		<Import file="MonoDevelop.EnvDTE.dll" />
 		<Import file="NuGet.Resolver.dll" />
 		<Import file="NuGet-LICENSE.txt" />
@@ -26,37 +27,67 @@
 		<Import file="Modules/NuGet/NuGet.Types.ps1xml" />
 		<Import file="Modules/NuGet/Profile.ps1" />
 
+		<Import file="Markdig.Signed.dll" />
 		<Import file="Microsoft.ApplicationInsights.dll" />
+		<!--<Import file="Microsoft.Bcl.AsyncInterfaces.dll" />-->
 		<!--<Import file="Microsoft.CodeAnalysis.CSharp.dll" />-->
 		<!--<Import file="Microsoft.CodeAnalysis.dll" />-->
-		<Import file="Microsoft.Management.Infrastructure.Native.dll" />
+		<Import file="Microsoft.Extensions.ObjectPool.dll" />
 		<Import file="Microsoft.Management.Infrastructure.dll" />
 		<Import file="Microsoft.PowerShell.Commands.Management.dll" />
 		<Import file="Microsoft.PowerShell.Commands.Utility.dll" />
 		<Import file="Microsoft.PowerShell.ConsoleHost.dll" />
-		<Import file="Microsoft.PowerShell.CoreCLR.Eventing.dll" />
+		<Import file="Microsoft.PowerShell.MarkdownRender.dll" />
 		<Import file="Microsoft.PowerShell.SDK.dll" />
 		<Import file="Microsoft.PowerShell.Security.dll" />
-		<!--<Import file="Microsoft.Win32.Registry.AccessControl.dll" />-->
+		<Import file="Microsoft.Win32.Registry.AccessControl.dll" />
+		<!--<Import file="Microsoft.Win32.SystemEvents.dll" />-->
+		<Import file="NJsonSchema.dll" />
+		<Import file="Namotion.Reflection.dll" />
+		<!--<Import file="System.CodeDom.dll" />-->
+		<Import file="System.ComponentModel.Composition.Registration.dll" />
+		<!--<Import file="System.ComponentModel.Composition.dll" />-->
+		<!--<Import file="System.Configuration.ConfigurationManager.dll" />-->
+		<Import file="System.Data.Odbc.dll" />
+		<Import file="System.Data.OleDb.dll" />
 		<Import file="System.Data.SqlClient.dll" />
 		<!--<Import file="System.Diagnostics.EventLog.dll" />-->
+		<!--<Import file="System.Diagnostics.PerformanceCounter.dll" />-->
+		<Import file="System.DirectoryServices.AccountManagement.dll" />
+		<Import file="System.DirectoryServices.Protocols.dll" />
+		<Import file="System.DirectoryServices.dll" />
+		<!--<Import file="System.Drawing.Common.dll" />-->
 		<!--<Import file="System.IO.Packaging.dll" />-->
+		<!--<Import file="System.IO.Ports.dll" />-->
 		<Import file="System.Management.Automation.dll" />
+		<Import file="System.Management.dll" />
 		<Import file="System.Net.Http.WinHttpHandler.dll" />
 		<Import file="System.Private.ServiceModel.dll" />
+		<Import file="System.Reflection.Context.dll" />
+		<Import file="System.Runtime.Caching.dll" />
 		<!--<Import file="System.Security.Cryptography.Pkcs.dll" />-->
+		<!--<Import file="System.Security.Cryptography.ProtectedData.dll" />-->
+		<!--<Import file="System.Security.Cryptography.Xml.dll" />-->
 		<!--<Import file="System.Security.Permissions.dll" />-->
 		<Import file="System.ServiceModel.Duplex.dll" />
 		<Import file="System.ServiceModel.Http.dll" />
 		<Import file="System.ServiceModel.NetTcp.dll" />
 		<Import file="System.ServiceModel.Primitives.dll" />
 		<Import file="System.ServiceModel.Security.dll" />
+		<Import file="System.ServiceModel.Syndication.dll" />
 		<Import file="System.ServiceModel.dll" />
 		<Import file="System.ServiceProcess.ServiceController.dll" />
-		<Import file="System.Threading.AccessControl.dll" />
+		<Import file="System.Speech.dll" />
+		<!--<Import file="System.Threading.AccessControl.dll" />-->
+		<Import file="System.Web.Services.Description.dll" />
+		<!--<Import file="System.Windows.Extensions.dll" />-->
 		<Import file="libmi.dylib" />
 		<Import file="libpsl-native.dylib" />
 		<Import file="libpsrpclient.dylib" />
+		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Host/Microsoft.PowerShell.Host.psd1" />
+		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Management/Microsoft.PowerShell.Management.psd1" />
+		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Security/Microsoft.PowerShell.Security.psd1" />
+		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1" />
 	</Runtime>
 	<Dependencies>
 		<Addin id="Core" version="17.0"/>
