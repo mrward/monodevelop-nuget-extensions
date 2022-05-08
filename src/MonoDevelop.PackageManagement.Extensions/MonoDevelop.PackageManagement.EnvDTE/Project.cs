@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MonoDevelop.Core;
-using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 using MD = MonoDevelop.Projects;
 using MonoDevelop.Ide;
@@ -61,7 +60,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			this.DotNetProject = project;
 			this.projectService = projectService;
 			this.fileService = fileService;
-			
+
 			CreateProperties ();
 			Object = new ProjectObject (this);
 			ProjectItems = new ProjectItems (this, this, fileService);
@@ -256,8 +255,8 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 		}
 
 		public virtual global::EnvDTE.ConfigurationManager ConfigurationManager {
-//			get { return new ConfigurationManager(this); }
-			get { throw new NotImplementedException (); }
+			get { return new ConfigurationManager (this); }
+			set { throw new NotImplementedException (); }
 		}
 
 		//		internal virtual string GetLowercaseFileExtension()

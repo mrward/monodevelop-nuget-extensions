@@ -29,7 +29,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Microsoft.VisualStudio.Shell.Flavor
 {
-	public class FlavoredProject : MarshalByRefObject, IVsAggregatableProject, IVsHierarchy
+	public class FlavoredProject : MarshalByRefObject, IVsHierarchy
 	{
 		EnvDTE.Project project;
 
@@ -40,42 +40,6 @@ namespace Microsoft.VisualStudio.Shell.Flavor
 
 		internal EnvDTE.Project Project {
 			get { return project; }
-		}
-
-		public int GetAggregateProjectTypeGuids (out string projTypeGuids)
-		{
-			projTypeGuids = GetProjectTypeGuidsFromProject ();
-			if (projTypeGuids == null) {
-				projTypeGuids = project.Kind;
-			}
-			return VsConstants.S_OK;
-		}
-
-		string GetProjectTypeGuidsFromProject ()
-		{
-			// TODO: Implement
-			return null;
-			//return project.GetUnevalatedProperty ("ProjectTypeGuids");
-		}
-
-		public int SetInnerProject (object punkInner)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public int InitializeForOuter (string pszFilename, string pszLocation, string pszName, uint grfCreateFlags, ref Guid iidProject, out IntPtr ppvProject, out int pfCanceled)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public int OnAggregationComplete ()
-		{
-			throw new NotImplementedException ();
-		}
-
-		public int SetAggregateProjectTypeGuids (string lpstrProjTypeGuids)
-		{
-			throw new NotImplementedException ();
 		}
 
 		int IVsHierarchy.SetSite (OLE.Interop.IServiceProvider psp)
