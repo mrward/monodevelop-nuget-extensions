@@ -152,7 +152,7 @@
     <View>
       <Name>EnvDTE.Project</Name>
       <ViewSelectedBy>
-        <TypeName>MonoDevelop.PackageManagement.PowerShell.EnvDTE.Project</TypeName>
+        <TypeName>MonoDevelop.PackageManagement.EnvDTE.Project</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
