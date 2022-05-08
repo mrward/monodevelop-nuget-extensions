@@ -36,7 +36,6 @@ using System.Threading.Tasks;
 using MonoDevelop.Core;
 using MonoDevelop.DotNetCore;
 using MonoDevelop.PackageManagement.PowerShell;
-using MonoDevelop.Projects;
 using NuGet.Common;
 using NuGet.PackageManagement.VisualStudio;
 using NuGetConsole;

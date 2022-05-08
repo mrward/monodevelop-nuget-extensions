@@ -48,9 +48,6 @@ namespace MonoDevelop.PackageManagement.PowerShell
 			Version version,
 			object privateData)
 		{
-			//var hostCommandHandler = new PowerShellHostCommandHandler ();
-			//privateData = new PSObject (hostCommandHandler);
-
 			this.version = version;
 			this.privateData = new PSObject (privateData);
 

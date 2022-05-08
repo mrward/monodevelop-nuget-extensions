@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Host;
+using System.Management.Automation.Internal;
 using System.Security;
 using System.Text;
 using MonoDevelop.PackageManagement.Scripting;
@@ -48,9 +49,17 @@ namespace MonoDevelop.PackageManagement.PowerShell
 			this.scriptingConsole = scriptingConsole;
 			rawUI = new PowerShellRawUserInterface (scriptingConsole);
 			hostPrompt = new PowerShellUserInterfaceHostPrompt (scriptingConsole);
+
+			// This does not work on its own. This only works if Out-String is the
+			// last command on the pipeline. Out-Default and Out-Host as the last
+			// command on the pipeline do not work. We need to use Out-Host
+			// otherwise native executables do not report their output to the host.
+			PSStyle.Instance.OutputRendering = OutputRendering.PlainText;
 		}
 
 		public override PSHostRawUserInterface RawUI => rawUI;
+
+		public override bool SupportsVirtualTerminal => false;
 
 		public int MaxVisibleColumns {
 			get { return rawUI.MaxVisibleColumns; }
@@ -94,6 +103,8 @@ namespace MonoDevelop.PackageManagement.PowerShell
 
 		public override void Write (string value)
 		{
+			value = RemoveEscapeCodes (value);
+
 			if (value.EndsWith ('\n')) {
 				if (messageBuilder.Length > 0) {
 					messageBuilder.Append (value.TrimEnd ());
@@ -120,16 +131,22 @@ namespace MonoDevelop.PackageManagement.PowerShell
 
 		public override void WriteDebugLine (string message)
 		{
+			message = RemoveEscapeCodes (message);
+
 			scriptingConsole.WriteLine (message, ScriptingStyle.Debug);
 		}
 
 		public override void WriteErrorLine (string value)
 		{
+			value = RemoveEscapeCodes (value);
+
 			scriptingConsole.WriteLine (value, ScriptingStyle.Error);
 		}
 
 		public override void WriteLine (string value)
 		{
+			value = RemoveEscapeCodes (value);
+
 			scriptingConsole.WriteLine (value, ScriptingStyle.Out);
 		}
 
@@ -139,12 +156,26 @@ namespace MonoDevelop.PackageManagement.PowerShell
 
 		public override void WriteVerboseLine (string message)
 		{
+			message = RemoveEscapeCodes (message);
+
 			scriptingConsole.WriteLine (message, ScriptingStyle.Debug);
 		}
 
 		public override void WriteWarningLine (string message)
 		{
+			message = RemoveEscapeCodes (message);
+
 			scriptingConsole.WriteLine (message, ScriptingStyle.Warning);
+		}
+
+		/// <summary>
+		/// StringDecorated removes the escape code if
+		/// PSStyle.Instance.OutputRendering == OutputRendering.PlainText
+		/// </summary>
+		static string RemoveEscapeCodes (string text)
+		{
+			var decorated = new StringDecorated (text);
+			return decorated.ToString ();
 		}
 	}
 }
