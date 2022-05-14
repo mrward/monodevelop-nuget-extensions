@@ -1,10 +1,10 @@
 ﻿//
-// ConfiguredProjectCommonProperties.cs
+// PropertyExtensions.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2019 Microsoft
+// Copyright (c) 2022 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
-using MonoDevelop.PackageManagement.EnvDTE;
-
-namespace Microsoft.VisualStudio.Project
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
-	public class ConfiguredProjectCommonProperties
+	static class PropertyExtensions
 	{
-		readonly CpsProject project;
-
-		internal ConfiguredProjectCommonProperties (CpsProject project)
+		public static string GetStringValue (this global::EnvDTE.Property property)
 		{
-			this.project = project;
-		}
-
-		public Task<string> GetEvaluatedPropertyValueAsync (string propertyName)
-		{
-			var property = project.Properties.Item (propertyName);
-			return Task.FromResult (property.GetStringValue ());
+			if (property?.Value != null) {
+				return property.Value.ToString ();
+			}
+			return string.Empty;
 		}
 	}
 }
+

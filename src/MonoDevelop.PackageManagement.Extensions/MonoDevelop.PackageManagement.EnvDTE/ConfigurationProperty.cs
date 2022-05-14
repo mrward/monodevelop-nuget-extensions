@@ -40,7 +40,18 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 
 		protected override object GetValue ()
 		{
-			return configuration.GetProperty (Name);
+			object value = configuration.GetProperty (Name);
+
+			if (value == null) {
+				if (StringComparer.OrdinalIgnoreCase.Equals ("IntermediatePath", Name)) {
+					value = configuration.GetProperty ("IntermediateOutputPath");
+				}
+			}
+
+			if (value is string stringValue) {
+				return stringValue ?? string.Empty;
+			}
+			return value;
 		}
 
 		protected override void SetValue (object value)

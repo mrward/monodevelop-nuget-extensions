@@ -28,7 +28,6 @@
 
 using System;
 using System.IO;
-using MonoDevelop.PackageManagement;
 using MonoDevelop.Projects;
 
 namespace MonoDevelop.PackageManagement.EnvDTE
@@ -53,6 +52,8 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				return GetOutputFileName ();
 			} else if (IsDefaultNamespace ()) {
 				return GetDefaultNamespace ();
+			} else if (IsIntermediateOutputPath ()) {
+				return project.GetIntermediateOutputPath ();
 			}
 
 			string value = GetMSBuildProjectProperty (Name);
@@ -83,9 +84,14 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			return IsCaseInsensitiveMatch (Name, "OutputFileName");
 		}
 
+		bool IsIntermediateOutputPath ()
+		{
+			return IsCaseInsensitiveMatch (Name, "IntermediateOutputPath");
+		}
+
 		bool IsCaseInsensitiveMatch (string a, string b)
 		{
-			return String.Equals (a, b, StringComparison.OrdinalIgnoreCase);
+			return string.Equals (a, b, StringComparison.OrdinalIgnoreCase);
 		}
 
 		string GetTargetFrameworkMoniker ()

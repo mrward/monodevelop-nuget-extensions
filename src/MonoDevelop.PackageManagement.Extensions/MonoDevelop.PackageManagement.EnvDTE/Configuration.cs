@@ -60,7 +60,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			if (property != null) {
 				return property.GetEnvDTEValue ();
 			}
-			return string.Empty;
+			return null;
 		}
 
 		public global::EnvDTE.DTE DTE => throw new NotImplementedException ();

@@ -350,6 +350,17 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 			return !relativePath.StartsWith ("..");
 		}
 
+		/// <summary>
+		/// Special case 'IntermediateOutputPath'. For .NET Core projects this returns a path inside
+		/// obj which uses guids and does not exist. Instead we ask the current configuration for the
+		/// IntermediateOutputPath.
+		/// </summary>
+		internal string GetIntermediateOutputPath ()
+		{
+			var property = ConfigurationManager.ActiveConfiguration.Properties.Item ("IntermediateOutputPath");
+			return property.GetStringValue ();
+		}
+
 		public void SaveAs (string NewFileName)
 		{
 			throw new NotImplementedException ();
