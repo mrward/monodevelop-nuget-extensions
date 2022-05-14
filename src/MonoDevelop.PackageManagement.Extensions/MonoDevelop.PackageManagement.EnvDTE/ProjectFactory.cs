@@ -1,10 +1,10 @@
 ﻿//
-// DotNetProjectExtensions.cs
+// ProjectFactory.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2022 Microsoft
+// Copyright (c) 2019 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,24 +25,24 @@
 // THE SOFTWARE.
 
 using System;
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
+using System.Runtime.Versioning;
+using MD = MonoDevelop.Projects;
 
-namespace MonoDevelop.PackageManagement
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
-	public static class DotNetProjectExtensions
+	internal static class ProjectFactory
 	{
-		public static string GetUniqueName (this DotNetProject project)
+		public static Project CreateProject (MD.DotNetProject project)
 		{
-			return FileService.AbsoluteToRelativePath (
-				project.ParentSolution.BaseDirectory,
-				project.FileName);
-		}
+			if (project == null) {
+				return null;
+			}
 
-		internal static bool IsSdkProject (this DotNetProject project)
-		{
-			return project.MSBuildProject.GetReferencedSDKs ().Length > 0;
+			if (project.IsSdkProject ()) {
+				return new CpsProject (project);
+			}
+
+			return new Project (project);
 		}
 	}
 }
-

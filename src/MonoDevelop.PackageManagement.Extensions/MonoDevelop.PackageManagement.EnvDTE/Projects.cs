@@ -31,7 +31,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MD = MonoDevelop.Projects;
-using MonoDevelop.PackageManagement;
 
 namespace MonoDevelop.PackageManagement.EnvDTE
 {
@@ -56,8 +55,8 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 
 		IEnumerable<Project> GetProjectsInSolution ()
 		{
-			foreach (MD.DotNetProject msbuildProject in GetOpenMSBuildProjects ()) {
-				yield return new Project (msbuildProject);
+			foreach (MD.DotNetProject project in GetOpenMSBuildProjects ()) {
+				yield return ProjectFactory.CreateProject (project);
 			}
 		}
 

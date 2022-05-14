@@ -1,10 +1,10 @@
 ﻿//
-// DotNetProjectExtensions.cs
+// CpsProject.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2022 Microsoft
+// Copyright (c) 2019 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
+using Microsoft.VisualStudio.Project;
+using Microsoft.VisualStudio.ProjectSystem.Properties;
+using MD = MonoDevelop.Projects;
 
-namespace MonoDevelop.PackageManagement
+namespace MonoDevelop.PackageManagement.EnvDTE
 {
-	public static class DotNetProjectExtensions
+	class CpsProject : Project, IVsBrowseObjectContext
 	{
-		public static string GetUniqueName (this DotNetProject project)
+		UnconfiguredProject unconfiguredProject;
+
+		public CpsProject (MD.DotNetProject project)
+			: base (project)
 		{
-			return FileService.AbsoluteToRelativePath (
-				project.ParentSolution.BaseDirectory,
-				project.FileName);
 		}
 
-		internal static bool IsSdkProject (this DotNetProject project)
-		{
-			return project.MSBuildProject.GetReferencedSDKs ().Length > 0;
+		public UnconfiguredProject UnconfiguredProject {
+			get {
+				if (unconfiguredProject == null) {
+					unconfiguredProject = new UnconfiguredProject (this);
+				}
+				return unconfiguredProject;
+			}
 		}
 	}
 }
-

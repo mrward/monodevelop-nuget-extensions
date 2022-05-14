@@ -151,7 +151,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			IDotNetProject dotNetProject = nuGetProject.GetDotNetProject ();
 			if (dotNetProject != null) {
-				var project = new MonoDevelop.PackageManagement.EnvDTE.Project (dotNetProject.DotNetProject);
+				var project = MonoDevelop.PackageManagement.EnvDTE.ProjectFactory.CreateProject (dotNetProject.DotNetProject);
 				return Task.FromResult<global::EnvDTE.Project> (project);
 			}
 			return null;
@@ -166,8 +166,9 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 			var projects = new List<global::EnvDTE.Project>();
 
-			foreach (DotNetProject project in solutionManager.Solution.GetAllDotNetProjects ()) {
-				projects.Add (new MonoDevelop.PackageManagement.EnvDTE.Project (project));
+			foreach (DotNetProject dotNetProject in solutionManager.Solution.GetAllDotNetProjects ()) {
+				var project = MonoDevelop.PackageManagement.EnvDTE.ProjectFactory.CreateProject (dotNetProject);
+				projects.Add (project);
 			}
 
 			return Task.FromResult (projects.AsEnumerable ());

@@ -105,7 +105,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 		{
 			var project = solution.StartupItem as MD.DotNetProject;
 			if (project != null) {
-				return new Project (project);
+				return ProjectFactory.CreateProject (project);
 			}
 			return null;
 		}
@@ -118,7 +118,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 				foreach (MD.SolutionItem solutionItem in solution.MultiStartupItems) {
 					var project = solutionItem as MD.DotNetProject;
 					if (project != null) {
-						yield return new Project (project);
+						yield return ProjectFactory.CreateProject (project);
 					}
 				}
 			}

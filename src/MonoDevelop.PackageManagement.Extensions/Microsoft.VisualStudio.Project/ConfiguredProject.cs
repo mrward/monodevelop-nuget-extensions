@@ -1,10 +1,10 @@
 ﻿//
-// DotNetProjectExtensions.cs
+// ConfiguredProject.cs
 //
 // Author:
 //       Matt Ward <matt.ward@microsoft.com>
 //
-// Copyright (c) 2022 Microsoft
+// Copyright (c) 2019 Microsoft
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using MonoDevelop.Core;
-using MonoDevelop.Projects;
+using MonoDevelop.PackageManagement.EnvDTE;
 
-namespace MonoDevelop.PackageManagement
+namespace Microsoft.VisualStudio.Project
 {
-	public static class DotNetProjectExtensions
+	public class ConfiguredProject
 	{
-		public static string GetUniqueName (this DotNetProject project)
+		internal ConfiguredProject (CpsProject project)
 		{
-			return FileService.AbsoluteToRelativePath (
-				project.ParentSolution.BaseDirectory,
-				project.FileName);
+			Services = new ConfiguredProjectServices (project);
 		}
 
-		internal static bool IsSdkProject (this DotNetProject project)
-		{
-			return project.MSBuildProject.GetReferencedSDKs ().Length > 0;
-		}
+		public ConfiguredProjectServices Services { get; private set; }
 	}
 }
-

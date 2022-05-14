@@ -63,7 +63,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 
 		public global::EnvDTE.Project SourceProject {
 			get {
-				return new Project (referenceProjectItem.OwnerProject as MD.DotNetProject);
+				return ProjectFactory.CreateProject (referenceProjectItem.OwnerProject as MD.DotNetProject);
 			}
 		}
 

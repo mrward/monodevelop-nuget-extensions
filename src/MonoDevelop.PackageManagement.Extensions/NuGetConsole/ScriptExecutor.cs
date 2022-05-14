@@ -56,7 +56,7 @@ namespace NuGetConsole
 					return true;
 				}
 
-				var dteProject = new MonoDevelop.PackageManagement.EnvDTE.Project (project);
+				var dteProject = MonoDevelop.PackageManagement.EnvDTE.ProjectFactory.CreateProject (project);
 				var request = new ScriptExecutionRequest (scriptPath, installPath, identity, dteProject);
 
 				var psNuGetProjectContext = nuGetProjectContext as IPSNuGetProjectContext;

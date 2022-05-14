@@ -45,18 +45,16 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 		{
 		}
 
-		public virtual global::EnvDTE.Property Item (string propertyName)
-		{
-			return propertyFactory.CreateProperty (propertyName);
-		}
-
-		public virtual IEnumerator GetEnumerator ()
+		public IEnumerator GetEnumerator ()
 		{
 			return propertyFactory.GetEnumerator ();
 		}
 
 		public global::EnvDTE.Property Item (object index)
 		{
+			if (index is string propertyName) {
+				return propertyFactory.CreateProperty (propertyName);
+			}
 			throw new NotImplementedException ();
 		}
 

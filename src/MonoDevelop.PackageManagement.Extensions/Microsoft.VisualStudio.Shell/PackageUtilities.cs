@@ -27,6 +27,7 @@
 using System;
 using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
+using MonoDevelop.PackageManagement.EnvDTE;
 
 namespace Microsoft.VisualStudio.Shell
 {
@@ -41,7 +42,7 @@ namespace Microsoft.VisualStudio.Shell
 			// 'CPS'
 			if (StringComparer.OrdinalIgnoreCase.Equals ("CPS", capabilityAppliesToExpression)) {
 				if (project is FlavoredProject flavoredProject) {
-					//return flavoredProject.Project is CpsProject;
+					return flavoredProject.Project is CpsProject;
 				}
 			}
 

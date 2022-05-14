@@ -65,8 +65,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 
 		string GetMSBuildProjectProperty (string name)
 		{
-			return String.Empty;
-			//return MSBuildProject.GetEvaluatedProperty (name);
+			return project.DotNetProject.MSBuildProject.EvaluatedProperties.GetValue (name);
 		}
 
 		bool IsTargetFrameworkMoniker ()
