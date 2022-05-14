@@ -54,7 +54,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 		{
 			Project project = solution.GetStartupProject ();
 			if (project != null) {
-				return solution.GetStartupProject ().Name;
+				return project.Name;
 			}
 			return String.Empty;
 		}
