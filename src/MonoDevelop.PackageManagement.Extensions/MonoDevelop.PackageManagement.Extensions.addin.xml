@@ -16,6 +16,7 @@
 		<Import file="NuGet-LICENSE.txt" />
 
 		<Import file="MonoDevelop.PackageManagement.PowerShell.dll" />
+		<Import file="MonoDevelop.PackageManagement.PowerShell.Cmdlets.dll" />
 
 		<Import file="Modules/NuGet/about_NuGet.PackageManagement.PowerShellCmdlets.help.txt" />
 		<Import file="Modules/NuGet/NuGet.Format.ps1xml" />
