@@ -60,26 +60,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		void CreateConsoleHost ()
 		{
-			if (IsSupportedDotNetCoreRuntimeInstalled ()) {
-				consoleHost = new PackageManagementConsoleHost (packageEvents);
-			} else {
-				consoleHost = new DotNetCoreRuntimeMissingConsoleHost (RequiredDotNetCoreRuntimeVersion);
-			}
-		}
-
-		static bool IsSupportedDotNetCoreRuntimeInstalled ()
-		{
-			if (!DotNetCoreRuntime.IsInstalled)
-				return false;
-
-			foreach (DotNetCoreVersion version in DotNetCoreRuntimeVersions.GetInstalledVersions (DotNetCoreRuntime.FileName)) {
-				if (RequiredDotNetCoreRuntimeVersion.Major == version.Major &&
-					RequiredDotNetCoreRuntimeVersion.Minor == version.Minor) {
-					return true;
-				}
-			}
-
-			return false;
+			consoleHost = new PackageManagementConsoleHost (packageEvents);
 		}
 	}
 }
