@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Host;
-using System.Management.Automation.Internal;
 using System.Security;
 using System.Text;
 using MonoDevelop.PackageManagement.Scripting;
@@ -174,8 +173,7 @@ namespace MonoDevelop.PackageManagement.PowerShell
 		/// </summary>
 		static string RemoveEscapeCodes (string text)
 		{
-			var decorated = new StringDecorated (text);
-			return decorated.ToString ();
+			return GetOutputString (text, supportsVirtualTerminal: false);
 		}
 
 		public ConsoleColor FormatAccentColor { get; set; } = ConsoleColor.Green;
