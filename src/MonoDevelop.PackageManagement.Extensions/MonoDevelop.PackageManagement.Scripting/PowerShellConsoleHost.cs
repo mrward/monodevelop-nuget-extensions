@@ -46,7 +46,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 	{
 		readonly IScriptingConsole scriptingConsole;
 		readonly object dte;
-		readonly object privateData;
+		readonly PowerShellHostPrivateData privateData;
 
 		List<string> modulesToImport = new List<string> ();
 
@@ -59,7 +59,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		public PowerShellConsoleHost (
 			IScriptingConsole scriptingConsole,
 			Version version,
-			object privateData,
+			PowerShellHostPrivateData privateData,
 			object dte)
 		{
 			this.scriptingConsole = scriptingConsole;

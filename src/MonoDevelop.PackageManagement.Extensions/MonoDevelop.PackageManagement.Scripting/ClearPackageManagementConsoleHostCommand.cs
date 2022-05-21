@@ -26,9 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using MonoDevelop.PackageManagement.PowerShell;
+
 namespace MonoDevelop.PackageManagement.Scripting
 {
-	internal class ClearPackageManagementConsoleHostCommand
+	internal class ClearPackageManagementConsoleHostCommand : PowerShellHostPrivateData
 	{
 		IPackageManagementConsoleHost consoleHost;
 

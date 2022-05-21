@@ -46,12 +46,16 @@ namespace MonoDevelop.PackageManagement.PowerShell
 		public PowerShellHost (
 			IScriptingConsole scriptingConsole,
 			Version version,
-			object privateData)
+			PowerShellHostPrivateData privateData)
 		{
 			this.version = version;
-			this.privateData = new PSObject (privateData);
 
 			ui = new PowerShellUserInterfaceHost (scriptingConsole);
+
+			privateData ??= new PowerShellHostPrivateData ();
+			privateData.UI = ui;
+
+			this.privateData = new PSObject (privateData);
 		}
 
 		public override CultureInfo CurrentCulture => currentCulture;

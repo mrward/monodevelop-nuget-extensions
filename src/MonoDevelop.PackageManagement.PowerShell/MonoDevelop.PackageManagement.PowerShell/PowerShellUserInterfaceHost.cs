@@ -177,5 +177,18 @@ namespace MonoDevelop.PackageManagement.PowerShell
 			var decorated = new StringDecorated (text);
 			return decorated.ToString ();
 		}
+
+		public ConsoleColor FormatAccentColor { get; set; } = ConsoleColor.Green;
+		public ConsoleColor ErrorAccentColor { get; set; } = ConsoleColor.Cyan;
+		public ConsoleColor ErrorForegroundColor { get; set; } = ConsoleColor.Black;
+		public ConsoleColor ErrorBackgroundColor { get; set; } = ConsoleColor.Red;
+		public ConsoleColor WarningForegroundColor { get; set; } = ConsoleColor.Black;
+		public ConsoleColor WarningBackgroundColor { get; set; } = ConsoleColor.Yellow;
+		public ConsoleColor DebugForegroundColor { get; set; } = ConsoleColor.Gray;
+		public ConsoleColor DebugBackgroundColor { get; set; } = Console.BackgroundColor;
+		public ConsoleColor VerboseForegroundColor { get; set; } = ConsoleColor.Gray;
+		public ConsoleColor VerboseBackgroundColor { get; set; } = Console.BackgroundColor;
+		public ConsoleColor ProgressForegroundColor { get; set; } = ConsoleColor.Black;
+		public ConsoleColor ProgressBackgroundColor { get; set; } = ConsoleColor.Yellow;
 	}
 }

@@ -27,6 +27,7 @@
 //
 
 using System;
+using MonoDevelop.PackageManagement.PowerShell;
 
 namespace MonoDevelop.PackageManagement.Scripting
 {
@@ -35,7 +36,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 		IPowerShellHost CreatePowerShellHost (
 			IScriptingConsole scriptingConsole,
 			Version version,
-			object privateData,
+			PowerShellHostPrivateData privateData,
 			object dte);
 	}
 }
