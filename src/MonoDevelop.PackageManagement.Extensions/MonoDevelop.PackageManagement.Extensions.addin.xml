@@ -119,4 +119,10 @@
 	<Extension path="/MonoDevelop/ProjectModel/ProjectModelExtensions">
 		<Class class="MonoDevelop.PackageManagement.Scripting.GlobalMSBuildProjectCollectionMSBuildExtension" />
 	</Extension>-->
+
+	<Extension path="/MonoDevelop/Ide/Pads/ProjectPad">
+		<NodeBuilder class="MonoDevelop.PackageManagement.NodeBuilders.SolutionNodeBuilderExtension" />
+		<NodeBuilder class="MonoDevelop.PackageManagement.NodeBuilders.NuGetConfigFilesSolutionNodeBuilder" />
+		<NodeBuilder class="MonoDevelop.PackageManagement.NodeBuilders.NuGetConfigFileNodeBuilder" />
+	</Extension>
 </Addin>
