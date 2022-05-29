@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using MonoDevelop.Core;
+using MonoDevelop.Core.Scheduling;
 using MonoDevelop.Ide;
 using MonoDevelop.Projects;
 using NuGet.Configuration;
@@ -161,7 +162,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void Run ()
 		{
-			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
+			BackgroundDispatch (() => {
 				RunSynchronous ();
 				IsRunning = true;
 			});
@@ -262,7 +263,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 			string command = String.Format ("Set-Location {0}", directory);
 
-			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
+			BackgroundDispatch (() => {
 				powerShellHost.ExecuteCommand (command);
 			});
 		}
@@ -309,7 +310,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			OnRunningCommand ();
 			InitializeToken ();
 
-			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
+			BackgroundDispatch (() => {
 				powerShellHost.ExecuteCommand (line);
 				OnCommandCompleted ();
 				WritePrompt ();
@@ -349,7 +350,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void ExecuteCommand (string command)
 		{
-			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
+			BackgroundDispatch (() => {
 				powerShellHost.ExecuteCommand (command);
 				WritePrompt ();
 			});
@@ -431,7 +432,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			OnRunningCommand ();
 			InitializeToken ();
 
-			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
+			BackgroundDispatch (() => {
 				bool showPrompt = SafeRunPowerShellInitializationScripts (solution);
 
 				OnCommandCompleted ();
@@ -503,6 +504,19 @@ namespace MonoDevelop.PackageManagement.Scripting
 		{
 			ITabExpansion tabExpansion = powerShellHost.CreateTabExpansion ();
 			return new CommandExpansion (tabExpansion);
+		}
+
+		/// <summary>
+		/// Workaround OperationsManager bug where passing a null SchedulingContext
+		/// causes a null reference exception in Operation.ExpandContextList
+		/// </summary>
+		static readonly SchedulingContext schedulingContext = new SchedulingContext ();
+
+		static void BackgroundDispatch (Action action)
+		{
+			PackageManagementBackgroundDispatcher.Dispatch (
+				cancellationToken => action (),
+				schedulingContext);
 		}
 	}
 }
