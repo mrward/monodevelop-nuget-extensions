@@ -161,7 +161,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void Run ()
 		{
-			PackageManagementBackgroundDispatcher.Dispatch (() => {
+			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
 				RunSynchronous ();
 				IsRunning = true;
 			});
@@ -262,7 +262,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 			string command = String.Format ("Set-Location {0}", directory);
 
-			PackageManagementBackgroundDispatcher.Dispatch (() => {
+			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
 				powerShellHost.ExecuteCommand (command);
 			});
 		}
@@ -309,7 +309,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			OnRunningCommand ();
 			InitializeToken ();
 
-			PackageManagementBackgroundDispatcher.Dispatch (() => {
+			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
 				powerShellHost.ExecuteCommand (line);
 				OnCommandCompleted ();
 				WritePrompt ();
@@ -349,7 +349,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 
 		public void ExecuteCommand (string command)
 		{
-			PackageManagementBackgroundDispatcher.Dispatch (() => {
+			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
 				powerShellHost.ExecuteCommand (command);
 				WritePrompt ();
 			});
@@ -431,7 +431,7 @@ namespace MonoDevelop.PackageManagement.Scripting
 			OnRunningCommand ();
 			InitializeToken ();
 
-			PackageManagementBackgroundDispatcher.Dispatch (() => {
+			PackageManagementBackgroundDispatcher.Dispatch (cancellationToken => {
 				bool showPrompt = SafeRunPowerShellInitializationScripts (solution);
 
 				OnCommandCompleted ();
