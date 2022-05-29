@@ -7,7 +7,7 @@
 	url         = "https://github.com/mrward/monodevelop-nuget-extensions"
 	description = "Provides extensions to the NuGet addin."
 	category    = "IDE extensions"
-	version     = "0.29">
+	version     = "0.30">
 
 	<Runtime>
 		<Import assembly="MonoDevelop.PackageManagement.Extensions.dll" />
@@ -90,10 +90,10 @@
 		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1" />
 	</Runtime>
 	<Dependencies>
-		<Addin id="Core" version="17.0"/>
-		<Addin id="Ide" version="17.0"/>
-		<Addin id="PackageManagement" version="17.0"/>
-		<Addin id="DotNetCore" version="17.0" />
+		<Addin id="Core" version="17.3"/>
+		<Addin id="Ide" version="17.3"/>
+		<Addin id="PackageManagement" version="17.3"/>
+		<Addin id="DotNetCore" version="17.3" />
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/Composition">
