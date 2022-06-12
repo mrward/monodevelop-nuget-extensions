@@ -1,1 +1,1 @@
-mono /Applications/Visual\ Studio\ 2019.app/Contents/Resources/lib/monodevelop/bin/vstool.exe setup pack bin/MonoDevelop.PackageManagement.Extensions.dll
+"/Applications/Visual Studio.app/Contents/MacOS/vstool" setup pack $PWD/bin/MonoDevelop.PackageManagement.Extensions.dll -d:$PWD
