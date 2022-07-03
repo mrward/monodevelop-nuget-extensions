@@ -1,5 +1,12 @@
 <Project>
-  <ItemGroup>
+   <ItemGroup>
+     <PackageReference Include="System.Runtime.InteropServices.NFloat.Internal" Version="6.0.1" />
+   </ItemGroup>
+   <ItemGroup>
+     <Reference Include="Microsoft.macOS">
+       <HintPath>$(MDBinDir)\Microsoft.macOS.dll</HintPath>
+       <Private>False</Private>
+     </Reference>
     <Reference Include="Microsoft.Build">
       <Private>False</Private>
       <HintPath>$(MDBinDir)\Microsoft.Build.dll</HintPath>
@@ -63,10 +70,6 @@
     <Reference Include="Microsoft.VisualStudio.Text.UI.Cocoa">
       <HintPath>$(MDBinDir)\Microsoft.VisualStudio.Text.UI.Cocoa.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Xamarin.Mac">
-      <Private>False</Private>
-      <HintPath>/usr/local/share/dotnet/packs/Microsoft.macOS.Ref/12.1.301-preview.13.7/ref/net6.0/Xamarin.Mac.dll</HintPath>
     </Reference>
     <Reference Include="Xwt">
       <Private>False</Private>
