@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Specialized;
+using Microsoft.VisualStudio.Components;
 using MonoDevelop.Components;
 using MonoDevelop.Components.Declarative;
 using MonoDevelop.Components.Docking;

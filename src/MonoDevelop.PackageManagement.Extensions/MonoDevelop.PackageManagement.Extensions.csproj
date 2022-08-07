@@ -34,6 +34,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\external\vsmac-console\src\Microsoft.VisualStudio.Components\ConsoleInputEventArgs.cs">
+      <Link>Microsoft.VisualStudio.Components\ConsoleInputEventArgs.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\vsmac-console\src\Microsoft.VisualStudio.Components\ConsoleViewCommandHandler.cs">
       <Link>Microsoft.VisualStudio.Components\ConsoleViewCommandHandler.cs</Link>
     </Compile>

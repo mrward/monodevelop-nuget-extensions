@@ -90,10 +90,10 @@
 		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1" />
 	</Runtime>
 	<Dependencies>
-		<Addin id="Core" version="17.3"/>
-		<Addin id="Ide" version="17.3"/>
-		<Addin id="PackageManagement" version="17.3"/>
-		<Addin id="DotNetCore" version="17.3" />
+		<Addin id="Core" version="17.4"/>
+		<Addin id="Ide" version="17.4"/>
+		<Addin id="PackageManagement" version="17.4"/>
+		<Addin id="DotNetCore" version="17.4" />
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/Composition">
