@@ -39,6 +39,8 @@ namespace MonoDevelop.PackageManagement
 		readonly PackageConsoleClassifierProvider provider;
 		PackageConsoleViewController controller;
 
+		static readonly List<ClassificationSpan> emptyClassificationsList = new List<ClassificationSpan> ();
+
 		public PackageConsoleClassifier (
 			ITextBuffer textBuffer,
 			PackageConsoleClassifierProvider provider)
@@ -73,12 +75,12 @@ namespace MonoDevelop.PackageManagement
 		{
 			if (!HasController)
 			{
-				return null;
+				return emptyClassificationsList;
 			}
 
 			ITextSnapshot snapshot = span.Snapshot;
 
-			var classifications = new List<ClassificationSpan>();
+			var classifications = new List<ClassificationSpan> ();
 
 			foreach (PackageConsoleClassificationTypeSpanInfo spanInfo in controller.ColoredSpans.Overlap (span)) {
 				if (spanInfo.Span.OverlapsWith (span)) {
