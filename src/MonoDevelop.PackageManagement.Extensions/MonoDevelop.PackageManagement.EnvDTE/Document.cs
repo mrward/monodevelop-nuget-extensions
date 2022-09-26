@@ -123,7 +123,7 @@ namespace MonoDevelop.PackageManagement.EnvDTE
 
 		public bool ReadOnly { get => throw new NotImplementedException (); set => throw new NotImplementedException (); }
 
-		public Windows Windows => throw new NotImplementedException ();
+		public global::EnvDTE.Windows Windows => throw new NotImplementedException();
 
 		public global::EnvDTE.ProjectItem ProjectItem => throw new NotImplementedException ();
 
