@@ -1,5 +1,5 @@
 <Project>
   <PropertyGroup>
-    <MDBinDir>\Applications\Visual Studio %28Preview%29.app\Contents\MonoBundle</MDBinDir>
+    <MDBinDir>\Applications\Visual Studio.app\Contents\MonoBundle</MDBinDir>
   </PropertyGroup>
 </Project>
