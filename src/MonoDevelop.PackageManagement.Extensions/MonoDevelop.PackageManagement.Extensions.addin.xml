@@ -85,16 +85,16 @@
 		<Import file="libmi.dylib" />
 		<Import file="libpsl-native.dylib" />
 		<Import file="libpsrpclient.dylib" />
-		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Host/Microsoft.PowerShell.Host.psd1" />
-		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Management/Microsoft.PowerShell.Management.psd1" />
-		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Security/Microsoft.PowerShell.Security.psd1" />
-		<Import file="runtimes/unix/lib/net6.0/Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1" />
+		<Import file="runtimes/unix/lib/net7.0/Modules/Microsoft.PowerShell.Host/Microsoft.PowerShell.Host.psd1" />
+		<Import file="runtimes/unix/lib/net7.0/Modules/Microsoft.PowerShell.Management/Microsoft.PowerShell.Management.psd1" />
+		<Import file="runtimes/unix/lib/net7.0/Modules/Microsoft.PowerShell.Security/Microsoft.PowerShell.Security.psd1" />
+		<Import file="runtimes/unix/lib/net7.0/Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1" />
 	</Runtime>
 	<Dependencies>
-		<Addin id="Core" version="17.4"/>
-		<Addin id="Ide" version="17.4"/>
-		<Addin id="PackageManagement" version="17.4"/>
-		<Addin id="DotNetCore" version="17.4" />
+		<Addin id="Core" version="17.5"/>
+		<Addin id="Ide" version="17.5"/>
+		<Addin id="PackageManagement" version="17.5"/>
+		<Addin id="DotNetCore" version="17.5" />
 	</Dependencies>
 
 	<Extension path="/MonoDevelop/Ide/Composition">
